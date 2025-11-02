@@ -1,0 +1,17 @@
+[Unit]
+Description=Music Player Daemon
+Documentation=man:mpd(1) man:mpd.conf(5)
+After=network.target sound.target
+
+[Service]
+Type=notify
+ExecStart=/home/linuxbrew/.linuxbrew/bin/mpd --no-daemon --stdout --verbose
+Restart=on-failure
+
+# Security protections (relaxed for user service)
+NoNewPrivileges=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+
+[Install]
+WantedBy=default.target

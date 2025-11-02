@@ -1,0 +1,9 @@
+user_pref("browser.ctrlTab.sortByRecentlyUsed", true);
+user_pref("browser.formfill.enable", false);
+user_pref("browser.toolbars.bookmarks.visibility", "never");
+user_pref("zen.workspaces.continue-where-left-off", true);
+user_pref("zen.view.compact.enable-at-startup", true);
+user_pref("zen.welcome-screen.seen", true);
+user_pref("datareporting.healthreport.upload.enabled", false);
+user_pref("toolkit.telemetry.enabled", false);
+user_pref("toolkit.telemetry.unified", false);

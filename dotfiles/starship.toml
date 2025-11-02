@@ -1,0 +1,70 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Inserts a blank line between shell prompts
+add_newline = true
+
+format = """
+[░▒▓](#4C566A)\
+[ ](bg:#4C566A fg:#ECEFF4)\
+[](bg:#8FBCBB fg:#4C566A)\
+$directory\
+[](fg:#8FBCBB bg:#3B4252)\
+$git_branch\
+$git_status\
+[](fg:#3B4252 bg:#434C5E)\
+$nodejs\
+$rust\
+$golang\
+$php\
+[](fg:#434C5E bg:#4C566A)\
+$time\
+[](fg:#4C566A)\
+\n$character"""
+
+[directory]
+style = "fg:#4C566A bg:#8FBCBB"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+[git_branch]
+symbol = ""
+style = "bg:#3B4252"
+format = '[[ $symbol $branch ](fg:#D8DEE9 bg:#3B4252)]($style)'
+
+[git_status]
+style = "bg:#3B4252"
+format = '[[($all_status$ahead_behind )](fg:#D8DEE9 bg:#3B4252)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:#434C5E"
+format = '[[ $symbol ($version) ](fg:#A3BE8C bg:#434C5E)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:#434C5E"
+format = '[[ $symbol ($version) ](fg:#D08770 bg:#434C5E)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:#434C5E"
+format = '[[ $symbol ($version) ](fg:#81A1C1 bg:#434C5E)]($style)'
+
+[php]
+symbol = ""
+style = "bg:#434C5E"
+format = '[[ $symbol ($version) ](fg:#B48EAD bg:#434C5E)]($style)'
+
+[time]
+disabled = false
+time_format = "%R" # Hour:Minute Format
+style = "bg:#4C566A"
+format = '[[  $time ](fg:#D8DEE9 bg:#4C566A)]($style)'

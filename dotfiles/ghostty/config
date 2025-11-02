@@ -1,0 +1,38 @@
+font-family = JetBrains Mono NF
+font-size = 15
+
+window-inherit-working-directory = true
+
+window-theme = ghostty
+window-decoration = true
+gtk-titlebar = true
+gtk-titlebar-style = native
+gtk-wide-tabs = false
+gtk-toolbar-style = flat
+window-padding-x = 0
+window-padding-y = 0
+background-opacity = 0.75
+background-blur-radius = 0
+
+theme = "Nord"
+cursor-style = bar
+cursor-style-blink = false
+
+mouse-hide-while-typing = true
+copy-on-select = false
+confirm-close-surface = false
+
+keybind = ctrl+plus=increase_font_size:1
+keybind = ctrl+minus=decrease_font_size:1
+keybind = ctrl+zero=reset_font_size
+keybind = ctrl+w=close_tab:this
+keybind = alt+left=unbind
+keybind = alt+right=unbind
+keybind = alt+h=previous_tab
+keybind = alt+l=next_tab
+keybind = ctrl+t=new_tab
+
+shell-integration = zsh
+shell-integration-features = sudo,title,no-cursor
+keybind = shift+enter=text:\n
+# background = #000000

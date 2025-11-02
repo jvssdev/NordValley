@@ -1,0 +1,22 @@
+
+font=JetBrainsMono Nerd Font  12
+
+background-color=#2e3440
+text-color=#d8dee9
+border-color=#3b4252
+
+border-size=2
+
+ignore-timeout=1
+default-timeout=5000
+margin=8
+
+[hidden]
+format=(and %h more)
+#base01
+text-color=#81a1c1
+border-color=#81a1c1
+
+[urgency=high]
+background-color=#5e81ac
+border-color=#bf616a

@@ -1,0 +1,26 @@
+{
+  userName,
+  userEmail,
+  fullName,
+  withGUI,
+  helix,
+  zen-browser,
+  homeDir,
+  ...
+}:
+{
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+  home-manager.users.${userName} = import ./home.nix;
+  home-manager.extraSpecialArgs = {
+    inherit
+      userName
+      userEmail
+      fullName
+      withGUI
+      helix
+      zen-browser
+      homeDir
+      ;
+  };
+}

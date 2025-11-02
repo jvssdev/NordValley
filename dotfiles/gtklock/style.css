@@ -1,0 +1,24 @@
+window {
+  background-color: rgb(46, 52, 64); /* nord0 - Polar Night base */
+  background-image: url("../../Wallpapers/250a80a4-492a-46de-b54b-13e47f93ab66.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#clock-label {
+  color: rgb(236, 239, 244); /* nord6 - Snow Storm brightest */
+}
+
+/* hide "Password:" label */
+#input-label {
+  font-size: 0;
+}
+
+window#eDP-1 #input-field {
+  margin-top: 32em;
+}
+
+#unlock-button {
+  color: rgba(46, 52, 64, 0.87); /* nord0 - Polar Night base with opacity */
+}

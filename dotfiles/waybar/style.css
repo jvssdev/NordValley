@@ -1,0 +1,60 @@
+* {
+  border: none;
+  border-radius: 0px;
+  font-family: "JetBrainsMono Nerd Font";
+  font-weight: bold;
+  font-size: 15px;
+  min-height: 13px;
+}
+
+@define-color background #2E3440;
+@define-color foreground #81A1C1;
+@define-color focused #B48EAD;
+@define-color urgent #BF616A;
+@define-color bluetooth #88C0D0;
+
+window#waybar {
+  background: @background;
+  color: @foreground;
+}
+window#waybar.hidden {
+  background: transparent;
+}
+
+#tags {
+  padding: 0px 6px;
+}
+#custom-player,
+#custom-record,
+#custom-inbox,
+#bluetooth,
+#custom-mute,
+#battery,
+#custom-clock {
+  padding: 0px 12px;
+}
+
+#tags button {
+  padding: 0px 6px;
+  min-width: 0px;
+  border-radius: 0px;
+  color: @foreground;
+}
+#tags button.occupied {
+  color: @foreground;
+}
+#tags button.focused {
+  color: @focused;
+}
+#tags button.urgent {
+  color: @urgent;
+}
+
+#battery.warning,
+#battery.critical {
+  color: @foreground;
+}
+
+#bluetooth.on {
+  color: @bluetooth;
+}
