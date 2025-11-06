@@ -1,0 +1,2322 @@
+# Project Directory Structure:
+.
+├── Wallpapers/
+│   ├── 250a80a4-492a-46de-b54b-13e47f93ab66.png
+│   ├── Firewatch.png
+│   ├── Nord_3840x2160.png
+│   ├── Picture 16.png
+│   ├── a6116535-4a72-453e-83c9-ea97b8597d8c.png
+│   ├── lit-up-sky-colorized.png
+│   ├── nighttimesky-colorized.png
+│   ├── nord_valley.png
+│   ├── paul-pastourmatzis-KT3WlrL_bsg-unsplash.jpg
+│   ├── puffy-stars-colorized.png
+│   ├── tokyonight.jpg
+│   └── tokyonight.png
+├── dotfiles/
+│   ├── btop/
+│   │   ├── themes/
+│   │   │   └── .keep
+│   │   └── btop.conf
+│   ├── fastfetch/
+│   │   └── config.jsonc
+│   ├── fuzzel/
+│   │   └── fuzzel.ini
+│   ├── ghostty/
+│   │   └── config
+│   ├── gtklock/
+│   │   ├── config.ini
+│   │   └── style.css
+│   ├── helix/
+│   │   ├── themes/
+│   │   │   └── nord_transparent.toml
+│   │   ├── config.toml
+│   │   └── languages.toml
+│   ├── hypridle/
+│   │   └── hypridle.conf
+│   ├── mako/
+│   │   └── config
+│   ├── mango/
+│   │   ├── 
+autostart.sh
+│   │   └── config.conf
+│   ├── mpd/
+│   │   ├── empty_database
+│   │   ├── empty_log
+│   │   ├── empty_pid
+│   │   ├── empty_state
+│   │   ├── empty_sticker.sql
+│   │   ├── mpd.conf
+│   │   ├── mpd.db
+│   │   └── mpd.state
+│   ├── pipewire/
+│   │   └── pipewire.conf.d/
+│   │       ├── user-session.conf
+│   │       └── user-session.conf
+
+
+│   ├── river/
+│   │   └── ini
+│   ├── rmpc/
+│   │   └── config.ron
+│   ├── sddm-theme/
+│   │   ├── assets/
+│   │   │   ├── change_user.svg
+│   │   │   └── nord_valley.png
+│   │   ├── components/
+│   │   │   ├── artwork/
+│   │   │   │   ├── logout_primary.svgz
+│   │   │   │   ├── restart_primary.svgz
+│   │   │   │   └── shutdown_primary.svgz
+│   │   │   ├── ActionButton.qml
+│   │   │   ├── Battery.qml
+│   │   │   ├── Clock.qml
+│   │   │   ├── Input.qml
+│   │   │   ├── SessionManagementScreen.qml
+│   │   │   ├── UserDelegate.qml
+│   │   │   ├── UserList.qml
+│   │   │   └── VirtualKeyboard.qml
+│   │   ├── faces/
+│   │   │   └── .face.icon
+│   │   ├── DropdownMenuStyle.qml
+│   │   ├── KeyboardButton.qml
+│   │   ├── Login.qml
+│   │   ├── Main.qml
+│   │   ├── SessionButton.qml
+│   │   ├── metadata.desktop
+│   │   └── theme.conf
+│   ├── systemd/
+│   │   └── user/
+│   │       └── mpd.service
+│   ├── waybar/
+│   │   ├── config.jsonc
+│   │   └── style.css
+│   ├── wleave/
+│   │   ├── icons/
+│   │   │   ├── hibernate.png
+│   │   │   ├── lock.png
+│   │   │   ├── logout.png
+│   │   │   ├── reboot.png
+│   │   │   ├── shutdown.png
+│   │   │   └── suspend.png
+│   │   ├── layout
+│   │   └── style.css
+│   ├── wpaperd/
+│   │   └── config.toml
+│   ├── xdg-desktop-portal/
+│   │   └── river-portals.conf
+│   ├── yazi/
+│   │   ├── flavors/
+│   │   │   └── nord.yazi/
+│   │   │       ├── readonly_LICENSE
+│   │   │       ├── readonly_LICENSE-tmtheme
+│   │   │       ├── readonly_README.md
+│   │   │       ├── readonly_flavor.toml
+│   │   │       ├── readonly_preview.png
+│   │   │       └── readonly_tmtheme.xml
+│   │   ├── plugins/
+│   │   │   └── starship.yazi/
+│   │   │       ├── readonly_LICENSE
+│   │   │       ├── readonly_README.md
+│   │   │       └── readonly_main.lua
+│   │   ├── init.lua
+│   │   ├── package.toml
+│   │   ├── theme.toml
+│   │   └── yazi.toml
+│   ├── zathura/
+│   │   └── zathurarc
+│   ├── zed/
+│   │   ├── themes/
+│   │   │   └── .keep
+│   │   ├── keymap.json
+│   │   └── private_settings.json
+│   ├── zen/
+│   │   ├── default/
+│   │   │   ├── chrome/
+│   │   │   │   └── userChrome.css
+│   │   │   └── user.js
+│   │   └── profiles.ini
+│   ├── zsh/
+│   │   ├── plugins/
+│   │   │   ├── fast-syntax-highlighting/
+│   │   │   │   ├── dot_git/
+│   │   │   │   │   ├── hooks/
+│   │   │   │   │   │   ├── executable_applypatch-msg.sample
+│   │   │   │   │   │   ├── executable_commit-msg.sample
+│   │   │   │   │   │   ├── executable_fsmonitor-watchman.sample
+│   │   │   │   │   │   ├── executable_post-update.sample
+│   │   │   │   │   │   ├── executable_pre-applypatch.sample
+│   │   │   │   │   │   ├── executable_pre-commit.sample
+│   │   │   │   │   │   ├── executable_pre-merge-commit.sample
+│   │   │   │   │   │   ├── executable_pre-push.sample
+│   │   │   │   │   │   ├── executable_pre-rebase.sample
+│   │   │   │   │   │   ├── executable_pre-receive.sample
+│   │   │   │   │   │   ├── executable_prepare-commit-msg.sample
+│   │   │   │   │   │   ├── executable_push-to-checkout.sample
+│   │   │   │   │   │   ├── executable_sendemail-validate.sample
+│   │   │   │   │   │   └── executable_update.sample
+│   │   │   │   │   ├── info/
+│   │   │   │   │   │   └── exclude
+│   │   │   │   │   ├── logs/
+│   │   │   │   │   │   ├── refs/
+│   │   │   │   │   │   │   ├── heads/
+│   │   │   │   │   │   │   │   └── master
+│   │   │   │   │   │   │   └── remotes/
+│   │   │   │   │   │   │       └── origin/
+│   │   │   │   │   │   │           └── HEAD
+│   │   │   │   │   │   └── HEAD
+│   │   │   │   │   ├── objects/
+│   │   │   │   │   │   ├── info/
+│   │   │   │   │   │   │   └── .keep
+│   │   │   │   │   │   └── pack/
+│   │   │   │   │   │       ├── readonly_pack-fe9ecdf41c1e00c7c30e0314d696f5708f866110.idx
+│   │   │   │   │   │       ├── readonly_pack-fe9ecdf41c1e00c7c30e0314d696f5708f866110.pack
+│   │   │   │   │   │       └── readonly_pack-fe9ecdf41c1e00c7c30e0314d696f5708f866110.rev
+│   │   │   │   │   ├── refs/
+│   │   │   │   │   │   ├── heads/
+│   │   │   │   │   │   │   └── master
+│   │   │   │   │   │   ├── remotes/
+│   │   │   │   │   │   │   └── origin/
+│   │   │   │   │   │   │       └── HEAD
+│   │   │   │   │   │   └── tags/
+│   │   │   │   │   │       └── .keep
+│   │   │   │   │   ├── HEAD
+│   │   │   │   │   ├── config
+│   │   │   │   │   ├── description
+│   │   │   │   │   ├── index
+│   │   │   │   │   ├── packed-refs
+│   │   │   │   │   └── shallow
+│   │   │   │   ├── dot_github/
+│   │   │   │   │   └── workflows/
+│   │   │   │   │       ├── linting.yml
+│   │   │   │   │       └── zunit.yaml
+│   │   │   │   ├── images/
+│   │   │   │   │   ├── 203654.gif
+│   │   │   │   │   ├── array-assign.png
+│   │   │   │   │   ├── assign.png
+│   │   │   │   │   ├── brackets.gif
+│   │   │   │   │   ├── cmdsubst.png
+│   │   │   │   │   ├── cplx_cond.png
+│   │   │   │   │   ├── eval_cmp.png
+│   │   │   │   │   ├── execfd.png
+│   │   │   │   │   ├── execfd_cmp.png
+│   │   │   │   │   ├── for-loop-cmp.png
+│   │   │   │   │   ├── for-loop.png
+│   │   │   │   │   ├── function.png
+│   │   │   │   │   ├── git_chroma.png
+│   │   │   │   │   ├── global-alias.png
+│   │   │   │   │   ├── heredoc.png
+│   │   │   │   │   ├── herestring.png
+│   │   │   │   │   ├── highlight-less.png
+│   │   │   │   │   ├── highlight-much.png
+│   │   │   │   │   ├── ideal-string.png
+│   │   │   │   │   ├── in_string.png
+│   │   │   │   │   ├── math.gif
+│   │   │   │   │   ├── parameter.png
+│   │   │   │   │   ├── theme.png
+│   │   │   │   │   ├── typeset.png
+│   │   │   │   │   └── zcalc.png
+│   │   │   │   ├── share/
+│   │   │   │   │   └── free_theme.zsh
+│   │   │   │   ├── test/
+│   │   │   │   │   ├── executable_parse.zsh
+│   │   │   │   │   └── to-parse.zsh
+│   │   │   │   ├── tests/
+│   │   │   │   │   ├── _output/
+│   │   │   │   │   │   └── empty_dot_gitkeep
+│   │   │   │   │   ├── _support/
+│   │   │   │   │   │   ├── bootstrap
+│   │   │   │   │   │   └── empty_dot_gitkeep
+│   │   │   │   │   ├── example.zunit
+│   │   │   │   │   └── main.zunit
+│   │   │   │   ├── themes/
+│   │   │   │   │   ├── base16.ini
+│   │   │   │   │   ├── clean.ini
+│   │   │   │   │   ├── default.ini
+│   │   │   │   │   ├── forest.ini
+│   │   │   │   │   ├── free.ini
+│   │   │   │   │   ├── q-jmnemonic.ini
+│   │   │   │   │   ├── safari.ini
+│   │   │   │   │   ├── spa.ini
+│   │   │   │   │   ├── sv-orple.ini
+│   │   │   │   │   ├── sv-plant.ini
+│   │   │   │   │   └── zdharma.ini
+│   │   │   │   ├── →chroma/
+│   │   │   │   │   ├── -alias.ch
+│   │   │   │   │   ├── -autoload.ch
+│   │   │   │   │   ├── -autorandr.ch
+│   │   │   │   │   ├── -awk.ch
+│   │   │   │   │   ├── -docker.ch
+│   │   │   │   │   ├── -example.ch
+│   │   │   │   │   ├── -fast-theme.ch
+│   │   │   │   │   ├── -fpath_peq.ch
+│   │   │   │   │   ├── -git.ch
+│   │   │   │   │   ├── -grep.ch
+│   │   │   │   │   ├── -hub.ch
+│   │   │   │   │   ├── -ionice.ch
+│   │   │   │   │   ├── -lab.ch
+│   │   │   │   │   ├── -make.ch
+│   │   │   │   │   ├── -nice.ch
+│   │   │   │   │   ├── -nmcli.ch
+│   │   │   │   │   ├── -node.ch
+│   │   │   │   │   ├── -ogit.ch
+│   │   │   │   │   ├── -perl.ch
+│   │   │   │   │   ├── -podman.ch
+│   │   │   │   │   ├── -precommand.ch
+│   │   │   │   │   ├── -printf.ch
+│   │   │   │   │   ├── -ruby.ch
+│   │   │   │   │   ├── -scp.ch
+│   │   │   │   │   ├── -sh.ch
+│   │   │   │   │   ├── -source.ch
+│   │   │   │   │   ├── -ssh.ch
+│   │   │   │   │   ├── -subcommand.ch
+│   │   │   │   │   ├── -subversion.ch
+│   │   │   │   │   ├── -vim.ch
+│   │   │   │   │   ├── -whatis.ch
+│   │   │   │   │   ├── -which.ch
+│   │   │   │   │   ├── -zinit.ch
+│   │   │   │   │   └── main-chroma.ch
+│   │   │   │   ├── CHANGELOG.md
+│   │   │   │   ├── CHROMA_GUIDE.adoc
+│   │   │   │   ├── LICENSE
+│   │   │   │   ├── README.md
+│   │   │   │   ├── THEME_GUIDE.md
+│   │   │   │   ├── _fast-theme
+│   │   │   │   ├── dot_fast-make-targets
+│   │   │   │   ├── dot_fast-read-ini-file
+│   │   │   │   ├── dot_fast-run-command
+│   │   │   │   ├── dot_fast-run-git-command
+│   │   │   │   ├── dot_fast-zts-read-all
+│   │   │   │   ├── dot_gitignore
+│   │   │   │   ├── dot_zunit.yml
+│   │   │   │   ├── fast-highlight
+│   │   │   │   ├── fast-string-highlight
+│   │   │   │   ├── fast-syntax-highlighting.plugin.zsh
+│   │   │   │   └── fast-theme
+│   │   │   ├── starship/
+│   │   │   │   ├── docs/
+│   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── ar-SA/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── bn-BD/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── ckb-IR/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── config/
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── de-DE/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── dot_vitepress/
+│   │   │   │   │   │   ├── theme/
+│   │   │   │   │   │   │   ├── index.css
+│   │   │   │   │   │   │   └── index.js
+│   │   │   │   │   │   └── config.mts
+│   │   │   │   │   ├── es-ES/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── faq/
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── fr-FR/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── guide/
+│   │   │   │   │   │   └── symlink_README.md
+│   │   │   │   │   ├── id-ID/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── installing/
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── it-IT/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── ja-JP/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── ko-KR/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── nl-NL/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── no-NO/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── pl-PL/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── presets/
+│   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   ├── pt-BR/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── pt-PT/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── public/
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── img/
+│   │   │   │   │   │   │   │   ├── bracketed-segments.png
+│   │   │   │   │   │   │   │   ├── catppuccin-powerline.png
+│   │   │   │   │   │   │   │   ├── gruvbox-rainbow.png
+│   │   │   │   │   │   │   │   ├── jetpack.png
+│   │   │   │   │   │   │   │   ├── nerd-font-symbols.png
+│   │   │   │   │   │   │   │   ├── no-empty-icons.png
+│   │   │   │   │   │   │   │   ├── no-runtime-versions.png
+│   │   │   │   │   │   │   │   ├── pastel-powerline.png
+│   │   │   │   │   │   │   │   ├── plain-text-symbols.png
+│   │   │   │   │   │   │   │   ├── pure-preset.png
+│   │   │   │   │   │   │   │   └── tokyo-night.png
+│   │   │   │   │   │   │   └── toml/
+│   │   │   │   │   │   │       ├── bracketed-segments.toml
+│   │   │   │   │   │   │       ├── catppuccin-powerline.toml
+│   │   │   │   │   │   │       ├── gruvbox-rainbow.toml
+│   │   │   │   │   │   │       ├── jetpack.toml
+│   │   │   │   │   │   │       ├── nerd-font-symbols.toml
+│   │   │   │   │   │   │       ├── no-empty-icons.toml
+│   │   │   │   │   │   │       ├── no-nerd-font.toml
+│   │   │   │   │   │   │       ├── no-runtime-versions.toml
+│   │   │   │   │   │   │       ├── pastel-powerline.toml
+│   │   │   │   │   │   │       ├── plain-text-symbols.toml
+│   │   │   │   │   │   │       ├── pure-preset.toml
+│   │   │   │   │   │   │       └── tokyo-night.toml
+│   │   │   │   │   │   ├── _redirects
+│   │   │   │   │   │   ├── demo.mp4
+│   │   │   │   │   │   ├── demo.webm
+│   │   │   │   │   │   ├── logo-uwu.png
+│   │   │   │   │   │   ├── nerd-font.woff2
+│   │   │   │   │   │   ├── robots.txt
+│   │   │   │   │   │   ├── symlink_config-schema.json
+│   │   │   │   │   │   ├── symlink_icon.png
+│   │   │   │   │   │   ├── symlink_install.sh
+│   │   │   │   │   │   ├── symlink_logo.png
+│   │   │   │   │   │   └── symlink_logo.svg
+│   │   │   │   │   ├── ru-RU/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── tr-TR/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── uk-UA/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── vi-VN/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── zh-CN/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── zh-TW/
+│   │   │   │   │   │   ├── advanced-config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── config/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── faq/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── guide/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── installing/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── migrating-to-0.45.0/
+│   │   │   │   │   │   │   └── README.md
+│   │   │   │   │   │   ├── presets/
+│   │   │   │   │   │   │   ├── README.md
+│   │   │   │   │   │   │   ├── bracketed-segments.md
+│   │   │   │   │   │   │   ├── catppuccin-powerline.md
+│   │   │   │   │   │   │   ├── gruvbox-rainbow.md
+│   │   │   │   │   │   │   ├── jetpack.md
+│   │   │   │   │   │   │   ├── nerd-font.md
+│   │   │   │   │   │   │   ├── no-empty-icons.md
+│   │   │   │   │   │   │   ├── no-nerd-font.md
+│   │   │   │   │   │   │   ├── no-runtimes.md
+│   │   │   │   │   │   │   ├── pastel-powerline.md
+│   │   │   │   │   │   │   ├── plain-text.md
+│   │   │   │   │   │   │   ├── pure-preset.md
+│   │   │   │   │   │   │   └── tokyo-night.md
+│   │   │   │   │   │   └── README.md
+│   │   │   │   │   ├── README.md
+│   │   │   │   │   ├── package-lock.json
+│   │   │   │   │   └── package.json
+│   │   │   │   ├── dot_git/
+│   │   │   │   │   ├── hooks/
+│   │   │   │   │   │   ├── executable_applypatch-msg.sample
+│   │   │   │   │   │   ├── executable_commit-msg.sample
+│   │   │   │   │   │   ├── executable_fsmonitor-watchman.sample
+│   │   │   │   │   │   ├── executable_post-update.sample
+│   │   │   │   │   │   ├── executable_pre-applypatch.sample
+│   │   │   │   │   │   ├── executable_pre-commit.sample
+│   │   │   │   │   │   ├── executable_pre-merge-commit.sample
+│   │   │   │   │   │   ├── executable_pre-push.sample
+│   │   │   │   │   │   ├── executable_pre-rebase.sample
+│   │   │   │   │   │   ├── executable_pre-receive.sample
+│   │   │   │   │   │   ├── executable_prepare-commit-msg.sample
+│   │   │   │   │   │   ├── executable_push-to-checkout.sample
+│   │   │   │   │   │   ├── executable_sendemail-validate.sample
+│   │   │   │   │   │   └── executable_update.sample
+│   │   │   │   │   ├── info/
+│   │   │   │   │   │   └── exclude
+│   │   │   │   │   ├── logs/
+│   │   │   │   │   │   ├── refs/
+│   │   │   │   │   │   │   ├── heads/
+│   │   │   │   │   │   │   │   └── master
+│   │   │   │   │   │   │   └── remotes/
+│   │   │   │   │   │   │       └── origin/
+│   │   │   │   │   │   │           └── HEAD
+│   │   │   │   │   │   └── HEAD
+│   │   │   │   │   ├── objects/
+│   │   │   │   │   │   ├── info/
+│   │   │   │   │   │   │   └── .keep
+│   │   │   │   │   │   └── pack/
+│   │   │   │   │   │       ├── readonly_pack-083c020e72cd635f976b353fec25f69254f1fd7e.idx
+│   │   │   │   │   │       ├── readonly_pack-083c020e72cd635f976b353fec25f69254f1fd7e.pack
+│   │   │   │   │   │       └── readonly_pack-083c020e72cd635f976b353fec25f69254f1fd7e.rev
+│   │   │   │   │   ├── refs/
+│   │   │   │   │   │   ├── heads/
+│   │   │   │   │   │   │   └── master
+│   │   │   │   │   │   ├── remotes/
+│   │   │   │   │   │   │   └── origin/
+│   │   │   │   │   │   │       └── HEAD
+│   │   │   │   │   │   └── tags/
+│   │   │   │   │   │       └── .keep
+│   │   │   │   │   ├── HEAD
+│   │   │   │   │   ├── config
+│   │   │   │   │   ├── description
+│   │   │   │   │   ├── index
+│   │   │   │   │   ├── packed-refs
+│   │   │   │   │   └── shallow
+│   │   │   │   ├── dot_github/
+│   │   │   │   │   ├── ISSUE_TEMPLATE/
+│   │   │   │   │   │   ├── Bug_report.md
+│   │   │   │   │   │   ├── Feature_request.md
+│   │   │   │   │   │   └── config.yml
+│   │   │   │   │   ├── workflows/
+│   │   │   │   │   │   ├── crowdin-pretranslate.yml
+│   │   │   │   │   │   ├── format-workflow.yml
+│   │   │   │   │   │   ├── publish-docs.yml
+│   │   │   │   │   │   ├── release.yml
+│   │   │   │   │   │   ├── security-audit.yml
+│   │   │   │   │   │   ├── spell-check.yml
+│   │   │   │   │   │   └── workflow.yml
+│   │   │   │   │   ├── FUNDING.yml
+│   │   │   │   │   ├── PULL_REQUEST_TEMPLATE.md
+│   │   │   │   │   ├── config-schema.json
+│   │   │   │   │   └── renovate.json5
+│   │   │   │   ├── install/
+│   │   │   │   │   ├── macos_packages/
+│   │   │   │   │   │   ├── pkg_resources/
+│   │   │   │   │   │   │   ├── English.lproj/
+│   │   │   │   │   │   │   │   ├── conclusion.html
+│   │   │   │   │   │   │   │   ├── license.html
+│   │   │   │   │   │   │   │   └── welcome.html
+│   │   │   │   │   │   │   └── icon.png
+│   │   │   │   │   │   ├── aarch64.plist
+│   │   │   │   │   │   ├── build_and_notarize.sh
+│   │   │   │   │   │   ├── build_component_package.sh
+│   │   │   │   │   │   ├── build_distribution_package.sh
+│   │   │   │   │   │   ├── common.sh
+│   │   │   │   │   │   ├── readme.md
+│   │   │   │   │   │   └── x86_64.plist
+│   │   │   │   │   ├── windows/
+│   │   │   │   │   │   ├── choco/
+│   │   │   │   │   │   │   ├── chocolateyInstall.install.ps1
+│   │   │   │   │   │   │   ├── chocolateyInstall.portable.ps1
+│   │   │   │   │   │   │   ├── starship.nuspec
+│   │   │   │   │   │   │   └── update.ps1
+│   │   │   │   │   │   ├── pkg_resources/
+│   │   │   │   │   │   │   ├── Banner.bmp
+│   │   │   │   │   │   │   ├── Dialog.bmp
+│   │   │   │   │   │   │   └── LICENSE.rtf
+│   │   │   │   │   │   └── main.wxs
+│   │   │   │   │   └── executable_install.sh
+│   │   │   │   ├── media/
+│   │   │   │   │   ├── demo.gif
+│   │   │   │   │   ├── flag-br.png
+│   │   │   │   │   ├── flag-cn.png
+│   │   │   │   │   ├── flag-de.png
+│   │   │   │   │   ├── flag-es.png
+│   │   │   │   │   ├── flag-fr.png
+│   │   │   │   │   ├── flag-id.png
+│   │   │   │   │   ├── flag-it.png
+│   │   │   │   │   ├── flag-jp.png
+│   │   │   │   │   ├── flag-ru.png
+│   │   │   │   │   ├── flag-tw.png
+│   │   │   │   │   ├── flag-ua.png
+│   │   │   │   │   ├── flag-us.png
+│   │   │   │   │   ├── flag-vn.png
+│   │   │   │   │   ├── icon.ico
+│   │   │   │   │   ├── icon.png
+│   │   │   │   │   ├── icon.svg
+│   │   │   │   │   ├── logo.ai
+│   │   │   │   │   ├── logo.png
+│   │   │   │   │   └── logo.svg
+│   │   │   │   ├── src/
+│   │   │   │   │   ├── configs/
+│   │   │   │   │   │   ├── aws.rs
+│   │   │   │   │   │   ├── azure.rs
+│   │   │   │   │   │   ├── battery.rs
+│   │   │   │   │   │   ├── buf.rs
+│   │   │   │   │   │   ├── bun.rs
+│   │   │   │   │   │   ├── c.rs
+│   │   │   │   │   │   ├── cc.rs
+│   │   │   │   │   │   ├── character.rs
+│   │   │   │   │   │   ├── cmake.rs
+│   │   │   │   │   │   ├── cmd_duration.rs
+│   │   │   │   │   │   ├── cobol.rs
+│   │   │   │   │   │   ├── conda.rs
+│   │   │   │   │   │   ├── container.rs
+│   │   │   │   │   │   ├── cpp.rs
+│   │   │   │   │   │   ├── crystal.rs
+│   │   │   │   │   │   ├── custom.rs
+│   │   │   │   │   │   ├── daml.rs
+│   │   │   │   │   │   ├── dart.rs
+│   │   │   │   │   │   ├── deno.rs
+│   │   │   │   │   │   ├── directory.rs
+│   │   │   │   │   │   ├── docker_context.rs
+│   │   │   │   │   │   ├── dotnet.rs
+│   │   │   │   │   │   ├── elixir.rs
+│   │   │   │   │   │   ├── elm.rs
+│   │   │   │   │   │   ├── env_var.rs
+│   │   │   │   │   │   ├── erlang.rs
+│   │   │   │   │   │   ├── executable_direnv.rs
+│   │   │   │   │   │   ├── executable_mise.rs
+│   │   │   │   │   │   ├── executable_nix_shell.rs
+│   │   │   │   │   │   ├── fennel.rs
+│   │   │   │   │   │   ├── fill.rs
+│   │   │   │   │   │   ├── fossil_branch.rs
+│   │   │   │   │   │   ├── fossil_metrics.rs
+│   │   │   │   │   │   ├── gcloud.rs
+│   │   │   │   │   │   ├── git_branch.rs
+│   │   │   │   │   │   ├── git_commit.rs
+│   │   │   │   │   │   ├── git_metrics.rs
+│   │   │   │   │   │   ├── git_state.rs
+│   │   │   │   │   │   ├── git_status.rs
+│   │   │   │   │   │   ├── gleam.rs
+│   │   │   │   │   │   ├── go.rs
+│   │   │   │   │   │   ├── gradle.rs
+│   │   │   │   │   │   ├── guix_shell.rs
+│   │   │   │   │   │   ├── haskell.rs
+│   │   │   │   │   │   ├── haxe.rs
+│   │   │   │   │   │   ├── helm.rs
+│   │   │   │   │   │   ├── hg_branch.rs
+│   │   │   │   │   │   ├── hg_state.rs
+│   │   │   │   │   │   ├── hostname.rs
+│   │   │   │   │   │   ├── java.rs
+│   │   │   │   │   │   ├── jobs.rs
+│   │   │   │   │   │   ├── julia.rs
+│   │   │   │   │   │   ├── kotlin.rs
+│   │   │   │   │   │   ├── kubernetes.rs
+│   │   │   │   │   │   ├── line_break.rs
+│   │   │   │   │   │   ├── localip.rs
+│   │   │   │   │   │   ├── lua.rs
+│   │   │   │   │   │   ├── memory_usage.rs
+│   │   │   │   │   │   ├── meson.rs
+│   │   │   │   │   │   ├── mod.rs
+│   │   │   │   │   │   ├── mojo.rs
+│   │   │   │   │   │   ├── nats.rs
+│   │   │   │   │   │   ├── netns.rs
+│   │   │   │   │   │   ├── nim.rs
+│   │   │   │   │   │   ├── nodejs.rs
+│   │   │   │   │   │   ├── ocaml.rs
+│   │   │   │   │   │   ├── odin.rs
+│   │   │   │   │   │   ├── opa.rs
+│   │   │   │   │   │   ├── openstack.rs
+│   │   │   │   │   │   ├── os.rs
+│   │   │   │   │   │   ├── package.rs
+│   │   │   │   │   │   ├── perl.rs
+│   │   │   │   │   │   ├── php.rs
+│   │   │   │   │   │   ├── pijul_channel.rs
+│   │   │   │   │   │   ├── pixi.rs
+│   │   │   │   │   │   ├── pulumi.rs
+│   │   │   │   │   │   ├── purescript.rs
+│   │   │   │   │   │   ├── python.rs
+│   │   │   │   │   │   ├── quarto.rs
+│   │   │   │   │   │   ├── raku.rs
+│   │   │   │   │   │   ├── red.rs
+│   │   │   │   │   │   ├── rlang.rs
+│   │   │   │   │   │   ├── ruby.rs
+│   │   │   │   │   │   ├── rust.rs
+│   │   │   │   │   │   ├── scala.rs
+│   │   │   │   │   │   ├── shell.rs
+│   │   │   │   │   │   ├── shlvl.rs
+│   │   │   │   │   │   ├── singularity.rs
+│   │   │   │   │   │   ├── solidity.rs
+│   │   │   │   │   │   ├── spack.rs
+│   │   │   │   │   │   ├── starship_root.rs
+│   │   │   │   │   │   ├── status.rs
+│   │   │   │   │   │   ├── sudo.rs
+│   │   │   │   │   │   ├── swift.rs
+│   │   │   │   │   │   ├── terraform.rs
+│   │   │   │   │   │   ├── time.rs
+│   │   │   │   │   │   ├── typst.rs
+│   │   │   │   │   │   ├── username.rs
+│   │   │   │   │   │   ├── v.rs
+│   │   │   │   │   │   ├── vagrant.rs
+│   │   │   │   │   │   ├── vcsh.rs
+│   │   │   │   │   │   ├── xmake.rs
+│   │   │   │   │   │   └── zig.rs
+│   │   │   │   │   ├── formatter/
+│   │   │   │   │   │   ├── mod.rs
+│   │   │   │   │   │   ├── model.rs
+│   │   │   │   │   │   ├── parser.rs
+│   │   │   │   │   │   ├── spec.pest
+│   │   │   │   │   │   ├── string_formatter.rs
+│   │   │   │   │   │   └── version.rs
+│   │   │   │   │   ├── init/
+│   │   │   │   │   │   ├── executable_starship.ps1
+│   │   │   │   │   │   ├── mod.rs
+│   │   │   │   │   │   ├── starship.bash
+│   │   │   │   │   │   ├── starship.elv
+│   │   │   │   │   │   ├── starship.fish
+│   │   │   │   │   │   ├── starship.ion
+│   │   │   │   │   │   ├── starship.lua
+│   │   │   │   │   │   ├── starship.nu
+│   │   │   │   │   │   ├── starship.tcsh
+│   │   │   │   │   │   ├── starship.xsh
+│   │   │   │   │   │   └── starship.zsh
+│   │   │   │   │   ├── modules/
+│   │   │   │   │   │   ├── utils/
+│   │   │   │   │   │   │   ├── directory.rs
+│   │   │   │   │   │   │   ├── directory_nix.rs
+│   │   │   │   │   │   │   ├── directory_win.rs
+│   │   │   │   │   │   │   ├── mod.rs
+│   │   │   │   │   │   │   ├── path.rs
+│   │   │   │   │   │   │   └── truncate.rs
+│   │   │   │   │   │   ├── aws.rs
+│   │   │   │   │   │   ├── azure.rs
+│   │   │   │   │   │   ├── battery.rs
+│   │   │   │   │   │   ├── buf.rs
+│   │   │   │   │   │   ├── bun.rs
+│   │   │   │   │   │   ├── c.rs
+│   │   │   │   │   │   ├── cc.rs
+│   │   │   │   │   │   ├── character.rs
+│   │   │   │   │   │   ├── cmake.rs
+│   │   │   │   │   │   ├── cmd_duration.rs
+│   │   │   │   │   │   ├── cobol.rs
+│   │   │   │   │   │   ├── conda.rs
+│   │   │   │   │   │   ├── container.rs
+│   │   │   │   │   │   ├── cpp.rs
+│   │   │   │   │   │   ├── crystal.rs
+│   │   │   │   │   │   ├── custom.rs
+│   │   │   │   │   │   ├── daml.rs
+│   │   │   │   │   │   ├── dart.rs
+│   │   │   │   │   │   ├── deno.rs
+│   │   │   │   │   │   ├── directory.rs
+│   │   │   │   │   │   ├── direnv.rs
+│   │   │   │   │   │   ├── docker_context.rs
+│   │   │   │   │   │   ├── dotnet.rs
+│   │   │   │   │   │   ├── elixir.rs
+│   │   │   │   │   │   ├── elm.rs
+│   │   │   │   │   │   ├── env_var.rs
+│   │   │   │   │   │   ├── erlang.rs
+│   │   │   │   │   │   ├── fennel.rs
+│   │   │   │   │   │   ├── fill.rs
+│   │   │   │   │   │   ├── fossil_branch.rs
+│   │   │   │   │   │   ├── fossil_metrics.rs
+│   │   │   │   │   │   ├── gcloud.rs
+│   │   │   │   │   │   ├── git_branch.rs
+│   │   │   │   │   │   ├── git_commit.rs
+│   │   │   │   │   │   ├── git_metrics.rs
+│   │   │   │   │   │   ├── git_state.rs
+│   │   │   │   │   │   ├── git_status.rs
+│   │   │   │   │   │   ├── gleam.rs
+│   │   │   │   │   │   ├── golang.rs
+│   │   │   │   │   │   ├── gradle.rs
+│   │   │   │   │   │   ├── guix_shell.rs
+│   │   │   │   │   │   ├── haskell.rs
+│   │   │   │   │   │   ├── haxe.rs
+│   │   │   │   │   │   ├── helm.rs
+│   │   │   │   │   │   ├── hg_branch.rs
+│   │   │   │   │   │   ├── hg_state.rs
+│   │   │   │   │   │   ├── hostname.rs
+│   │   │   │   │   │   ├── java.rs
+│   │   │   │   │   │   ├── jobs.rs
+│   │   │   │   │   │   ├── julia.rs
+│   │   │   │   │   │   ├── kotlin.rs
+│   │   │   │   │   │   ├── kubernetes.rs
+│   │   │   │   │   │   ├── line_break.rs
+│   │   │   │   │   │   ├── localip.rs
+│   │   │   │   │   │   ├── lua.rs
+│   │   │   │   │   │   ├── memory_usage.rs
+│   │   │   │   │   │   ├── meson.rs
+│   │   │   │   │   │   ├── mise.rs
+│   │   │   │   │   │   ├── mod.rs
+│   │   │   │   │   │   ├── mojo.rs
+│   │   │   │   │   │   ├── nats.rs
+│   │   │   │   │   │   ├── netns.rs
+│   │   │   │   │   │   ├── nim.rs
+│   │   │   │   │   │   ├── nix_shell.rs
+│   │   │   │   │   │   ├── nodejs.rs
+│   │   │   │   │   │   ├── ocaml.rs
+│   │   │   │   │   │   ├── odin.rs
+│   │   │   │   │   │   ├── opa.rs
+│   │   │   │   │   │   ├── openstack.rs
+│   │   │   │   │   │   ├── os.rs
+│   │   │   │   │   │   ├── package.rs
+│   │   │   │   │   │   ├── perl.rs
+│   │   │   │   │   │   ├── php.rs
+│   │   │   │   │   │   ├── pijul_channel.rs
+│   │   │   │   │   │   ├── pixi.rs
+│   │   │   │   │   │   ├── pulumi.rs
+│   │   │   │   │   │   ├── purescript.rs
+│   │   │   │   │   │   ├── python.rs
+│   │   │   │   │   │   ├── quarto.rs
+│   │   │   │   │   │   ├── raku.rs
+│   │   │   │   │   │   ├── red.rs
+│   │   │   │   │   │   ├── rlang.rs
+│   │   │   │   │   │   ├── ruby.rs
+│   │   │   │   │   │   ├── rust.rs
+│   │   │   │   │   │   ├── scala.rs
+│   │   │   │   │   │   ├── shell.rs
+│   │   │   │   │   │   ├── shlvl.rs
+│   │   │   │   │   │   ├── singularity.rs
+│   │   │   │   │   │   ├── solidity.rs
+│   │   │   │   │   │   ├── spack.rs
+│   │   │   │   │   │   ├── status.rs
+│   │   │   │   │   │   ├── sudo.rs
+│   │   │   │   │   │   ├── swift.rs
+│   │   │   │   │   │   ├── terraform.rs
+│   │   │   │   │   │   ├── time.rs
+│   │   │   │   │   │   ├── typst.rs
+│   │   │   │   │   │   ├── username.rs
+│   │   │   │   │   │   ├── vagrant.rs
+│   │   │   │   │   │   ├── vcsh.rs
+│   │   │   │   │   │   ├── vlang.rs
+│   │   │   │   │   │   ├── xmake.rs
+│   │   │   │   │   │   └── zig.rs
+│   │   │   │   │   ├── test/
+│   │   │   │   │   │   ├── fixtures/
+│   │   │   │   │   │   │   ├── git-repo.bundle
+│   │   │   │   │   │   │   └── hg-repo.bundle
+│   │   │   │   │   │   └── mod.rs
+│   │   │   │   │   ├── bug_report.rs
+│   │   │   │   │   ├── config.rs
+│   │   │   │   │   ├── configure.rs
+│   │   │   │   │   ├── context.rs
+│   │   │   │   │   ├── context_env.rs
+│   │   │   │   │   ├── lib.rs
+│   │   │   │   │   ├── logger.rs
+│   │   │   │   │   ├── main.rs
+│   │   │   │   │   ├── module.rs
+│   │   │   │   │   ├── print.rs
+│   │   │   │   │   ├── segment.rs
+│   │   │   │   │   ├── serde_utils.rs
+│   │   │   │   │   └── utils.rs
+│   │   │   │   ├── CHANGELOG.md
+│   │   │   │   ├── CODE_OF_CONDUCT.md
+│   │   │   │   ├── CONTRIBUTING.md
+│   │   │   │   ├── Cargo.lock
+│   │   │   │   ├── Cargo.toml
+│   │   │   │   ├── LICENSE
+│   │   │   │   ├── README.md
+│   │   │   │   ├── SECURITY.md
+│   │   │   │   ├── build.rs
+│   │   │   │   ├── clippy.toml
+│   │   │   │   ├── crowdin.yml
+│   │   │   │   ├── deny.toml
+│   │   │   │   ├── dot_codecov.yml
+│   │   │   │   ├── dot_dprint.json
+│   │   │   │   ├── dot_gitattributes
+│   │   │   │   ├── dot_gitignore
+│   │   │   │   ├── dot_rustfmt.toml
+│   │   │   │   ├── release-please-config.json
+│   │   │   │   ├── starship.exe.manifest
+│   │   │   │   └── typos.toml
+│   │   │   ├── zsh-autosuggestions/
+│   │   │   │   ├── dot_git/
+│   │   │   │   │   ├── hooks/
+│   │   │   │   │   │   ├── executable_applypatch-msg.sample
+│   │   │   │   │   │   ├── executable_commit-msg.sample
+│   │   │   │   │   │   ├── executable_fsmonitor-watchman.sample
+│   │   │   │   │   │   ├── executable_post-update.sample
+│   │   │   │   │   │   ├── executable_pre-applypatch.sample
+│   │   │   │   │   │   ├── executable_pre-commit.sample
+│   │   │   │   │   │   ├── executable_pre-merge-commit.sample
+│   │   │   │   │   │   ├── executable_pre-push.sample
+│   │   │   │   │   │   ├── executable_pre-rebase.sample
+│   │   │   │   │   │   ├── executable_pre-receive.sample
+│   │   │   │   │   │   ├── executable_prepare-commit-msg.sample
+│   │   │   │   │   │   ├── executable_push-to-checkout.sample
+│   │   │   │   │   │   ├── executable_sendemail-validate.sample
+│   │   │   │   │   │   └── executable_update.sample
+│   │   │   │   │   ├── info/
+│   │   │   │   │   │   └── exclude
+│   │   │   │   │   ├── logs/
+│   │   │   │   │   │   ├── refs/
+│   │   │   │   │   │   │   ├── heads/
+│   │   │   │   │   │   │   │   └── master
+│   │   │   │   │   │   │   └── remotes/
+│   │   │   │   │   │   │       └── origin/
+│   │   │   │   │   │   │           └── HEAD
+│   │   │   │   │   │   └── HEAD
+│   │   │   │   │   ├── objects/
+│   │   │   │   │   │   ├── info/
+│   │   │   │   │   │   │   └── .keep
+│   │   │   │   │   │   └── pack/
+│   │   │   │   │   │       ├── readonly_pack-dfb0a1ba282115f6bc35f2c9b7db7e50b67aa8d7.idx
+│   │   │   │   │   │       ├── readonly_pack-dfb0a1ba282115f6bc35f2c9b7db7e50b67aa8d7.pack
+│   │   │   │   │   │       └── readonly_pack-dfb0a1ba282115f6bc35f2c9b7db7e50b67aa8d7.rev
+│   │   │   │   │   ├── refs/
+│   │   │   │   │   │   ├── heads/
+│   │   │   │   │   │   │   └── master
+│   │   │   │   │   │   ├── remotes/
+│   │   │   │   │   │   │   └── origin/
+│   │   │   │   │   │   │       └── HEAD
+│   │   │   │   │   │   └── tags/
+│   │   │   │   │   │       └── .keep
+│   │   │   │   │   ├── HEAD
+│   │   │   │   │   ├── config
+│   │   │   │   │   ├── description
+│   │   │   │   │   ├── index
+│   │   │   │   │   ├── packed-refs
+│   │   │   │   │   └── shallow
+│   │   │   │   ├── dot_github/
+│   │   │   │   │   ├── ISSUE_TEMPLATE/
+│   │   │   │   │   │   ├── bug-report.md
+│   │   │   │   │   │   └── feature_request.md
+│   │   │   │   │   └── workflows/
+│   │   │   │   │       └── integration.yml
+│   │   │   │   ├── spec/
+│   │   │   │   │   ├── integrations/
+│   │   │   │   │   │   ├── auto_cd_spec.rb
+│   │   │   │   │   │   ├── bracketed_paste_magic_spec.rb
+│   │   │   │   │   │   ├── client_zpty_spec.rb
+│   │   │   │   │   │   ├── glob_subst_spec.rb
+│   │   │   │   │   │   ├── rebound_bracket_spec.rb
+│   │   │   │   │   │   ├── vi_mode_spec.rb
+│   │   │   │   │   │   ├── wrapped_widget_spec.rb
+│   │   │   │   │   │   └── zle_input_stack_spec.rb
+│   │   │   │   │   ├── options/
+│   │   │   │   │   │   ├── buffer_max_size_spec.rb
+│   │   │   │   │   │   ├── highlight_style_spec.rb
+│   │   │   │   │   │   ├── original_widget_prefix_spec.rb
+│   │   │   │   │   │   ├── strategy_spec.rb
+│   │   │   │   │   │   └── widget_lists_spec.rb
+│   │   │   │   │   ├── strategies/
+│   │   │   │   │   │   ├── completion_spec.rb
+│   │   │   │   │   │   ├── history_spec.rb
+│   │   │   │   │   │   ├── match_prev_cmd_spec.rb
+│   │   │   │   │   │   └── special_characters_helper.rb
+│   │   │   │   │   ├── widgets/
+│   │   │   │   │   │   ├── disable_spec.rb
+│   │   │   │   │   │   ├── enable_spec.rb
+│   │   │   │   │   │   ├── fetch_spec.rb
+│   │   │   │   │   │   └── toggle_spec.rb
+│   │   │   │   │   ├── async_spec.rb
+│   │   │   │   │   ├── kill_ring_spec.rb
+│   │   │   │   │   ├── line_init_spec.rb
+│   │   │   │   │   ├── multi_line_spec.rb
+│   │   │   │   │   ├── spec_helper.rb
+│   │   │   │   │   └── terminal_session.rb
+│   │   │   │   ├── src/
+│   │   │   │   │   ├── strategies/
+│   │   │   │   │   │   ├── completion.zsh
+│   │   │   │   │   │   ├── history.zsh
+│   │   │   │   │   │   └── match_prev_cmd.zsh
+│   │   │   │   │   ├── async.zsh
+│   │   │   │   │   ├── bind.zsh
+│   │   │   │   │   ├── config.zsh
+│   │   │   │   │   ├── fetch.zsh
+│   │   │   │   │   ├── highlight.zsh
+│   │   │   │   │   ├── start.zsh
+│   │   │   │   │   ├── util.zsh
+│   │   │   │   │   └── widgets.zsh
+│   │   │   │   ├── CHANGELOG.md
+│   │   │   │   ├── DESCRIPTION
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── Gemfile
+│   │   │   │   ├── Gemfile.lock
+│   │   │   │   ├── INSTALL.md
+│   │   │   │   ├── LICENSE
+│   │   │   │   ├── Makefile
+│   │   │   │   ├── README.md
+│   │   │   │   ├── URL
+│   │   │   │   ├── VERSION
+│   │   │   │   ├── ZSH_VERSIONS
+│   │   │   │   ├── dot_editorconfig
+│   │   │   │   ├── dot_gitignore
+│   │   │   │   ├── dot_rspec
+│   │   │   │   ├── dot_rubocop.yml
+│   │   │   │   ├── dot_ruby-version
+│   │   │   │   ├── executable_install_test_zsh.sh
+│   │   │   │   ├── zsh-autosuggestions.plugin.zsh
+│   │   │   │   └── zsh-autosuggestions.zsh
+│   │   │   └── zsh-helix-mode/
+│   │   │       ├── dot_git/
+│   │   │       │   ├── hooks/
+│   │   │       │   │   ├── executable_applypatch-msg.sample
+│   │   │       │   │   ├── executable_commit-msg.sample
+│   │   │       │   │   ├── executable_fsmonitor-watchman.sample
+│   │   │       │   │   ├── executable_post-update.sample
+│   │   │       │   │   ├── executable_pre-applypatch.sample
+│   │   │       │   │   ├── executable_pre-commit.sample
+│   │   │       │   │   ├── executable_pre-merge-commit.sample
+│   │   │       │   │   ├── executable_pre-push.sample
+│   │   │       │   │   ├── executable_pre-rebase.sample
+│   │   │       │   │   ├── executable_pre-receive.sample
+│   │   │       │   │   ├── executable_prepare-commit-msg.sample
+│   │   │       │   │   ├── executable_push-to-checkout.sample
+│   │   │       │   │   ├── executable_sendemail-validate.sample
+│   │   │       │   │   └── executable_update.sample
+│   │   │       │   ├── info/
+│   │   │       │   │   └── exclude
+│   │   │       │   ├── logs/
+│   │   │       │   │   ├── refs/
+│   │   │       │   │   │   ├── heads/
+│   │   │       │   │   │   │   └── main
+│   │   │       │   │   │   └── remotes/
+│   │   │       │   │   │       └── origin/
+│   │   │       │   │   │           └── HEAD
+│   │   │       │   │   └── HEAD
+│   │   │       │   ├── objects/
+│   │   │       │   │   ├── info/
+│   │   │       │   │   │   └── .keep
+│   │   │       │   │   └── pack/
+│   │   │       │   │       ├── readonly_pack-7b25ea0398da6e2541de8db44a09808c949c2c47.idx
+│   │   │       │   │       ├── readonly_pack-7b25ea0398da6e2541de8db44a09808c949c2c47.pack
+│   │   │       │   │       └── readonly_pack-7b25ea0398da6e2541de8db44a09808c949c2c47.rev
+│   │   │       │   ├── refs/
+│   │   │       │   │   ├── heads/
+│   │   │       │   │   │   └── main
+│   │   │       │   │   ├── remotes/
+│   │   │       │   │   │   └── origin/
+│   │   │       │   │   │       └── HEAD
+│   │   │       │   │   └── tags/
+│   │   │       │   │       └── .keep
+│   │   │       │   ├── HEAD
+│   │   │       │   ├── config
+│   │   │       │   ├── description
+│   │   │       │   ├── index
+│   │   │       │   ├── packed-refs
+│   │   │       │   └── shallow
+│   │   │       ├── LICENSE
+│   │   │       ├── README.md
+│   │   │       ├── default.nix
+│   │   │       ├── flake.lock
+│   │   │       ├── flake.nix
+│   │   │       ├── zsh-helix-mode.plugin.zsh
+│   │   │       └── zsh-helix-mode.zsh
+│   │   └── dot_zshrc
+│   ├── mimeapps.list
+│   └── starship.toml
+├── hosts/
+│   ├── ashes/
+│   │   ├── configuration.nix
+│   │   └── hardware-configuration.nix
+│   └── iso/
+│       └── configuration.nix
+├── modules/
+│   ├── elevated-packages.nix
+│   ├── home-manager.nix
+│   ├── home.nix
+│   ├── intel-drivers.nix
+│   ├── packages.nix
+│   ├── path.nix
+│   ├── programs.nix
+│   ├── river.nix
+│   └── services.nix
+├── README.md
+├── flake.lock
+└── flake.nix
+
+# BEGIN FILE CONTENTS
+
+# File: hosts/ashes/configuration.nix
+
+{
+  pkgs,
+  lib,
+  userName,
+  fullName,
+  helix,
+  zen-browser,
+  ...
+}:
+
+{
+  environment.variables.EDITOR = "hx";
+  nix = {
+    settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+    settings.auto-optimise-store = true;
+  };
+
+  programs.zsh.enable = true;
+  programs.starship.enable = true;
+
+  users.users.${userName} = {
+    isNormalUser = true;
+    description = fullName;
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "docker"
+      "libvirtd"
+      "kvm"
+    ];
+    shell = pkgs.zsh;
+  };
+
+  environment.etc."direnv/direnv.toml".text = ''
+    [global]
+    hide_env_diff = true
+    warn_timeout = 0
+    log_filter="^$"
+  '';
+
+  zramSwap.enable = true;
+  nixpkgs.config.allowUnfree = true;
+
+  boot.loader = {
+    efi.canTouchEfiVariables = true;
+    grub = {
+      enable = true;
+      devices = [ "nodev" ];
+      efiSupport = true;
+      useOSProber = true;
+      gfxmodeEfi = "800x600";
+      fontSize = 30;
+    };
+  };
+
+  powerManagement = {
+    powertop.enable = true;
+    cpuFreqGovernor = lib.mkDefault "powersave";
+  };
+
+  networking = {
+    hostName = "nixos";
+    networkmanager.enable = true;
+  };
+
+  time.timeZone = "America/Sao_Paulo";
+  i18n.defaultLocale = "en_US.UTF-8";
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_US.UTF-8";
+    LC_IDENTIFICATION = "en_US.UTF-8";
+    LC_MEASUREMENT = "en_US.UTF-8";
+    LC_MONETARY = "en_US.UTF-8";
+    LC_NAME = "en_US.UTF-8";
+    LC_NUMERIC = "en_US.UTF-8";
+    LC_PAPER = "en_US.UTF-8";
+    LC_TELEPHONE = "en_US.UTF-8";
+    LC_TIME = "en_US.UTF-8";
+  };
+
+  environment.systemPackages = pkgs.callPackage ./packages.nix { inherit zen-browser; };
+
+  system.stateVersion = "25.05";
+}
+
+
+# File: hosts/ashes/hardware-configuration.nix
+
+# Do not modify this file!  It was generated by ‘nixos-generate-config’
+# and may be overwritten by future invocations.  Please make changes
+# to /etc/nixos/configuration.nix instead.
+{ config, lib, pkgs, modulesPath, ... }:
+
+{
+  imports =
+    [ (modulesPath + "/installer/scan/not-detected.nix")
+    ];
+
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" ];
+  boot.initrd.kernelModules = [ ];
+  boot.kernelModules = [ "kvm-amd" ];
+  boot.extraModulePackages = [ ];
+
+  fileSystems."/" =
+    { device = "/dev/disk/by-uuid/ac23fcb5-7f1a-4aca-b123-86e8c2110d02";
+      fsType = "ext4";
+    };
+
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-uuid/F289-4F70";
+      fsType = "vfat";
+      options = [ "fmask=0077" "dmask=0077" ];
+    };
+
+  swapDevices = [ ];
+
+  # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
+  # (the default) this is the recommended approach. When using systemd-networkd it's
+  # still possible to use this option, but it's recommended to use it in conjunction
+  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
+  networking.useDHCP = lib.mkDefault true;
+  # networking.interfaces.enp8s0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.wlp7s0.useDHCP = lib.mkDefault true;
+
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+}
+
+
+# File: hosts/iso/configuration.nix
+
+{ pkgs, modulesPath, ... }:
+{
+  imports = [ "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix" ];
+
+  nixpkgs.hostPlatform = "x86_64-linux";
+}
+
+
+# File: modules/elevated-packages.nix
+
+{ pkgs, ... }:
+
+{
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [ stdenv.cc.cc ];
+  };
+}
+
+
+# File: modules/home-manager.nix
+
+{
+  userName,
+  userEmail,
+  fullName,
+  withGUI,
+  helix,
+  zen-browser,
+  homeDir,
+  ...
+}:
+{
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+  home-manager.users.${userName} = import ./home.nix;
+  home-manager.extraSpecialArgs = {
+    inherit
+      userName
+      userEmail
+      fullName
+      withGUI
+      helix
+      zen-browser
+      homeDir
+      ;
+  };
+}
+
+
+# File: modules/home.nix
+
+{
+  pkgs,
+  config,
+  specialArgs,
+  lib,
+  ...
+}:
+
+let
+  inherit (specialArgs)
+    withGUI
+    homeDir
+    userName
+    helix
+    zen-browser
+    isRiver
+    isMango
+    ;
+in
+{
+  imports = [ ./programs.nix ];
+
+  home.username = userName;
+  home.homeDirectory = homeDir;
+  xdg.enable = true;
+  home.stateVersion = "25.05";
+
+  home.packages = pkgs.callPackage ./packages.nix { inherit withGUI helix; };
+
+  home.sessionPath = [
+    "$HOME/.nix-profile/bin"
+    "/nix/var/nix/profiles/default/bin"
+  ];
+
+  home.sessionVariables = {
+    EDITOR = "hx";
+    TERMINAL = "ghostty";
+    BROWSER = "${zen-browser}/bin/zen";
+    DEFAULT_BROWSER = "${zen-browser}/bin/zen";
+    XDG_SCREENSHOTS_DIR = "$HOME/Pictures/screenshots";
+    LC_ALL = "en_US.UTF-8";
+    QT_QPA_PLATFORMTHEME = "qt6ct";
+    NIXOS_OZONE_WL = "1";
+    SHELL = "${pkgs.zsh}/bin/zsh";
+  };
+
+  home.file = {
+    # For nix-shell
+    ".config/nixpkgs/config.nix".text = ''
+      {
+        allowUnfree = true;
+      }
+    '';
+
+    ".config/btop".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/btop";
+
+    ".config/lazygit".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/lazygit";
+
+    ".config/fastfetch".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/fastfetch";
+
+    ".config/wleave".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/wleave";
+
+    ".config/helix".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/helix";
+
+    ".config/fuzzel".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/fuzzel";
+
+    ".config/hypridle".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/hypridle";
+
+    ".config/waybar".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/waybar";
+
+    ".config/gtklock".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/gtklock";
+
+    ".config/mako".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mako";
+
+    ".config/mpd".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mpd";
+
+    ".config/wpaperd".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/wpaperd";
+
+    ".config/yazi".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/yazi";
+
+    ".config/zathura".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zathura";
+
+    ".config/zed".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zed";
+
+    ".config/ghostty".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/ghostty";
+
+    ".zen".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zen";
+  }
+
+  // lib.optionalAttrs (isRiver) {
+    ".config/river".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/river";
+  }
+
+  // lib.optionalAttrs (isMango) {
+    ".config/mango".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mango";
+  };
+
+  gtk = {
+    theme = {
+      name = "Nordic";
+      package = pkgs.nordic;
+    };
+    iconTheme = {
+      name = "Nordzy-dark";
+      package = pkgs.nordzy-icon-theme;
+    };
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+    };
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+    };
+  };
+
+  qt = {
+    enable = true;
+    style.name = "kvantum";
+    platformTheme.name = "qt6ct";
+  };
+
+  fonts.fontconfig.enable = true;
+}
+
+
+# File: modules/intel-drivers.nix
+
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
+with lib;
+let
+  cfg = config.drivers.intel;
+in
+{
+  options.drivers.intel = {
+    enable = mkEnableOption "Enable Intel Graphics Drivers";
+  };
+
+  config = mkIf cfg.enable {
+    nixpkgs.config.packageOverrides = pkgs: {
+      vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+    };
+
+    hardware.graphics = {
+      extraPackages = with pkgs; [
+        intel-media-driver
+        vaapiIntel
+        vaapiVdpau
+        libvdpau-va-gl
+      ];
+    };
+  };
+}
+
+
+# File: modules/packages.nix
+
+{
+  pkgs,
+  withGUI,
+  helix,
+  zen-browser,
+}:
+
+with pkgs;
+
+let
+  basePackages = [
+
+    efibootmgr
+    gcc
+    gnumake
+    cargo
+    rustc
+    wget
+    unzip
+    tree-sitter
+    nodejs_22
+
+    nerd-fonts.jetbrains-mono
+    bibata-cursors
+
+    font-awesome
+    roboto
+    markdown-oxide
+    mpls
+    deno
+    zig
+    zls
+    go
+    gopls
+    nixd
+    nil
+    nixfmt-rfc-style
+    nixpkgs-fmt
+    lazygit
+    fzf
+    fd
+    ncdu
+    ripgrep
+    fastfetch
+    nixos-shell
+    nix-your-shell
+    yazi
+    yaziPlugins.nord
+    yaziPlugins.starship
+    bat
+    ffmpeg
+
+    yazi
+    mpc
+    mpd
+    mpd-mpris
+    playerctl
+    rmpc
+    hypridle
+    wleave
+    p7zip
+
+    gtklock
+    btop
+    keepassxc
+    anydesk
+    lmstudio
+    qbittorrent
+    mpv
+    gammastep
+    wpaperd
+    imv
+
+    libgcc
+    lxqt.lxqt-policykit
+    libnotify
+    ripgrep
+    bat
+    brightnessctl
+
+    appimage-run
+    playerctl
+    nh
+
+    grim
+    slurp
+    waybar
+    fuzzel
+    mako
+    wl-clipboard
+    pavucontrol
+    libvirt
+    qemu
+    virt-viewer
+    virt-manager
+    spice
+    spice-gtk
+    spice-protocol
+    OVMF
+    zed-editor
+    cliphist
+    zed-editor
+    fastfetch
+    xfce.thunar
+    xfce.thunar-archive-plugin
+    xfce.thunar-media-tags-plugin
+    archiver
+    polkit
+    mate.mate-polkit
+    gvfs
+    networkmanagerapplet
+
+    libsForQt5.qt5.qtgraphicaleffectsr
+
+    zen-browser.packages.${pkgs.system}.default
+    helix.packages.${pkgs.system}.default
+  ];
+in
+basePackages
+++ pkgs.lib.optionals withGUI [
+  # GUI tools
+]
+
+
+# File: modules/path.nix
+
+{ nixpkgs, pkgs, ... }:
+{
+  # make `nix run nixpkgs#nixpkgs` use the same nixpkgs as the one used by this flake.
+  # remove nix-channel related tools & configs, we use flakes instead.
+  # Use flake for nix_path https://nixos-and-flakes.thiscute.world/best-practices/nix-path-and-flake-registry
+  nix = {
+    channel.enable = false;
+    registry.nixpkgs.flake = nixpkgs;
+    settings.nix-path = nixpkgs.lib.mkForce "nixpkgs=/etc/nix/inputs/nixpkgs";
+  };
+  environment.etc."nix/inputs/nixpkgs".source = "${nixpkgs}";
+}
+
+
+# File: modules/programs.nix
+
+{ pkgs, specialArgs, ... }:
+
+let
+  inherit (specialArgs)
+    userName
+    fullName
+    userEmail
+    withGUI
+    ;
+in
+{
+  imports = [ ./zsh.nix ];
+  programs = {
+    home-manager.enable = true;
+    git = {
+      settings = {
+        user = {
+          name = fullName;
+          email = userEmail;
+        };
+      };
+      enable = true;
+      ignores = [
+        ".envrc"
+        ".direnv/"
+      ];
+    };
+
+    starship = {
+      enable = true;
+      settings = pkgs.lib.importTOML ../dotfiles/starship/starship.toml;
+    };
+
+    zoxide = {
+      enable = true;
+      options = [ "--cmd cd" ];
+    };
+
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
+
+    atuin = {
+      enable = true;
+      enableFishIntegration = true;
+    };
+  };
+}
+
+
+# File: modules/river.nix
+
+{ userName, pkgs, ... }:
+{
+  environment.systemPackages = with pkgs; [
+    xdg-desktop-portal-gtk
+    xdg-desktop-portal-wlr
+    xwayland
+    (pkgs.runCommand "nord-sddm-theme" { } ''
+      mkdir -p $out/share/sddm/themes/nord-sddm
+      cp -r ${../dotfiles/sddm-theme}/* $out/share/sddm/themes/nord-sddm/
+    '')
+  ];
+  services = {
+    xserver = {
+      enable = false;
+      xkb = {
+        layout = "br";
+        variant = "";
+      };
+    };
+    displayManager.sddm = {
+      enable = true;
+      wayland.enable = true;
+      theme = "nord-sddm";
+    };
+    logind = {
+      extraConfig = ''
+        HandlePowerKey=suspend
+      '';
+    };
+    libinput.enable = true;
+    upower.enable = true;
+    fstrim.enable = true;
+    gvfs.enable = true;
+    openssh.enable = true;
+    flatpak.enable = false;
+    printing = {
+      enable = false;
+      drivers = [ pkgs.hplipWithPlugin ];
+    };
+    power-profiles-daemon.enable = false;
+    auto-cpufreq = {
+      enable = true;
+      settings = {
+        battery = {
+          governor = "powersave";
+          turbo = "never";
+        };
+        charger = {
+          governor = "performance";
+          turbo = "auto";
+        };
+      };
+    };
+    syncthing = {
+      enable = true;
+      user = userName;
+      dataDir = "/home/${userName}";
+      #configDir = "/home/${userName}/.config/syncthing";
+    };
+  };
+  services.displayManager.autoLogin = {
+    enable = false;
+    user = userName;
+  };
+  programs.river = {
+    enable = true;
+    xwayland.enable = true;
+  };
+
+  environment.etc."sddm/wayland-sessions/river.desktop".text = ''
+    [Desktop Entry]
+    Name=River
+    Comment= a dynamic tiling Wayland compositor with flexible runtime config
+    DesktopNames=river
+    Exec=/usr/bin/startriver
+    Type=Application
+  '';
+}
+
+
+# File: modules/services.nix
+
+{
+  pkgs,
+  userName,
+  homeDir,
+  ...
+}:
+
+{
+  virtualisation = {
+    docker = {
+      enable = true;
+    };
+    libvirtd = {
+      enable = true;
+      qemu = {
+        swtpm.enable = true;
+        ovmf.enable = true;
+        runAsRoot = true;
+      };
+    };
+    spiceUSBRedirection.enable = true;
+  };
+
+  services.envfs.enable = true;
+
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+  };
+}
+
+
+# File: flake.nix
+
+{
+  description = "NixOS configuration with River and MangoWC window managers";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    helix.url = "github:helix-editor/helix/master";
+    zen-browser.url = "github:MarceColl/zen-browser-flake";
+    nur.url = "github:nix-community/NUR";
+  };
+
+  outputs =
+    {
+      nixpkgs,
+      home-manager,
+      nur,
+      ...
+    }@inputs:
+    let
+      userInfo = {
+        userName = "joaov";
+        fullName = "João Víctor Santos Silva";
+        userEmail = "joao.victor.ss.dev@gmail.com";
+      };
+
+      linux_x86 = "x86_64-linux";
+
+      defaults = {
+        withGUI = true;
+        homeDir = "/home/${userInfo.userName}";
+      };
+    in
+    {
+      # RiverWM
+      nixosConfigurations.river = nixpkgs.lib.nixosSystem {
+        system = linux_x86;
+        specialArgs =
+          inputs
+          // userInfo
+          // {
+            withGUI = defaults.withGUI;
+            homeDir = defaults.homeDir;
+            isRiver = true;
+          };
+        modules = [
+          ./hosts/ashes/configuration.nix
+          ./hosts/ashes/hardware-configuration.nix
+          ./modules/path.nix
+          ./modules/services.nix
+          ./modules/elevated-packages.nix
+          ./modules/intel-drivers.nix
+          ./modules/river.nix
+          { nixpkgs.overlays = [ nur.overlays.default ]; }
+          home-manager.nixosModules.home-manager
+          ./modules/home-manager.nix
+        ];
+      };
+
+      # MangoWC
+      nixosConfigurations.mangowc = nixpkgs.lib.nixosSystem {
+        system = linux_x86;
+        specialArgs =
+          inputs
+          // userInfo
+          // {
+            withGUI = defaults.withGUI;
+            homeDir = defaults.homeDir;
+            isMango = true;
+          };
+        modules = [
+          ./hosts/ashes/configuration.nix
+          ./hosts/ashes/hardware-configuration.nix
+          ./modules/path.nix
+          ./modules/services.nix
+          ./modules/elevated-packages.nix
+          ./modules/intel-drivers.nix
+          # ./modules/mangowc.nix
+          { nixpkgs.overlays = [ nur.overlays.default ]; }
+          home-manager.nixosModules.home-manager
+          ./modules/home-manager.nix
+        ];
+      };
+
+      homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          system = linux_x86;
+          config = {
+            allowUnfree = true;
+          };
+        };
+        extraSpecialArgs = {
+          withGUI = defaults.withGUI;
+          homeDir = defaults.homeDir;
+          helix = inputs.helix;
+        }
+        // userInfo;
+        modules = [ ./modules/home.nix ];
+      };
+
+      # Build ISO image
+      nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
+        modules = [ ./hosts/iso/configuration.nix ];
+      };
+    };
+}

@@ -62,7 +62,6 @@ let
 
     gtklock
     btop
-    rclone
     keepassxc
     anydesk
     lmstudio
