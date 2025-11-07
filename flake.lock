@@ -77,7 +77,7 @@
       "inputs": {
         "flake-compat": "flake-compat_2",
         "gitignore": "gitignore",
-        "nixpkgs": [          
+        "nixpkgs": [
           "nixpkgs"
         ]
       },
@@ -118,7 +118,7 @@
     },
     "helix": {
       "inputs": {
-        "nixpkgs": "nixpkgs",        
+        "nixpkgs": "nixpkgs"
       },
       "locked": {
         "lastModified": 1761055346,
@@ -137,7 +137,7 @@
     },
     "hercules-ci-effects": {
       "inputs": {
-        "flake-parts": [         
+        "flake-parts": [
           "flake-parts"
         ],
         "nixpkgs": [
@@ -279,8 +279,11 @@
     },
     "root": {
       "inputs": {
+        "flake-parts": "flake-parts",
+        "git-hooks": "git-hooks",
         "helix": "helix",
-        "home-manager": "home-manager",        
+        "hercules-ci-effects": "hercules-ci-effects",
+        "home-manager": "home-manager",
         "nixpkgs": "nixpkgs_3",
         "nur": "nur",
         "zen-browser": "zen-browser"
