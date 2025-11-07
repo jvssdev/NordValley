@@ -15,9 +15,13 @@ Complete guide for installing and configuring NixOS with River or MangoWC window
 
 ### Option 1: Automatic Installation (Recommended)
 
-1. **Boot from NixOS USB**
+1. **After a minimal NixOS installation, install git via nix-shell**
 
-2. **Configure network** (if needed):
+```bash
+nix-shell -p git
+```
+
+* **Configure network** (if needed):
 ```bash
 # For WiFi
 sudo systemctl start wpa_supplicant
@@ -26,14 +30,14 @@ wpa_cli
 # For Ethernet (usually automatic)
 ```
 
-3. **Clone the repository**:
+2. **Clone the repository**:
 ```bash
 # Temporarily in live environment
-git clone https://github.com/joaovictor-ss/NordValley.git
+git clone https://github.com/jvssdev/NordValley.git
 cd NordValley
 ```
 
-4. **Run the installer**:
+3. **Run the installer**:
 ```bash
 chmod +x install.sh
 ./install.sh
