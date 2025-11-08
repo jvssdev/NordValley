@@ -1611,6 +1611,15 @@ autostart.sh
     cpuFreqGovernor = lib.mkDefault "powersave";
   };
 
+  fonts = {
+    enableDefaultPackages = true; # Enables core defaults (serif, sans, mono, emoji)
+    packages = with pkgs; [
+      nerd-fonts.jetbrains-mono
+      font-awesome
+      roboto
+    ];
+  };
+
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
@@ -1830,8 +1839,6 @@ in
     style.name = "kvantum";
     platformTheme.name = "qt6ct";
   };
-
-  fonts.fontconfig.enable = true;
 }
 
 
@@ -1894,11 +1901,7 @@ let
     tree-sitter
     nodejs_22
 
-    # Fonts
-    nerd-fonts.jetbrains-mono
     bibata-cursors
-    font-awesome
-    roboto
 
     # LSP servers
     markdown-oxide
@@ -1929,7 +1932,7 @@ let
     ffmpeg
 
     # Media
-    mpc-cli
+    mpc
     mpd
     mpd-mpris
     playerctl
@@ -2023,11 +2026,13 @@ basePackages
 { pkgs, lib, ... }:
 {
   services.logind.settings = {
-    HandlePowerKey = "suspend";
-    HandlePowerKeyLongPress = "poweroff";
-    HandleLidSwitch = "suspend";
-    HandleLidSwitchExternalPower = "suspend";
-    HandleLidSwitchDocked = "ignore";
+    Login = {
+      HandlePowerKey = "suspend";
+      HandlePowerKeyLongPress = "poweroff";
+      HandleLidSwitch = "suspend";
+      HandleLidSwitchExternalPower = "suspend";
+      HandleLidSwitchDocked = "ignore";
+    };
   };
 }
 
@@ -2123,7 +2128,9 @@ basePackages
     enable = false;
     user = userName;
   };
-  programs.river.enable = true;
+  wayland.windowManager.river = {
+    enable = true;
+  };
   environment.etc."sddm/wayland-sessions/river.desktop".text = ''
     [Desktop Entry]
     Name=River

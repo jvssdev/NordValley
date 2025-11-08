@@ -1,6 +1,7 @@
 { userName, pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
+    river
     xdg-desktop-portal-gtk
     xdg-desktop-portal-wlr
     xwayland
@@ -9,6 +10,7 @@
       cp -r ${../dotfiles/sddm-theme}/* $out/share/sddm/themes/nord-sddm/
     '')
   ];
+
   services = {
     xserver = {
       enable = false;
@@ -52,19 +54,18 @@
       dataDir = "/home/${userName}";
     };
   };
+
   services.displayManager.autoLogin = {
     enable = false;
     user = userName;
   };
-  wayland.windowManager.river = {
-    enable = true;
-  };
+
   environment.etc."sddm/wayland-sessions/river.desktop".text = ''
     [Desktop Entry]
     Name=River
-    Comment= a dynamic tiling Wayland compositor with flexible runtime config
+    Comment=A dynamic tiling Wayland compositor
     DesktopNames=river
-    Exec=/usr/bin/startriver
+    Exec=river
     Type=Application
   '';
 }
