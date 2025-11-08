@@ -1524,11 +1524,11 @@ autostart.sh
 │       └── configuration.nix
 ├── modules/
 │   ├── elevated-packages.nix
-│   ├── home-manager.nix
 │   ├── home.nix
 │   ├── intel-drivers.nix
 │   ├── packages.nix
 │   ├── path.nix
+│   ├── power-management.nix
 │   ├── programs.nix
 │   ├── river.nix
 │   └── services.nix
@@ -1697,36 +1697,6 @@ autostart.sh
   programs.nix-ld = {
     enable = true;
     libraries = with pkgs; [ stdenv.cc.cc ];
-  };
-}
-
-
-# File: modules/home-manager.nix
-
-{
-  userName,
-  userEmail,
-  fullName,
-  withGUI,
-  helix,
-  zen-browser,
-  homeDir,
-  ...
-}:
-{
-  home-manager.useGlobalPkgs = true;
-  home-manager.useUserPackages = true;
-  home-manager.users.${userName} = import ./home.nix;
-  home-manager.extraSpecialArgs = {
-    inherit
-      userName
-      userEmail
-      fullName
-      withGUI
-      helix
-      zen-browser
-      homeDir
-      ;
   };
 }
 
@@ -1914,7 +1884,7 @@ with pkgs;
 
 let
   basePackages = [
-
+    # Build essentials
     efibootmgr
     gcc
     gnumake
@@ -1925,11 +1895,13 @@ let
     tree-sitter
     nodejs_22
 
+    # Fonts
     nerd-fonts.jetbrains-mono
     bibata-cursors
-
     font-awesome
     roboto
+
+    # LSP servers
     markdown-oxide
     mpls
     deno
@@ -1941,6 +1913,8 @@ let
     nil
     nixfmt-rfc-style
     nixpkgs-fmt
+
+    # CLI tools
     lazygit
     fzf
     fd
@@ -1955,75 +1929,78 @@ let
     bat
     ffmpeg
 
-    yazi
-    mpc
+    # Media
+    mpc-cli
     mpd
     mpd-mpris
     playerctl
     rmpc
+
+    # Wayland tools
     hypridle
     wleave
-    p7zip
-
     gtklock
+    wpaperd
+    gammastep
+
+    # System utilities
+    p7zip
     btop
+    brightnessctl
+    appimage-run
+    nh
+    grim
+    slurp
+    wl-clipboard
+    cliphist
+
+    # GUI applications
     keepassxc
     anydesk
     lmstudio
     qbittorrent
     mpv
-    gammastep
-    wpaperd
     imv
 
+    # Libraries
     libgcc
     lxqt.lxqt-policykit
     libnotify
-    ripgrep
-    bat
-    brightnessctl
 
-    appimage-run
-    playerctl
-    nh
-
-    grim
-    slurp
-    waybar
-    fuzzel
-    mako
-    wl-clipboard
-    pavucontrol
-    libvirt
-    qemu
-    virt-viewer
-    virt-manager
-    spice
-    spice-gtk
-    spice-protocol
-    OVMF
-    zed-editor
-    cliphist
-    zed-editor
-    fastfetch
+    # File manager
     xfce.thunar
     xfce.thunar-archive-plugin
     xfce.thunar-media-tags-plugin
     archiver
+    gvfs
+
+    # Polkit
     polkit
     mate.mate-polkit
-    gvfs
+
+    # Network
     networkmanagerapplet
 
-    libsForQt5.qt5.qtgraphicaleffectsr
+    # Qt
+    libsForQt5.qt5.qtgraphicaleffects
 
+    # Wayland bar/menu
+    waybar
+    fuzzel
+    mako
+    pavucontrol
+
+    # Editors
+    zed-editor
+
+    # Custom packages from inputs
     zen-browser.packages.${pkgs.system}.default
     helix.packages.${pkgs.system}.default
   ];
 in
 basePackages
 ++ pkgs.lib.optionals withGUI [
-  # GUI tools
+  # Additional GUI tools if needed
 ]
 
 
@@ -2043,57 +2020,162 @@ basePackages
 }
 
 
+# File: modules/power-management.nix
+
+{ pkgs, lib, ... }:
+
+{
+  services.logind = {
+    powerKey = "suspend";
+    powerKeyLongPress = "poweroff";
+    lidSwitch = "suspend";
+    lidSwitchExternalPower = "suspend";
+    lidSwitchDocked = "ignore";
+  };
+
+  # services.tlp = {
+  #   enable = true;
+  #   settings = {
+  #     CPU_SCALING_GOVERNOR_ON_AC = "performance";
+  #     CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+  #     CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+  #     CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+  #   };
+  # };
+}
+
+
 # File: modules/programs.nix
 
-{ pkgs, specialArgs, ... }:
+{
+  pkgs,
+  withGUI,
+  helix,
+  zen-browser,
+}:
+
+with pkgs;
 
 let
-  inherit (specialArgs)
-    userName
-    fullName
-    userEmail
-    withGUI
-    ;
+  basePackages = [
+    # Build essentials
+    efibootmgr
+    gcc
+    gnumake
+    cargo
+    rustc
+    wget
+    unzip
+    tree-sitter
+    nodejs_22
+
+    # Fonts
+    nerd-fonts.jetbrains-mono
+    bibata-cursors
+    font-awesome
+    roboto
+
+    # LSP servers
+    markdown-oxide
+    mpls
+    deno
+    zig
+    zls
+    go
+    gopls
+    nixd
+    nil
+    nixfmt-rfc-style
+    nixpkgs-fmt
+
+    # CLI tools
+    lazygit
+    fzf
+    fd
+    ncdu
+    ripgrep
+    fastfetch
+    nixos-shell
+    nix-your-shell
+    yazi
+    yaziPlugins.nord
+    yaziPlugins.starship
+    bat
+    ffmpeg
+
+    # Media
+    mpc-cli
+    mpd
+    mpd-mpris
+    playerctl
+    rmpc
+
+    # Wayland tools
+    hypridle
+    wleave
+    gtklock
+    wpaperd
+    gammastep
+
+    # System utilities
+    p7zip
+    btop
+    brightnessctl
+    appimage-run
+    nh
+    grim
+    slurp
+    wl-clipboard
+    cliphist
+
+    # GUI applications
+    keepassxc
+    anydesk
+    lmstudio
+    qbittorrent
+    mpv
+    imv
+
+    # Libraries
+    libgcc
+    lxqt.lxqt-policykit
+    libnotify
+
+    # File manager
+    xfce.thunar
+    xfce.thunar-archive-plugin
+    xfce.thunar-media-tags-plugin
+    archiver
+    gvfs
+
+    # Polkit
+    polkit
+    mate.mate-polkit
+
+    # Network
+    networkmanagerapplet
+
+    # Qt
+    libsForQt5.qt5.qtgraphicaleffects
+
+    # Wayland bar/menu
+    waybar
+    fuzzel
+    mako
+    pavucontrol
+
+    # Editors
+    zed-editor
+
+    # Custom packages from inputs
+    zen-browser.packages.${pkgs.system}.default
+    helix.packages.${pkgs.system}.default
+  ];
 in
-{
-  # imports = [ ./zsh.nix ];
-  programs = {
-    home-manager.enable = true;
-    git = {
-      settings = {
-        user = {
-          name = fullName;
-          email = userEmail;
-        };
-      };
-      enable = true;
-      ignores = [
-        ".envrc"
-        ".direnv/"
-      ];
-    };
-
-    starship = {
-      enable = true;
-      settings = pkgs.lib.importTOML ../dotfiles/starship/starship.toml;
-    };
-
-    zoxide = {
-      enable = true;
-      options = [ "--cmd cd" ];
-    };
-
-    direnv = {
-      enable = true;
-      nix-direnv.enable = true;
-    };
-
-    atuin = {
-      enable = true;
-      enableFishIntegration = true;
-    };
-  };
-}
+basePackages
+++ pkgs.lib.optionals withGUI [
+  # Additional GUI tools if needed
+]
 
 
 # File: modules/river.nix
@@ -2109,6 +2191,7 @@ in
       cp -r ${../dotfiles/sddm-theme}/* $out/share/sddm/themes/nord-sddm/
     '')
   ];
+
   services = {
     xserver = {
       enable = false;
@@ -2117,27 +2200,30 @@ in
         variant = "";
       };
     };
+
     displayManager.sddm = {
       enable = true;
       wayland.enable = true;
       theme = "nord-sddm";
     };
-    logind = {
-      extraConfig = ''
-        HandlePowerKey=suspend
-      '';
-    };
+
+    # Removido: services.logind.extraConfig não existe mais
+    # A configuração de power button agora é feita de forma diferente
+
     libinput.enable = true;
     upower.enable = true;
     fstrim.enable = true;
     gvfs.enable = true;
     openssh.enable = true;
     flatpak.enable = false;
+
     printing = {
       enable = false;
       drivers = [ pkgs.hplipWithPlugin ];
     };
+
     power-profiles-daemon.enable = false;
+
     auto-cpufreq = {
       enable = true;
       settings = {
@@ -2151,17 +2237,19 @@ in
         };
       };
     };
+
     syncthing = {
       enable = true;
       user = userName;
       dataDir = "/home/${userName}";
-      #configDir = "/home/${userName}/.config/syncthing";
     };
   };
+
   services.displayManager.autoLogin = {
     enable = false;
     user = userName;
   };
+
   programs.river = {
     enable = true;
     xwayland.enable = true;
@@ -2192,16 +2280,28 @@ in
     docker = {
       enable = true;
     };
+
     libvirtd = {
       enable = true;
       qemu = {
+        package = pkgs.qemu_kvm;
         swtpm.enable = true;
-        ovmf.enable = true;
-        runAsRoot = true;
       };
     };
+
     spiceUSBRedirection.enable = true;
   };
+
+  environment.systemPackages = with pkgs; [
+    libvirt
+    qemu
+    virt-viewer
+    virt-manager
+    spice
+    spice-gtk
+    spice-protocol
+    OVMF
+  ];
 
   services.envfs.enable = true;
 
@@ -2897,6 +2997,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
             withGUI = defaults.withGUI;
             homeDir = defaults.homeDir;
             isRiver = true;
+            isMango = false;
           };
         modules = [
           ./hosts/ashes/configuration.nix
@@ -2905,10 +3006,24 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           ./modules/services.nix
           ./modules/elevated-packages.nix
           ./modules/intel-drivers.nix
+          ./modules/power-management.nix
           ./modules/river.nix
           { nixpkgs.overlays = [ nur.overlays.default ]; }
           home-manager.nixosModules.home-manager
-          ./modules/home-manager.nix
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.${userInfo.userName} = import ./modules/home.nix;
+              extraSpecialArgs = {
+                inherit (inputs) helix zen-browser;
+                inherit (userInfo) userName userEmail fullName;
+                inherit (defaults) withGUI homeDir;
+                isRiver = true;
+                isMango = false;
+              };
+            };
+          }
         ];
       };
 
@@ -2921,6 +3036,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           // {
             withGUI = defaults.withGUI;
             homeDir = defaults.homeDir;
+            isRiver = false;
             isMango = true;
           };
         modules = [
@@ -2929,11 +3045,25 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           ./modules/path.nix
           ./modules/services.nix
           ./modules/elevated-packages.nix
+          ./modules/power-management.nix
           ./modules/intel-drivers.nix
           # ./modules/mangowc.nix
           { nixpkgs.overlays = [ nur.overlays.default ]; }
           home-manager.nixosModules.home-manager
-          ./modules/home-manager.nix
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.${userInfo.userName} = import ./modules/home.nix;
+              extraSpecialArgs = {
+                inherit (inputs) helix zen-browser;
+                inherit (userInfo) userName userEmail fullName;
+                inherit (defaults) withGUI homeDir;
+                isRiver = false;
+                isMango = true;
+              };
+            };
+          }
         ];
       };
 
@@ -2948,6 +3078,9 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           withGUI = defaults.withGUI;
           homeDir = defaults.homeDir;
           helix = inputs.helix;
+          zen-browser = inputs.zen-browser;
+          isRiver = false;
+          isMango = false;
         }
         // userInfo;
         modules = [ ./modules/home.nix ];
