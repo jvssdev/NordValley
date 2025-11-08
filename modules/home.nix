@@ -127,6 +127,4 @@ in
     style.name = "kvantum";
     platformTheme.name = "qt6ct";
   };
-
-  fonts.fontconfig.enable = true;
 }

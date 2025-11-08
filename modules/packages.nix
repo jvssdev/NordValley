@@ -21,11 +21,7 @@ let
     tree-sitter
     nodejs_22
 
-    # Fonts
-    nerd-fonts.jetbrains-mono
     bibata-cursors
-    font-awesome
-    roboto
 
     # LSP servers
     markdown-oxide

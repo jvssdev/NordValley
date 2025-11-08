@@ -66,6 +66,15 @@
     cpuFreqGovernor = lib.mkDefault "powersave";
   };
 
+  fonts = {
+    enableDefaultPackages = true; # Enables core defaults (serif, sans, mono, emoji)
+    packages = with pkgs; [
+      (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+      font-awesome
+      roboto
+    ];
+  };
+
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
