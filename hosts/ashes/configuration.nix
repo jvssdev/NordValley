@@ -85,11 +85,5 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Import packages with required arguments
-  environment.systemPackages = import ../modules/packages.nix {
-    inherit pkgs helix zen-browser;
-    withGUI = true;
-  };
-
   system.stateVersion = "25.05";
 }
