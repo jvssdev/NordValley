@@ -1,8 +1,9 @@
 {
   pkgs,
-  withGUI,
+  withGUI ? true,
   helix,
   zen-browser,
+  ...
 }:
 
 with pkgs;
@@ -124,6 +125,6 @@ let
   ];
 in
 basePackages
-++ pkgs.lib.optionals withGUI [
+++ lib.optionals withGUI [
   # Additional GUI tools if needed
 ]
