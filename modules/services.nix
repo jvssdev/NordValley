@@ -10,16 +10,28 @@
     docker = {
       enable = true;
     };
+
     libvirtd = {
       enable = true;
       qemu = {
+        package = pkgs.qemu_kvm;
         swtpm.enable = true;
-        ovmf.enable = true;
-        runAsRoot = true;
       };
     };
+
     spiceUSBRedirection.enable = true;
   };
+
+  environment.systemPackages = with pkgs; [
+    libvirt
+    qemu
+    virt-viewer
+    virt-manager
+    spice
+    spice-gtk
+    spice-protocol
+    OVMF
+  ];
 
   services.envfs.enable = true;
 
