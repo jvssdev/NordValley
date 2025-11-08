@@ -24,21 +24,27 @@
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
 
-      linux_x86 = "x86_64-linux";
+      system = "x86_64-linux";
 
       defaults = {
         withGUI = true;
         homeDir = "/home/${userInfo.userName}";
       };
+
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
     in
     {
       # RiverWM
       nixosConfigurations.river = nixpkgs.lib.nixosSystem {
-        system = linux_x86;
+        inherit system;
         specialArgs =
           inputs
           // userInfo
           // {
+            inherit pkgs;
             withGUI = defaults.withGUI;
             homeDir = defaults.homeDir;
             isRiver = true;
@@ -74,11 +80,12 @@
 
       # MangoWC
       nixosConfigurations.mangowc = nixpkgs.lib.nixosSystem {
-        system = linux_x86;
+        inherit system;
         specialArgs =
           inputs
           // userInfo
           // {
+            inherit pkgs;
             withGUI = defaults.withGUI;
             homeDir = defaults.homeDir;
             isRiver = false;
@@ -114,10 +121,8 @@
 
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
-          system = linux_x86;
-          config = {
-            allowUnfree = true;
-          };
+          inherit system;
+          config.allowUnfree = true;
         };
         extraSpecialArgs = {
           withGUI = defaults.withGUI;
@@ -133,6 +138,7 @@
 
       # Build ISO image
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
+        inherit system;
         modules = [ ./hosts/iso/configuration.nix ];
       };
     };
