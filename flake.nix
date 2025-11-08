@@ -51,6 +51,7 @@
           ./modules/services.nix
           ./modules/elevated-packages.nix
           ./modules/intel-drivers.nix
+          ./modules/power-management.nix
           ./modules/river.nix
           { nixpkgs.overlays = [ nur.overlays.default ]; }
           home-manager.nixosModules.home-manager
@@ -89,6 +90,7 @@
           ./modules/path.nix
           ./modules/services.nix
           ./modules/elevated-packages.nix
+          ./modules/power-management.nix
           ./modules/intel-drivers.nix
           # ./modules/mangowc.nix
           { nixpkgs.overlays = [ nur.overlays.default ]; }
