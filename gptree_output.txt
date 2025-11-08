@@ -1526,6 +1526,7 @@ autostart.sh
 │   ├── elevated-packages.nix
 │   ├── home.nix
 │   ├── intel-drivers.nix
+│   ├── mango.nix
 │   ├── packages.nix
 │   ├── path.nix
 │   ├── power-management.nix
@@ -1876,6 +1877,84 @@ in
 }
 
 
+# File: modules/mango.nix
+
+{ userName, pkgs, ... }:
+{
+  # Enable mango at system level
+  programs.mango.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    xdg-desktop-portal-gtk
+    xdg-desktop-portal-wlr
+    xwayland
+    (pkgs.runCommand "nord-sddm-theme" { } ''
+      mkdir -p $out/share/sddm/themes/nord-sddm
+      cp -r ${../dotfiles/sddm-theme}/* $out/share/sddm/themes/nord-sddm/
+    '')
+  ];
+
+  services = {
+    xserver = {
+      enable = false;
+      xkb = {
+        layout = "br";
+        variant = "";
+      };
+    };
+    displayManager.sddm = {
+      enable = true;
+      wayland.enable = true;
+      theme = "nord-sddm";
+    };
+    libinput.enable = true;
+    upower.enable = true;
+    fstrim.enable = true;
+    gvfs.enable = true;
+    openssh.enable = true;
+    flatpak.enable = false;
+    printing = {
+      enable = false;
+      drivers = [ pkgs.hplipWithPlugin ];
+    };
+    power-profiles-daemon.enable = false;
+    auto-cpufreq = {
+      enable = true;
+      settings = {
+        battery = {
+          governor = "powersave";
+          turbo = "never";
+        };
+        charger = {
+          governor = "performance";
+          turbo = "auto";
+        };
+      };
+    };
+    syncthing = {
+      enable = true;
+      user = userName;
+      dataDir = "/home/${userName}";
+    };
+  };
+
+  services.displayManager.autoLogin = {
+    enable = false;
+    user = userName;
+  };
+
+  # Create desktop entry for Mango
+  environment.etc."sddm/wayland-sessions/mango.desktop".text = ''
+    [Desktop Entry]
+    Name=MangoWC
+    Comment=A Wayland compositor based on wlroots
+    DesktopNames=mango
+    Exec=mango
+    Type=Application
+  '';
+}
+
+
 # File: modules/packages.nix
 
 {
@@ -2073,6 +2152,7 @@ basePackages
 { userName, pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
+    river
     xdg-desktop-portal-gtk
     xdg-desktop-portal-wlr
     xwayland
@@ -2081,6 +2161,7 @@ basePackages
       cp -r ${../dotfiles/sddm-theme}/* $out/share/sddm/themes/nord-sddm/
     '')
   ];
+
   services = {
     xserver = {
       enable = false;
@@ -2124,19 +2205,18 @@ basePackages
       dataDir = "/home/${userName}";
     };
   };
+
   services.displayManager.autoLogin = {
     enable = false;
     user = userName;
   };
-  wayland.windowManager.river = {
-    enable = true;
-  };
+
   environment.etc."sddm/wayland-sessions/river.desktop".text = ''
     [Desktop Entry]
     Name=River
-    Comment= a dynamic tiling Wayland compositor with flexible runtime config
+    Comment=A dynamic tiling Wayland compositor
     DesktopNames=river
-    Exec=/usr/bin/startriver
+    Exec=river
     Type=Application
   '';
 }
@@ -2724,6 +2804,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
     helix.url = "github:helix-editor/helix/master";
     zen-browser.url = "github:MarceColl/zen-browser-flake";
     nur.url = "github:nix-community/NUR";
+    mango.url = "github:DreamMaoMao/mango";
   };
 
   outputs =
@@ -2740,21 +2821,27 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
 
-      linux_x86 = "x86_64-linux";
+      system = "x86_64-linux";
 
       defaults = {
         withGUI = true;
         homeDir = "/home/${userInfo.userName}";
       };
+
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
     in
     {
       # RiverWM
       nixosConfigurations.river = nixpkgs.lib.nixosSystem {
-        system = linux_x86;
+        inherit system;
         specialArgs =
           inputs
           // userInfo
           // {
+            inherit pkgs;
             withGUI = defaults.withGUI;
             homeDir = defaults.homeDir;
             isRiver = true;
@@ -2769,7 +2856,12 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           ./modules/intel-drivers.nix
           ./modules/power-management.nix
           ./modules/river.nix
-          { nixpkgs.overlays = [ nur.overlays.default ]; }
+          {
+            nixpkgs.overlays = [
+              nur.overlays.default
+              (import ./overlays/river-next.nix)
+            ];
+          }
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -2790,11 +2882,12 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
 
       # MangoWC
       nixosConfigurations.mangowc = nixpkgs.lib.nixosSystem {
-        system = linux_x86;
+        inherit system;
         specialArgs =
           inputs
           // userInfo
           // {
+            inherit pkgs;
             withGUI = defaults.withGUI;
             homeDir = defaults.homeDir;
             isRiver = false;
@@ -2830,10 +2923,8 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
 
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
-          system = linux_x86;
-          config = {
-            allowUnfree = true;
-          };
+          inherit system;
+          config.allowUnfree = true;
         };
         extraSpecialArgs = {
           withGUI = defaults.withGUI;
@@ -2849,6 +2940,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
 
       # Build ISO image
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
+        inherit system;
         modules = [ ./hosts/iso/configuration.nix ];
       };
     };

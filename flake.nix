@@ -105,7 +105,7 @@
           ./modules/elevated-packages.nix
           ./modules/power-management.nix
           ./modules/intel-drivers.nix
-          # ./modules/mangowc.nix
+          ./modules/mangowc.nix
           { nixpkgs.overlays = [ nur.overlays.default ]; }
           home-manager.nixosModules.home-manager
           {
