@@ -28,7 +28,7 @@ in
 
     starship = {
       enable = true;
-      settings = pkgs.lib.importTOML ../dotfiles/starship/starship.toml;
+      settings = pkgs.lib.importTOML ../dotfiles/starship.toml;
     };
 
     zoxide = {
