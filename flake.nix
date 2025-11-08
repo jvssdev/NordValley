@@ -8,6 +8,7 @@
     helix.url = "github:helix-editor/helix/master";
     zen-browser.url = "github:MarceColl/zen-browser-flake";
     nur.url = "github:nix-community/NUR";
+    mango.url = "github:DreamMaoMao/mango";
   };
 
   outputs =
@@ -59,7 +60,12 @@
           ./modules/intel-drivers.nix
           ./modules/power-management.nix
           ./modules/river.nix
-          { nixpkgs.overlays = [ nur.overlays.default ]; }
+          {
+            nixpkgs.overlays = [
+              nur.overlays.default
+              (import ./overlays/river-next.nix)
+            ];
+          }
           home-manager.nixosModules.home-manager
           {
             home-manager = {
