@@ -42,6 +42,7 @@
             withGUI = defaults.withGUI;
             homeDir = defaults.homeDir;
             isRiver = true;
+            isMango = false;
           };
         modules = [
           ./hosts/ashes/configuration.nix
@@ -53,7 +54,20 @@
           ./modules/river.nix
           { nixpkgs.overlays = [ nur.overlays.default ]; }
           home-manager.nixosModules.home-manager
-          ./modules/home-manager.nix
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.${userInfo.userName} = import ./modules/home.nix;
+              extraSpecialArgs = {
+                inherit (inputs) helix zen-browser;
+                inherit (userInfo) userName userEmail fullName;
+                inherit (defaults) withGUI homeDir;
+                isRiver = true;
+                isMango = false;
+              };
+            };
+          }
         ];
       };
 
@@ -66,6 +80,7 @@
           // {
             withGUI = defaults.withGUI;
             homeDir = defaults.homeDir;
+            isRiver = false;
             isMango = true;
           };
         modules = [
@@ -78,7 +93,20 @@
           # ./modules/mangowc.nix
           { nixpkgs.overlays = [ nur.overlays.default ]; }
           home-manager.nixosModules.home-manager
-          ./modules/home-manager.nix
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.${userInfo.userName} = import ./modules/home.nix;
+              extraSpecialArgs = {
+                inherit (inputs) helix zen-browser;
+                inherit (userInfo) userName userEmail fullName;
+                inherit (defaults) withGUI homeDir;
+                isRiver = false;
+                isMango = true;
+              };
+            };
+          }
         ];
       };
 
@@ -93,6 +121,9 @@
           withGUI = defaults.withGUI;
           homeDir = defaults.homeDir;
           helix = inputs.helix;
+          zen-browser = inputs.zen-browser;
+          isRiver = false;
+          isMango = false;
         }
         // userInfo;
         modules = [ ./modules/home.nix ];
