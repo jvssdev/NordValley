@@ -69,7 +69,7 @@
   fonts = {
     enableDefaultPackages = true; # Enables core defaults (serif, sans, mono, emoji)
     packages = with pkgs; [
-      (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+      nerd-fonts.jetbrains-mono
       font-awesome
       roboto
     ];
