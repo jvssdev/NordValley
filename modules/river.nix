@@ -9,6 +9,7 @@
       cp -r ${../dotfiles/sddm-theme}/* $out/share/sddm/themes/nord-sddm/
     '')
   ];
+
   services = {
     xserver = {
       enable = false;
@@ -17,27 +18,30 @@
         variant = "";
       };
     };
+
     displayManager.sddm = {
       enable = true;
       wayland.enable = true;
       theme = "nord-sddm";
     };
-    logind = {
-      extraConfig = ''
-        HandlePowerKey=suspend
-      '';
-    };
+
+    # Removido: services.logind.extraConfig não existe mais
+    # A configuração de power button agora é feita de forma diferente
+
     libinput.enable = true;
     upower.enable = true;
     fstrim.enable = true;
     gvfs.enable = true;
     openssh.enable = true;
     flatpak.enable = false;
+
     printing = {
       enable = false;
       drivers = [ pkgs.hplipWithPlugin ];
     };
+
     power-profiles-daemon.enable = false;
+
     auto-cpufreq = {
       enable = true;
       settings = {
@@ -51,17 +55,19 @@
         };
       };
     };
+
     syncthing = {
       enable = true;
       user = userName;
       dataDir = "/home/${userName}";
-      #configDir = "/home/${userName}/.config/syncthing";
     };
   };
+
   services.displayManager.autoLogin = {
     enable = false;
     user = userName;
   };
+
   programs.river = {
     enable = true;
     xwayland.enable = true;
