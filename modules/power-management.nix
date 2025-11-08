@@ -1,10 +1,12 @@
 { pkgs, lib, ... }:
 {
-  services.logind = {
-    lidSwitch = "suspend";
-    lidSwitchExternalPower = "suspend";
-    lidSwitchDocked = "ignore";
-    powerKey = "suspend";
-    powerKeyLongPress = "poweroff";
+  services.logind.settings = {
+    Login = {
+      HandlePowerKey = "suspend";
+      HandlePowerKeyLongPress = "poweroff";
+      HandleLidSwitch = "suspend";
+      HandleLidSwitchExternalPower = "suspend";
+      HandleLidSwitchDocked = "ignore";
+    };
   };
 }
