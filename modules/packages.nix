@@ -97,7 +97,6 @@ let
     xfce.thunar
     xfce.thunar-archive-plugin
     xfce.thunar-media-tags-plugin
-    archiver
     gvfs
 
     # Polkit
