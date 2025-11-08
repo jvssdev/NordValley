@@ -52,7 +52,7 @@ let
     ffmpeg
 
     # Media
-    mpc-cli
+    mpc
     mpd
     mpd-mpris
     playerctl
