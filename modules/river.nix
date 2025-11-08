@@ -56,7 +56,9 @@
     enable = false;
     user = userName;
   };
-  wayland.windowManagers.river.enable = true;
+  wayland.windowManager.river = {
+    enable = true;
+  };
   environment.etc."sddm/wayland-sessions/river.desktop".text = ''
     [Desktop Entry]
     Name=River
