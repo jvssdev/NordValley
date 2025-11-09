@@ -7,7 +7,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     helix.url = "github:helix-editor/helix/master";
     zen-browser.url = "github:MarceColl/zen-browser-flake";
-    helium-browser.url = "github:ominit/helium-browser-flake"
+    helium-browser.url = "github:ominit/helium-browser-flake";
     nur.url = "github:nix-community/NUR";
     mango.url = "github:DreamMaoMao/mango";
   };
