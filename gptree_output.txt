@@ -1718,7 +1718,6 @@ autostart.sh
   lib,
   ...
 }:
-
 let
   inherit (specialArgs)
     withGUI
@@ -1729,16 +1728,16 @@ let
     helium-browser
     isRiver
     isMango
+    mango
     ;
 in
 {
-  imports = [ ./programs.nix ];
+  imports = [ ./programs.nix ] ++ lib.optionals isMango [ mango.hmModules.mango ];
 
   home.username = userName;
   home.homeDirectory = homeDir;
   xdg.enable = true;
   home.stateVersion = "25.05";
-
   home.packages = pkgs.callPackage ./packages.nix {
     inherit
       withGUI
@@ -1747,12 +1746,10 @@ in
       helium-browser
       ;
   };
-
   home.sessionPath = [
     "$HOME/.nix-profile/bin"
     "/nix/var/nix/profiles/default/bin"
   ];
-
   home.sessionVariables = {
     EDITOR = "hx";
     TERMINAL = "ghostty";
@@ -1764,7 +1761,6 @@ in
     NIXOS_OZONE_WL = "1";
     SHELL = "${pkgs.zsh}/bin/zsh";
   };
-
   home.file = {
     # For nix-shell
     ".config/nixpkgs/config.nix".text = ''
@@ -1772,56 +1768,37 @@ in
         allowUnfree = true;
       }
     '';
-
     ".config/btop".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/btop";
-
     ".config/lazygit".source =
       config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/lazygit";
-
     ".config/fastfetch".source =
       config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/fastfetch";
-
     ".config/wleave".source =
       config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/wleave";
-
     ".config/helix".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/helix";
-
     ".config/fuzzel".source =
       config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/fuzzel";
-
     ".config/hypridle".source =
       config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/hypridle";
-
     ".config/waybar".source =
       config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/waybar";
-
     ".config/gtklock".source =
       config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/gtklock";
-
     ".config/mako".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mako";
-
     ".config/mpd".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mpd";
-
     ".config/wpaperd".source =
       config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/wpaperd";
-
     ".config/yazi".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/yazi";
-
     ".config/zathura".source =
       config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zathura";
-
     ".config/zed".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zed";
-
     ".config/ghostty".source =
       config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/ghostty";
-
     ".zen".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zen";
   }
-
   // lib.optionalAttrs (isRiver) {
     ".config/river".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/river";
   }
-
   // lib.optionalAttrs (isMango) {
     ".config/mango".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mango";
   };
@@ -1842,11 +1819,16 @@ in
       gtk-application-prefer-dark-theme = 1;
     };
   };
-
   qt = {
     enable = true;
     style.name = "kvantum";
     platformTheme.name = "qt6ct";
+  };
+
+  wayland.windowManager.mango = lib.mkIf isMango {
+    enable = true;
+    settings = builtins.readFile (../../dotfiles/mango/config.conf + "");
+    autostart_sh = builtins.readFile (../../dotfiles/mango/autostart.sh + "");
   };
 }
 
@@ -1889,7 +1871,7 @@ in
 
 { userName, pkgs, ... }:
 {
-  # Enable mango at system level
+  # Enable Mango at system level (this now works after flake import)
   programs.mango.enable = true;
 
   environment.systemPackages = with pkgs; [
@@ -1951,7 +1933,7 @@ in
     user = userName;
   };
 
-  # Create desktop entry for Mango
+  # Desktop entry for Mango (no exec path needed; module handles it)
   environment.etc."sddm/wayland-sessions/mango.desktop".text = ''
     [Desktop Entry]
     Name=MangoWC
@@ -3001,14 +2983,11 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         fullName = "João Víctor Santos Silva";
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
-
       system = "x86_64-linux";
-
       defaults = {
         withGUI = true;
         homeDir = "/home/${userInfo.userName}";
       };
-
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
@@ -3029,6 +3008,13 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
             isMango = false;
           };
         modules = [
+          (
+            { config, ... }:
+            {
+              nixpkgs.config.allowUnfree = true;
+            }
+          )
+
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
@@ -3038,10 +3024,9 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           ./modules/power-management.nix
           ./modules/river.nix
           {
-            nixpkgs.overlays = [
-              nur.overlays.default
-              (import ./overlays/river-next.nix)
-            ];
+            # nixpkgs.overlays = [
+            #   nur.overlays.default
+            # ];
           }
           home-manager.nixosModules.home-manager
           {
@@ -3075,6 +3060,13 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
             isMango = true;
           };
         modules = [
+          (
+            { config, ... }:
+            {
+              nixpkgs.config.allowUnfree = true;
+            }
+          )
+
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
@@ -3083,7 +3075,11 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           ./modules/power-management.nix
           ./modules/intel-drivers.nix
           ./modules/mango.nix
+
+          inputs.mango.nixosModules.mango
+
           { nixpkgs.overlays = [ nur.overlays.default ]; }
+
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -3091,7 +3087,12 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
               useUserPackages = true;
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
-                inherit (inputs) helix zen-browser helium-browser;
+                inherit (inputs)
+                  helix
+                  zen-browser
+                  helium-browser
+                  mango
+                  ;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
                 isRiver = false;

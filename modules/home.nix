@@ -19,7 +19,7 @@ let
     ;
 in
 {
-  imports = [ ./programs.nix ] ++ lib.optionals isMango [ mango.hmModules.mango ];
+  imports = [ ./programs.nix ];
 
   home.username = userName;
   home.homeDirectory = homeDir;
@@ -110,11 +110,5 @@ in
     enable = true;
     style.name = "kvantum";
     platformTheme.name = "qt6ct";
-  };
-
-  wayland.windowManager.mango = lib.mkIf isMango {
-    enable = true;
-    settings = builtins.readFile (../../dotfiles/mango/config.conf + "");
-    autostart_sh = builtins.readFile (../../dotfiles/mango/autostart.sh + "");
   };
 }
