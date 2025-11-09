@@ -114,7 +114,7 @@ in
 
   wayland.windowManager.mango = lib.mkIf isMango {
     enable = true;
-    settings = builtins.readFile ./../../dotfiles/mango/config.conf;
-    autostart_sh = builtins.readFile ./../../dotfiles/mango/autostart.sh;
+    settings = builtins.readFile (../../dotfiles/mango/config.conf + "");
+    autostart_sh = builtins.readFile (../../dotfiles/mango/autostart.sh + "");
   };
 }
