@@ -1732,7 +1732,7 @@ let
     ;
 in
 {
-  imports = [ ./programs.nix ] ++ lib.optionals isMango [ mango.hmModules.mango ];
+  imports = [ ./programs.nix ];
 
   home.username = userName;
   home.homeDirectory = homeDir;
@@ -1823,12 +1823,6 @@ in
     enable = true;
     style.name = "kvantum";
     platformTheme.name = "qt6ct";
-  };
-
-  wayland.windowManager.mango = lib.mkIf isMango {
-    enable = true;
-    settings = builtins.readFile (../../dotfiles/mango/config.conf + "");
-    autostart_sh = builtins.readFile (../../dotfiles/mango/autostart.sh + "");
   };
 }
 
@@ -2988,10 +2982,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         withGUI = true;
         homeDir = "/home/${userInfo.userName}";
       };
-      pkgs = import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
+      # Remove pkgs daqui, será criado automaticamente
     in
     {
       # RiverWM
@@ -3001,7 +2992,6 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           inputs
           // userInfo
           // {
-            inherit pkgs;
             withGUI = defaults.withGUI;
             homeDir = defaults.homeDir;
             isRiver = true;
@@ -3009,7 +2999,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           };
         modules = [
           (
-            { config, ... }:
+            { config, pkgs, ... }:
             {
               nixpkgs.config.allowUnfree = true;
             }
@@ -3023,11 +3013,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           ./modules/intel-drivers.nix
           ./modules/power-management.nix
           ./modules/river.nix
-          {
-            # nixpkgs.overlays = [
-            #   nur.overlays.default
-            # ];
-          }
+
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -3053,7 +3039,6 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           inputs
           // userInfo
           // {
-            inherit pkgs;
             withGUI = defaults.withGUI;
             homeDir = defaults.homeDir;
             isRiver = false;
@@ -3061,7 +3046,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           };
         modules = [
           (
-            { config, ... }:
+            { config, pkgs, ... }:
             {
               nixpkgs.config.allowUnfree = true;
             }

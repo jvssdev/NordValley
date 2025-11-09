@@ -19,12 +19,18 @@ let
     ;
 in
 {
-  imports = [ ./programs.nix ];
+  imports = [
+    ./programs.nix
+  ]
+  ++ lib.optionals isMango [
+    mango.hmModules.mango
+  ];
 
   home.username = userName;
   home.homeDirectory = homeDir;
   xdg.enable = true;
   home.stateVersion = "25.05";
+
   home.packages = pkgs.callPackage ./packages.nix {
     inherit
       withGUI
@@ -33,10 +39,12 @@ in
       helium-browser
       ;
   };
+
   home.sessionPath = [
     "$HOME/.nix-profile/bin"
     "/nix/var/nix/profiles/default/bin"
   ];
+
   home.sessionVariables = {
     EDITOR = "hx";
     TERMINAL = "ghostty";
@@ -48,6 +56,14 @@ in
     NIXOS_OZONE_WL = "1";
     SHELL = "${pkgs.zsh}/bin/zsh";
   };
+
+  # MangoWC configuration
+  wayland.windowManager.mango = lib.mkIf isMango {
+    enable = true;
+    settings = builtins.readFile ../dotfiles/mango/config.conf;
+    autostart_sh = builtins.readFile ../dotfiles/mango/autostart.sh;
+  };
+
   home.file = {
     # For nix-shell
     ".config/nixpkgs/config.nix".text = ''
@@ -87,6 +103,8 @@ in
     ".config/river".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/river";
   }
   // lib.optionalAttrs (isMango) {
+    # Mango config is handled by wayland.windowManager.mango above
+    # But we still symlink for easy editing
     ".config/mango".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mango";
   };
 
@@ -106,6 +124,7 @@ in
       gtk-application-prefer-dark-theme = 1;
     };
   };
+
   qt = {
     enable = true;
     style.name = "kvantum";

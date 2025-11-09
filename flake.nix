@@ -1,5 +1,5 @@
 {
-  description = "NixOS configuration with River and MangoWC window managers";
+  description = "NixOS configuration with River window manager";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -13,12 +13,13 @@
   };
 
   outputs =
-    {
+    inputs@{
       nixpkgs,
       home-manager,
       nur,
+      mango,
       ...
-    }@inputs:
+    }:
     let
       userInfo = {
         userName = "joaov";
@@ -30,20 +31,15 @@
         withGUI = true;
         homeDir = "/home/${userInfo.userName}";
       };
-      pkgs = import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
     in
     {
-      # RiverWM
+      # RiverWM configuration
       nixosConfigurations.river = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs =
           inputs
           // userInfo
           // {
-            inherit pkgs;
             withGUI = defaults.withGUI;
             homeDir = defaults.homeDir;
             isRiver = true;
@@ -51,7 +47,7 @@
           };
         modules = [
           (
-            { config, ... }:
+            { config, pkgs, ... }:
             {
               nixpkgs.config.allowUnfree = true;
             }
@@ -65,11 +61,7 @@
           ./modules/intel-drivers.nix
           ./modules/power-management.nix
           ./modules/river.nix
-          {
-            # nixpkgs.overlays = [
-            #   nur.overlays.default
-            # ];
-          }
+
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -95,7 +87,6 @@
           inputs
           // userInfo
           // {
-            inherit pkgs;
             withGUI = defaults.withGUI;
             homeDir = defaults.homeDir;
             isRiver = false;
@@ -103,7 +94,7 @@
           };
         modules = [
           (
-            { config, ... }:
+            { config, pkgs, ... }:
             {
               nixpkgs.config.allowUnfree = true;
             }
@@ -118,7 +109,11 @@
           ./modules/intel-drivers.nix
           ./modules/mango.nix
 
-          inputs.mango.nixosModules.mango
+          # Enable mango at NixOS level
+          mango.nixosModules.mango
+          {
+            programs.mango.enable = true;
+          }
 
           { nixpkgs.overlays = [ nur.overlays.default ]; }
 
@@ -127,6 +122,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              backupFileExtension = "backup";
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
@@ -156,14 +152,13 @@
           helix = inputs.helix;
           zen-browser = inputs.zen-browser;
           helium-browser = inputs.helium-browser;
-          isRiver = false;
+          isRiver = true;
           isMango = false;
         }
         // userInfo;
         modules = [ ./modules/home.nix ];
       };
 
-      # Build ISO image
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [ ./hosts/iso/configuration.nix ];

@@ -1,8 +1,5 @@
 { userName, pkgs, ... }:
 {
-  # Enable Mango at system level (this now works after flake import)
-  programs.mango.enable = true;
-
   environment.systemPackages = with pkgs; [
     xdg-desktop-portal-gtk
     xdg-desktop-portal-wlr
@@ -62,7 +59,7 @@
     user = userName;
   };
 
-  # Desktop entry for Mango (no exec path needed; module handles it)
+  # Desktop entry for Mango
   environment.etc."sddm/wayland-sessions/mango.desktop".text = ''
     [Desktop Entry]
     Name=MangoWC
