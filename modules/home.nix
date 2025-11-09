@@ -19,7 +19,8 @@ let
     ;
 in
 {
-  imports = [ ./programs.nix ];
+  imports = [ ./programs.nix ] ++ lib.optionals isMango [ mango.hmModules.mango ];
+
   home.username = userName;
   home.homeDirectory = homeDir;
   xdg.enable = true;
@@ -88,6 +89,7 @@ in
   // lib.optionalAttrs (isMango) {
     ".config/mango".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mango";
   };
+
   gtk = {
     theme = {
       name = "Nordic";
@@ -109,12 +111,10 @@ in
     style.name = "kvantum";
     platformTheme.name = "qt6ct";
   };
-}
-// lib.optionalAttrs isMango {
-  imports = [ mango.hmModules.mango ];
 
-  wayland.windowManager.mango = {
+  wayland.windowManager.mango = lib.mkIf isMango {
     enable = true;
-    settings = builtins.readFile "${homeDir}/NordValley/dotfiles/mango/config.conf";
+    settings = builtins.readFile ./../../dotfiles/mango/config.conf;
+    autostart_sh = builtins.readFile ./../../dotfiles/mango/autostart.sh;
   };
 }
