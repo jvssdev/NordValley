@@ -1726,6 +1726,7 @@ let
     userName
     helix
     zen-browser
+    helium-browser
     isRiver
     isMango
     ;
@@ -1738,7 +1739,14 @@ in
   xdg.enable = true;
   home.stateVersion = "25.05";
 
-  home.packages = pkgs.callPackage ./packages.nix { inherit withGUI helix zen-browser; };
+  home.packages = pkgs.callPackage ./packages.nix {
+    inherit
+      withGUI
+      helix
+      zen-browser
+      helium-browser
+      ;
+  };
 
   home.sessionPath = [
     "$HOME/.nix-profile/bin"
@@ -1962,6 +1970,7 @@ in
   withGUI ? true,
   helix,
   zen-browser,
+  helium-browser,
   ...
 }:
 
@@ -2075,6 +2084,7 @@ let
 
     # Custom packages from inputs
     zen-browser.packages.${pkgs.system}.default
+    helium-browser.packages.${pkgs.system}.default
     helix.packages.${pkgs.system}.default
   ];
 in
@@ -2597,6 +2607,45 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": [
+          "helium-browser",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1759362264,
+        "narHash": "sha256-wfG0S7pltlYyZTM+qqlhJ7GMw2fTF4mLKCIVhLii/4M=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "758cf7296bee11f1706a574c77d072b8a7baa881",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
+    "flake-parts_2": {
+      "inputs": {
+        "nixpkgs-lib": "nixpkgs-lib"
+      },
+      "locked": {
+        "lastModified": 1749398372,
+        "narHash": "sha256-tYBdgS56eXYaWVW3fsnPQ/nFlgWi/Z2Ymhyu21zVM98=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "9305fe4e5c2a6fcf5ba6a3ff155720fbe4076569",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
+    "flake-parts_3": {
+      "inputs": {
+        "nixpkgs-lib": [
           "nur",
           "nixpkgs"
         ]
@@ -2615,9 +2664,29 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         "type": "github"
       }
     },
+    "helium-browser": {
+      "inputs": {
+        "flake-parts": "flake-parts",
+        "nixpkgs": "nixpkgs",
+        "treefmt-nix": "treefmt-nix"
+      },
+      "locked": {
+        "lastModified": 1762608461,
+        "narHash": "sha256-+TNPqE/Rlk0bIa7fTzGb03k+EGgM7TXo2j80n/X8aok=",
+        "owner": "ominit",
+        "repo": "helium-browser-flake",
+        "rev": "994bdd5026718f3d716e25ffafad3b3dd6afe6b2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ominit",
+        "repo": "helium-browser-flake",
+        "type": "github"
+      }
+    },
     "helix": {
       "inputs": {
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": "nixpkgs_2",
         "rust-overlay": "rust-overlay"
       },
       "locked": {
@@ -2655,7 +2724,58 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         "type": "github"
       }
     },
+    "mango": {
+      "inputs": {
+        "flake-parts": "flake-parts_2",
+        "nixpkgs": "nixpkgs_3",
+        "scenefx": "scenefx"
+      },
+      "locked": {
+        "lastModified": 1762615612,
+        "narHash": "sha256-8B8W/kOMssLgS9xtbtdVlG6VcBJbzFSRFHfHx7Wufa8=",
+        "owner": "DreamMaoMao",
+        "repo": "mango",
+        "rev": "47f0ea84c1a1610087d3a588d6a0882f31c48a33",
+        "type": "github"
+      },
+      "original": {
+        "owner": "DreamMaoMao",
+        "repo": "mango",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
+      "locked": {
+        "lastModified": 1759831965,
+        "narHash": "sha256-vgPm2xjOmKdZ0xKA6yLXPJpjOtQPHfaZDRtH+47XEBo=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "c9b6fb798541223bbb396d287d16f43520250518",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-lib": {
+      "locked": {
+        "lastModified": 1748740939,
+        "narHash": "sha256-rQaysilft1aVMwF14xIdGS3sj1yHlI6oKQNBRTF40cc=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "656a64127e9d791a334452c6b6606d17539476e2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
       "locked": {
         "lastModified": 1759381078,
         "narHash": "sha256-gTrEEp5gEspIcCOx9PD8kMaF1iEmfBcTbO0Jag2QhQs=",
@@ -2671,39 +2791,55 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         "type": "github"
       }
     },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1762363567,
-        "narHash": "sha256-YRqMDEtSMbitIMj+JLpheSz0pwEr0Rmy5mC7myl17xs=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "ae814fd3904b621d8ab97418f1d0f2eb0d3716f4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1762363567,
-        "narHash": "sha256-YRqMDEtSMbitIMj+JLpheSz0pwEr0Rmy5mC7myl17xs=",
-        "owner": "nixos",
+        "lastModified": 1750386251,
+        "narHash": "sha256-1ovgdmuDYVo5OUC5NzdF+V4zx2uT8RtsgZahxidBTyw=",
+        "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "ae814fd3904b621d8ab97418f1d0f2eb0d3716f4",
+        "rev": "076e8c6678d8c54204abcb4b1b14c366835a58bb",
         "type": "github"
       },
       "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
     },
     "nixpkgs_4": {
+      "locked": {
+        "lastModified": 1762363567,
+        "narHash": "sha256-YRqMDEtSMbitIMj+JLpheSz0pwEr0Rmy5mC7myl17xs=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "ae814fd3904b621d8ab97418f1d0f2eb0d3716f4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_5": {
+      "locked": {
+        "lastModified": 1762363567,
+        "narHash": "sha256-YRqMDEtSMbitIMj+JLpheSz0pwEr0Rmy5mC7myl17xs=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "ae814fd3904b621d8ab97418f1d0f2eb0d3716f4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_6": {
       "locked": {
         "lastModified": 1727348695,
         "narHash": "sha256-J+PeFKSDV+pHL7ukkfpVzCOO7mBSrrpJ3svwBFABbhI=",
@@ -2721,15 +2857,15 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
     },
     "nur": {
       "inputs": {
-        "flake-parts": "flake-parts",
-        "nixpkgs": "nixpkgs_3"
+        "flake-parts": "flake-parts_3",
+        "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1762629367,
-        "narHash": "sha256-+sPlb8TjEPIazBEpOQlfJlMleXPTTOwdhfiBPyB9ELs=",
+        "lastModified": 1762641887,
+        "narHash": "sha256-owXprdtO+bDV6LM9Dv5LUhHOTuF5p8GI6E14dHUvq0Q=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "1cbc72520eef49b5687f6f93c030499731d0ecd8",
+        "rev": "853639eea83335c78dd6ee2e3bd286e98180367a",
         "type": "github"
       },
       "original": {
@@ -2740,9 +2876,11 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
     },
     "root": {
       "inputs": {
+        "helium-browser": "helium-browser",
         "helix": "helix",
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs_2",
+        "mango": "mango",
+        "nixpkgs": "nixpkgs_4",
         "nur": "nur",
         "zen-browser": "zen-browser"
       }
@@ -2768,9 +2906,51 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         "type": "github"
       }
     },
+    "scenefx": {
+      "inputs": {
+        "nixpkgs": [
+          "mango",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1750785057,
+        "narHash": "sha256-tGX6j4W91rcb+glXJo43sjPI9zQvPotonknG1BdihR4=",
+        "owner": "wlrfx",
+        "repo": "scenefx",
+        "rev": "3a6cfb12e4ba97b43326357d14f7b3e40897adfc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "wlrfx",
+        "repo": "scenefx",
+        "type": "github"
+      }
+    },
+    "treefmt-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "helium-browser",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1758728421,
+        "narHash": "sha256-ySNJ008muQAds2JemiyrWYbwbG+V7S5wg3ZVKGHSFu8=",
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "rev": "5eda4ee8121f97b218f7cc73f5172098d458f1d1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
     "zen-browser": {
       "inputs": {
-        "nixpkgs": "nixpkgs_4"
+        "nixpkgs": "nixpkgs_6"
       },
       "locked": {
         "lastModified": 1727721329,
@@ -2803,6 +2983,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     helix.url = "github:helix-editor/helix/master";
     zen-browser.url = "github:MarceColl/zen-browser-flake";
+    helium-browser.url = "github:ominit/helium-browser-flake";
     nur.url = "github:nix-community/NUR";
     mango.url = "github:DreamMaoMao/mango";
   };
@@ -2869,7 +3050,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
               useUserPackages = true;
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
-                inherit (inputs) helix zen-browser;
+                inherit (inputs) helix zen-browser helium-browser;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
                 isRiver = true;
@@ -2901,7 +3082,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           ./modules/elevated-packages.nix
           ./modules/power-management.nix
           ./modules/intel-drivers.nix
-          # ./modules/mangowc.nix
+          ./modules/mango.nix
           { nixpkgs.overlays = [ nur.overlays.default ]; }
           home-manager.nixosModules.home-manager
           {
@@ -2910,7 +3091,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
               useUserPackages = true;
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
-                inherit (inputs) helix zen-browser;
+                inherit (inputs) helix zen-browser helium-browser;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
                 isRiver = false;
@@ -2931,6 +3112,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           homeDir = defaults.homeDir;
           helix = inputs.helix;
           zen-browser = inputs.zen-browser;
+          helium-browser = inputs.helium-browser;
           isRiver = false;
           isMango = false;
         }

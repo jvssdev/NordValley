@@ -1,9 +1,23 @@
-{ userName, pkgs, ... }:
 {
-  # Enable mango at system level
-  programs.mango.enable = true;
+  userName,
+  pkgs,
+  inputs,
+  ...
+}:
+
+let
+  mango = inputs.mango.packages.${pkgs.system}.default;
+in
+{
+  imports = [ inputs.mango.nixosModules.default ];
+
+  programs.mango = {
+    enable = true;
+    package = mango;
+  };
 
   environment.systemPackages = with pkgs; [
+    xdg-desktop-portal
     xdg-desktop-portal-gtk
     xdg-desktop-portal-wlr
     xwayland
@@ -62,13 +76,13 @@
     user = userName;
   };
 
-  # Create desktop entry for Mango
+  # Desktop entry for Mango session
   environment.etc."sddm/wayland-sessions/mango.desktop".text = ''
     [Desktop Entry]
     Name=MangoWC
     Comment=A Wayland compositor based on wlroots
     DesktopNames=mango
-    Exec=mango
+    Exec=${mango}/bin/mango
     Type=Application
   '';
 }
