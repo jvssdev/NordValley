@@ -1,23 +1,9 @@
+{ userName, pkgs, ... }:
 {
-  userName,
-  pkgs,
-  inputs,
-  ...
-}:
-
-let
-  mango = inputs.mango.packages.${pkgs.system}.default;
-in
-{
-  imports = [ inputs.mango.nixosModules.default ];
-
-  programs.mango = {
-    enable = true;
-    package = mango;
-  };
+  # Enable Mango at system level (this now works after flake import)
+  programs.mango.enable = true;
 
   environment.systemPackages = with pkgs; [
-    xdg-desktop-portal
     xdg-desktop-portal-gtk
     xdg-desktop-portal-wlr
     xwayland
@@ -76,13 +62,13 @@ in
     user = userName;
   };
 
-  # Desktop entry for Mango session
+  # Desktop entry for Mango (no exec path needed; module handles it)
   environment.etc."sddm/wayland-sessions/mango.desktop".text = ''
     [Desktop Entry]
     Name=MangoWC
     Comment=A Wayland compositor based on wlroots
     DesktopNames=mango
-    Exec=${mango}/bin/mango
+    Exec=mango
     Type=Application
   '';
 }

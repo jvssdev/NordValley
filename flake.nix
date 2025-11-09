@@ -25,14 +25,11 @@
         fullName = "João Víctor Santos Silva";
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
-
       system = "x86_64-linux";
-
       defaults = {
         withGUI = true;
         homeDir = "/home/${userInfo.userName}";
       };
-
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
@@ -53,6 +50,13 @@
             isMango = false;
           };
         modules = [
+          (
+            { config, ... }:
+            {
+              nixpkgs.config.allowUnfree = true;
+            }
+          )
+
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
@@ -62,10 +66,9 @@
           ./modules/power-management.nix
           ./modules/river.nix
           {
-            nixpkgs.overlays = [
-              nur.overlays.default
-              (import ./overlays/river-next.nix)
-            ];
+            # nixpkgs.overlays = [
+            #   nur.overlays.default
+            # ];
           }
           home-manager.nixosModules.home-manager
           {
@@ -99,6 +102,13 @@
             isMango = true;
           };
         modules = [
+          (
+            { config, ... }:
+            {
+              nixpkgs.config.allowUnfree = true;
+            }
+          )
+
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
@@ -107,7 +117,11 @@
           ./modules/power-management.nix
           ./modules/intel-drivers.nix
           ./modules/mango.nix
+
+          inputs.mango.nixosModules.mango
+
           { nixpkgs.overlays = [ nur.overlays.default ]; }
+
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -115,7 +129,12 @@
               useUserPackages = true;
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
-                inherit (inputs) helix zen-browser helium-browser;
+                inherit (inputs)
+                  helix
+                  zen-browser
+                  helium-browser
+                  mango
+                  ;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
                 isRiver = false;
