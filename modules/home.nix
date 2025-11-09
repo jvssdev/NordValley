@@ -13,6 +13,7 @@ let
     userName
     helix
     zen-browser
+    helium-browser
     isRiver
     isMango
     ;
@@ -25,7 +26,14 @@ in
   xdg.enable = true;
   home.stateVersion = "25.05";
 
-  home.packages = pkgs.callPackage ./packages.nix { inherit withGUI helix zen-browser; };
+  home.packages = pkgs.callPackage ./packages.nix {
+    inherit
+      withGUI
+      helix
+      zen-browser
+      helium-browser
+      ;
+  };
 
   home.sessionPath = [
     "$HOME/.nix-profile/bin"

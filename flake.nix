@@ -7,6 +7,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     helix.url = "github:helix-editor/helix/master";
     zen-browser.url = "github:MarceColl/zen-browser-flake";
+    helium-browser.url = "github:ominit/helium-browser-flake"
     nur.url = "github:nix-community/NUR";
     mango.url = "github:DreamMaoMao/mango";
   };
@@ -73,7 +74,7 @@
               useUserPackages = true;
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
-                inherit (inputs) helix zen-browser;
+                inherit (inputs) helix zen-browser helium-browser;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
                 isRiver = true;
@@ -114,7 +115,7 @@
               useUserPackages = true;
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
-                inherit (inputs) helix zen-browser;
+                inherit (inputs) helix zen-browser helium-browser;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
                 isRiver = false;
@@ -135,6 +136,7 @@
           homeDir = defaults.homeDir;
           helix = inputs.helix;
           zen-browser = inputs.zen-browser;
+          helium-browser = inputs.helium-browser;
           isRiver = false;
           isMango = false;
         }
