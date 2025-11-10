@@ -1,5 +1,5 @@
 {
-  description = "NixOS configuration with River window manager";
+  description = "NixOS configuration with River and MangoWC window manager";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -54,10 +54,19 @@
         fullName = "João Víctor Santos Silva";
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
+
+      # Overlay to fix wrapGAppsHook rename issue
+      fixWrapGAppsHook = final: prev: {
+        wrapGAppsHook = prev.wrapGAppsHook3;
+      };
+
       pkgs = import nixpkgs {
         system = "x86_64-linux";
         config.allowUnfree = true;
-        overlays = [ nur.overlays.default ];
+        overlays = [
+          nur.overlays.default
+          fixWrapGAppsHook
+        ];
       };
       system = pkgs.stdenv.hostPlatform.system;
       defaults = {
@@ -79,7 +88,10 @@
             isMango = false;
           };
         modules = [
-          { nixpkgs.config.allowUnfree = true; }
+          {
+            nixpkgs.config.allowUnfree = true;
+            nixpkgs.overlays = [ fixWrapGAppsHook ];
+          }
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
@@ -124,7 +136,10 @@
             isMango = true;
           };
         modules = [
-          { nixpkgs.config.allowUnfree = true; }
+          {
+            nixpkgs.config.allowUnfree = true;
+            nixpkgs.overlays = [ fixWrapGAppsHook ];
+          }
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
