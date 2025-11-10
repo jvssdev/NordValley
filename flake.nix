@@ -55,22 +55,12 @@
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
 
-      # Overlay to fix wrapGAppsHook rename issue
-      fixWrapGAppsHook =
-        final: prev:
-        let
-          latestHook = (
-            prev.wrapGAppsHook4 or (prev.wrapGAppsHook3 or (prev.wrapGAppsHook
-              or (throw "No compatible wrapGAppsHook variant found (tried 4, 3, and original)")
-            )
-            )
-          );
-        in
-        {
-          wrapGAppsHook = latestHook;
-          wrapGAppsHook3 = latestHook;
-        };
+      # Overlay to fix wrapGAppsHook rename issue (Nixpkgs 2025: alias to wrapGAppsHook3)
+      fixWrapGAppsHook = final: prev: {
+        wrapGAppsHook = prev.wrapGAppsHook3 or (throw "wrapGAppsHook3 not found—update nixpkgs?");
 
+        wrapGAppsHook3 = prev.wrapGAppsHook3 or prev.wrapGAppsHook;
+      };
       pkgs = import nixpkgs {
         system = "x86_64-linux";
         config.allowUnfree = true;
