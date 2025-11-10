@@ -56,9 +56,19 @@
       };
 
       # Overlay to fix wrapGAppsHook rename issue
-      fixWrapGAppsHook = final: prev: {
-        wrapGAppsHook = prev.wrapGAppsHook3;
-      };
+      fixWrapGAppsHook =
+        final: prev:
+        let
+          # Try latest first, fallback to older
+          getLatestHook =
+            name: prev.${name} or (throw "No compatible wrapGAppsHook variant found in ${name}");
+          latestHook = getLatestHook "wrapGAppsHook4" "wrapGAppsHook3" "wrapGAppsHook";
+        in
+        {
+          wrapGAppsHook = latestHook;
+          # Also alias the intermediate one if needed
+          wrapGAppsHook3 = latestHook;
+        };
 
       pkgs = import nixpkgs {
         system = "x86_64-linux";
