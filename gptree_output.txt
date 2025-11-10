@@ -37,8 +37,7 @@
 │   ├── mako/
 │   │   └── config
 │   ├── mango/
-│   │   ├── 
-autostart.sh
+│   │   ├── autostart.sh
 │   │   └── config.conf
 │   ├── mpd/
 │   │   ├── empty_database
@@ -55,6 +54,7 @@ autostart.sh
 │   │       └── user-session.conf
 
 
+│   ├── quickshell/
 │   ├── river/
 │   │   └── ini
 │   ├── rmpc/
@@ -1726,6 +1726,7 @@ let
     helix
     zen-browser
     helium-browser
+    quickshell
     isRiver
     isMango
     mango
@@ -1750,6 +1751,7 @@ in
       helix
       zen-browser
       helium-browser
+      quickshell
       ;
   };
 
@@ -1808,6 +1810,8 @@ in
     ".config/zathura".source =
       config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zathura";
     ".config/zed".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zed";
+    ".config/quickshell".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/quickshell";
     ".config/ghostty".source =
       config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/ghostty";
     ".zen".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zen";
@@ -1963,6 +1967,7 @@ in
   helix,
   zen-browser,
   helium-browser,
+  quickshell,
   ...
 }:
 
@@ -2078,6 +2083,7 @@ let
     zen-browser.packages.${pkgs.system}.default
     helium-browser.packages.${pkgs.system}.default
     helix.packages.${pkgs.system}.default
+    quickshell.packages.${pkgs.system}.default
   ];
 in
 basePackages
@@ -2704,11 +2710,11 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1762560325,
-        "narHash": "sha256-lIkbDXmzJNAj/Y7eHRynBvixvMiQLmKcH7sX4syseh8=",
+        "lastModified": 1762716787,
+        "narHash": "sha256-YfcY28igFL5ZPCTtVBaVUvnhcWg8tyiBVSlULpXEIeQ=",
         "owner": "helix-editor",
         "repo": "helix",
-        "rev": "65ea351cc30b23d40e9a5784a4be99768536b7f5",
+        "rev": "a79292b630ae4a0e6e37814ad21411ab50926c73",
         "type": "github"
       },
       "original": {
@@ -2725,11 +2731,11 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         ]
       },
       "locked": {
-        "lastModified": 1762704774,
-        "narHash": "sha256-iodz4xQbULkHqetbPu5BCSWsVEzZiiNSv0/dzfH4XiE=",
+        "lastModified": 1762721397,
+        "narHash": "sha256-E428EuouA4nFTNlLuqlL4lVR78X+EbBIqDqsBFnB79w=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "be4a9233dd3f6104c9b0fdd3d56f953eb519a4c7",
+        "rev": "b8645b18b0f5374127bbade6de7381ef0b3d5720",
         "type": "github"
       },
       "original": {
@@ -2745,11 +2751,11 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         "scenefx": "scenefx"
       },
       "locked": {
-        "lastModified": 1762701589,
-        "narHash": "sha256-xB9F2URQwqUPX4YU9ggWPLrAvEGegO/Inlvs835lMJg=",
+        "lastModified": 1762756220,
+        "narHash": "sha256-frfMp+DrWFfJIkaueJwJo4i3+KzVFrcpN+9zVs3gl3M=",
         "owner": "DreamMaoMao",
         "repo": "mango",
-        "rev": "d0a51f47856b62ed1d135eaa2a1824377efc85a4",
+        "rev": "64d8764f58d6469ae641bde9079938702022f309",
         "type": "github"
       },
       "original": {
@@ -2855,6 +2861,21 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
     },
     "nixpkgs_6": {
       "locked": {
+        "lastModified": 1758690382,
+        "narHash": "sha256-NY3kSorgqE5LMm1LqNwGne3ZLMF2/ILgLpFr1fS4X3o=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "e643668fd71b949c53f8626614b21ff71a07379d",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "ref": "nixos-unstable",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_7": {
+      "locked": {
         "lastModified": 1727348695,
         "narHash": "sha256-J+PeFKSDV+pHL7ukkfpVzCOO7mBSrrpJ3svwBFABbhI=",
         "owner": "nixos",
@@ -2875,17 +2896,35 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1762708011,
-        "narHash": "sha256-Dbu+RHOSk9qrUd68V4tOf9EeGJsm2d4x0gLsZVqfUeA=",
+        "lastModified": 1762770405,
+        "narHash": "sha256-HJo5R+/+LOhALb8PF16YaR983+HscBgMAJKUaVfNhik=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "6b706a1235bb0e398dfda62d49529a9fa11cb5e6",
+        "rev": "552b8fe95b4befc7078b9d6c971b65989657c158",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
         "repo": "NUR",
         "type": "github"
+      }
+    },
+    "quickshell": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_6"
+      },
+      "locked": {
+        "lastModified": 1761897390,
+        "narHash": "sha256-er4gYrIoThYLjlsOMTysoRfn67d1Gci+ZpqDrtQxrA0=",
+        "ref": "refs/heads/master",
+        "rev": "fc704e6b5d445899a1565955268c91942a4f263f",
+        "revCount": 700,
+        "type": "git",
+        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
       }
     },
     "root": {
@@ -2896,6 +2935,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         "mango": "mango",
         "nixpkgs": "nixpkgs_4",
         "nur": "nur",
+        "quickshell": "quickshell",
         "zen-browser": "zen-browser"
       }
     },
@@ -2981,7 +3021,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
     },
     "zen-browser": {
       "inputs": {
-        "nixpkgs": "nixpkgs_6"
+        "nixpkgs": "nixpkgs_7"
       },
       "locked": {
         "lastModified": 1727721329,
@@ -3017,8 +3057,8 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
     helium-browser.url = "github:ominit/helium-browser-flake";
     nur.url = "github:nix-community/NUR";
     mango.url = "github:DreamMaoMao/mango";
+    quickshell.url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
   };
-
   outputs =
     inputs@{
       nixpkgs,
@@ -3033,7 +3073,12 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         fullName = "João Víctor Santos Silva";
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
-      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        system = "x86_64-linux";
+        config.allowUnfree = true;
+      };
+      system = pkgs.stdenv.hostPlatform.system;
+
       defaults = {
         withGUI = true;
         homeDir = "/home/${userInfo.userName}";
@@ -3076,7 +3121,12 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
               useUserPackages = true;
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
-                inherit (inputs) helix zen-browser helium-browser;
+                inherit (inputs)
+                  helix
+                  zen-browser
+                  helium-browser
+                  quickshell
+                  ;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
                 isRiver = true;
@@ -3137,6 +3187,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
                   zen-browser
                   helium-browser
                   mango
+                  quickshell
                   ;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
@@ -3150,13 +3201,14 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
 
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
-          inherit system;
+          system = "x86_64-linux";
           config.allowUnfree = true;
         };
         extraSpecialArgs = {
           withGUI = defaults.withGUI;
           homeDir = defaults.homeDir;
           helix = inputs.helix;
+          quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;
           helium-browser = inputs.helium-browser;
           isRiver = true;
@@ -3680,229 +3732,3 @@ fi
 
 # Cleanup backup if everything went well
 rm -f "${FLAKE_DIR}/flake.nix.backup"
-
-
-# File: dotfiles/mango/
-autostart.sh
-
-waybar >/dev/null 2>&1 &
-#wpaperd -i $HOME/Wallpapers/ >/dev/null 2>&1 &
-mako >/dev/null 2>&1 &
-dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
-nm-applet >/dev/null 2>&1 &
-easyeffects --gapplication-service >/dev/null 2>&1 &
-wl-clip-persist --clipboard regular --reconnect-tries 0 &
-
-wl-paste --type text --watch cliphist store & 
-wl-paste --type image --watch cliphist store & 
-/usr/lib/mate-polkit/mate-polkit &
-
-
-# File: dotfiles/mango/config.conf
-
-# Monitors - Uncomment this and set your monitor if on vm
-# monitorrule=Virtial-1,0.55,1,tile,0,1,0,0,1920,1080,60
-monitorrule=eDP-1,0.55,1,tile,0,1,0,0,1920,1080,60
-
-bind=SUPER,t,spawn,ghostty
-bind=SUPER,a,spawn,fuzzel 
-bind=SUPER,e,spawn,thunar
-bind = SUPER,P,spawn 'grim -g "$(slurp)" - | wl-copy'
-#bind=SUPER+CTRL,w,spawn,cliphist wipe
-bind=SUPER,l,spawn,gtklock
-bind=CTRL+alt,p,spawn,wleave
-bind=SUPER,m,quit
-
-bind=SUPER,1,comboview,1
-bind=SUPER,2,comboview,2
-bind=SUPER,3,comboview,3
-bind=SUPER,4,comboview,4
-bind=SUPER,5,comboview,5
-bind=SUPER,6,comboview,6
-bind=SUPER,7,comboview,7
-bind=SUPER,8,comboview,8
-bind=SUPER,9,comboview,9
-
-bind=SUPER,i,incnmaster,+1
-bind=SUPER,p,incnmaster,-1
-bind=SUPER,q,killclient
-bind=SUPER+SHIFT,r,reload_config
-
-# Layouts
-bind=SUPER,t,setlayout,tile
-bind=SUPER,v,setlayout,vertical_grid
-bind=SUPER,c,setlayout,spiral
-bind=SUPER,x,setlayout,scroller
-bind=SUPER,n,switch_layout
-bind=SUPER,g,togglegaps
-bind=SUPER,s,toggleoverview
-
-tagrule=id:1,layout_name:tile
-tagrule=id:2,layout_name:tile
-tagrule=id:3,layout_name:tile
-tagrule=id:4,layout_name:tile
-tagrule=id:5,layout_name:tile
-tagrule=id:6,layout_name:tile
-tagrule=id:7,layout_name:tile
-tagrule=id:8,layout_name:tile
-tagrule=id:9,layout_name:tile
-
-animations=1
-gappih=5
-gappiv=5
-gappoh=5
-gappov=5
-borderpx=2
-border_radius=7
-no_border_when_single=0
-focuscolor=0x88c0d0
-
-mousebind=SUPER,btn_left,moveresize,curmove
-mousebind=SUPER,btn_right,moveresize,curresize
-
-axisbind=SUPER,UP,viewtoleft_have_client
-axisbind=SUPER,DOWN,viewtoright_have_client
-
-repeat_rate=35
-repeat_delay=200
-
-blur=0
-blur_layer=1
-blur_optimized=1
-blur_params_num_passes = 2
-blur_params_radius = 5
-blur_params_noise = 0.02
-blur_params_brightness = 0.9
-blur_params_contrast = 0.9
-blur_params_saturation = 1.2
-
-shadows = 1
-layer_shadows = 1
-shadow_only_floating=1
-shadows_size = 12
-shadows_blur = 15
-shadows_position_x = 0
-shadows_position_y = 0
-shadowscolor= 0x000000ff
-
-animations=1
-layer_animations=1
-animation_type_open=zoom
-animation_type_close=slide 
-layer_animation_type_open=slide
-layer_animation_type_close=slide 
-animation_fade_in=1
-animation_fade_out=1
-tag_animation_direction=1
-zoom_initial_ratio=0.3
-zoom_end_ratio=0.7
-fadein_begin_opacity=0.6
-fadeout_begin_opacity=0.8
-animation_duration_move=500
-animation_duration_open=400
-animation_duration_tag=350
-animation_duration_close=800
-animation_curve_open=0.46,1.0,0.29,1.1
-animation_curve_move=0.46,1.0,0.29,1
-animation_curve_tag=0.46,1.0,0.29,1
-animation_curve_close=0.08,0.92,0,1
-
-# Scroller Layout Setting
-scroller_structs=20
-scroller_default_proportion=0.8
-scroller_focus_center=0
-scroller_prefer_center=1
-edge_scroller_pointer_focus=1
-scroller_default_proportion_single=1.0
-scroller_proportion_preset=0.5,0.8,1.0
-
-bind=SUPER+SHIFT,f,togglefloating,
-bind=SUPER,f,togglefullscreen,
-
-# smartmovewin
-bind=CTRL+SHIFT,Up,smartmovewin,up
-bind=CTRL+SHIFT,Down,smartmovewin,down
-bind=CTRL+SHIFT,Left,smartmovewin,left
-bind=CTRL+SHIFT,Right,smartmovewin,right
-
-# switch window focus
-bind=SUPER,Down,focusstack,next
-bind=SUPER,Up,focusstack,prev
-bind=SUPER,Left,focusdir,left
-bind=SUPER,Right,focusdir,right
-
-# swap window
-bind=SUPER+SHIFT,Up,exchange_client,up
-bind=SUPER+SHIFT,Down,exchange_client,down
-bind=SUPER+SHIFT,Left,exchange_client,left
-bind=SUPER+SHIFT,Right,exchange_client,right
-
-# workspace switching
-bind=SUPER+CTRL,Left,tag,next
-bind=SUPER+CTRL,Right,tag,next
-
-# Move windows to workspace
-bind=SUPER+SHIFT,1,tag,1
-bind=SUPER+SHIFT,2,tag,2
-bind=SUPER+SHIFT,3,tag,3
-bind=SUPER+SHIFT,4,tag,4
-bind=SUPER+SHIFT,5,tag,5
-bind=SUPER+SHIFT,6,tag,6
-bind=SUPER+SHIFT,7,tag,7
-bind=SUPER+SHIFT,8,tag,8
-bind=SUPER+SHIFT,9,tag,9
-
-gesturebind=none,left,3,focusdir,left
-gesturebind=none,right,3,focusdir,right
-gesturebind=none,up,3,focusdir,up
-gesturebind=none,down,3,focusdir,down
-gesturebind=none,left,4,viewtoleft_have_client
-gesturebind=none,right,4,viewtoright_have_client
-gesturebind=none,up,4,toggleoverview
-gesturebind=none,down,4,toggleoverview
-
-
- 
-bind = NONE,XF86AudioRaiseVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
-bind = NONE,XF86AudioLowerVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
-bind = NONE,XF86AudioMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
-bind = NONE,XF86AudioMicMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
-bind = NONE,XF86MonBrightnessUp,spawn,brightnessctl s 10%+
-bind = NONE,XF86MonBrightnessDown,spawn,brightnessctl s 10%-
-
-bind = NONE,XF86AudioNext,spawn,playerctl next
-bind = NONE,XF86AudioPause,spawn,playerctl play-pause
-bind = NONE,XF86AudioPlay,spawn,playerctl play-pause
-bind = NONE,XF86AudioPrev,spawn,playerctl previous
-
-#cursor_size=24
-env=XCURSOR_SIZE,24
-
-windowrule=title:Authentication required,isfloating:1
-windowrule=title:Keybindings,isfloating:1
-windowrule=title:Rename*,isfloating:1
-windowrule=title:Compressing*,isfloating:1
-windowrule=title:File Already Exists*,isfloating:1
-windowrule=title:Extracting Files*,isfloating:1
-windowrule=title:File Operation Progress*,isfloating:1
-windowrule=title:Confirm to replace files*,isfloating:1
-windowrule=appid:clipse,isfloating:1,width:600,height:800
-windowrule=title:Mission Center,isfloating:1,width:1400,height:800
-
-env=QT_QPA_PLATFORMTHEME,qt6ct
-env=QT_AUTO_SCREEN_SCALE_FACTOR,1
-env=QT_QPA_PLATFORM,Wayland;xcb
-env=QT_WAYLAND_FORCE_DPI,100
-env=XDG_SESSION_TYPE,wayland
-env=GDK_BACKEND,wayland,x11
-env=CLUTTER_BACKEND,wayland
-
-env = MOZ_ENABLE_WAYLAND,1
-
-env = ELECTRON_OZONE_PLATFORM_HINT,auto
-
-HandleLidSwitch=ignore
-HandleLidSwitchExternalPower=ignore
-HandleLidSwitchDocked=ignore
-switchbind=fold,spawn,gtklock
-switchbind=unfold,spawn,wlr-dpms on
