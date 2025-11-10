@@ -110,6 +110,7 @@
                   zen-browser
                   helium-browser
                   quickshell
+                  zed
                   ;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
@@ -160,6 +161,7 @@
                   helium-browser
                   mango
                   quickshell
+                  zed
                   ;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
