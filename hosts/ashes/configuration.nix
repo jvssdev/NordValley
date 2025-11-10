@@ -29,8 +29,8 @@
         "helix.cachix.org-1:ejp9KQpR1FBI2nYpDUq3mXRLc41P4Y1kFnkmNjvC7cc="
       ];
 
-      max-jobs = 4;
-      cores = 2;
+      # max-jobs = 4;
+      # cores = 2;
 
       auto-optimise-store = true;
     };

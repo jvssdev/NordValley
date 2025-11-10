@@ -1,18 +1,45 @@
 {
   description = "NixOS configuration with River window manager";
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    helix.url = "github:helix-editor/helix/master";
-    zen-browser.url = "github:MarceColl/zen-browser-flake";
-    helium-browser.url = "github:ominit/helium-browser-flake";
-    nur.url = "github:nix-community/NUR";
-    mango.url = "github:DreamMaoMao/mango";
-    quickshell.url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+
+    helix = {
+      url = "github:helix-editor/helix/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    zen-browser = {
+      url = "github:MarceColl/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    helium-browser = {
+      url = "github:ominit/helium-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    mango = {
+      url = "github:DreamMaoMao/mango";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
+
   outputs =
     inputs@{
       nixpkgs,
@@ -30,7 +57,7 @@
       pkgs = import nixpkgs {
         system = "x86_64-linux";
         config.allowUnfree = true;
-        overlays = [ nur.overlays.default ]; # Apply NUR globally to avoid per-module conflicts
+        overlays = [ nur.overlays.default ];
       };
       system = pkgs.stdenv.hostPlatform.system;
       defaults = {
