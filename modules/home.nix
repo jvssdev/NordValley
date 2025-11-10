@@ -17,6 +17,7 @@ let
     isRiver
     isMango
     mango
+    zed
     ;
 in
 {
