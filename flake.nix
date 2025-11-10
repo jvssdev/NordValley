@@ -26,7 +26,12 @@
         fullName = "João Víctor Santos Silva";
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
-      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        system = "x86_64-linux";
+        config.allowUnfree = true;
+      };
+      system = pkgs.stdenv.hostPlatform.system;
+
       defaults = {
         withGUI = true;
         homeDir = "/home/${userInfo.userName}";
@@ -143,7 +148,7 @@
 
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
-          inherit system;
+          system = "x86_64-linux";
           config.allowUnfree = true;
         };
         extraSpecialArgs = {
