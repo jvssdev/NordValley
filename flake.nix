@@ -185,6 +185,7 @@
           quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;
           helium-browser = inputs.helium-browser;
+          zed = inputs.zed;
           isRiver = true;
           isMango = false;
         }
