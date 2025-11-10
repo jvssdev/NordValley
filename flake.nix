@@ -38,6 +38,11 @@
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    zed = {
+      url = "github:zed-industries/zed";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -55,18 +60,11 @@
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
 
-      # Overlay to fix wrapGAppsHook rename issue (Nixpkgs 2025: alias to wrapGAppsHook3)
-      fixWrapGAppsHook = final: prev: {
-        wrapGAppsHook = prev.wrapGAppsHook3 or (throw "wrapGAppsHook3 not found—update nixpkgs?");
-
-        wrapGAppsHook3 = prev.wrapGAppsHook3 or prev.wrapGAppsHook;
-      };
       pkgs = import nixpkgs {
         system = "x86_64-linux";
         config.allowUnfree = true;
         overlays = [
           nur.overlays.default
-          fixWrapGAppsHook
         ];
       };
       system = pkgs.stdenv.hostPlatform.system;
@@ -91,7 +89,6 @@
         modules = [
           {
             nixpkgs.config.allowUnfree = true;
-            nixpkgs.overlays = [ fixWrapGAppsHook ];
           }
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
@@ -139,7 +136,6 @@
         modules = [
           {
             nixpkgs.config.allowUnfree = true;
-            nixpkgs.overlays = [ fixWrapGAppsHook ];
           }
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix

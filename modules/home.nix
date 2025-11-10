@@ -39,6 +39,7 @@ in
       zen-browser
       helium-browser
       quickshell
+      zed
       ;
   };
 

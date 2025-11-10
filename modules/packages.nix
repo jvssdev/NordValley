@@ -113,14 +113,12 @@ let
     mako
     pavucontrol
 
-    # Editors
-    zed-editor
-
     # Custom packages from inputs
     zen-browser.packages.${pkgs.system}.default
     helium-browser.packages.${pkgs.system}.default
     helix.packages.${pkgs.system}.default
     quickshell.packages.${pkgs.system}.default
+    zed.packages.${pkgs.system}.default
   ];
 in
 basePackages
