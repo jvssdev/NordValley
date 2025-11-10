@@ -29,8 +29,8 @@
         "helix.cachix.org-1:ejp9KQpR1FBI2nYpDUq3mXRLc41P4Y1kFnkmNjvC7cc="
       ];
 
-      # max-jobs = lib.mkDefault 1;
-      # cores = lib.mkDefault 1;
+      max-jobs = 4;
+      cores = 2;
 
       auto-optimise-store = true;
     };
@@ -65,7 +65,12 @@
     log_filter="^$"
   '';
 
-  zramSwap.enable = true;
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 50;
+  };
+
   nixpkgs.config.allowUnfree = true;
 
   boot.loader = {
