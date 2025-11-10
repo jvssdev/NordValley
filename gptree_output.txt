@@ -1732,12 +1732,18 @@ let
     ;
 in
 {
-  imports = [ ./programs.nix ];
+  imports = [
+    ./programs.nix
+  ]
+  ++ lib.optionals isMango [
+    mango.hmModules.mango
+  ];
 
   home.username = userName;
   home.homeDirectory = homeDir;
   xdg.enable = true;
   home.stateVersion = "25.05";
+
   home.packages = pkgs.callPackage ./packages.nix {
     inherit
       withGUI
@@ -1746,10 +1752,12 @@ in
       helium-browser
       ;
   };
+
   home.sessionPath = [
     "$HOME/.nix-profile/bin"
     "/nix/var/nix/profiles/default/bin"
   ];
+
   home.sessionVariables = {
     EDITOR = "hx";
     TERMINAL = "ghostty";
@@ -1761,6 +1769,14 @@ in
     NIXOS_OZONE_WL = "1";
     SHELL = "${pkgs.zsh}/bin/zsh";
   };
+
+  # MangoWC configuration
+  wayland.windowManager.mango = lib.mkIf isMango {
+    enable = true;
+    settings = builtins.readFile ../dotfiles/mango/config.conf;
+    autostart_sh = builtins.readFile ../dotfiles/mango/autostart.sh;
+  };
+
   home.file = {
     # For nix-shell
     ".config/nixpkgs/config.nix".text = ''
@@ -1800,6 +1816,8 @@ in
     ".config/river".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/river";
   }
   // lib.optionalAttrs (isMango) {
+    # Mango config is handled by wayland.windowManager.mango above
+    # But we still symlink for easy editing
     ".config/mango".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mango";
   };
 
@@ -1819,6 +1837,7 @@ in
       gtk-application-prefer-dark-theme = 1;
     };
   };
+
   qt = {
     enable = true;
     style.name = "kvantum";
@@ -1865,9 +1884,6 @@ in
 
 { userName, pkgs, ... }:
 {
-  # Enable Mango at system level (this now works after flake import)
-  programs.mango.enable = true;
-
   environment.systemPackages = with pkgs; [
     xdg-desktop-portal-gtk
     xdg-desktop-portal-wlr
@@ -1927,7 +1943,7 @@ in
     user = userName;
   };
 
-  # Desktop entry for Mango (no exec path needed; module handles it)
+  # Desktop entry for Mango
   environment.etc."sddm/wayland-sessions/mango.desktop".text = ''
     [Desktop Entry]
     Name=MangoWC
@@ -2640,6 +2656,28 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         "type": "github"
       }
     },
+    "flake-utils": {
+      "inputs": {
+        "systems": [
+          "mango",
+          "scenefx",
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "helium-browser": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -2687,11 +2725,11 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         ]
       },
       "locked": {
-        "lastModified": 1762463325,
-        "narHash": "sha256-33YUsWpPyeBZEWrKQ2a1gkRZ7i0XCC/2MYpU6BVeQSU=",
+        "lastModified": 1762704774,
+        "narHash": "sha256-iodz4xQbULkHqetbPu5BCSWsVEzZiiNSv0/dzfH4XiE=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "0562fef070a1027325dd4ea10813d64d2c967b39",
+        "rev": "be4a9233dd3f6104c9b0fdd3d56f953eb519a4c7",
         "type": "github"
       },
       "original": {
@@ -2707,11 +2745,11 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         "scenefx": "scenefx"
       },
       "locked": {
-        "lastModified": 1762615612,
-        "narHash": "sha256-8B8W/kOMssLgS9xtbtdVlG6VcBJbzFSRFHfHx7Wufa8=",
+        "lastModified": 1762701589,
+        "narHash": "sha256-xB9F2URQwqUPX4YU9ggWPLrAvEGegO/Inlvs835lMJg=",
         "owner": "DreamMaoMao",
         "repo": "mango",
-        "rev": "47f0ea84c1a1610087d3a588d6a0882f31c48a33",
+        "rev": "d0a51f47856b62ed1d135eaa2a1824377efc85a4",
         "type": "github"
       },
       "original": {
@@ -2785,11 +2823,11 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1762363567,
-        "narHash": "sha256-YRqMDEtSMbitIMj+JLpheSz0pwEr0Rmy5mC7myl17xs=",
+        "lastModified": 1762596750,
+        "narHash": "sha256-rXXuz51Bq7DHBlfIjN7jO8Bu3du5TV+3DSADBX7/9YQ=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "ae814fd3904b621d8ab97418f1d0f2eb0d3716f4",
+        "rev": "b6a8526db03f735b89dd5ff348f53f752e7ddc8e",
         "type": "github"
       },
       "original": {
@@ -2801,11 +2839,11 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
     },
     "nixpkgs_5": {
       "locked": {
-        "lastModified": 1762363567,
-        "narHash": "sha256-YRqMDEtSMbitIMj+JLpheSz0pwEr0Rmy5mC7myl17xs=",
+        "lastModified": 1762596750,
+        "narHash": "sha256-rXXuz51Bq7DHBlfIjN7jO8Bu3du5TV+3DSADBX7/9YQ=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "ae814fd3904b621d8ab97418f1d0f2eb0d3716f4",
+        "rev": "b6a8526db03f735b89dd5ff348f53f752e7ddc8e",
         "type": "github"
       },
       "original": {
@@ -2837,11 +2875,11 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1762641887,
-        "narHash": "sha256-owXprdtO+bDV6LM9Dv5LUhHOTuF5p8GI6E14dHUvq0Q=",
+        "lastModified": 1762708011,
+        "narHash": "sha256-Dbu+RHOSk9qrUd68V4tOf9EeGJsm2d4x0gLsZVqfUeA=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "853639eea83335c78dd6ee2e3bd286e98180367a",
+        "rev": "6b706a1235bb0e398dfda62d49529a9fa11cb5e6",
         "type": "github"
       },
       "original": {
@@ -2884,22 +2922,39 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
     },
     "scenefx": {
       "inputs": {
+        "flake-utils": "flake-utils",
         "nixpkgs": [
           "mango",
           "nixpkgs"
-        ]
+        ],
+        "systems": "systems"
       },
       "locked": {
-        "lastModified": 1750785057,
-        "narHash": "sha256-tGX6j4W91rcb+glXJo43sjPI9zQvPotonknG1BdihR4=",
+        "lastModified": 1762447505,
+        "narHash": "sha256-VEBQ8KXkSS4c+kdAhmvq06lEd9WNeCXdRK1U+qSilFw=",
         "owner": "wlrfx",
         "repo": "scenefx",
-        "rev": "3a6cfb12e4ba97b43326357d14f7b3e40897adfc",
+        "rev": "7f9e7409f6169fa637f1265895c121a8f8b70272",
         "type": "github"
       },
       "original": {
         "owner": "wlrfx",
         "repo": "scenefx",
+        "type": "github"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1689347949,
+        "narHash": "sha256-12tWmuL2zgBgZkdoB6qXZsgJEH9LR3oUgpaQq2RbI80=",
+        "owner": "nix-systems",
+        "repo": "default-linux",
+        "rev": "31732fcf5e8fea42e59c2488ad31a0e651500f68",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default-linux",
         "type": "github"
       }
     },
@@ -2951,7 +3006,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
 # File: flake.nix
 
 {
-  description = "NixOS configuration with River and MangoWC window managers";
+  description = "NixOS configuration with River window manager";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -2965,12 +3020,13 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
   };
 
   outputs =
-    {
+    inputs@{
       nixpkgs,
       home-manager,
       nur,
+      mango,
       ...
-    }@inputs:
+    }:
     let
       userInfo = {
         userName = "joaov";
@@ -2982,10 +3038,9 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
         withGUI = true;
         homeDir = "/home/${userInfo.userName}";
       };
-      # Remove pkgs daqui, será criado automaticamente
     in
     {
-      # RiverWM
+      # RiverWM configuration
       nixosConfigurations.river = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs =
@@ -3061,7 +3116,11 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           ./modules/intel-drivers.nix
           ./modules/mango.nix
 
-          inputs.mango.nixosModules.mango
+          # Enable mango at NixOS level
+          mango.nixosModules.mango
+          {
+            programs.mango.enable = true;
+          }
 
           { nixpkgs.overlays = [ nur.overlays.default ]; }
 
@@ -3070,6 +3129,7 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              backupFileExtension = "backup";
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
@@ -3099,14 +3159,13 @@ Delete stale paths and generations older than x days: `nix-collect-garbage --del
           helix = inputs.helix;
           zen-browser = inputs.zen-browser;
           helium-browser = inputs.helium-browser;
-          isRiver = false;
+          isRiver = true;
           isMango = false;
         }
         // userInfo;
         modules = [ ./modules/home.nix ];
       };
 
-      # Build ISO image
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [ ./hosts/iso/configuration.nix ];
@@ -3621,3 +3680,229 @@ fi
 
 # Cleanup backup if everything went well
 rm -f "${FLAKE_DIR}/flake.nix.backup"
+
+
+# File: dotfiles/mango/
+autostart.sh
+
+waybar >/dev/null 2>&1 &
+#wpaperd -i $HOME/Wallpapers/ >/dev/null 2>&1 &
+mako >/dev/null 2>&1 &
+dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
+nm-applet >/dev/null 2>&1 &
+easyeffects --gapplication-service >/dev/null 2>&1 &
+wl-clip-persist --clipboard regular --reconnect-tries 0 &
+
+wl-paste --type text --watch cliphist store & 
+wl-paste --type image --watch cliphist store & 
+/usr/lib/mate-polkit/mate-polkit &
+
+
+# File: dotfiles/mango/config.conf
+
+# Monitors - Uncomment this and set your monitor if on vm
+# monitorrule=Virtial-1,0.55,1,tile,0,1,0,0,1920,1080,60
+monitorrule=eDP-1,0.55,1,tile,0,1,0,0,1920,1080,60
+
+bind=SUPER,t,spawn,ghostty
+bind=SUPER,a,spawn,fuzzel 
+bind=SUPER,e,spawn,thunar
+bind = SUPER,P,spawn 'grim -g "$(slurp)" - | wl-copy'
+#bind=SUPER+CTRL,w,spawn,cliphist wipe
+bind=SUPER,l,spawn,gtklock
+bind=CTRL+alt,p,spawn,wleave
+bind=SUPER,m,quit
+
+bind=SUPER,1,comboview,1
+bind=SUPER,2,comboview,2
+bind=SUPER,3,comboview,3
+bind=SUPER,4,comboview,4
+bind=SUPER,5,comboview,5
+bind=SUPER,6,comboview,6
+bind=SUPER,7,comboview,7
+bind=SUPER,8,comboview,8
+bind=SUPER,9,comboview,9
+
+bind=SUPER,i,incnmaster,+1
+bind=SUPER,p,incnmaster,-1
+bind=SUPER,q,killclient
+bind=SUPER+SHIFT,r,reload_config
+
+# Layouts
+bind=SUPER,t,setlayout,tile
+bind=SUPER,v,setlayout,vertical_grid
+bind=SUPER,c,setlayout,spiral
+bind=SUPER,x,setlayout,scroller
+bind=SUPER,n,switch_layout
+bind=SUPER,g,togglegaps
+bind=SUPER,s,toggleoverview
+
+tagrule=id:1,layout_name:tile
+tagrule=id:2,layout_name:tile
+tagrule=id:3,layout_name:tile
+tagrule=id:4,layout_name:tile
+tagrule=id:5,layout_name:tile
+tagrule=id:6,layout_name:tile
+tagrule=id:7,layout_name:tile
+tagrule=id:8,layout_name:tile
+tagrule=id:9,layout_name:tile
+
+animations=1
+gappih=5
+gappiv=5
+gappoh=5
+gappov=5
+borderpx=2
+border_radius=7
+no_border_when_single=0
+focuscolor=0x88c0d0
+
+mousebind=SUPER,btn_left,moveresize,curmove
+mousebind=SUPER,btn_right,moveresize,curresize
+
+axisbind=SUPER,UP,viewtoleft_have_client
+axisbind=SUPER,DOWN,viewtoright_have_client
+
+repeat_rate=35
+repeat_delay=200
+
+blur=0
+blur_layer=1
+blur_optimized=1
+blur_params_num_passes = 2
+blur_params_radius = 5
+blur_params_noise = 0.02
+blur_params_brightness = 0.9
+blur_params_contrast = 0.9
+blur_params_saturation = 1.2
+
+shadows = 1
+layer_shadows = 1
+shadow_only_floating=1
+shadows_size = 12
+shadows_blur = 15
+shadows_position_x = 0
+shadows_position_y = 0
+shadowscolor= 0x000000ff
+
+animations=1
+layer_animations=1
+animation_type_open=zoom
+animation_type_close=slide 
+layer_animation_type_open=slide
+layer_animation_type_close=slide 
+animation_fade_in=1
+animation_fade_out=1
+tag_animation_direction=1
+zoom_initial_ratio=0.3
+zoom_end_ratio=0.7
+fadein_begin_opacity=0.6
+fadeout_begin_opacity=0.8
+animation_duration_move=500
+animation_duration_open=400
+animation_duration_tag=350
+animation_duration_close=800
+animation_curve_open=0.46,1.0,0.29,1.1
+animation_curve_move=0.46,1.0,0.29,1
+animation_curve_tag=0.46,1.0,0.29,1
+animation_curve_close=0.08,0.92,0,1
+
+# Scroller Layout Setting
+scroller_structs=20
+scroller_default_proportion=0.8
+scroller_focus_center=0
+scroller_prefer_center=1
+edge_scroller_pointer_focus=1
+scroller_default_proportion_single=1.0
+scroller_proportion_preset=0.5,0.8,1.0
+
+bind=SUPER+SHIFT,f,togglefloating,
+bind=SUPER,f,togglefullscreen,
+
+# smartmovewin
+bind=CTRL+SHIFT,Up,smartmovewin,up
+bind=CTRL+SHIFT,Down,smartmovewin,down
+bind=CTRL+SHIFT,Left,smartmovewin,left
+bind=CTRL+SHIFT,Right,smartmovewin,right
+
+# switch window focus
+bind=SUPER,Down,focusstack,next
+bind=SUPER,Up,focusstack,prev
+bind=SUPER,Left,focusdir,left
+bind=SUPER,Right,focusdir,right
+
+# swap window
+bind=SUPER+SHIFT,Up,exchange_client,up
+bind=SUPER+SHIFT,Down,exchange_client,down
+bind=SUPER+SHIFT,Left,exchange_client,left
+bind=SUPER+SHIFT,Right,exchange_client,right
+
+# workspace switching
+bind=SUPER+CTRL,Left,tag,next
+bind=SUPER+CTRL,Right,tag,next
+
+# Move windows to workspace
+bind=SUPER+SHIFT,1,tag,1
+bind=SUPER+SHIFT,2,tag,2
+bind=SUPER+SHIFT,3,tag,3
+bind=SUPER+SHIFT,4,tag,4
+bind=SUPER+SHIFT,5,tag,5
+bind=SUPER+SHIFT,6,tag,6
+bind=SUPER+SHIFT,7,tag,7
+bind=SUPER+SHIFT,8,tag,8
+bind=SUPER+SHIFT,9,tag,9
+
+gesturebind=none,left,3,focusdir,left
+gesturebind=none,right,3,focusdir,right
+gesturebind=none,up,3,focusdir,up
+gesturebind=none,down,3,focusdir,down
+gesturebind=none,left,4,viewtoleft_have_client
+gesturebind=none,right,4,viewtoright_have_client
+gesturebind=none,up,4,toggleoverview
+gesturebind=none,down,4,toggleoverview
+
+
+ 
+bind = NONE,XF86AudioRaiseVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
+bind = NONE,XF86AudioLowerVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bind = NONE,XF86AudioMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bind = NONE,XF86AudioMicMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+bind = NONE,XF86MonBrightnessUp,spawn,brightnessctl s 10%+
+bind = NONE,XF86MonBrightnessDown,spawn,brightnessctl s 10%-
+
+bind = NONE,XF86AudioNext,spawn,playerctl next
+bind = NONE,XF86AudioPause,spawn,playerctl play-pause
+bind = NONE,XF86AudioPlay,spawn,playerctl play-pause
+bind = NONE,XF86AudioPrev,spawn,playerctl previous
+
+#cursor_size=24
+env=XCURSOR_SIZE,24
+
+windowrule=title:Authentication required,isfloating:1
+windowrule=title:Keybindings,isfloating:1
+windowrule=title:Rename*,isfloating:1
+windowrule=title:Compressing*,isfloating:1
+windowrule=title:File Already Exists*,isfloating:1
+windowrule=title:Extracting Files*,isfloating:1
+windowrule=title:File Operation Progress*,isfloating:1
+windowrule=title:Confirm to replace files*,isfloating:1
+windowrule=appid:clipse,isfloating:1,width:600,height:800
+windowrule=title:Mission Center,isfloating:1,width:1400,height:800
+
+env=QT_QPA_PLATFORMTHEME,qt6ct
+env=QT_AUTO_SCREEN_SCALE_FACTOR,1
+env=QT_QPA_PLATFORM,Wayland;xcb
+env=QT_WAYLAND_FORCE_DPI,100
+env=XDG_SESSION_TYPE,wayland
+env=GDK_BACKEND,wayland,x11
+env=CLUTTER_BACKEND,wayland
+
+env = MOZ_ENABLE_WAYLAND,1
+
+env = ELECTRON_OZONE_PLATFORM_HINT,auto
+
+HandleLidSwitch=ignore
+HandleLidSwitchExternalPower=ignore
+HandleLidSwitchDocked=ignore
+switchbind=fold,spawn,gtklock
+switchbind=unfold,spawn,wlr-dpms on
