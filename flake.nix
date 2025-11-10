@@ -59,14 +59,15 @@
       fixWrapGAppsHook =
         final: prev:
         let
-          # Try latest first, fallback to older
-          getLatestHook =
-            name: prev.${name} or (throw "No compatible wrapGAppsHook variant found in ${name}");
-          latestHook = getLatestHook "wrapGAppsHook4" "wrapGAppsHook3" "wrapGAppsHook";
+          latestHook = (
+            prev.wrapGAppsHook4 or (prev.wrapGAppsHook3 or (prev.wrapGAppsHook
+              or (throw "No compatible wrapGAppsHook variant found (tried 4, 3, and original)")
+            )
+            )
+          );
         in
         {
           wrapGAppsHook = latestHook;
-          # Also alias the intermediate one if needed
           wrapGAppsHook3 = latestHook;
         };
 
