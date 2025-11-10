@@ -1,10 +1,11 @@
 {
   description = "NixOS configuration with River window manager";
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     helix.url = "github:helix-editor/helix/master";
     zen-browser.url = "github:MarceColl/zen-browser-flake";
     helium-browser.url = "github:ominit/helium-browser-flake";
@@ -29,9 +30,9 @@
       pkgs = import nixpkgs {
         system = "x86_64-linux";
         config.allowUnfree = true;
+        overlays = [ nur.overlays.default ]; # Apply NUR globally to avoid per-module conflicts
       };
       system = pkgs.stdenv.hostPlatform.system;
-
       defaults = {
         withGUI = true;
         homeDir = "/home/${userInfo.userName}";
@@ -51,13 +52,7 @@
             isMango = false;
           };
         modules = [
-          (
-            { config, pkgs, ... }:
-            {
-              nixpkgs.config.allowUnfree = true;
-            }
-          )
-
+          { nixpkgs.config.allowUnfree = true; }
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
@@ -66,7 +61,6 @@
           ./modules/intel-drivers.nix
           ./modules/power-management.nix
           ./modules/river.nix
-
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -103,13 +97,7 @@
             isMango = true;
           };
         modules = [
-          (
-            { config, pkgs, ... }:
-            {
-              nixpkgs.config.allowUnfree = true;
-            }
-          )
-
+          { nixpkgs.config.allowUnfree = true; }
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
@@ -118,21 +106,13 @@
           ./modules/power-management.nix
           ./modules/intel-drivers.nix
           ./modules/mango.nix
-
-          # Enable mango at NixOS level
           mango.nixosModules.mango
-          {
-            programs.mango.enable = true;
-          }
-
-          { nixpkgs.overlays = [ nur.overlays.default ]; }
-
+          { programs.mango.enable = true; }
           home-manager.nixosModules.home-manager
           {
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              backupFileExtension = "backup";
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
