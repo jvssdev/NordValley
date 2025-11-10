@@ -4,6 +4,7 @@
   helix,
   zen-browser,
   helium-browser,
+  quickshell,
   ...
 }:
 
@@ -119,6 +120,7 @@ let
     zen-browser.packages.${pkgs.system}.default
     helium-browser.packages.${pkgs.system}.default
     helix.packages.${pkgs.system}.default
+    quickshell.packages.${pkgs.system}.default
   ];
 in
 basePackages

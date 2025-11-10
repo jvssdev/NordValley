@@ -13,6 +13,7 @@ let
     helix
     zen-browser
     helium-browser
+    quickshell
     isRiver
     isMango
     mango
@@ -37,6 +38,7 @@ in
       helix
       zen-browser
       helium-browser
+      quickshell
       ;
   };
 
@@ -95,6 +97,8 @@ in
     ".config/zathura".source =
       config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zathura";
     ".config/zed".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zed";
+    ".config/quickshell".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/quickshell";
     ".config/ghostty".source =
       config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/ghostty";
     ".zen".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zen";

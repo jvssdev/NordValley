@@ -10,7 +10,7 @@
     helium-browser.url = "github:ominit/helium-browser-flake";
     nur.url = "github:nix-community/NUR";
     mango.url = "github:DreamMaoMao/mango";
-  };
+    quickshell.url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
 
   outputs =
     inputs@{
@@ -74,7 +74,7 @@
               useUserPackages = true;
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
-                inherit (inputs) helix zen-browser helium-browser;
+                inherit (inputs) helix zen-browser helium-browser quickshell;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
                 isRiver = true;
@@ -135,7 +135,8 @@
                   zen-browser
                   helium-browser
                   mango
-                  ;
+                  quickshell
+                      ;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
                 isRiver = false;
@@ -155,6 +156,7 @@
           withGUI = defaults.withGUI;
           homeDir = defaults.homeDir;
           helix = inputs.helix;
+          quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;
           helium-browser = inputs.helium-browser;
           isRiver = true;
