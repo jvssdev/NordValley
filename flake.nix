@@ -55,7 +55,7 @@
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
       system = "x86_64-linux";
-      # Global pkgs with Fenix overlay for Rust 1.89.0 stable (fixes wasm32-wasi and cargo-auditable in unstable)
+      # Global pkgs with Fenix overlay for Rust 1.89.0 stable (fixes wasm32-wasi and infinite recursion in overrides)
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
@@ -69,20 +69,22 @@
               toolchain = fenix.packages.${system}.stable.toolchain;
             in
             {
-              # Override cargo to disable auditable (buggy in 1.90 unstable; fixes strict eval failure)
-              cargo = toolchain.override { auditable = false; };
+              # Use prev to break recursion loop in overrides
               rustc = toolchain;
+              cargo = toolchain;
               rustPlatform = final.makeRustPlatform {
-                rustc = final.rustc;
-                cargo = final.cargo;
+                rustc = toolchain;
+                cargo = toolchain;
               };
-              # Also override buildPackages for cross-builds (prevents cargo-auditable in derivations)
-              buildPackages = final.buildPackages // {
-                cargo = final.cargo;
-                rustc = final.rustc;
+              # Override buildPackages using prev to avoid self-reference loop
+              buildPackages = prev.buildPackages.override {
+                rustc = toolchain;
+                cargo = toolchain;
               };
-              # Specific override for Zed if needed
-              zed = final.zed.override { rustPlatform = final.rustPlatform; };
+              # Specific override for Zed using the stable platform
+              zed = final.zed.override {
+                rustPlatform = final.rustPlatform;
+              };
             }
           )
         ];
