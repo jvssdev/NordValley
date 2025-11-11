@@ -95,9 +95,6 @@
             isMango = false;
           };
         modules = [
-          {
-            nixpkgs.config.allowUnfree = true;
-          }
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
@@ -143,9 +140,6 @@
             isMango = true;
           };
         modules = [
-          {
-            nixpkgs.config.allowUnfree = true;
-          }
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
