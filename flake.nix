@@ -1,56 +1,51 @@
 {
   description = "NixOS configuration with River and MangoWC window manager";
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     helix = {
       url = "github:helix-editor/helix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     helium-browser = {
       url = "github:ominit/helium-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     mango = {
       url = "github:DreamMaoMao/mango";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     zed = {
       url = "github:zed-industries/zed";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-
   outputs =
     inputs@{
       nixpkgs,
       home-manager,
       nur,
       mango,
+      fenix,
       ...
     }:
     let
@@ -59,7 +54,6 @@
         fullName = "João Víctor Santos Silva";
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
-
       pkgs = import nixpkgs {
         system = "x86_64-linux";
         config.allowUnfree = true;
@@ -106,6 +100,7 @@
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
+                  fenix
                   helix
                   zen-browser
                   helium-browser
@@ -121,7 +116,6 @@
           }
         ];
       };
-
       # MangoWC
       nixosConfigurations.mangowc = nixpkgs.lib.nixosSystem {
         inherit system;
@@ -156,6 +150,7 @@
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
+                  fenix
                   helix
                   zen-browser
                   helium-browser
@@ -172,7 +167,6 @@
           }
         ];
       };
-
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           system = "x86_64-linux";
@@ -181,6 +175,7 @@
         extraSpecialArgs = {
           withGUI = defaults.withGUI;
           homeDir = defaults.homeDir;
+          fenix = inputs.fenix;
           helix = inputs.helix;
           quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;
@@ -192,7 +187,6 @@
         // userInfo;
         modules = [ ./modules/home.nix ];
       };
-
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [ ./hosts/iso/configuration.nix ];

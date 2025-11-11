@@ -18,6 +18,7 @@ let
     isMango
     mango
     zed
+    fenix
     ;
 in
 {
