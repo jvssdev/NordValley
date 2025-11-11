@@ -55,40 +55,38 @@
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
       system = "x86_64-linux";
-      # Global pkgs with Fenix overlay for Rust 1.89.0 stable (fixes wasm32-wasi and infinite recursion in overrides)
+
+      # Hybrid overlay: Fenix stable Rust + unstable nixpkgs
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
         overlays = [
           nur.overlays.default
-          # Fenix overlay: Force stable Rust (1.89.0) for all packages/builds (Zed, rustPlatform)
-          fenix.overlays.default
+
           (
             final: prev:
             let
-              toolchain = fenix.packages.${system}.stable.toolchain;
+
+              stableToolchain = fenix.packages.${system}.stable.toolchain;
             in
             {
-              # Use prev to break recursion loop in overrides
-              rustc = toolchain;
-              cargo = toolchain;
-              rustPlatform = final.makeRustPlatform {
-                rustc = toolchain;
-                cargo = toolchain;
+
+              rustc = stableToolchain;
+              cargo = stableToolchain;
+
+              rustPlatform = prev.rustPlatform.override {
+                rustc = stableToolchain;
+                cargo = stableToolchain;
               };
-              # Override buildPackages using prev to avoid self-reference loop
-              buildPackages = prev.buildPackages.override {
-                rustc = toolchain;
-                cargo = toolchain;
-              };
-              # Specific override for Zed using the stable platform
-              zed = final.zed.override {
-                rustPlatform = final.rustPlatform;
-              };
+
+              # zed-editor = prev.zed-editor.override {
+              #   rustPlatform = final.rustPlatform;
+              # };
             }
           )
         ];
       };
+
       defaults = {
         withGUI = true;
         homeDir = "/home/${userInfo.userName}";
@@ -97,7 +95,7 @@
     {
       # RiverWM configuration
       nixosConfigurations.river = nixpkgs.lib.nixosSystem {
-        inherit system pkgs; # Use global pkgs with Rust overlay
+        inherit system pkgs;
         specialArgs =
           inputs
           // userInfo
@@ -127,7 +125,6 @@
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
-                  fenix
                   helix
                   zen-browser
                   helium-browser
@@ -143,9 +140,10 @@
           }
         ];
       };
+
       # MangoWC
       nixosConfigurations.mangowc = nixpkgs.lib.nixosSystem {
-        inherit system pkgs; # Use global pkgs with Rust overlay
+        inherit system pkgs;
         specialArgs =
           inputs
           // userInfo
@@ -177,7 +175,6 @@
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
-                  fenix
                   helix
                   zen-browser
                   helium-browser
@@ -194,12 +191,12 @@
           }
         ];
       };
+
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs; # Use global pkgs with Rust overlay
+        inherit pkgs;
         extraSpecialArgs = {
           withGUI = defaults.withGUI;
           homeDir = defaults.homeDir;
-          fenix = inputs.fenix;
           helix = inputs.helix;
           quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;
@@ -211,6 +208,7 @@
         // userInfo;
         modules = [ ./modules/home.nix ];
       };
+
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [ ./hosts/iso/configuration.nix ];

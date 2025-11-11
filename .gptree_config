@@ -25,6 +25,6 @@ showIgnoredInTree: false
 # Whether to show only default ignored files in the directory tree while still respecting gitignore
 showDefaultIgnoredInTree: false
 # Previously selected files (when using the -s or --save flag previously)
-previousFiles: hosts/ashes/configuration.nix,hosts/ashes/hardware-configuration.nix,hosts/iso/configuration.nix,modules/elevated-packages.nix,modules/home.nix,modules/intel-drivers.nix,modules/mango.nix,modules/packages.nix,modules/path.nix,modules/power-management.nix,modules/programs.nix,modules/river.nix,modules/services.nix,README.md,flake.lock,flake.nix,install.sh,live-install.sh,setup.sh
+previousFiles: hosts/ashes/configuration.nix,hosts/ashes/hardware-configuration.nix,hosts/iso/configuration.nix,flake.lock,flake.nix
 # Excluded directories (when using the -s or --save flag previously or edited in UI)
 excludeDirs: 
