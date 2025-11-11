@@ -9,26 +9,12 @@
   ...
 }:
 {
+
   nixpkgs.overlays = [
-    (final: prev: {
-      # Use Fenix's stable toolchain (Rust 1.89.0) to avoid build failures in 1.90.0 (e.g., wasm32-wasi issues)
-      # This overrides Rust globally for system and package builds, including Zed and other Rust apps
-      rustc = fenix.stable.withComponents [
-        "rustc"
-        "cargo"
-        "rust-src"
-        "rustfmt"
-        "clippy"
-      ];
-      # Override rustPlatform for building Rust crates/packages
-      rustPlatform = final.makeRustPlatform {
-        rustc = final.rustc;
-        cargo = final.cargo;
-      };
-      # Optional: Remove cross-compilation targets like wasm32-wasi if still causing issues
-      # rustc = final.rustc.override { targets = [ "x86_64-unknown-linux-gnu" ]; };
-    })
+    fenix.overlays.default
+    # (final: prev: { rustc = (fenix.stable.withComponents ["clippy"]).rustc; })
   ];
+
   environment.variables.EDITOR = "hx";
   nix = {
     settings = {
