@@ -5,29 +5,9 @@
   fullName,
   helix,
   zen-browser,
-  fenix,
   ...
 }:
 {
-  nixpkgs.overlays = [
-    fenix.overlays.default
-    (
-      final: prev:
-      let
-        system = pkgs.system; # x86_64-linux
-        toolchain = fenix.packages.${system}.stable.toolchain;
-      in
-      {
-        rustc = toolchain;
-        cargo = toolchain;
-        rustPlatform = final.makeRustPlatform {
-          rustc = final.rustc;
-          cargo = final.cargo;
-        };
-      }
-    )
-  ];
-
   environment.variables.EDITOR = "hx";
   nix = {
     settings = {

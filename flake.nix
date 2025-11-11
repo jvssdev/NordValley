@@ -1,5 +1,5 @@
 {
-  description = "NixOS configuration with River and MangoWC window manager";
+  description = "NordValley NixOS with River and MangoWC window manager";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
@@ -54,14 +54,33 @@
         fullName = "João Víctor Santos Silva";
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
+      system = "x86_64-linux";
+      # Global pkgs with Fenix overlay
       pkgs = import nixpkgs {
-        system = "x86_64-linux";
+        inherit system;
         config.allowUnfree = true;
         overlays = [
           nur.overlays.default
+          # Fenix overlay: Force stable Rust
+          fenix.overlays.default
+          (
+            final: prev:
+            let
+              toolchain = fenix.packages.${system}.stable.toolchain;
+            in
+            {
+              rustc = toolchain;
+              cargo = toolchain;
+              rustPlatform = final.makeRustPlatform {
+                rustc = final.rustc;
+                cargo = final.cargo;
+              };
+              # Optional: Specific override for Zed if needed
+              zed = final.zed.override { rustPlatform = final.rustPlatform; };
+            }
+          )
         ];
       };
-      system = pkgs.stdenv.hostPlatform.system;
       defaults = {
         withGUI = true;
         homeDir = "/home/${userInfo.userName}";
@@ -70,7 +89,7 @@
     {
       # RiverWM configuration
       nixosConfigurations.river = nixpkgs.lib.nixosSystem {
-        inherit system;
+        inherit system pkgs; # Use global pkgs with Rust overlay
         specialArgs =
           inputs
           // userInfo
@@ -118,7 +137,7 @@
       };
       # MangoWC
       nixosConfigurations.mangowc = nixpkgs.lib.nixosSystem {
-        inherit system;
+        inherit system pkgs; # Use global pkgs with Rust overlay
         specialArgs =
           inputs
           // userInfo
@@ -168,10 +187,7 @@
         ];
       };
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-        };
+        inherit pkgs; # Use global pkgs with Rust overlay
         extraSpecialArgs = {
           withGUI = defaults.withGUI;
           homeDir = defaults.homeDir;
