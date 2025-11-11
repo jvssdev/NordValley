@@ -55,13 +55,13 @@
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
       system = "x86_64-linux";
-      # Global pkgs with Fenix overlay
+      # Global pkgs with Fenix overlay for Rust 1.89.0 stable (fixes wasm32-wasi and cargo-auditable in unstable)
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
         overlays = [
           nur.overlays.default
-          # Fenix overlay: Force stable Rust
+          # Fenix overlay: Force stable Rust (1.89.0) for all packages/builds (Zed, rustPlatform)
           fenix.overlays.default
           (
             final: prev:
@@ -69,13 +69,19 @@
               toolchain = fenix.packages.${system}.stable.toolchain;
             in
             {
+              # Override cargo to disable auditable (buggy in 1.90 unstable; fixes strict eval failure)
+              cargo = toolchain.override { auditable = false; };
               rustc = toolchain;
-              cargo = toolchain;
               rustPlatform = final.makeRustPlatform {
                 rustc = final.rustc;
                 cargo = final.cargo;
               };
-              # Optional: Specific override for Zed if needed
+              # Also override buildPackages for cross-builds (prevents cargo-auditable in derivations)
+              buildPackages = final.buildPackages // {
+                cargo = final.cargo;
+                rustc = final.rustc;
+              };
+              # Specific override for Zed if needed
               zed = final.zed.override { rustPlatform = final.rustPlatform; };
             }
           )
