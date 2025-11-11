@@ -56,7 +56,6 @@
       };
       system = "x86_64-linux";
 
-      # Hybrid overlay: Fenix stable Rust + unstable nixpkgs
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
@@ -74,14 +73,10 @@
               rustc = stableToolchain;
               cargo = stableToolchain;
 
-              rustPlatform = prev.rustPlatform.override {
+              rustPlatform = prev.makeRustPlatform {
                 rustc = stableToolchain;
                 cargo = stableToolchain;
               };
-
-              # zed-editor = prev.zed-editor.override {
-              #   rustPlatform = final.rustPlatform;
-              # };
             }
           )
         ];
