@@ -15,9 +15,7 @@
       final: prev:
       let
         system = pkgs.system; # x86_64-linux
-        toolchain = fenix.toolchains.${system}.stable.default.override {
-          targets = [ "x86_64-unknown-linux-gnu" ];
-        };
+        toolchain = fenix.packages.${system}.stable.toolchain;
       in
       {
         rustc = toolchain;
@@ -26,7 +24,6 @@
           rustc = final.rustc;
           cargo = final.cargo;
         };
-        # zed = final.zed.override { rustPlatform = final.rustPlatform; };
       }
     )
   ];
