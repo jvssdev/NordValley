@@ -61,19 +61,13 @@
         config.allowUnfree = true;
         overlays = [
           nur.overlays.default
-
           (
             final: prev:
             let
-
               stableToolchain = fenix.packages.${system}.stable.toolchain;
             in
             {
-
-              rustc = stableToolchain;
-              cargo = stableToolchain;
-
-              rustPlatform = prev.makeRustPlatform {
+              rustPlatformStable = prev.makeRustPlatform {
                 rustc = stableToolchain;
                 cargo = stableToolchain;
               };
