@@ -58,7 +58,6 @@
     algorithm = "zstd";
     memoryPercent = 50;
   };
-  nixpkgs.config.allowUnfree = true;
   boot.loader = {
     efi.canTouchEfiVariables = true;
     grub = {
