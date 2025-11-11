@@ -9,10 +9,19 @@
   ...
 }:
 {
-
   nixpkgs.overlays = [
     fenix.overlays.default
-    # (final: prev: { rustc = (fenix.stable.withComponents ["clippy"]).rustc; })
+    (final: prev: {
+      rustc = final.fenix.stable.rustc.override {
+        targets = [ "x86_64-unknown-linux-gnu" ];
+      };
+      cargo = final.fenix.stable.cargo;
+      rustPlatform = final.makeRustPlatform {
+        rustc = final.rustc;
+        cargo = final.cargo;
+      };
+      # zed = final.zed.override { inherit (final) rustc cargo; };
+    })
   ];
 
   environment.variables.EDITOR = "hx";
@@ -32,8 +41,6 @@
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "helix.cachix.org-1:ejp9KQpR1FBI2nYpDUq3mXRLc41P4Y1kFnkmNjvC7cc="
       ];
-      # max-jobs = 4;
-      # cores = 2;
       auto-optimise-store = true;
     };
     gc = {
@@ -84,7 +91,7 @@
     cpuFreqGovernor = lib.mkDefault "powersave";
   };
   fonts = {
-    enableDefaultPackages = true; # Enables core defaults (serif, sans, mono, emoji)
+    enableDefaultPackages = true;
     packages = with pkgs; [
       nerd-fonts.jetbrains-mono
       font-awesome
