@@ -14,19 +14,19 @@
     (
       final: prev:
       let
-        system = pkgs.system;
-        toolchain = fenix.legacyToolchains.${system}.stable.default.override {
+        system = pkgs.system; # x86_64-linux
+        toolchain = fenix.toolchains.${system}.stable.default.override {
           targets = [ "x86_64-unknown-linux-gnu" ];
         };
       in
       {
         rustc = toolchain;
-        cargo = toolchain.cargo;
+        cargo = toolchain;
         rustPlatform = final.makeRustPlatform {
           rustc = final.rustc;
           cargo = final.cargo;
         };
-        # zed = final.zed.override { inherit (final) rustc cargo rustPlatform; };
+        # zed = final.zed.override { rustPlatform = final.rustPlatform; };
       }
     )
   ];
