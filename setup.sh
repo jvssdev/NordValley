@@ -173,12 +173,6 @@ echo "Full Name: $fullName"
 echo "Email: $userEmail"
 echo "Window Manager: $WM_CONFIG"
 echo ""
-echo "The following features will be installed:"
-echo "  • Docker (container runtime)"
-echo "  • Virtualization (libvirt/QEMU)"
-echo "  • Syncthing (file synchronization)"
-echo "  • Waydroid (Android container)"
-echo "  • Rclone (cloud storage sync)"
 if [[ $enable_intel =~ ^[Yy]$ ]]; then
     echo "  • Intel Graphics Drivers"
 fi
@@ -215,12 +209,6 @@ if sudo nixos-rebuild switch --flake "${FLAKE_DIR}#${WM_CONFIG}"; then
     echo "  - Your home directory will be: /home/$currentUser"
     echo "  - Config location: ${FLAKE_DIR}"
     echo ""
-    echo "Installed services:"
-    echo "  - Docker: docker command available"
-    echo "  - libvirt/QEMU: virt-manager for VMs"
-    echo "  - Syncthing: http://localhost:8384"
-    echo "  - Waydroid: Initialize with 'waydroid init'"
-    echo "  - Rclone: Configure with 'rclone config'"
     echo
     read -p "Reboot now? (y/n) [n]: " reboot_now
     if [[ $reboot_now =~ ^[Yy]$ ]]; then
