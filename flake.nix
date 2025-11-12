@@ -55,36 +55,40 @@
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
       system = "x86_64-linux";
-
-      # Hybrid overlay: Fenix stable Rust + unstable nixpkgs
+      # Global pkgs with Fenix overlay for Rust 1.89.0 stable (fixes wasm32-wasi and cargo-auditable in unstable)
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
         overlays = [
           nur.overlays.default
+          # Fenix overlay: Force stable Rust (1.89.0) for all packages/builds (Zed, rustPlatform)
           fenix.overlays.default
-          (final: prev: {
-            zed-editor =
-              let
-                rustToolchain =
-                  with final.fenix;
-                  combine [
-                    stable.rustc
-                    stable.cargo
-                    stable.rust-std
-                  ];
-                rustPlatformStable = final.makeRustPlatform {
-                  rustc = rustToolchain;
-                  cargo = rustToolchain;
-                };
-              in
-              prev.zed-editor.override {
-                rustPlatform = rustPlatformStable;
+          (
+            final: prev:
+            let
+              toolchain = fenix.packages.${system}.stable.toolchain;
+            in
+            {
+              # Use prev to break recursion loop in overrides
+              rustc = toolchain;
+              cargo = toolchain;
+              rustPlatform = final.makeRustPlatform {
+                rustc = toolchain;
+                cargo = toolchain;
               };
-          })
+              # Override buildPackages using prev to avoid self-reference loop
+              buildPackages = prev.buildPackages.override {
+                rustc = toolchain;
+                cargo = toolchain;
+              };
+              # Specific override for Zed using the stable platform
+              zed = final.zed.override {
+                rustPlatform = final.rustPlatform;
+              };
+            }
+          )
         ];
       };
-
       defaults = {
         withGUI = true;
         homeDir = "/home/${userInfo.userName}";
@@ -93,7 +97,7 @@
     {
       # RiverWM configuration
       nixosConfigurations.river = nixpkgs.lib.nixosSystem {
-        inherit system pkgs;
+        inherit system pkgs; # Use global pkgs with Rust overlay
         specialArgs =
           inputs
           // userInfo
@@ -104,9 +108,7 @@
             isMango = false;
           };
         modules = [
-          {
-            nixpkgs.config.allowUnfree = true;
-          }
+          # Removed nixpkgs.config.allowUnfree (already set in global pkgs import)
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
@@ -123,6 +125,7 @@
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
+                  fenix
                   helix
                   zen-browser
                   helium-browser
@@ -138,10 +141,9 @@
           }
         ];
       };
-
       # MangoWC
       nixosConfigurations.mangowc = nixpkgs.lib.nixosSystem {
-        inherit system pkgs;
+        inherit system pkgs; # Use global pkgs with Rust overlay
         specialArgs =
           inputs
           // userInfo
@@ -152,9 +154,7 @@
             isMango = true;
           };
         modules = [
-          {
-            nixpkgs.config.allowUnfree = true;
-          }
+          # Removed nixpkgs.config.allowUnfree (already set in global pkgs import)
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
@@ -173,6 +173,7 @@
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
+                  fenix
                   helix
                   zen-browser
                   helium-browser
@@ -189,12 +190,12 @@
           }
         ];
       };
-
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
+        inherit pkgs; # Use global pkgs with Rust overlay
         extraSpecialArgs = {
           withGUI = defaults.withGUI;
           homeDir = defaults.homeDir;
+          fenix = inputs.fenix;
           helix = inputs.helix;
           quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;
@@ -206,7 +207,6 @@
         // userInfo;
         modules = [ ./modules/home.nix ];
       };
-
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [ ./hosts/iso/configuration.nix ];
