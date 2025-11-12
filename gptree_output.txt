@@ -1736,7 +1736,6 @@ let
     isRiver
     isMango
     mango
-    zed
     ;
 in
 {
@@ -1759,7 +1758,6 @@ in
       zen-browser
       helium-browser
       quickshell
-      zed
       ;
   };
 
@@ -1974,7 +1972,6 @@ in
   zen-browser,
   helium-browser,
   quickshell,
-  zed,
   ...
 }:
 
@@ -2058,9 +2055,6 @@ let
 
     # Libraries
     libgcc
-    xorg.libX11
-    xorg.libXft
-    xorg.libxcb
     lxqt.lxqt-policykit
     libnotify
 
@@ -2086,12 +2080,14 @@ let
     mako
     pavucontrol
 
+    # Editor
+    zed-editor
+
     # Custom packages from inputs
     zen-browser.packages.${pkgs.system}.default
     helium-browser.packages.${pkgs.system}.default
     helix.packages.${pkgs.system}.default
     quickshell.packages.${pkgs.system}.default
-    zed.packages.${pkgs.system}.default
   ];
 in
 basePackages
@@ -2322,10 +2318,6 @@ basePackages
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-    zed = {
-      url = "github:zed-industries/zed";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
   outputs =
     inputs@{
@@ -2393,7 +2385,6 @@ basePackages
                   zen-browser
                   helium-browser
                   quickshell
-                  zed
                   ;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
@@ -2440,7 +2431,6 @@ basePackages
                   helium-browser
                   mango
                   quickshell
-                  zed
                   ;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
@@ -2460,7 +2450,6 @@ basePackages
           quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;
           helium-browser = inputs.helium-browser;
-          zed = inputs.zed;
           isRiver = true;
           isMango = false;
         }

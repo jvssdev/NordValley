@@ -19,7 +19,7 @@
     };
     helium-browser = {
       url = "github:ominit/helium-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     nur = {
       url = "github:nix-community/NUR";
