@@ -1,13 +1,12 @@
 {
   description = "NordValley NixOS with River and MangoWC window manager";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    fenix = {
-      url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     helix = {
@@ -28,11 +27,11 @@
     };
     mango = {
       url = "github:DreamMaoMao/mango";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     zed = {
       url = "github:zed-industries/zed";
@@ -45,7 +44,7 @@
       home-manager,
       nur,
       mango,
-      fenix,
+      nixpkgs-unstable,
       ...
     }:
     let
@@ -55,33 +54,15 @@
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
       system = "x86_64-linux";
-      # Global pkgs with Fenix overlay for Rust 1.89.0 stable (fixes wasm32-wasi and cargo-auditable in unstable)
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
         overlays = [
           nur.overlays.default
-          # Fenix overlay: Force stable Rust (1.89.0) for all packages/builds (Zed, rustPlatform)
-          fenix.overlays.default
-          (
-            final: prev:
-            let
-              toolchain = fenix.packages.${system}.stable.toolchain;
-            in
-            {
-              # Use prev to break recursion loop in overrides
-              rustc = toolchain;
-              cargo = toolchain;
-              rustPlatform = final.makeRustPlatform {
-                rustc = toolchain;
-                cargo = toolchain;
-              };
-              # Specific override for Zed using the stable platform
-              zed = final.zed.override {
-                rustPlatform = final.rustPlatform;
-              };
-            }
-          )
+          (final: prev: {
+            quickshell = inputs.quickshell.packages.${system}.default;
+            mango = inputs.mango.packages.${system}.default;
+          })
         ];
       };
       defaults = {
@@ -92,7 +73,7 @@
     {
       # RiverWM configuration
       nixosConfigurations.river = nixpkgs.lib.nixosSystem {
-        inherit system pkgs; # Use global pkgs with Rust overlay
+        inherit system pkgs;
         specialArgs =
           inputs
           // userInfo
@@ -103,7 +84,6 @@
             isMango = false;
           };
         modules = [
-          # Removed nixpkgs.config.allowUnfree (already set in global pkgs import)
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
@@ -120,7 +100,6 @@
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
-                  fenix
                   helix
                   zen-browser
                   helium-browser
@@ -138,7 +117,7 @@
       };
       # MangoWC
       nixosConfigurations.mangowc = nixpkgs.lib.nixosSystem {
-        inherit system pkgs; # Use global pkgs with Rust overlay
+        inherit system pkgs;
         specialArgs =
           inputs
           // userInfo
@@ -149,7 +128,6 @@
             isMango = true;
           };
         modules = [
-          # Removed nixpkgs.config.allowUnfree (already set in global pkgs import)
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
@@ -168,7 +146,6 @@
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
-                  fenix
                   helix
                   zen-browser
                   helium-browser
@@ -186,11 +163,10 @@
         ];
       };
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs; # Use global pkgs with Rust overlay
+        inherit pkgs;
         extraSpecialArgs = {
           withGUI = defaults.withGUI;
           homeDir = defaults.homeDir;
-          fenix = inputs.fenix;
           helix = inputs.helix;
           quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;

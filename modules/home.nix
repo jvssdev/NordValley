@@ -18,7 +18,6 @@ let
     isMango
     mango
     zed
-    fenix
     ;
 in
 {
@@ -110,8 +109,6 @@ in
     ".config/river".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/river";
   }
   // lib.optionalAttrs (isMango) {
-    # Mango config is handled by wayland.windowManager.mango above
-    # But we still symlink for easy editing
     ".config/mango".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mango";
   };
 
