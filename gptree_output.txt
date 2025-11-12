@@ -1604,7 +1604,6 @@
     algorithm = "zstd";
     memoryPercent = 50;
   };
-  nixpkgs.config.allowUnfree = true;
   boot.loader = {
     efi.canTouchEfiVariables = true;
     grub = {
@@ -1702,501 +1701,584 @@
 }
 
 
-# File: flake.lock
+# File: modules/elevated-packages.nix
+
+{ pkgs, ... }:
 
 {
-  "nodes": {
-    "crane": {
-      "locked": {
-        "lastModified": 1758215636,
-        "narHash": "sha256-8nkzkPbdxze8CxWhKWlcLbJEU1vfLM/nVqRlTy17V54=",
-        "owner": "ipetkov",
-        "repo": "crane",
-        "rev": "a669fe77a8b0cd6f11419d89ea45a16691ca5121",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ipetkov",
-        "repo": "crane",
-        "type": "github"
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [ stdenv.cc.cc ];
+  };
+}
+
+
+# File: modules/home.nix
+
+{
+  pkgs,
+  config,
+  specialArgs,
+  lib,
+  ...
+}:
+let
+  inherit (specialArgs)
+    withGUI
+    homeDir
+    userName
+    helix
+    zen-browser
+    helium-browser
+    quickshell
+    isRiver
+    isMango
+    mango
+    zed
+    ;
+in
+{
+  imports = [
+    ./programs.nix
+  ]
+  ++ lib.optionals isMango [
+    mango.hmModules.mango
+  ];
+
+  home.username = userName;
+  home.homeDirectory = homeDir;
+  xdg.enable = true;
+  home.stateVersion = "25.05";
+
+  home.packages = pkgs.callPackage ./packages.nix {
+    inherit
+      withGUI
+      helix
+      zen-browser
+      helium-browser
+      quickshell
+      zed
+      ;
+  };
+
+  home.sessionPath = [
+    "$HOME/.nix-profile/bin"
+    "/nix/var/nix/profiles/default/bin"
+  ];
+
+  home.sessionVariables = {
+    EDITOR = "hx";
+    TERMINAL = "ghostty";
+    BROWSER = "${zen-browser}/bin/zen";
+    DEFAULT_BROWSER = "${zen-browser}/bin/zen";
+    XDG_SCREENSHOTS_DIR = "$HOME/Pictures/screenshots";
+    LC_ALL = "en_US.UTF-8";
+    QT_QPA_PLATFORMTHEME = "qt6ct";
+    NIXOS_OZONE_WL = "1";
+    SHELL = "${pkgs.zsh}/bin/zsh";
+  };
+
+  # MangoWC configuration
+  wayland.windowManager.mango = lib.mkIf isMango {
+    enable = true;
+    settings = builtins.readFile ../dotfiles/mango/config.conf;
+    autostart_sh = builtins.readFile ../dotfiles/mango/autostart.sh;
+  };
+
+  home.file = {
+    # For nix-shell
+    ".config/nixpkgs/config.nix".text = ''
+      {
+        allowUnfree = true;
       }
-    },
-    "fenix": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "rust-analyzer-src": "rust-analyzer-src"
-      },
-      "locked": {
-        "lastModified": 1762843506,
-        "narHash": "sha256-3rFn1xzPo+a7kGmjLHXKUd/2G6Qd4f2GPAcdw+6GUPY=",
-        "owner": "nix-community",
-        "repo": "fenix",
-        "rev": "0147a7b71748b7308c83077cf62791b8cd4c37b6",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "fenix",
-        "type": "github"
-      }
-    },
-    "flake-compat": {
-      "locked": {
-        "lastModified": 1747046372,
-        "narHash": "sha256-CIVLLkVgvHYbgI2UpXvIIBJ12HWgX+fjA8Xf8PUmqCY=",
-        "owner": "edolstra",
-        "repo": "flake-compat",
-        "rev": "9100a0f413b0c601e0533d1d94ffd501ce2e7885",
-        "type": "github"
-      },
-      "original": {
-        "owner": "edolstra",
-        "repo": "flake-compat",
-        "type": "github"
-      }
-    },
-    "flake-parts": {
-      "inputs": {
-        "nixpkgs-lib": [
-          "helium-browser",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1759362264,
-        "narHash": "sha256-wfG0S7pltlYyZTM+qqlhJ7GMw2fTF4mLKCIVhLii/4M=",
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "rev": "758cf7296bee11f1706a574c77d072b8a7baa881",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "type": "github"
-      }
-    },
-    "flake-parts_2": {
-      "inputs": {
-        "nixpkgs-lib": "nixpkgs-lib"
-      },
-      "locked": {
-        "lastModified": 1749398372,
-        "narHash": "sha256-tYBdgS56eXYaWVW3fsnPQ/nFlgWi/Z2Ymhyu21zVM98=",
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "rev": "9305fe4e5c2a6fcf5ba6a3ff155720fbe4076569",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "type": "github"
-      }
-    },
-    "flake-parts_3": {
-      "inputs": {
-        "nixpkgs-lib": [
-          "nur",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1733312601,
-        "narHash": "sha256-4pDvzqnegAfRkPwO3wmwBhVi/Sye1mzps0zHWYnP88c=",
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "rev": "205b12d8b7cd4802fbcb8e8ef6a0f1408781a4f9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "type": "github"
-      }
-    },
-    "flake-utils": {
-      "inputs": {
-        "systems": [
-          "mango",
-          "scenefx",
-          "systems"
-        ]
-      },
-      "locked": {
-        "lastModified": 1731533236,
-        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "helium-browser": {
-      "inputs": {
-        "flake-parts": "flake-parts",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "treefmt-nix": "treefmt-nix"
-      },
-      "locked": {
-        "lastModified": 1762608461,
-        "narHash": "sha256-+TNPqE/Rlk0bIa7fTzGb03k+EGgM7TXo2j80n/X8aok=",
-        "owner": "ominit",
-        "repo": "helium-browser-flake",
-        "rev": "994bdd5026718f3d716e25ffafad3b3dd6afe6b2",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ominit",
-        "repo": "helium-browser-flake",
-        "type": "github"
-      }
-    },
-    "helix": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "rust-overlay": "rust-overlay"
-      },
-      "locked": {
-        "lastModified": 1762875534,
-        "narHash": "sha256-RM3zq2CwhiMlbATFPs5z82tQJ4HcQPnN65RMBHDETYA=",
-        "owner": "helix-editor",
-        "repo": "helix",
-        "rev": "f828de34fac5a489e4373ea3dd5712c5f1af229e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "helix-editor",
-        "ref": "master",
-        "repo": "helix",
-        "type": "github"
-      }
-    },
-    "home-manager": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1762787259,
-        "narHash": "sha256-t2U/GLLXHa2+kJkwnFNRVc2fEJ/lUfyZXBE5iKzJdcs=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "37a3d97f2873e0f68711117c34d04b7c7ead8f4e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
-    "home-manager_2": {
-      "inputs": {
-        "nixpkgs": [
-          "zen-browser",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1762351818,
-        "narHash": "sha256-0ptUDbYwxv1kk/uzEX4+NJjY2e16MaAhtzAOJ6K0TG0=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "b959c67241cae17fc9e4ee7eaf13dfa8512477ea",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
-    "mango": {
-      "inputs": {
-        "flake-parts": "flake-parts_2",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "scenefx": "scenefx"
-      },
-      "locked": {
-        "lastModified": 1762756220,
-        "narHash": "sha256-frfMp+DrWFfJIkaueJwJo4i3+KzVFrcpN+9zVs3gl3M=",
-        "owner": "DreamMaoMao",
-        "repo": "mango",
-        "rev": "64d8764f58d6469ae641bde9079938702022f309",
-        "type": "github"
-      },
-      "original": {
-        "owner": "DreamMaoMao",
-        "repo": "mango",
-        "type": "github"
-      }
-    },
-    "nixpkgs": {
-      "locked": {
-        "lastModified": 1762596750,
-        "narHash": "sha256-rXXuz51Bq7DHBlfIjN7jO8Bu3du5TV+3DSADBX7/9YQ=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "b6a8526db03f735b89dd5ff348f53f752e7ddc8e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs-lib": {
-      "locked": {
-        "lastModified": 1748740939,
-        "narHash": "sha256-rQaysilft1aVMwF14xIdGS3sj1yHlI6oKQNBRTF40cc=",
-        "owner": "nix-community",
-        "repo": "nixpkgs.lib",
-        "rev": "656a64127e9d791a334452c6b6606d17539476e2",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "nixpkgs.lib",
-        "type": "github"
-      }
-    },
-    "nur": {
-      "inputs": {
-        "flake-parts": "flake-parts_3",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1762879226,
-        "narHash": "sha256-c4Uu/kAvM3oOTwc/Ra/CfV94Q8hUVV1wOLD5YJ6aybA=",
-        "owner": "nix-community",
-        "repo": "NUR",
-        "rev": "d1c8c13c615f2f46c4bce4c107b56900ac63e77a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "NUR",
-        "type": "github"
-      }
-    },
-    "quickshell": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1761897390,
-        "narHash": "sha256-er4gYrIoThYLjlsOMTysoRfn67d1Gci+ZpqDrtQxrA0=",
-        "ref": "refs/heads/master",
-        "rev": "fc704e6b5d445899a1565955268c91942a4f263f",
-        "revCount": 700,
-        "type": "git",
-        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
-      }
-    },
-    "root": {
-      "inputs": {
-        "fenix": "fenix",
-        "helium-browser": "helium-browser",
-        "helix": "helix",
-        "home-manager": "home-manager",
-        "mango": "mango",
-        "nixpkgs": "nixpkgs",
-        "nur": "nur",
-        "quickshell": "quickshell",
-        "zed": "zed",
-        "zen-browser": "zen-browser"
-      }
-    },
-    "rust-analyzer-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1762781608,
-        "narHash": "sha256-N7RppKUAk1DmJSzTKeDthQ6R4HE1FvfT0NfbuuLvXR0=",
-        "owner": "rust-lang",
-        "repo": "rust-analyzer",
-        "rev": "260f94c0cee4fcb2f9de181318fe3e94cf6c95b2",
-        "type": "github"
-      },
-      "original": {
-        "owner": "rust-lang",
-        "ref": "nightly",
-        "repo": "rust-analyzer",
-        "type": "github"
-      }
-    },
-    "rust-overlay": {
-      "inputs": {
-        "nixpkgs": [
-          "helix",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1759631821,
-        "narHash": "sha256-V8A1L0FaU/aSXZ1QNJScxC12uP4hANeRBgI4YdhHeRM=",
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "rev": "1d7cbdaad90f8a5255a89a6eddd8af24dc89cafe",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "type": "github"
-      }
-    },
-    "rust-overlay_2": {
-      "inputs": {
-        "nixpkgs": [
-          "zed",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1758508617,
-        "narHash": "sha256-kx2uELmVnAbiekj/YFfWR26OXqXedImkhe2ocnbumTA=",
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "rev": "d2bac276ac7e669a1f09c48614538a37e3eb6d0f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "type": "github"
-      }
-    },
-    "scenefx": {
-      "inputs": {
-        "flake-utils": "flake-utils",
-        "nixpkgs": [
-          "mango",
-          "nixpkgs"
-        ],
-        "systems": "systems"
-      },
-      "locked": {
-        "lastModified": 1762447505,
-        "narHash": "sha256-VEBQ8KXkSS4c+kdAhmvq06lEd9WNeCXdRK1U+qSilFw=",
-        "owner": "wlrfx",
-        "repo": "scenefx",
-        "rev": "7f9e7409f6169fa637f1265895c121a8f8b70272",
-        "type": "github"
-      },
-      "original": {
-        "owner": "wlrfx",
-        "repo": "scenefx",
-        "type": "github"
-      }
-    },
-    "systems": {
-      "locked": {
-        "lastModified": 1689347949,
-        "narHash": "sha256-12tWmuL2zgBgZkdoB6qXZsgJEH9LR3oUgpaQq2RbI80=",
-        "owner": "nix-systems",
-        "repo": "default-linux",
-        "rev": "31732fcf5e8fea42e59c2488ad31a0e651500f68",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default-linux",
-        "type": "github"
-      }
-    },
-    "treefmt-nix": {
-      "inputs": {
-        "nixpkgs": [
-          "helium-browser",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1758728421,
-        "narHash": "sha256-ySNJ008muQAds2JemiyrWYbwbG+V7S5wg3ZVKGHSFu8=",
-        "owner": "numtide",
-        "repo": "treefmt-nix",
-        "rev": "5eda4ee8121f97b218f7cc73f5172098d458f1d1",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "treefmt-nix",
-        "type": "github"
-      }
-    },
-    "zed": {
-      "inputs": {
-        "crane": "crane",
-        "flake-compat": "flake-compat",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "rust-overlay": "rust-overlay_2"
-      },
-      "locked": {
-        "lastModified": 1762887117,
-        "narHash": "sha256-ONYzSYw5fRhlSv6sEZxFm1BaTmJ3hNwtKTiINRFrZwg=",
-        "owner": "zed-industries",
-        "repo": "zed",
-        "rev": "e01e0b83c4ceeba28fef70385362ebf98aab92ed",
-        "type": "github"
-      },
-      "original": {
-        "owner": "zed-industries",
-        "repo": "zed",
-        "type": "github"
-      }
-    },
-    "zen-browser": {
-      "inputs": {
-        "home-manager": "home-manager_2",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1762835117,
-        "narHash": "sha256-qwUWaKy+kmTBk6xxMI0yfkD5IU2gcxXOXNPJ2T+Enys=",
-        "owner": "0xc000022070",
-        "repo": "zen-browser-flake",
-        "rev": "51f5194aff34d130d07f684df2a85b10a3933558",
-        "type": "github"
-      },
-      "original": {
-        "owner": "0xc000022070",
-        "repo": "zen-browser-flake",
-        "type": "github"
-      }
-    }
-  },
-  "root": "root",
-  "version": 7
+    '';
+    ".config/btop".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/btop";
+    ".config/lazygit".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/lazygit";
+    ".config/fastfetch".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/fastfetch";
+    ".config/wleave".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/wleave";
+    ".config/helix".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/helix";
+    ".config/fuzzel".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/fuzzel";
+    ".config/hypridle".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/hypridle";
+    ".config/waybar".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/waybar";
+    ".config/gtklock".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/gtklock";
+    ".config/mako".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mako";
+    ".config/mpd".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mpd";
+    ".config/wpaperd".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/wpaperd";
+    ".config/yazi".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/yazi";
+    ".config/zathura".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zathura";
+    ".config/zed".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zed";
+    ".config/quickshell".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/quickshell";
+    ".config/ghostty".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/ghostty";
+    ".zen".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zen";
+  }
+  // lib.optionalAttrs (isRiver) {
+    ".config/river".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/river";
+  }
+  // lib.optionalAttrs (isMango) {
+    ".config/mango".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mango";
+  };
+
+  gtk = {
+    theme = {
+      name = "Nordic";
+      package = pkgs.nordic;
+    };
+    iconTheme = {
+      name = "Nordzy-dark";
+      package = pkgs.nordzy-icon-theme;
+    };
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+    };
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+    };
+  };
+
+  qt = {
+    enable = true;
+    style.name = "kvantum";
+    platformTheme.name = "qt6ct";
+  };
+}
+
+
+# File: modules/intel-drivers.nix
+
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
+with lib;
+let
+  cfg = config.drivers.intel;
+in
+{
+  options.drivers.intel = {
+    enable = mkEnableOption "Enable Intel Graphics Drivers";
+  };
+
+  config = mkIf cfg.enable {
+    nixpkgs.config.packageOverrides = pkgs: {
+      vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+    };
+
+    hardware.graphics = {
+      extraPackages = with pkgs; [
+        intel-media-driver
+        vaapiIntel
+        vaapiVdpau
+        libvdpau-va-gl
+      ];
+    };
+  };
+}
+
+
+# File: modules/mango.nix
+
+{ userName, pkgs, ... }:
+{
+  environment.systemPackages = with pkgs; [
+    xdg-desktop-portal-gtk
+    xdg-desktop-portal-wlr
+    xwayland
+    (pkgs.runCommand "nord-sddm-theme" { } ''
+      mkdir -p $out/share/sddm/themes/nord-sddm
+      cp -r ${../dotfiles/sddm-theme}/* $out/share/sddm/themes/nord-sddm/
+    '')
+  ];
+
+  services = {
+    xserver = {
+      enable = false;
+      xkb = {
+        layout = "br";
+        variant = "";
+      };
+    };
+    displayManager.sddm = {
+      enable = true;
+      wayland.enable = true;
+      theme = "nord-sddm";
+    };
+    libinput.enable = true;
+    upower.enable = true;
+    fstrim.enable = true;
+    gvfs.enable = true;
+    openssh.enable = true;
+    flatpak.enable = false;
+    printing = {
+      enable = false;
+      drivers = [ pkgs.hplipWithPlugin ];
+    };
+    power-profiles-daemon.enable = false;
+    auto-cpufreq = {
+      enable = true;
+      settings = {
+        battery = {
+          governor = "powersave";
+          turbo = "never";
+        };
+        charger = {
+          governor = "performance";
+          turbo = "auto";
+        };
+      };
+    };
+    syncthing = {
+      enable = true;
+      user = userName;
+      dataDir = "/home/${userName}";
+    };
+  };
+
+  services.displayManager.autoLogin = {
+    enable = false;
+    user = userName;
+  };
+
+  # Desktop entry for Mango
+  environment.etc."sddm/wayland-sessions/mango.desktop".text = ''
+    [Desktop Entry]
+    Name=MangoWC
+    Comment=A Wayland compositor based on wlroots
+    DesktopNames=mango
+    Exec=mango
+    Type=Application
+  '';
+}
+
+
+# File: modules/packages.nix
+
+{
+  pkgs,
+  withGUI ? true,
+  helix,
+  zen-browser,
+  helium-browser,
+  quickshell,
+  zed,
+  ...
+}:
+
+with pkgs;
+
+let
+  basePackages = [
+    # Build essentials
+    efibootmgr
+    gcc
+    gnumake
+    cargo
+    rustc
+    wget
+    unzip
+    tree-sitter
+    nodejs_22
+
+    bibata-cursors
+
+    # LSP servers
+    markdown-oxide
+    mpls
+    deno
+    zig
+    zls
+    go
+    gopls
+    nixd
+    nil
+    nixfmt-rfc-style
+    nixpkgs-fmt
+
+    # CLI tools
+    lazygit
+    fzf
+    fd
+    ncdu
+    ripgrep
+    fastfetch
+    nixos-shell
+    nix-your-shell
+    yazi
+    yaziPlugins.nord
+    yaziPlugins.starship
+    bat
+    ffmpeg
+
+    # Media
+    mpc
+    mpd
+    mpd-mpris
+    playerctl
+    rmpc
+
+    # Wayland tools
+    hypridle
+    wleave
+    gtklock
+    wpaperd
+    gammastep
+
+    # System utilities
+    p7zip
+    btop
+    brightnessctl
+    appimage-run
+    nh
+    grim
+    slurp
+    wl-clipboard
+    cliphist
+
+    # GUI applications
+    keepassxc
+    anydesk
+    lmstudio
+    qbittorrent
+    mpv
+    imv
+
+    # Libraries
+    libgcc
+    lxqt.lxqt-policykit
+    libnotify
+
+    # File manager
+    xfce.thunar
+    xfce.thunar-archive-plugin
+    xfce.thunar-media-tags-plugin
+    gvfs
+
+    # Polkit
+    polkit
+    mate.mate-polkit
+
+    # Network
+    networkmanagerapplet
+
+    # Qt
+    libsForQt5.qt5.qtgraphicaleffects
+
+    # Wayland bar/menu
+    waybar
+    fuzzel
+    mako
+    pavucontrol
+
+    # Custom packages from inputs
+    zen-browser.packages.${pkgs.system}.default
+    helium-browser.packages.${pkgs.system}.default
+    helix.packages.${pkgs.system}.default
+    quickshell.packages.${pkgs.system}.default
+    zed.packages.${pkgs.system}.default
+  ];
+in
+basePackages
+++ lib.optionals withGUI [
+  # Additional GUI tools if needed
+]
+
+
+# File: modules/path.nix
+
+{ nixpkgs, pkgs, ... }:
+{
+  # make `nix run nixpkgs#nixpkgs` use the same nixpkgs as the one used by this flake.
+  # remove nix-channel related tools & configs, we use flakes instead.
+  # Use flake for nix_path https://nixos-and-flakes.thiscute.world/best-practices/nix-path-and-flake-registry
+  nix = {
+    channel.enable = false;
+    registry.nixpkgs.flake = nixpkgs;
+    settings.nix-path = nixpkgs.lib.mkForce "nixpkgs=/etc/nix/inputs/nixpkgs";
+  };
+  environment.etc."nix/inputs/nixpkgs".source = "${nixpkgs}";
+}
+
+
+# File: modules/power-management.nix
+
+{ pkgs, lib, ... }:
+{
+  services.logind.settings = {
+    Login = {
+      HandlePowerKey = "suspend";
+      HandlePowerKeyLongPress = "poweroff";
+      HandleLidSwitch = "suspend";
+      HandleLidSwitchExternalPower = "suspend";
+      HandleLidSwitchDocked = "ignore";
+    };
+  };
+}
+
+
+# File: modules/programs.nix
+
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+
+{
+  programs = {
+    git = {
+      enable = true;
+      lfs.enable = true;
+    };
+
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
+  };
+
+  xdg.configFile."direnv/direnv.toml".text = ''
+    [global]
+    hide_env_diff = true
+    warn_timeout = 0
+    log_filter="^$"
+  '';
+}
+
+
+# File: modules/river.nix
+
+{ userName, pkgs, ... }:
+{
+  environment.systemPackages = with pkgs; [
+    river
+    xdg-desktop-portal-gtk
+    xdg-desktop-portal-wlr
+    xwayland
+    (pkgs.runCommand "nord-sddm-theme" { } ''
+      mkdir -p $out/share/sddm/themes/nord-sddm
+      cp -r ${../dotfiles/sddm-theme}/* $out/share/sddm/themes/nord-sddm/
+    '')
+  ];
+
+  services = {
+    xserver = {
+      enable = false;
+      xkb = {
+        layout = "br";
+        variant = "";
+      };
+    };
+    displayManager.sddm = {
+      enable = true;
+      wayland.enable = true;
+      theme = "nord-sddm";
+    };
+    libinput.enable = true;
+    upower.enable = true;
+    fstrim.enable = true;
+    gvfs.enable = true;
+    openssh.enable = true;
+    flatpak.enable = false;
+    printing = {
+      enable = false;
+      drivers = [ pkgs.hplipWithPlugin ];
+    };
+    power-profiles-daemon.enable = false;
+    auto-cpufreq = {
+      enable = true;
+      settings = {
+        battery = {
+          governor = "powersave";
+          turbo = "never";
+        };
+        charger = {
+          governor = "performance";
+          turbo = "auto";
+        };
+      };
+    };
+    syncthing = {
+      enable = true;
+      user = userName;
+      dataDir = "/home/${userName}";
+    };
+  };
+
+  services.displayManager.autoLogin = {
+    enable = false;
+    user = userName;
+  };
+
+  environment.etc."sddm/wayland-sessions/river.desktop".text = ''
+    [Desktop Entry]
+    Name=River
+    Comment=A dynamic tiling Wayland compositor
+    DesktopNames=river
+    Exec=river
+    Type=Application
+  '';
+}
+
+
+# File: modules/services.nix
+
+{
+  pkgs,
+  userName,
+  homeDir,
+  ...
+}:
+
+{
+  virtualisation = {
+    docker = {
+      enable = true;
+    };
+
+    libvirtd = {
+      enable = true;
+      qemu = {
+        package = pkgs.qemu_kvm;
+        swtpm.enable = true;
+      };
+    };
+
+    spiceUSBRedirection.enable = true;
+  };
+
+  environment.systemPackages = with pkgs; [
+    libvirt
+    qemu
+    virt-viewer
+    virt-manager
+    spice
+    spice-gtk
+    spice-protocol
+    OVMF
+  ];
+
+  services.envfs.enable = true;
+
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+  };
 }
 
 
@@ -2205,13 +2287,12 @@
 {
   description = "NordValley NixOS with River and MangoWC window manager";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    fenix = {
-      url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     helix = {
@@ -2232,11 +2313,11 @@
     };
     mango = {
       url = "github:DreamMaoMao/mango";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     zed = {
       url = "github:zed-industries/zed";
@@ -2249,7 +2330,7 @@
       home-manager,
       nur,
       mango,
-      fenix,
+      nixpkgs-unstable,
       ...
     }:
     let
@@ -2259,38 +2340,15 @@
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
       system = "x86_64-linux";
-      # Global pkgs with Fenix overlay for Rust 1.89.0 stable (fixes wasm32-wasi and infinite recursion in overrides)
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
         overlays = [
           nur.overlays.default
-          # Fenix overlay: Force stable Rust (1.89.0) for all packages/builds (Zed, rustPlatform)
-          fenix.overlays.default
-          (
-            final: prev:
-            let
-              toolchain = fenix.packages.${system}.stable.toolchain;
-            in
-            {
-              # Use prev to break recursion loop in overrides
-              rustc = toolchain;
-              cargo = toolchain;
-              rustPlatform = final.makeRustPlatform {
-                rustc = toolchain;
-                cargo = toolchain;
-              };
-              # Override buildPackages using prev to avoid self-reference loop
-              buildPackages = prev.buildPackages.override {
-                rustc = toolchain;
-                cargo = toolchain;
-              };
-              # Specific override for Zed using the stable platform
-              zed = final.zed.override {
-                rustPlatform = final.rustPlatform;
-              };
-            }
-          )
+          (final: prev: {
+            quickshell = inputs.quickshell.packages.${system}.default;
+            mango = inputs.mango.packages.${system}.default;
+          })
         ];
       };
       defaults = {
@@ -2301,7 +2359,7 @@
     {
       # RiverWM configuration
       nixosConfigurations.river = nixpkgs.lib.nixosSystem {
-        inherit system pkgs; # Use global pkgs with Rust overlay
+        inherit system pkgs;
         specialArgs =
           inputs
           // userInfo
@@ -2312,9 +2370,6 @@
             isMango = false;
           };
         modules = [
-          {
-            nixpkgs.config.allowUnfree = true;
-          }
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
@@ -2331,7 +2386,6 @@
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
-                  fenix
                   helix
                   zen-browser
                   helium-browser
@@ -2349,7 +2403,7 @@
       };
       # MangoWC
       nixosConfigurations.mangowc = nixpkgs.lib.nixosSystem {
-        inherit system pkgs; # Use global pkgs with Rust overlay
+        inherit system pkgs;
         specialArgs =
           inputs
           // userInfo
@@ -2360,9 +2414,6 @@
             isMango = true;
           };
         modules = [
-          {
-            nixpkgs.config.allowUnfree = true;
-          }
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
@@ -2381,7 +2432,6 @@
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
-                  fenix
                   helix
                   zen-browser
                   helium-browser
@@ -2399,11 +2449,10 @@
         ];
       };
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs; # Use global pkgs with Rust overlay
+        inherit pkgs;
         extraSpecialArgs = {
           withGUI = defaults.withGUI;
           homeDir = defaults.homeDir;
-          fenix = inputs.fenix;
           helix = inputs.helix;
           quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;
