@@ -89,6 +89,9 @@ let
 
     # Libraries
     libgcc
+    xorg.libX11
+    xorg.libXft
+    xorg.libxcb
     lxqt.lxqt-policykit
     libnotify
 
