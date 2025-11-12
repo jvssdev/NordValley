@@ -5,7 +5,6 @@
   zen-browser,
   helium-browser,
   quickshell,
-  zed,
   ...
 }:
 
@@ -89,9 +88,6 @@ let
 
     # Libraries
     libgcc
-    xorg.libX11
-    xorg.libXft
-    xorg.libxcb
     lxqt.lxqt-policykit
     libnotify
 
@@ -117,12 +113,14 @@ let
     mako
     pavucontrol
 
+    # Editor
+    zed-editor
+
     # Custom packages from inputs
     zen-browser.packages.${pkgs.system}.default
     helium-browser.packages.${pkgs.system}.default
     helix.packages.${pkgs.system}.default
     quickshell.packages.${pkgs.system}.default
-    zed.packages.${pkgs.system}.default
   ];
 in
 basePackages

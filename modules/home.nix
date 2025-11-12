@@ -17,7 +17,6 @@ let
     isRiver
     isMango
     mango
-    zed
     ;
 in
 {
@@ -40,7 +39,6 @@ in
       zen-browser
       helium-browser
       quickshell
-      zed
       ;
   };
 

@@ -33,10 +33,6 @@
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-    zed = {
-      url = "github:zed-industries/zed";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
   outputs =
     inputs@{
@@ -104,7 +100,6 @@
                   zen-browser
                   helium-browser
                   quickshell
-                  zed
                   ;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
@@ -151,7 +146,6 @@
                   helium-browser
                   mango
                   quickshell
-                  zed
                   ;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
@@ -171,7 +165,6 @@
           quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;
           helium-browser = inputs.helium-browser;
-          zed = inputs.zed;
           isRiver = true;
           isMango = false;
         }

@@ -1619,6 +1619,7 @@
     powertop.enable = true;
     cpuFreqGovernor = lib.mkDefault "powersave";
   };
+
   fonts = {
     enableDefaultPackages = true;
     packages = with pkgs; [
@@ -1627,6 +1628,7 @@
       roboto
     ];
   };
+
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
@@ -2056,6 +2058,9 @@ let
 
     # Libraries
     libgcc
+    xorg.libX11
+    xorg.libXft
+    xorg.libxcb
     lxqt.lxqt-policykit
     libnotify
 
