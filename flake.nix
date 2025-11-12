@@ -63,29 +63,25 @@
         overlays = [
           nur.overlays.default
           fenix.overlays.default
-          (
-            final: prev:
-            let
-              rustToolchain =
-                with fenix.packages.${system};
-                combine [
-                  stable.rustc
-                  stable.cargo
-                  stable.rust-std
-                  stable.clippy
-                  stable.rustfmt
-                ];
-            in
-            {
-              rustc = rustToolchain;
-              cargo = rustToolchain;
-
-              rustPlatform = final.makeRustPlatform {
-                rustc = rustToolchain;
-                cargo = rustToolchain;
+          (final: prev: {
+            zed-editor =
+              let
+                rustToolchain =
+                  with final.fenix;
+                  combine [
+                    stable.rustc
+                    stable.cargo
+                    stable.rust-std
+                  ];
+                rustPlatformStable = final.makeRustPlatform {
+                  rustc = rustToolchain;
+                  cargo = rustToolchain;
+                };
+              in
+              prev.zed-editor.override {
+                rustPlatform = rustPlatformStable;
               };
-            }
-          )
+          })
         ];
       };
 
