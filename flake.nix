@@ -76,11 +76,6 @@
                 rustc = toolchain;
                 cargo = toolchain;
               };
-              # Override buildPackages using prev to avoid self-reference loop
-              buildPackages = prev.buildPackages.override {
-                rustc = toolchain;
-                cargo = toolchain;
-              };
               # Specific override for Zed using the stable platform
               zed = final.zed.override {
                 rustPlatform = final.rustPlatform;
