@@ -73,6 +73,8 @@
     powertop.enable = true;
     cpuFreqGovernor = lib.mkDefault "powersave";
   };
+
+  # Fixed fonts configuration
   fonts = {
     enableDefaultPackages = true;
     packages = with pkgs; [
@@ -80,7 +82,21 @@
       font-awesome
       roboto
     ];
+    fontconfig = {
+      enable = true;
+      defaultFonts = {
+        monospace = [ "JetBrainsMono Nerd Font" ];
+        sansSerif = [ "Roboto" ];
+      };
+    };
   };
+
+  environment.systemPackages = with pkgs; [
+    xorg.libX11
+    xorg.libXft
+    xorg.libXinerama
+  ];
+
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
