@@ -20,6 +20,8 @@
     };
 
     spiceUSBRedirection.enable = true;
+
+    waydroid.enable = true;
   };
 
   environment.systemPackages = with pkgs; [
@@ -31,6 +33,10 @@
     spice-gtk
     spice-protocol
     OVMF
+
+    # Waydroid dependencies
+    waydroid
+    lxc
   ];
 
   services.envfs.enable = true;
@@ -41,5 +47,13 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
+  };
+
+  # Syncthing - obrigatório
+  services.syncthing = {
+    enable = true;
+    user = userName;
+    dataDir = "/home/${userName}";
+    configDir = "/home/${userName}/.config/syncthing";
   };
 }

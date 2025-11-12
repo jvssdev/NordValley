@@ -172,18 +172,6 @@ if [[ $enable_intel =~ ^[Yy]$ ]]; then
     # This will be handled by the configuration
 fi
 
-# Ask about additional features
-echo
-print_info "Optional features:"
-read -p "Enable Docker? (y/n) [y]: " enable_docker
-enable_docker=${enable_docker:-y}
-
-read -p "Enable virtualization (libvirt/QEMU)? (y/n) [y]: " enable_virt
-enable_virt=${enable_virt:-y}
-
-read -p "Enable Syncthing? (y/n) [y]: " enable_syncthing
-enable_syncthing=${enable_syncthing:-y}
-
 # Git configuration
 if [ -d "$FLAKE_DIR/.git" ]; then
     print_info "Adding changes to git..."
@@ -205,12 +193,21 @@ echo "User: $currentUser"
 echo "Full Name: $fullName"
 echo "Email: $userEmail"
 echo "Window Manager: $WM_CONFIG"
-echo "Docker: $([[ $enable_docker =~ ^[Yy]$ ]] && echo "Yes" || echo "No")"
-echo "Virtualization: $([[ $enable_virt =~ ^[Yy]$ ]] && echo "Yes" || echo "No")"
-echo "Syncthing: $([[ $enable_syncthing =~ ^[Yy]$ ]] && echo "Yes" || echo "No")"
+echo ""
+echo "The following features will be installed:"
+echo "  • Docker (container runtime)"
+echo "  • Virtualization (libvirt/QEMU)"
+echo "  • Syncthing (file synchronization)"
+echo "  • Waydroid (Android container)"
+echo "  • Rclone (cloud storage sync)"
+if [[ $enable_intel =~ ^[Yy]$ ]]; then
+    echo "  • Intel Graphics Drivers"
+fi
 if [ -n "$BUILD_FLAGS" ]; then
+    echo ""
     echo "Build Flags: $BUILD_FLAGS (low RAM mode)"
 else
+    echo ""
     echo "Build Flags: default"
 fi
 echo "═══════════════════════════════════════════════════════════"
@@ -252,6 +249,13 @@ if [ "$build_success" = "true" ]; then
     echo "  - Your window manager will be: ${WM_CONFIG}"
     echo "  - Your home directory will be: /home/$currentUser"
     echo "  - Config location: ${FLAKE_DIR}"
+    echo ""
+    echo "Installed services:"
+    echo "  - Docker: docker command available"
+    echo "  - libvirt/QEMU: virt-manager for VMs"
+    echo "  - Syncthing: http://localhost:8384"
+    echo "  - Waydroid: Initialize with 'waydroid init'"
+    echo "  - Rclone: Configure with 'rclone config'"
     echo
     read -p "Reboot now? (y/n) [n]: " reboot_now
     if [[ $reboot_now =~ ^[Yy]$ ]]; then

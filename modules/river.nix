@@ -48,11 +48,6 @@
         };
       };
     };
-    syncthing = {
-      enable = true;
-      user = userName;
-      dataDir = "/home/${userName}";
-    };
   };
 
   services.displayManager.autoLogin = {

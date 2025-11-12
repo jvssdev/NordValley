@@ -78,6 +78,10 @@ let
     wl-clipboard
     cliphist
 
+    # Cloud/Sync tools
+    rclone
+    rclone-ui
+
     # GUI applications
     keepassxc
     anydesk
