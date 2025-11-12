@@ -56,20 +56,33 @@
       };
       system = "x86_64-linux";
 
+      # Hybrid overlay: Fenix stable Rust + unstable nixpkgs
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
         overlays = [
           nur.overlays.default
+          fenix.overlays.default
           (
             final: prev:
             let
-              stableToolchain = fenix.packages.${system}.stable.toolchain;
+              rustToolchain =
+                with fenix.packages.${system};
+                combine [
+                  stable.rustc
+                  stable.cargo
+                  stable.rust-std
+                  stable.clippy
+                  stable.rustfmt
+                ];
             in
             {
-              rustPlatformStable = prev.makeRustPlatform {
-                rustc = stableToolchain;
-                cargo = stableToolchain;
+              rustc = rustToolchain;
+              cargo = rustToolchain;
+
+              rustPlatform = final.makeRustPlatform {
+                rustc = rustToolchain;
+                cargo = rustToolchain;
               };
             }
           )
@@ -95,6 +108,9 @@
             isMango = false;
           };
         modules = [
+          {
+            nixpkgs.config.allowUnfree = true;
+          }
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
@@ -140,6 +156,9 @@
             isMango = true;
           };
         modules = [
+          {
+            nixpkgs.config.allowUnfree = true;
+          }
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
