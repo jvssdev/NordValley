@@ -40,8 +40,8 @@ in
   home.sessionVariables = {
     EDITOR = "hx";
     TERMINAL = "ghostty";
-    BROWSER = "${zen-browser}/bin/zen";
-    DEFAULT_BROWSER = "${zen-browser}/bin/zen";
+    BROWSER = "${helium-browser.packages.${pkgs.system}.default}/bin/helium";
+    DEFAULT_BROWSER = "${helium-browser.packages.${pkgs.system}.default}/bin/helium";
     XDG_SCREENSHOTS_DIR = "$HOME/Pictures/screenshots";
     LC_ALL = "en_US.UTF-8";
     QT_QPA_PLATFORMTHEME = "qt6ct";
@@ -50,31 +50,32 @@ in
   };
   imports = [
     ./programs.nix
-    ../home/btop.nix
-    ../home/fastfetch.nix
-    ../home/fuzzel.nix
-    ../home/ghostty.nix
-    ../home/gtklock.nix
-    ../home/helix.nix
-    ../home/mako.nix
-    ../home/mpd.nix
-    ../home/quickshell/quickshell.nix
-    ../home/rmpc.nix
-    ../home/waybar.nix
-    ../home/wpaperd.nix
-    ../home/yazi.nix
-    ../home/zathura.nix
-    ../home/zed.nix
-    ../home/zen.nix
-    ../home/starship.nix
-    ../home/zoxide.nix
-    ../home/stylix.nix
+    ../home/btop/default.nix
+    ../home/fastfetch/default.nix
+    ../home/fuzzel/default.nix
+    ../home/ghostty/default.nix
+    ../home/gtklock/default.nix
+    ../home/helix/default.nix
+    ../home/mako/default.nix
+    ../home/mpd/default.nix
+    ../home/mpv/default.nix
+    ../home/quickshell/default.nix
+    ../home/starship/default.nix
+    ../home/stylix/default.nix
+    ../home/waybar/default.nix
+    ../home/wpaperd/default.nix
+    ../home/yazi/default.nix
+    ../home/zathura/default.nix
+    ../home/zed/default.nix
+    ../home/zen/default.nix
+    ../home/zoxide/default.nix
+    ../home/zsh/default.nix
   ]
   ++ lib.optionals isRiver [
     ../home/river
   ]
   ++ lib.optionals isMango [
-    ../home/mango.nix
+    ../home/mango/default.nix
     mango.hmModules.mango
   ]
   ++ [

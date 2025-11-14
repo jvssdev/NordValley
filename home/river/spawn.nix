@@ -13,7 +13,7 @@ let
   nm-applet = "${pkgs.networkmanagerapplet}/bin/nm-applet";
   blueman-applet = "${pkgs.blueman}/bin/blueman-applet";
   wl-paste = "${pkgs.wl-clipboard}/bin/wl-paste";
-  hypridle = "${pkgs.hypridle}/bin/hypridle";
+  quickshell = "${pkgs.quickshell}/bin/quickshell";
 
   spawns = [
     "${wpaperd}"
@@ -21,7 +21,7 @@ let
     "${mako}"
     "${nm-applet} --indicator"
     "${blueman-applet}"
-    "${hypridle} -c ~/.config/hypridle/hypridle.conf"
+    "${quickshell}"
   ];
 in
 {

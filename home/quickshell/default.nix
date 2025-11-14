@@ -104,26 +104,24 @@
     }
   '';
 
-  # Autostart via systemd user service
-  systemd.user.services.quickshell-idle = {
-    Unit = {
-      Description = "Quickshell Idle Manager (gtklock integration)";
-      PartOf = [ "graphical-session.target" ];
-      After = [ "graphical-session.target" ];
-    };
-
-    Service = {
-      Type = "simple";
-      ExecStart = "${pkgs.quickshell}/bin/quickshell";
-      Restart = "on-failure";
-      RestartSec = 3;
-    };
-
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-  };
-
-  # Enable the service
-  systemd.user.services.quickshell-idle.enable = true;
+  # systemd.user.services.quickshell-idle = {
+  #   Unit = {
+  #     Description = "Quickshell Idle Manager (gtklock integration)";
+  #     PartOf = [ "graphical-session.target" ];
+  #     After = [ "graphical-session.target" ];
+  #   };
+  #
+  #   Service = {
+  #     Type = "simple";
+  #     ExecStart = "${pkgs.quickshell}/bin/quickshell";
+  #     Restart = "on-failure";
+  #     RestartSec = 3;
+  #   };
+  #
+  #   Install = {
+  #     WantedBy = [ "graphical-session.target" ];
+  #   };
+  # };
+  #
+  # systemd.user.services.quickshell-idle.enable = true;
 }
