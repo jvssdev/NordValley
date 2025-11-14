@@ -80,7 +80,59 @@
       nerd-fonts.jetbrains-mono
       font-awesome
       roboto
+      montserrat
     ];
+  };
+
+  services = {
+    xserver = {
+      enable = false;
+      xkb = {
+        layout = "br";
+        variant = "";
+      };
+    };
+
+    displayManager.sddm = {
+      enable = true;
+      wayland.enable = true;
+      theme = "Nordic";
+    };
+
+    displayManager.autoLogin = {
+      enable = false;
+      user = userName;
+    };
+
+    libinput.enable = true;
+    upower.enable = true;
+    fstrim.enable = true;
+    gvfs.enable = true;
+    openssh.enable = true;
+    flatpak.enable = false;
+    printing = {
+      enable = false;
+      drivers = [ pkgs.hplipWithPlugin ];
+    };
+    power-profiles-daemon.enable = false;
+    auto-cpufreq = {
+      enable = true;
+      settings = {
+        battery = {
+          governor = "powersave";
+          turbo = "never";
+        };
+        charger = {
+          governor = "performance";
+          turbo = "auto";
+        };
+      };
+    };
+    syncthing = {
+      enable = true;
+      user = userName;
+      dataDir = "/home/${userName}";
+    };
   };
 
   networking = {

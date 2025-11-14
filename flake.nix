@@ -9,6 +9,10 @@
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     helix = {
       url = "github:helix-editor/helix/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -87,7 +91,6 @@
           ./modules/elevated-packages.nix
           ./modules/intel-drivers.nix
           ./modules/power-management.nix
-          ./modules/river.nix
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -96,6 +99,7 @@
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
+                  stylix
                   helix
                   zen-browser
                   helium-browser
@@ -130,7 +134,6 @@
           ./modules/elevated-packages.nix
           ./modules/power-management.nix
           ./modules/intel-drivers.nix
-          ./modules/mango.nix
           mango.nixosModules.mango
           { programs.mango.enable = true; }
           home-manager.nixosModules.home-manager
@@ -141,6 +144,7 @@
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
+                  stylix
                   helix
                   zen-browser
                   helium-browser
@@ -161,6 +165,7 @@
         extraSpecialArgs = {
           withGUI = defaults.withGUI;
           homeDir = defaults.homeDir;
+          stylix = inputs.stylix;
           helix = inputs.helix;
           quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;

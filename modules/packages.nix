@@ -25,19 +25,12 @@ let
 
     bibata-cursors
 
-    # LSP servers
-    markdown-oxide
-    mpls
-    deno
-    zig
-    zls
-    go
-    gopls
-    nixd
-    nil
-    nixfmt-rfc-style
-    nixpkgs-fmt
+    xdg-desktop-portal-gtk
+    xdg-desktop-portal-wlr
+    xwayland
 
+    zig
+    go
     # CLI tools
     lazygit
     fzf
@@ -51,19 +44,18 @@ let
     yaziPlugins.nord
     yaziPlugins.starship
     bat
+    starship
+    lsd
     ffmpeg
 
     # Media
     mpc
-    mpd
-    mpd-mpris
     playerctl
-    rmpc
 
     # Wayland tools
-    hypridle
     wleave
     gtklock
+    wlopm
     wpaperd
     gammastep
 
@@ -116,6 +108,10 @@ let
     fuzzel
     mako
     pavucontrol
+
+    base16-schemes
+
+    nordic.sddm
 
     # Editor
     zed-editor

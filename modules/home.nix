@@ -3,6 +3,8 @@
   config,
   specialArgs,
   lib,
+  isRiver ? false,
+  isMango ? false,
   ...
 }:
 let
@@ -14,24 +16,14 @@ let
     zen-browser
     helium-browser
     quickshell
-    isRiver
-    isMango
     mango
     ;
 in
 {
-  imports = [
-    ./programs.nix
-  ]
-  ++ lib.optionals isMango [
-    mango.hmModules.mango
-  ];
-
   home.username = userName;
   home.homeDirectory = homeDir;
   xdg.enable = true;
   home.stateVersion = "25.05";
-
   home.packages = pkgs.callPackage ./packages.nix {
     inherit
       withGUI
@@ -41,12 +33,10 @@ in
       quickshell
       ;
   };
-
   home.sessionPath = [
     "$HOME/.nix-profile/bin"
     "/nix/var/nix/profiles/default/bin"
   ];
-
   home.sessionVariables = {
     EDITOR = "hx";
     TERMINAL = "ghostty";
@@ -58,56 +48,112 @@ in
     NIXOS_OZONE_WL = "1";
     SHELL = "${pkgs.zsh}/bin/zsh";
   };
+  imports = [
+    ./programs.nix
+    ../home/btop.nix
+    ../home/fastfetch.nix
+    ../home/fuzzel.nix
+    ../home/ghostty.nix
+    ../home/gtklock.nix
+    ../home/helix.nix
+    ../home/mako.nix
+    ../home/mpd.nix
+    ../home/quickshell/quickshell.nix
+    ../home/rmpc.nix
+    ../home/waybar.nix
+    ../home/wpaperd.nix
+    ../home/yazi.nix
+    ../home/zathura.nix
+    ../home/zed.nix
+    ../home/zen.nix
+    ../home/starship.nix
+    ../home/zoxide.nix
+    ../home/stylix.nix
+  ]
+  ++ lib.optionals isRiver [
+    ../home/river
+  ]
+  ++ lib.optionals isMango [
+    ../home/mango.nix
+    mango.hmModules.mango
+  ]
+  ++ [
+    (import ../home/wleave {
+      inherit
+        pkgs
+        config
+        specialArgs
+        lib
+        isRiver
+        isMango
+        ;
+    })
+  ];
 
-  # MangoWC configuration
-  wayland.windowManager.mango = lib.mkIf isMango {
+  xdg.mimeApps = {
     enable = true;
-    settings = builtins.readFile ../dotfiles/mango/config.conf;
-    autostart_sh = builtins.readFile ../dotfiles/mango/autostart.sh;
-  };
 
-  home.file = {
-    # For nix-shell
-    ".config/nixpkgs/config.nix".text = ''
-      {
-        allowUnfree = true;
-      }
-    '';
-    ".config/btop".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/btop";
-    ".config/lazygit".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/lazygit";
-    ".config/fastfetch".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/fastfetch";
-    ".config/wleave".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/wleave";
-    ".config/helix".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/helix";
-    ".config/fuzzel".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/fuzzel";
-    ".config/hypridle".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/hypridle";
-    ".config/waybar".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/waybar";
-    ".config/gtklock".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/gtklock";
-    ".config/mako".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mako";
-    ".config/mpd".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mpd";
-    ".config/wpaperd".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/wpaperd";
-    ".config/yazi".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/yazi";
-    ".config/zathura".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zathura";
-    ".config/zed".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zed";
-    ".config/quickshell".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/quickshell";
-    ".config/ghostty".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/ghostty";
-    ".zen".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/zen";
-  }
-  // lib.optionalAttrs (isRiver) {
-    ".config/river".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/river";
-  }
-  // lib.optionalAttrs (isMango) {
-    ".config/mango".source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/NordValley/dotfiles/mango";
+    defaultApplications = {
+      # Web browser
+      "x-scheme-handler/http" = [ "Helium.desktop" ];
+      "x-scheme-handler/https" = [ "Helium.desktop" ];
+      "x-scheme-handler/chrome" = [ "Helium.desktop" ];
+      "text/html" = [ "Helium.desktop" ];
+      "application/x-extension-htm" = [ "Helium.desktop" ];
+      "application/x-extension-html" = [ "Helium.desktop" ];
+      "application/x-extension-shtml" = [ "Helium.desktop" ];
+      "application/xhtml+xml" = [ "Helium.desktop" ];
+      "application/x-extension-xhtml" = [ "Helium.desktop" ];
+      "application/x-extension-xht" = [ "Helium.desktop" ];
+
+      # File manager
+      "inode/directory" = [ "thunar.desktop" ];
+
+      # Images
+      "image/png" = [ "imv.desktop" ];
+      "image/jpeg" = [ "imv.desktop" ];
+      "image/gif" = [ "imv.desktop" ];
+      "image/webp" = [ "imv.desktop" ];
+      "image/svg+xml" = [ "imv.desktop" ];
+
+      # PDF
+      "application/pdf" = [ "org.pwmt.zathura.desktop" ];
+
+      # Video
+      "video/mp4" = [ "mpv.desktop" ];
+      "video/x-matroska" = [ "mpv.desktop" ];
+
+      # Audio
+      "audio/mpeg" = [ "mpv.desktop" ];
+
+      # Text files
+      "text/plain" = [ "helix.desktop" ];
+      "text/txt" = [ "helix.desktop" ];
+    };
+
+    associations.added = {
+      # Web browser
+      "x-scheme-handler/http" = [ "Helium.desktop" ];
+      "x-scheme-handler/https" = [ "Helium.desktop" ];
+      "x-scheme-handler/chrome" = [ "Helium.desktop" ];
+      "text/html" = [ "Helium.desktop" ];
+      "application/x-extension-htm" = [ "Helium.desktop" ];
+      "application/x-extension-html" = [ "Helium.desktop" ];
+      "application/x-extension-shtml" = [ "Helium.desktop" ];
+      "application/xhtml+xml" = [ "Helium.desktop" ];
+      "application/x-extension-xhtml" = [ "Helium.desktop" ];
+      "application/x-extension-xht" = [ "Helium.desktop" ];
+
+      # File manager
+      "inode/directory" = [ "thunar.desktop" ];
+
+      # Images
+      "image/png" = [ "imv.desktop" ];
+      "image/jpeg" = [ "imv.desktop" ];
+
+      # PDF
+      "application/pdf" = [ "org.pwmt.zathura.desktop" ];
+    };
   };
 
   gtk = {
@@ -126,7 +172,6 @@ in
       gtk-application-prefer-dark-theme = 1;
     };
   };
-
   qt = {
     enable = true;
     style.name = "kvantum";
