@@ -156,6 +156,8 @@ in
     };
   };
 
+  xdg.configFile."mimeapps.list".force = true;
+
   gtk = {
     theme = {
       name = "Nordic";
