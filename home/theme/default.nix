@@ -21,7 +21,10 @@ in
 
   fonts.fontconfig.enable = true;
   home.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
+    nerd-fonts.hack
+    nerd-fonts.meslo-lg
     montserrat
   ];
 
