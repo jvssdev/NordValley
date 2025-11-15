@@ -1,17 +1,19 @@
 {
   pkgs,
-  inputs,
   lib,
+  specialArgs,
   ...
 }:
+let
+  zen-browser = specialArgs.zen-browser;
+in
 {
-  imports = [
-    inputs.zen-browser.homeModules.beta
+  home.packages = [
+    zen-browser.packages.${pkgs.system}.default
   ];
 
   programs.zen-browser = {
     enable = true;
-
     profiles.default = {
       id = 0;
       name = "default";
@@ -92,7 +94,6 @@
   };
 
   home.sessionVariables = {
-    BROWSER = "zen-beta";
     MOZ_ENABLE_WAYLAND = "1";
     MOZ_USE_XINPUT2 = "1";
   };
