@@ -2,9 +2,17 @@
   config,
   lib,
   pkgs,
+  specialArgs,
   ...
 }:
+let
+  stylix = specialArgs.stylix;
+in
 {
+  imports = [
+    stylix.homeManagerModules.stylix
+  ];
+
   stylix = {
     enable = true;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/nord.yaml";
@@ -41,7 +49,7 @@
       lazygit.enable = true;
       wpaperd.enable = false;
       waybar.enable = false;
-      zeb.enable = false;
+      zed.enable = false;
     };
   };
 }
