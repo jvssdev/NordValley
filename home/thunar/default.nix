@@ -15,10 +15,10 @@
     ];
   };
 
-  environment.systemPackages = [
-    pkgs.ark
-    pkgs.ffmpegthumbnailer
-    pkgs.libgsf
-    pkgs.xfce.tumbler
+  home.packages = with pkgs; [
+    ark
+    ffmpegthumbnailer
+    libgsf
+    xfce.tumbler
   ];
 }
