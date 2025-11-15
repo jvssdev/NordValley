@@ -43,7 +43,7 @@ in
           };
         };
       };
-      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+      extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
         ublock-origin
         darkreader
         privacy-badger
