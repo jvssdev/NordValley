@@ -15,7 +15,7 @@
     defaultTimeout = 5000;
     margin = "8";
 
-    extraConfig = ''
+    settings = ''
       [hidden]
       format=(and %h more)
     '';
