@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let
-  palette = config.stylix.base16Scheme.palette;
+  palette = config.colorScheme.palette;
 in
 {
   programs.waybar = {

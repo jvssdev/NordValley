@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let
-  c = config.stylix.colors;
+  c = config.colorScheme.palette;
 in
 {
   programs.starship = {

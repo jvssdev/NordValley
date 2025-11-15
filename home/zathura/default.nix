@@ -2,9 +2,8 @@
 {
   programs.zathura = {
     enable = true;
-    options = with config.stylix.base16Scheme.palette; {
-      font = "${config.stylix.fonts.serif.name} 14";
-
+    options = with config.colorScheme.palette {
+      
       default-fg = "#${base05}";
       default-bg = "#${base00}";
       completion-bg = "#${base02}";

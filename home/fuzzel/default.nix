@@ -1,17 +1,27 @@
-{ lib, ... }:
+{ config, lib, ... }:
+let
+  c = config.colorScheme.palette;
+in
 {
   programs = {
-    # Required so Stylix can inject its theme into fuzzel's config
     fuzzel = {
       enable = true;
       settings = {
         main = {
-          font = lib.mkForce "JetBrainsMono Nerd Font:size 10";
+          font = lib.mkForce "JetBrainsMono Nerd Font:size=10";
           icon-theme = "Nordzy-dark";
           dpi-aware = "no";
         };
+        colors = {
+          background = "${c.base00}f0";
+          text = "${c.base05}ff";
+          selection = "${c.base0D}ff";
+          selection-text = "${c.base00}ff";
+          border = "${c.base0D}ff";
+        };
         border = {
-          selection-radius = 10;
+          width = 2;
+          radius = 10;
         };
       };
     };

@@ -9,8 +9,7 @@
 }:
 let
   inherit (specialArgs) homeDir;
-  inherit (config.lib.stylix) colors;
-
+  c = config.colorScheme.palette;
   logoutAction =
     if isRiver then
       "riverctl exit"
@@ -55,20 +54,17 @@ in
         }
       ];
     };
-
     "wleave/style.css".text = ''
       * {
-        font-family: ${config.stylix.fonts.sansSerif.name};
+        font-family: "Montserrat", sans-serif;
         font-size: 20pt;
       }
-
       window {
-        color: #${colors.base05};
-        background-color: #${colors.base00};
+        color: #${c.base05};
+        background-color: #${c.base00};
       }
-
       button {
-        border-radius: ${toString config.stylix.rounding.radius}px;
+        border-radius: 10px;
         background-repeat: no-repeat;
         background-position: center;
         background-size: 50%;
@@ -77,39 +73,31 @@ in
         margin: 5px;
         transition: box-shadow 0.1s ease-in-out, background-color 0.1s ease-in-out;
       }
-
       button:hover {
-        background-color: #${colors.base01};
+        background-color: #${c.base01};
       }
-
       button:focus {
-        background-color: #${colors.base0D};
-        color: #${colors.base00};
-        box-shadow: 0 0 10px #${colors.base0D};
+        background-color: #${c.base0D};
+        color: #${c.base00};
+        box-shadow: 0 0 10px #${c.base0D};
       }
-
       #lock {
-        background-image: url("${homeDir}/.config/wleave/icons/lock.png");
+        background-image: image(url("${homeDir}/.config/wleave/icons/lock.png"));
       }
-
       #logout {
-        background-image: url("${homeDir}/.config/wleave/icons/logout.png");
+        background-image: image(url("${homeDir}/.config/wleave/icons/logout.png"));
       }
-
       #suspend {
-        background-image: url("${homeDir}/.config/wleave/icons/suspend.png");
+        background-image: image(url("${homeDir}/.config/wleave/icons/suspend.png"));
       }
-
       #shutdown {
-        background-image: url("${homeDir}/.config/wleave/icons/shutdown.png");
+        background-image: image(url("${homeDir}/.config/wleave/icons/shutdown.png"));
       }
-
       #reboot {
-        background-image: url("${homeDir}/.config/wleave/icons/reboot.png");
+        background-image: image(url("${homeDir}/.config/wleave/icons/reboot.png"));
       }
     '';
   };
-
   home.file = {
     ".config/wleave/icons/lock.png".source = ./icons/lock.png;
     ".config/wleave/icons/logout.png".source = ./icons/logout.png;

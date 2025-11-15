@@ -9,10 +9,9 @@
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    stylix = {
-      url = "github:danth/stylix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+
+    nix-colors.url = "github:misterio77/nix-colors";
+
     helix = {
       url = "github:helix-editor/helix/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -45,6 +44,7 @@
       nur,
       mango,
       nixpkgs-unstable,
+      nix-colors,
       ...
     }:
     let
@@ -99,11 +99,11 @@
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
-                  stylix
                   helix
                   zen-browser
                   helium-browser
                   quickshell
+                  nix-colors
                   ;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
@@ -112,6 +112,7 @@
               };
               sharedModules = [
                 inputs.zen-browser.homeModules.default
+                nix-colors.homeManagerModules.default
               ];
             };
           }
@@ -160,12 +161,12 @@
               users.${userInfo.userName} = import ./modules/home.nix;
               extraSpecialArgs = {
                 inherit (inputs)
-                  stylix
                   helix
                   zen-browser
                   helium-browser
                   mango
                   quickshell
+                  nix-colors
                   ;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
@@ -174,6 +175,7 @@
               };
               sharedModules = [
                 inputs.zen-browser.homeModules.default
+                nix-colors.homeManagerModules.default
               ];
             };
           }
@@ -184,16 +186,19 @@
         extraSpecialArgs = {
           withGUI = defaults.withGUI;
           homeDir = defaults.homeDir;
-          stylix = inputs.stylix;
           helix = inputs.helix;
           quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;
           helium-browser = inputs.helium-browser;
+          nix-colors = inputs.nix-colors;
           isRiver = true;
           isMango = false;
         }
         // userInfo;
-        modules = [ ./modules/home.nix ];
+        modules = [
+          ./modules/home.nix
+          nix-colors.homeManagerModules.default
+        ];
       };
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
         inherit system;

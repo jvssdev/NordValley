@@ -11,7 +11,7 @@
 
     settings = {
       # Theme settings
-      # color_theme = "nord";  -- stylix
+      color_theme = "nord";
       theme_background = true;
       truecolor = true;
       force_tty = false;

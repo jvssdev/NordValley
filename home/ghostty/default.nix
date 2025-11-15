@@ -5,7 +5,7 @@
     settings = {
       font-size = 15;
       font-family = "JetBrainsMono Nerd Font";
-      # theme = "Nord";  -- stylix
+      theme = "Nord";
       window-decoration = false;
       cursor-style = "bar";
       cursor-style-blink = false;

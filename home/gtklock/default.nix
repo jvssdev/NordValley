@@ -2,10 +2,14 @@
   config,
   pkgs,
   lib,
+  specialArgs,
   ...
 }:
 let
-  c = config.stylix.colors;
+  inherit (specialArgs)
+    homeDir
+    ;
+  c = config.colorScheme.palette;
 
   gtklockConfig = pkgs.writeText "gtklock-config" ''
     [main]
@@ -23,7 +27,7 @@ let
   gtklockStyle = pkgs.writeText "gtklock-style.css" ''
     window {
       background-color: #${c.base00};
-      background-image: url("${config.stylix.image}");
+      background-image: url("${homeDir}/Wallpapers/a6116535-4a72-453e-83c9-ea97b8597d8c.png");
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;

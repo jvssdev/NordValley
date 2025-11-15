@@ -61,7 +61,7 @@ in
     ../home/mpv/default.nix
     ../home/quickshell/default.nix
     ../home/starship/default.nix
-    ../home/stylix/default.nix
+    ../home/theme/default.nix
     ../home/waybar/default.nix
     ../home/wpaperd/default.nix
     ../home/yazi/default.nix
@@ -158,26 +158,4 @@ in
   };
 
   xdg.configFile."mimeapps.list".force = true;
-
-  gtk = {
-    theme = {
-      name = "Nordic";
-      package = pkgs.nordic;
-    };
-    iconTheme = {
-      name = "Nordzy-dark";
-      package = pkgs.nordzy-icon-theme;
-    };
-    gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
-    };
-    gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
-    };
-  };
-  qt = {
-    enable = true;
-    style.name = "kvantum";
-    platformTheme.name = "qt6ct";
-  };
 }
