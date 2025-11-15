@@ -8,17 +8,21 @@
 {
   programs.thunar = {
     enable = true;
-    plugins = [
-      pkgs.xfce.thunar-archive-plugin
-      pkgs.xfce.thunar-media-tags-plugin
-      pkgs.xfce.thunar-volman
+    plugins = with pkgs.xfce; [
+      thunar-archive-plugin
+      thunar-media-tags-plugin
+      thunar-volman
     ];
   };
+
+  programs.xfconf.enable = true;
+  services.gvfs.enable = true;
+  services.tumbler.enable = true;
 
   home.packages = with pkgs; [
     ark
     ffmpegthumbnailer
     libgsf
-    xfce.tumbler
+    tumbler
   ];
 }
