@@ -110,6 +110,9 @@
                 isRiver = true;
                 isMango = false;
               };
+              sharedModules = [
+                inputs.zen-browser.homeManagerModules.default
+              ];
             };
           }
         ];
@@ -169,6 +172,9 @@
                 isRiver = false;
                 isMango = true;
               };
+              sharedModules = [
+                inputs.zen-browser.homeManagerModules.default
+              ];
             };
           }
         ];
