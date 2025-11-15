@@ -253,6 +253,13 @@
             language-servers = [ "nixd" ];
             auto-format = true;
           }
+
+          {
+            name = "python";
+            # formatter.command = "";
+            language-servers = [ "basedpyright" ];
+            auto-format = true;
+          }
           # {
           #   name = "toml";
           #   formatter = { command = "taplo"; args = [ "format" "-" ]; };
@@ -284,12 +291,14 @@
   };
 
   home.packages = with pkgs; [
-
-    nodePackages.typescript-language-server
     gopls
     zls
-    deno
+    typescript
 
+    nodePackages.typescript-language-server
+    cmake-language-server
+    basedpyright
+    yaml-language-server
     nixfmt-rfc-style
     nixpkgs-fmt
     nil
@@ -298,9 +307,6 @@
     shfmt
     nodePackages.prettier
     biome
-    gofmt
-    nixfmt
-
     mpls
   ];
 }
