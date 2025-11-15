@@ -135,7 +135,20 @@
           ./modules/power-management.nix
           ./modules/intel-drivers.nix
           mango.nixosModules.mango
-          { programs.mango.enable = true; }
+          {
+            programs.mango.enable = true;
+          }
+          {
+            # SDDM Desktop Entry for MangoWC
+            environment.etc."sddm/wayland-sessions/mango.desktop".text = ''
+              [Desktop Entry]
+              Name=MangoWC
+              Comment=A Wayland compositor based on wlroots
+              DesktopNames=mango
+              Exec=mango
+              Type=Application
+            '';
+          }
           home-manager.nixosModules.home-manager
           {
             home-manager = {

@@ -4,17 +4,6 @@
 }:
 
 {
-
-  # Desktop entry for Mango
-  environment.etc."sddm/wayland-sessions/mango.desktop".text = ''
-    [Desktop Entry]
-    Name=MangoWC
-    Comment=A Wayland compositor based on wlroots
-    DesktopNames=mango
-    Exec=mango
-    Type=Application
-  '';
-
   wayland.windowManager.mango = {
     enable = true;
     autostart_sh = ''
