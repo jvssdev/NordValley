@@ -8,10 +8,6 @@ let
   zen-browser = specialArgs.zen-browser;
 in
 {
-  imports = [
-    zen-browser.homeModules.default
-  ];
-
   home.packages = [
     zen-browser.packages.${pkgs.system}.default
   ];
