@@ -111,7 +111,7 @@
                 isMango = false;
               };
               sharedModules = [
-                inputs.zen-browser.homeManagerModules.default
+                inputs.zen-browser.homeModules.default
               ];
             };
           }
@@ -173,7 +173,7 @@
                 isMango = true;
               };
               sharedModules = [
-                inputs.zen-browser.homeManagerModules.default
+                inputs.zen-browser.homeModules.default
               ];
             };
           }

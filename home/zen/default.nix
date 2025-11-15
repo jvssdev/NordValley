@@ -9,7 +9,7 @@ let
 in
 {
   imports = [
-    zen-browser.homeManagerModules.default
+    zen-browser.homeModules.default
   ];
 
   home.packages = [
