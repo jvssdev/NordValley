@@ -3,6 +3,12 @@ let
   palette = config.colorScheme.palette;
 in
 {
+  home.packages = with pkgs; [
+    zsh-autosuggestions
+    zsh-completions
+    fast-syntax-highlighting
+  ];
+
   programs.zsh = {
     enable = true;
     history = {

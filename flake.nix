@@ -16,6 +16,10 @@
       url = "github:helix-editor/helix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    zsh-hlx = {
+      url = "github:multirious/zsh-helix-mode/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -45,6 +49,7 @@
       mango,
       nixpkgs-unstable,
       nix-colors,
+      zsh-hlx,
       ...
     }:
     let
