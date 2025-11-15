@@ -8,6 +8,10 @@ let
   zen-browser = specialArgs.zen-browser;
 in
 {
+  imports = [
+    zen-browser.homeManagerModules.default
+  ];
+
   home.packages = [
     zen-browser.packages.${pkgs.system}.default
   ];
@@ -17,8 +21,7 @@ in
     profiles.default = {
       id = 0;
       name = "default";
-      isDefault = false;
-
+      isDefault = true;
       settings = {
         "apz.overscroll.enabled" = true;
         "browser.aboutConfig.showWarning" = false;
@@ -37,32 +40,26 @@ in
         "devtools.debugger.remote-enabled" = true;
         "devtools.chrome.enabled" = true;
       };
-
       search = {
         force = true;
-        default = "duckduckgo";
+        default = "DuckDuckGo";
         engines = {
-          "duckduckgo" = {
+          "DuckDuckGo" = {
             urls = [ { template = "https://duckduckgo.com/?q={searchTerms}&ia=web"; } ];
             icon = "https://duckduckgo.com/favicon.ico";
             definedAliases = [ "@ddg" ];
           };
         };
       };
-
-      extensions = {
-        # https://gitlab.com/rycee/nur-expressions/-/raw/master/pkgs/firefox-addons/addons.json
-        packages = with pkgs.nur.repos.rycee.firefox-addons; [
-          ublock-origin
-          darkreader
-          privacy-badger
-          keepassxc-browser
-          sponsorblock
-          betterttv
-        ];
-      };
-
-      userChrome = lib.mkAfter ''
+      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+        ublock-origin
+        darkreader
+        privacy-badger
+        keepassxc-browser
+        sponsorblock
+        betterttv
+      ];
+      userChrome = ''
         :root:not([inDOMFullscreen="true"]):not([chromehidden~="location"]):not([chromehidden~="toolbar"]) {
           & #tabbrowser-tabbox #tabbrowser-tabpanels .browserSidebarContainer {
             & browser[transparent="true"] {
@@ -72,7 +69,6 @@ in
         }
       '';
     };
-
     policies = {
       AutofillAddressEnabled = false;
       AutofillCreditCardEnabled = false;
