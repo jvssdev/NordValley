@@ -109,6 +109,7 @@
                   helium-browser
                   quickshell
                   nix-colors
+                  zsh-hlx
                   ;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
@@ -172,6 +173,7 @@
                   mango
                   quickshell
                   nix-colors
+                  zsh-hlx
                   ;
                 inherit (userInfo) userName userEmail fullName;
                 inherit (defaults) withGUI homeDir;
@@ -196,6 +198,7 @@
           zen-browser = inputs.zen-browser;
           helium-browser = inputs.helium-browser;
           nix-colors = inputs.nix-colors;
+          zsh-hlx = inputs.zsh-hlx;
           isRiver = true;
           isMango = false;
         }

@@ -1,7 +1,15 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  specialArgs,
+  ...
+}:
 let
   palette = config.colorScheme.palette;
+  zsh-helix-mode = specialArgs.zsh-hlx;
 in
+
 {
   home.packages = with pkgs; [
     zsh-autosuggestions
