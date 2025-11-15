@@ -59,22 +59,17 @@
     memoryPercent = 50;
   };
   boot.loader = {
-    efi.canTouchEfiVariables = true;
-    efiSysMountPoint = "/boot";
-    grub = {
+    systemd-boot = {
       enable = true;
-      devices = [ "nodev" ];
-      efiSupport = true;
-      useOSProber = true;
-      gfxmodeEfi = "800x600";
-      fontSize = 30;
+      configurationLimit = 10;
+      consoleMode = "auto";
     };
+    efi.canTouchEfiVariables = true;
   };
   powerManagement = {
     powertop.enable = true;
     cpuFreqGovernor = lib.mkDefault "powersave";
   };
-
   fonts = {
     enableDefaultPackages = true;
     packages = with pkgs; [
@@ -84,7 +79,6 @@
       montserrat
     ];
   };
-
   services = {
     xserver = {
       enable = false;
@@ -93,18 +87,15 @@
         variant = "";
       };
     };
-
     displayManager.sddm = {
       enable = true;
       wayland.enable = true;
       theme = "Nordic";
     };
-
     displayManager.autoLogin = {
       enable = false;
       user = userName;
     };
-
     libinput.enable = true;
     upower.enable = true;
     fstrim.enable = true;
@@ -135,7 +126,6 @@
       dataDir = "/home/${userName}";
     };
   };
-
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
