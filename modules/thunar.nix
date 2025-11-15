@@ -15,7 +15,7 @@
   services.tumbler.enable = true;
 
   environment.systemPackages = with pkgs; [
-    ark
+    kdePackages.ark
     ffmpegthumbnailer
     libgsf
     tumbler
