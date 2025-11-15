@@ -5,32 +5,35 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    yaziPlugins.nord
-    yaziPlugins.starship
-  ];
-
   programs.yazi = {
     package = pkgs.yazi;
     enable = true;
     enableZshIntegration = true;
-    plugins = with pkgs.yaziPlugins; {
-      inherit nord starship;
+
+    plugins = {
+      starship = "${pkgs.yaziPlugins.starship}";
     };
-    flavors = { inherit (pkgs.yaziPlugins) nord; };
-    theme.flavor = {
-      light = "nord";
-      dark = "nord";
+
+    flavors = {
+      nord = "${pkgs.yaziPlugins.nord}";
     };
-    initLua = /* lua */ ''
+
+    theme = {
+      flavor = {
+        use = "nord";
+      };
+    };
+
+    initLua = ''
       require("starship"):setup({
-        hide_flags = false, -- Default: false
-        flags_after_prompt = true, -- Default: true
-        config_file = "~/.config/starship.toml", -- Default: nil
+        hide_flags = false,
+        flags_after_prompt = true,
+        config_file = "~/.config/starship.toml",
       })
     '';
+
     settings = {
-      mgr = {
+      manager = {
         show_hidden = true;
       };
       opener = {
