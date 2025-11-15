@@ -1,10 +1,6 @@
 {
   pkgs,
   withGUI ? true,
-  helix,
-  zen-browser,
-  helium-browser,
-  quickshell,
   ...
 }:
 
@@ -117,10 +113,10 @@ let
     zed-editor
 
     # Custom packages from inputs
-    zen-browser.packages.${pkgs.system}.default
-    helium-browser.packages.${pkgs.system}.default
-    helix.packages.${pkgs.system}.default
-    quickshell.packages.${pkgs.system}.default
+    # zen-browser.packages.${pkgs.system}.default
+    # helium-browser.packages.${pkgs.system}.default
+    # helix.packages.${pkgs.system}.default
+    # quickshell.packages.${pkgs.system}.default
   ];
 in
 basePackages
