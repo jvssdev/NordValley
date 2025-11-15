@@ -33,7 +33,6 @@ let
     fd
     ncdu
     ripgrep
-    fastfetch
     nixos-shell
     nix-your-shell
 
@@ -48,14 +47,12 @@ let
 
     # Wayland tools
     wleave
-    gtklock
     wlopm
     wpaperd
     gammastep
 
     # System utilities
     p7zip
-    btop
     brightnessctl
     appimage-run
     nh
@@ -81,10 +78,6 @@ let
     lxqt.lxqt-policykit
     libnotify
 
-    # File manager
-    xfce.thunar
-    xfce.thunar-archive-plugin
-    xfce.thunar-media-tags-plugin
     gvfs
 
     # Polkit
@@ -98,17 +91,11 @@ let
     libsForQt5.qt5.qtgraphicaleffects
 
     # Wayland bar/menu
-    waybar
-    fuzzel
     mako
     pavucontrol
 
     base16-schemes
-
     nordic.sddm
-
-    # Editor
-    zed-editor
 
     # Custom packages from inputs
     # zen-browser.packages.${pkgs.system}.default
