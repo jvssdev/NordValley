@@ -15,6 +15,7 @@ in
 
   stylix = {
     enable = true;
+    autoEnable = false;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/nord.yaml";
     polarity = "dark";
     cursor.package = pkgs.bibata-cursors;
