@@ -10,14 +10,8 @@ in
 {
   services.mako = {
     enable = true;
-
-    font = "JetBrainsMono Nerd Font 12";
-    borderSize = 2;
-    ignoreTimeout = true;
-    defaultTimeout = 5000;
-    margin = "8";
-
     settings = {
+      font = "JetBrainsMono Nerd Font 12";
       default-timeout = "5000";
       format = "<b>%a ⏵</b> %s\\n%b";
       height = "110";
