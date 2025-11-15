@@ -295,11 +295,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1763207061,
-        "narHash": "sha256-Mph6iAgHuC41r+vu4jxtxqDeLRcl2JtfVhRSnctsmgE=",
+        "lastModified": 1763209319,
+        "narHash": "sha256-tjhrc3TUn/F8b8b4i9UPqt9G7Y8Z/bHYz554WWyN40w=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "7101b4453c90c3fd62b2bfed5bf910a1f7b2beff",
+        "rev": "218daebea38479495f06cb33ee6f1ab3a3de2b11",
         "type": "github"
       },
       "original": {
@@ -339,7 +339,8 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nur": "nur",
         "quickshell": "quickshell",
-        "zen-browser": "zen-browser"
+        "zen-browser": "zen-browser",
+        "zsh-hlx": "zsh-hlx"
       }
     },
     "rust-overlay": {
@@ -440,6 +441,27 @@
       "original": {
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
+        "type": "github"
+      }
+    },
+    "zsh-hlx": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1758445842,
+        "narHash": "sha256-wiUocowz3uL3fTAxTfG3URhOwB2RrFWEmUnW4k0ETJ4=",
+        "owner": "multirious",
+        "repo": "zsh-helix-mode",
+        "rev": "f9d72d23f5ce12da31967a6ecd15dcafa1355fa7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "multirious",
+        "ref": "main",
+        "repo": "zsh-helix-mode",
         "type": "github"
       }
     }
