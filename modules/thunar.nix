@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ config, pkgs, ... }:
 
 {
   programs.thunar = {
@@ -16,10 +11,10 @@
   };
 
   programs.xfconf.enable = true;
-  services.gvfs.enable = true;
+  services.gSELF.enable = true;
   services.tumbler.enable = true;
 
-  home.packages = with pkgs; [
+  environment.systemPackages = with pkgs; [
     ark
     ffmpegthumbnailer
     libgsf

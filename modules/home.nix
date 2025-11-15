@@ -62,7 +62,6 @@ in
     ../home/quickshell/default.nix
     ../home/starship/default.nix
     ../home/theme/default.nix
-    ../home/thunar/default.nix
     ../home/waybar/default.nix
     ../home/wpaperd/default.nix
     ../home/yazi/default.nix

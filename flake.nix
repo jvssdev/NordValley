@@ -96,6 +96,7 @@
           ./modules/elevated-packages.nix
           ./modules/intel-drivers.nix
           ./modules/power-management.nix
+          ./modules/thunar.nix
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -144,6 +145,7 @@
           ./modules/elevated-packages.nix
           ./modules/power-management.nix
           ./modules/intel-drivers.nix
+          ./modules/thunar.nix
           mango.nixosModules.mango
           {
             programs.mango.enable = true;
