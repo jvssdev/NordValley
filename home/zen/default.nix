@@ -38,16 +38,16 @@ in
       };
       search = {
         force = true;
-        default = "DuckDuckGo";
+        default = "ddg";
         engines = {
-          "DuckDuckGo" = {
+          "ddg" = {
             urls = [ { template = "https://duckduckgo.com/?q={searchTerms}&ia=web"; } ];
             icon = "https://duckduckgo.com/favicon.ico";
             definedAliases = [ "@ddg" ];
           };
         };
       };
-      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+      extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
         ublock-origin
         darkreader
         privacy-badger
