@@ -1,13 +1,10 @@
 { config, pkgs, ... }:
-
 let
   palette = config.stylix.base16Scheme.palette;
 in
 {
-
   programs.zsh = {
     enable = true;
-
     history = {
       size = 100000;
       save = 20000;
@@ -17,7 +14,6 @@ in
       ignoreSpace = true;
       share = true;
     };
-
     enableCompletion = true;
     completionInit = ''
       autoload -Uz compinit
@@ -26,25 +22,17 @@ in
       _comp_options+=(globdots)
       compinit -d ${config.xdg.cacheHome}/zsh/zcompdump-$ZSH_VERSION
     '';
-
-    initExtra = ''
-      autoload -U select-word-style
-      select-word-style bash
-    '';
-
     profileExtra = ''
       export PATH="/usr/lib64/qt6/bin:$PATH"
       export PATH="$HOME/.cargo/bin:$PATH"
       export GOPATH=$HOME/go
       export PATH="$HOME/.local/bin:$PATH"
     '';
-
     shellAliases = {
       xh = "hx";
       ls = "lsd";
       cat = "bat --paging=never";
     };
-
     plugins = [
       {
         name = "zsh-helix-mode";
@@ -67,8 +55,13 @@ in
         file = "share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh";
       }
     ];
-
+    # Merged initExtra - contains all initialization code
     initExtra = ''
+      # Word style selection
+      autoload -U select-word-style
+      select-word-style bash
+
+      # ZSH Helix Mode styling
       export ZHM_STYLE_CURSOR_SELECT="fg=#${palette.base00},bg=#${palette.base08}"
       export ZHM_STYLE_CURSOR_INSERT="fg=#${palette.base00},bg=#${palette.base0B}"
       export ZHM_STYLE_OTHER_CURSOR_NORMAL="fg=#${palette.base00},bg=#${palette.base0C}"
@@ -77,6 +70,7 @@ in
       export ZHM_STYLE_SELECTION="fg=#${palette.base07},bg=#${palette.base02}"
       export ZHM_CURSOR_INSERT='\e[0m\e[6 q\e]12;#${palette.base0B}\a'
 
+      # ZSH Autosuggestions widget configuration
       ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(
         zhm_history_prev
         zhm_history_next
@@ -93,21 +87,19 @@ in
         zhm_move_next_word_end
       )
 
-      # === fzf ===
+      # fzf configuration
       eval "$(${pkgs.fzf}/bin/fzf --zsh)"
       zhm_wrap_widget fzf-completion zhm_fzf_completion
       bindkey '^I' zhm_fzf_completion
-
       export FZF_DEFAULT_OPTS="
         --color=bg+:#${palette.base02},bg:#${palette.base00},spinner:#${palette.base04},hl:#${palette.base0D}
         --color=fg:#${palette.base05},header:#${palette.base0D},info:#${palette.base0C},pointer:#${palette.base04}
         --color=marker:#${palette.base0B},fg+:#${palette.base07},prompt:#${palette.base0C},hl+:#${palette.base0C}"
 
+      # Initialize zoxide and starship
       eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
-
       eval "$(${pkgs.starship}/bin/starship init zsh)"
     '';
   };
-
   xdg.cacheHome = "${config.home.homeDirectory}/.cache";
 }
