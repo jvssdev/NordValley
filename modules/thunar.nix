@@ -18,6 +18,6 @@
     kdePackages.ark
     ffmpegthumbnailer
     libgsf
-    tumbler
+    xfce.tumbler
   ];
 }
