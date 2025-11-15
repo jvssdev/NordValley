@@ -8,10 +8,6 @@ let
   zen-browser = specialArgs.zen-browser;
 in
 {
-  home.packages = [
-    zen-browser.packages.${pkgs.system}.default
-  ];
-
   programs.zen-browser = {
     enable = true;
     profiles.default = {
@@ -47,7 +43,7 @@ in
           };
         };
       };
-      extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
+      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
         ublock-origin
         darkreader
         privacy-badger
