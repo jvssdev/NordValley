@@ -5,6 +5,11 @@
   ...
 }:
 {
+  home.packages = with pkgs; [
+    yaziPlugins.nord
+    yaziPlugins.starship
+  ];
+
   programs.yazi = {
     package = pkgs.yazi;
     enable = true;

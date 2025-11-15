@@ -36,9 +36,7 @@ let
     fastfetch
     nixos-shell
     nix-your-shell
-    yazi
-    yaziPlugins.nord
-    yaziPlugins.starship
+
     bat
     starship
     lsd
