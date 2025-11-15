@@ -32,17 +32,31 @@ let
       background-repeat: no-repeat;
       background-position: center;
     }
+
     #clock-label {
       color: #${c.base06};
+      font-size: 4em;
+      font-weight: bold;
     }
+
     #input-label {
       font-size: 0;
     }
+
     window#eDP-1 #input-field {
       margin-top: 32em;
     }
+
     #unlock-button {
-      color: rgba(${c.base00-rgb-r}, ${c.base00-rgb-g}, ${c.base00-rgb-b}, 0.87);
+      color: #${c.base05};
+      background-color: #${c.base02};
+      border-radius: 8px;
+      padding: 8px 16px;
+      opacity: 0.9;
+    }
+
+    #unlock-button:hover {
+      background-color: #${c.base03};
     }
   '';
 in
