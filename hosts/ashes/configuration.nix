@@ -9,6 +9,9 @@
 }:
 {
   environment.variables.EDITOR = "hx";
+
+  programs.dconf.enable = true;
+
   nix = {
     settings = {
       experimental-features = [
@@ -33,8 +36,7 @@
       options = "--delete-older-than 30d";
     };
   };
-  programs.zsh.enable = true;
-  programs.starship.enable = true;
+
   users.users.${userName} = {
     isNormalUser = true;
     description = fullName;
@@ -47,17 +49,20 @@
     ];
     shell = pkgs.zsh;
   };
+
   environment.etc."direnv/direnv.toml".text = ''
     [global]
     hide_env_diff = true
     warn_timeout = 0
     log_filter="^$"
   '';
+
   zramSwap = {
     enable = true;
     algorithm = "zstd";
     memoryPercent = 50;
   };
+
   boot.loader = {
     grub = {
       enable = true;
@@ -67,10 +72,12 @@
     };
     efi.canTouchEfiVariables = true;
   };
+
   powerManagement = {
     powertop.enable = true;
     cpuFreqGovernor = lib.mkDefault "powersave";
   };
+
   fonts = {
     enableDefaultPackages = true;
     packages = with pkgs; [
@@ -80,6 +87,7 @@
       montserrat
     ];
   };
+
   services = {
     xserver = {
       enable = false;
@@ -88,26 +96,38 @@
         variant = "";
       };
     };
+
     displayManager.sddm = {
       enable = true;
       wayland.enable = true;
       theme = "Nordic";
     };
+
     displayManager.autoLogin = {
       enable = false;
       user = userName;
     };
+
+    # Adicione o D-Bus
+    dbus = {
+      enable = true;
+      packages = [ pkgs.dconf ];
+    };
+
     libinput.enable = true;
     upower.enable = true;
     fstrim.enable = true;
     gvfs.enable = true;
     openssh.enable = true;
     flatpak.enable = false;
+
     printing = {
       enable = false;
       drivers = [ pkgs.hplipWithPlugin ];
     };
+
     power-profiles-daemon.enable = false;
+
     auto-cpufreq = {
       enable = true;
       settings = {
@@ -121,17 +141,21 @@
         };
       };
     };
+
     syncthing = {
       enable = true;
       user = userName;
       dataDir = "/home/${userName}";
     };
   };
+
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
   };
+
   time.timeZone = "America/Sao_Paulo";
+
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
@@ -144,5 +168,11 @@
     LC_TELEPHONE = "en_US.UTF-8";
     LC_TIME = "en_US.UTF-8";
   };
+
+  environment.systemPackages = with pkgs; [
+    dconf
+    glib
+  ];
+
   system.stateVersion = "25.05";
 }
