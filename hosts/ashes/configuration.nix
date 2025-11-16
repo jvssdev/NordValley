@@ -37,6 +37,9 @@
     };
   };
 
+  programs.zsh.enable = true;
+  programs.starship.enable = true;
+
   users.users.${userName} = {
     isNormalUser = true;
     description = fullName;
