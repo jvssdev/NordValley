@@ -18,7 +18,7 @@ let
   brightnessStep = "5%";
 
   # Helper function to generate tag numbers
-  tagNum = n: toString (lib.trivial.pow 2 (n - 1));
+  tagNum = n: toString (builtins.bitShiftL 1 (n - 1));
 in
 {
   wayland.windowManager.river.settings = {
