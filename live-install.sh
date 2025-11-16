@@ -46,6 +46,27 @@ get_build_flags() {
     fi
 }
 
+# Function to clean Nix channels (we use flakes instead)
+clean_nix_channels() {
+    print_info "Cleaning legacy Nix channels (flakes-only setup)..."
+    
+    # Paths to clean in mounted system
+    local channel_paths=(
+        "/mnt/nix/var/nix/profiles/per-user/root/channels"
+        "/mnt/root/.nix-defexpr/channels"
+        "/mnt/root/.local/state/nix/profiles/channels"
+    )
+    
+    for path in "${channel_paths[@]}"; do
+        if [ -e "$path" ]; then
+            print_info "Removing: $path"
+            rm -rf "$path" 2>/dev/null || true
+        fi
+    done
+    
+    print_success "Channel cleanup completed"
+}
+
 # Check if running as root
 if [[ $EUID -eq 0 ]]; then
     print_error "This script should not be executed as root! Exiting..."
@@ -164,6 +185,9 @@ mkdir -p ~/Downloads
 mkdir -p ~/.config
 
 print_success "Directories created"
+
+# Clean Nix channels before installation
+clean_nix_channels
 
 # Enable Intel drivers if needed
 read -p "Enable Intel graphics drivers? (y/n) [n]: " enable_intel
