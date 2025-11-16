@@ -62,14 +62,14 @@ in
       }
     ];
     initContent = lib.mkMerge [
-      (lib.mkOrder 1000 ''
+      (lib.mkOrder 1300 ''
         autoload -U select-word-style
         select-word-style bash
         export ZHM_STYLE_CURSOR_SELECT="fg:#${palette.base00},bg:#${palette.base08}"
         export ZHM_STYLE_CURSOR_INSERT="fg:#${palette.base00},bg:#${palette.base0B}"
         export ZHM_STYLE_OTHER_CURSOR_NORMAL="fg:#${palette.base00},bg:#${palette.base0C}"
         export ZHM_STYLE_OTHER_CURSOR_SELECT="fg:#${palette.base00},bg:#${palette.base0E}"
-        export ZHM_STYLE_OTHER_CURSOR_INSERTinsert="fg:#${palette.base00},bg:#${palette.base0D}"
+        export ZHM_STYLE_OTHER_CURSOR_INSERT="fg:#${palette.base00},bg:#${palette.base0D}"
         export ZHM_STYLE_SELECTION="fg:#${palette.base07},bg:#${palette.base02}"
         export ZHM_CURSOR_INSERT='\e[0m\e[6 q\e]12;#${palette.base0B}\a'
         ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(
