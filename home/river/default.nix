@@ -11,15 +11,6 @@
     ./spawn.nix
   ];
 
-  environment.etc."sddm/wayland-sessions/river.desktop".text = ''
-    [Desktop Entry]
-    Name=River
-    Comment=A dynamic tiling Wayland compositor
-    DesktopNames=river
-    Exec=river
-    Type=Application
-  '';
-
   home.sessionVariables = lib.mkIf config.wayland.windowManager.river.enable {
     MOZ_ENABLE_WAYLAND = "1";
     QT_QPA_PLATFORM = "wayland";

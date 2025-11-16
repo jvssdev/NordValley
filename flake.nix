@@ -97,6 +97,17 @@
           ./modules/intel-drivers.nix
           ./modules/power-management.nix
           ./modules/thunar.nix
+          # SDDM Desktop Entry for River
+          {
+            environment.etc."sddm/wayland-sessions/river.desktop".text = ''
+              [Desktop Entry]
+              Name=River
+              Comment=A dynamic tiling Wayland compositor
+              DesktopNames=river
+              Exec=river
+              Type=Application
+            '';
+          }
           home-manager.nixosModules.home-manager
           {
             home-manager = {
