@@ -67,12 +67,10 @@ in
     ];
 
     initContent = ''
-      # --- Carrega o plugin zsh-helix-mode ANTES de usar seus comandos ---
       source "${
         zsh-hlx.packages.${pkgs.system}.default
       }/share/zsh/zsh-helix-mode/zsh-helix-mode.plugin.zsh"
 
-      # --- Estilos do cursor e seleção (com cores do tema) ---
       autoload -U select-word-style
       select-word-style bash
 
@@ -84,7 +82,6 @@ in
       export ZHM_STYLE_SELECTION="fg:#${palette.base07},bg:#${palette.base02}"
       export ZHM_CURSOR_INSERT='\e[0m\e[6 q\e]12;#${palette.base0B}\a'
 
-      # --- Integração com zsh-autosuggestions ---
       ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(
         zhm_history_prev zhm_history_next zhm_prompt_accept
         zhm_accept zhm_accept_or_insert_newline
@@ -96,18 +93,15 @@ in
         zhm_move_next_word_start zhm_move_next_word_end
       )
 
-      # --- fzf (com wrapper para helix-mode) ---
       eval "$(${pkgs.fzf}/bin/fzf --zsh)"
       zhm_wrap_widget fzf-completion zhm_fzf_completion
       bindkey '^I' zhm_fzf_completion
 
-      # --- Cores do fzf (com tema) ---
       export FZF_DEFAULT_OPTS="
         --color=bg+:#${palette.base02},bg:#${palette.base00},spinner:#${palette.base04},hl:#${palette.base0D}
         --color=fg:#${palette.base05},header:#${palette.base0D},info:#${palette.base0C},pointer:#${palette.base04}
         --color=marker:#${palette.base0B},fg+:#${palette.base07},prompt:#${palette.base0C},hl+:#${palette.base0C}"
 
-      # --- zoxide e starship ---
       eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
       eval "$(${pkgs.starship}/bin/starship init zsh)"
     '';
