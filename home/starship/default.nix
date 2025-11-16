@@ -13,22 +13,8 @@ in
       add_newline = true;
 
       format = ''
-        [░▒▓](#${c.base03})\
-        [ ](bg:#${c.base03} fg:#${c.base07})\
-        [powerline right](bg:#${c.base0B} fg:#${c.base03})\
-        $directory\
-        [powerline right](fg:#${c.base0B} bg:#${c.base01})\
-        $git_branch\
-        $git_status\
-        [powerline right](fg:#${c.base01} bg:#${c.base02})\
-        $nodejs\
-        $rust\
-        $golang\
-        $php\
-        [powerline right](fg:#${c.base02} bg:#${c.base03})\
-        $time\
-        [powerline right](fg:#${c.base03})\
-        \n$character
+        [░▒▓](#${c.base03})[ ](bg:#${c.base03} fg:#${c.base07})[powerline right](bg:#${c.base0B} fg:#${c.base03})$directory[powerline right](fg:#${c.base0B} bg:#${c.base01})$git_branch$git_status[powerline right](fg:#${c.base01} bg:#${c.base02})$nodejs$rust$golang$php[powerline right](fg:#${c.base02} bg:#${c.base03})$time[powerline right](fg:#${c.base03})
+        $character
       '';
 
       directory = {
