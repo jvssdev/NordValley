@@ -59,16 +59,13 @@
     memoryPercent = 50;
   };
   boot.loader = {
-    efi.canTouchEfiVariables = true;
-    efiSysMountPoint = "/boot";
     grub = {
       enable = true;
-      devices = [ "nodev" ];
+      device = "nodev";
       efiSupport = true;
       useOSProber = true;
-      gfxmodeEfi = "800x600";
-      fontSize = 30;
     };
+    efi.canTouchEfiVariables = true;
   };
   powerManagement = {
     powertop.enable = true;
