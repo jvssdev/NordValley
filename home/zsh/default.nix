@@ -67,17 +67,24 @@ in
     ];
 
     initContent = ''
+      # --- Carrega o plugin zsh-helix-mode ANTES de usar seus comandos ---
+      source "${
+        zsh-hlx.packages.${pkgs.system}.default
+      }/share/zsh/zsh-helix-mode/zsh-helix-mode.plugin.zsh"
+
+      # --- Estilos do cursor e seleção (com cores do tema) ---
       autoload -U select-word-style
       select-word-style bash
 
-      export ZHM_STYLE_CURSOR_SELECT="fg=#$$ {palette.base00},bg=# $${palette.base08}"
-      export ZHM_STYLE_CURSOR_INSERT="fg=#$$ {palette.base00},bg=# $${palette.base0B}"
-      export ZHM_STYLE_OTHER_CURSOR_NORMAL="fg=#$$ {palette.base00},bg=# $${palette.base0C}"
-      export ZHM_STYLE_OTHER_CURSOR_SELECT="fg=#$$ {palette.base00},bg=# $${palette.base0E}"
-      export ZHM_STYLE_OTHER_CURSOR_INSERT="fg=#$$ {palette.base00},bg=# $${palette.base0D}"
-      export ZHM_STYLE_SELECTION="fg=#$$ {palette.base07},bg=# $${palette.base02}"
+      export ZHM_STYLE_CURSOR_SELECT="fg:#${palette.base00},bg:#${palette.base08}"
+      export ZHM_STYLE_CURSOR_INSERT="fg:#${palette.base00},bg:#${palette.base0B}"
+      export ZHM_STYLE_OTHER_CURSOR_NORMAL="fg:#${palette.base00},bg:#${palette.base0C}"
+      export ZHM_STYLE_OTHER_CURSOR_SELECT="fg:#${palette.base00},bg:#${palette.base0E}"
+      export ZHM_STYLE_OTHER_CURSOR_INSERT="fg:#${palette.base00},bg:#${palette.base0D}"
+      export ZHM_STYLE_SELECTION="fg:#${palette.base07},bg:#${palette.base02}"
       export ZHM_CURSOR_INSERT='\e[0m\e[6 q\e]12;#${palette.base0B}\a'
 
+      # --- Integração com zsh-autosuggestions ---
       ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(
         zhm_history_prev zhm_history_next zhm_prompt_accept
         zhm_accept zhm_accept_or_insert_newline
@@ -89,17 +96,20 @@ in
         zhm_move_next_word_start zhm_move_next_word_end
       )
 
-      eval "$$ ( $${pkgs.fzf}/bin/fzf --zsh)"
+      # --- fzf (com wrapper para helix-mode) ---
+      eval "$(${pkgs.fzf}/bin/fzf --zsh)"
       zhm_wrap_widget fzf-completion zhm_fzf_completion
       bindkey '^I' zhm_fzf_completion
 
+      # --- Cores do fzf (com tema) ---
       export FZF_DEFAULT_OPTS="
-        --color=bg+:#$$ {palette.base02},bg:# $${palette.base00},spinner:#$$ {palette.base04},hl:# $${palette.base0D}
-        --color=fg:#$$ {palette.base05},header:# $${palette.base0D},info:#$$ {palette.base0C},pointer:# $${palette.base04}
-        --color=marker:#$$ {palette.base0B},fg+:# $${palette.base07},prompt:#$$ {palette.base0C},hl+:# $${palette.base0C}"
+        --color=bg+:#${palette.base02},bg:#${palette.base00},spinner:#${palette.base04},hl:#${palette.base0D}
+        --color=fg:#${palette.base05},header:#${palette.base0D},info:#${palette.base0C},pointer:#${palette.base04}
+        --color=marker:#${palette.base0B},fg+:#${palette.base07},prompt:#${palette.base0C},hl+:#${palette.base0C}"
 
-      eval "$$ ( $${pkgs.zoxide}/bin/zoxide init zsh)"
-      eval "$$ ( $${pkgs.starship}/bin/starship init zsh)"
+      # --- zoxide e starship ---
+      eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
+      eval "$(${pkgs.starship}/bin/starship init zsh)"
     '';
   };
 
