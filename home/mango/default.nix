@@ -29,6 +29,10 @@
     '';
 
     settings = ''
+
+      xkb_rules_layout = "br"
+      xkb_rules_variant = ""
+
       # Monitors - Uncomment this and set your monitor if on vm
       # monitorrule=Virtial-1,0.55,1,tile,0,1,0,0,1920,1080,60
       monitorrule=eDP-1,0.55,1,tile,0,1,0,0,1920,1080,60

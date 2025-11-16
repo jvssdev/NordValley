@@ -43,7 +43,15 @@ in
     BROWSER = "${helium-browser.packages.${pkgs.system}.default}/bin/helium";
     DEFAULT_BROWSER = "${helium-browser.packages.${pkgs.system}.default}/bin/helium";
     XDG_SCREENSHOTS_DIR = "$HOME/Pictures/screenshots";
-    LC_ALL = "en_US.UTF-8";
+    LC_ADDRESS = "pt_BR.UTF-8";
+    LC_IDENTIFICATION = "en_US.UTF-8";
+    LC_MEASUREMENT = "pt_BR.UTF-8";
+    LC_MONETARY = "pt_BR.UTF-8";
+    LC_NAME = "pt_BR.UTF-8";
+    LC_NUMERIC = "pt_BR.UTF-8";
+    LC_PAPER = "pt_BR.UTF-8";
+    LC_TELEPHONE = "pt_BR.UTF-8";
+    LC_TIME = "pt_BR.UTF-8";
     QT_QPA_PLATFORMTHEME = "qt6ct";
     NIXOS_OZONE_WL = "1";
     SHELL = "${pkgs.zsh}/bin/zsh";
