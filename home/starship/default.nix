@@ -69,7 +69,7 @@ in
         disabled = false;
         time_format = "%R";
         style = "bg:#${c.base03}";
-        format = "[[ time $time ](fg:#${c.base04} bg:#${c.base03})]($style)";
+        format = "[[  $time ](fg:#${c.base04} bg:#${c.base03})]($style)";
       };
     };
   };
