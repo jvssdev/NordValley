@@ -115,167 +115,159 @@
           b.d = ":buffer-close";
         };
       };
+    };
 
-      languages = {
-        language = [
-          {
-            name = "bash";
-            formatter.command = "shfmt";
-            auto-format = true;
-          }
-          {
-            name = "markdown";
-            formatter = {
-              command = "prettierd";
-              args = [
-                "--parser"
-                "markdown"
-              ];
-            };
-            language-servers = [
-              "markdown-oxide"
-              "mpls"
-            ];
-            auto-format = true;
-          }
-          {
-            name = "javascript";
-            indent = {
-              tab-width = 4;
-              unit = " ";
-            };
-            formatter = {
-              command = "biome";
-              args = [
-                "--parser"
-                "javascript"
-              ];
-            };
-            language-servers = [ "typescript-language-server" ];
-            auto-format = true;
-          }
-          {
-            name = "typescript";
-            indent = {
-              tab-width = 4;
-              unit = " ";
-            };
-            formatter = {
-              command = "biome";
-              args = [
-                "--parser"
-                "typescript"
-              ];
-            };
-            language-servers = [ "typescript-language-server" ];
-            auto-format = true;
-          }
-          {
-            name = "tsx";
-            indent = {
-              tab-width = 4;
-              unit = " ";
-            };
-            formatter = {
-              command = "biome";
-              args = [
-                "--parser"
-                "typescript"
-              ];
-            };
-            language-servers = [ "typescript-language-server" ];
-            auto-format = true;
-          }
-          {
-            name = "go";
-            language-servers = [ "gopls" ];
-            formatter.command = "gofmt";
-            auto-format = true;
-          }
-          {
-            name = "zig";
-            language-servers = [ "zls" ];
-            formatter.command = "";
-            auto-format = true;
-          }
-          {
-            name = "json";
-            file-types = [
-              "json"
-              "jsonc"
-            ];
-            formatter = {
-              command = "prettierd";
-              args = [
-                "prettierd"
-                "--parser"
-                "json"
-              ];
-            };
-            auto-format = true;
-          }
-          {
-            name = "html";
-            formatter = {
-              command = "prettierd";
-              args = [
-                "--parser"
-                "html"
-              ];
-            };
-            auto-format = true;
-          }
-          {
-            name = "css";
-            formatter = {
-              command = "biome";
-              args = [
-                "--parser"
-                "css"
-              ];
-            };
-            auto-format = true;
-          }
-          {
-            name = "yaml";
-            formatter = {
-              command = "prettierd";
-              args = [
-                "--parser"
-                "yaml"
-              ];
-            };
-            auto-format = true;
-          }
-          {
-            name = "nix";
-            formatter.command = "nixfmt";
-            language-servers = [ "nixd" ];
-            auto-format = true;
-          }
-
-          {
-            name = "python";
-            # formatter.command = "";
-            language-servers = [ "basedpyright" ];
-            auto-format = true;
-          }
-          # {
-          #   name = "toml";
-          #   formatter = { command = "taplo"; args = [ "format" "-" ]; };
-          #   auto-format = true;
-          # }
-        ];
-
-        language-server = {
-          mpls = {
-            command = "mpls";
+    languages = {
+      language = [
+        {
+          name = "bash";
+          formatter.command = "shfmt";
+          auto-format = true;
+        }
+        {
+          name = "markdown";
+          formatter = {
+            command = "prettierd";
             args = [
-              "--dark-mode"
-              "--enable-emoji"
+              "--parser"
+              "markdown"
             ];
           };
-          # taplo.config.root_dir = [ ".git" "*.toml" ];
+          language-servers = [
+            "markdown-oxide"
+            "mpls"
+          ];
+          auto-format = true;
+        }
+        {
+          name = "javascript";
+          indent = {
+            tab-width = 4;
+            unit = " ";
+          };
+          formatter = {
+            command = "biome";
+            args = [
+              "--parser"
+              "javascript"
+            ];
+          };
+          language-servers = [ "typescript-language-server" ];
+          auto-format = true;
+        }
+        {
+          name = "typescript";
+          indent = {
+            tab-width = 4;
+            unit = " ";
+          };
+          formatter = {
+            command = "biome";
+            args = [
+              "--parser"
+              "typescript"
+            ];
+          };
+          language-servers = [ "typescript-language-server" ];
+          auto-format = true;
+        }
+        {
+          name = "tsx";
+          indent = {
+            tab-width = 4;
+            unit = " ";
+          };
+          formatter = {
+            command = "biome";
+            args = [
+              "--parser"
+              "typescript"
+            ];
+          };
+          language-servers = [ "typescript-language-server" ];
+          auto-format = true;
+        }
+        {
+          name = "go";
+          language-servers = [ "gopls" ];
+          formatter.command = "gofmt";
+          auto-format = true;
+        }
+        {
+          name = "zig";
+          language-servers = [ "zls" ];
+          formatter.command = "";
+          auto-format = true;
+        }
+        {
+          name = "json";
+          file-types = [
+            "json"
+            "jsonc"
+          ];
+          formatter = {
+            command = "prettierd";
+            args = [
+              "prettierd"
+              "--parser"
+              "json"
+            ];
+          };
+          auto-format = true;
+        }
+        {
+          name = "html";
+          formatter = {
+            command = "prettierd";
+            args = [
+              "--parser"
+              "html"
+            ];
+          };
+          auto-format = true;
+        }
+        {
+          name = "css";
+          formatter = {
+            command = "biome";
+            args = [
+              "--parser"
+              "css"
+            ];
+          };
+          auto-format = true;
+        }
+        {
+          name = "yaml";
+          formatter = {
+            command = "prettierd";
+            args = [
+              "--parser"
+              "yaml"
+            ];
+          };
+          auto-format = true;
+        }
+        {
+          name = "nix";
+          formatter.command = "nixfmt";
+          language-servers = [ "nixd" ];
+          auto-format = true;
+        }
+        {
+          name = "python";
+          language-servers = [ "basedpyright" ];
+          auto-format = true;
+        }
+      ];
+
+      language-server = {
+        mpls = {
+          command = "mpls";
+          args = [
+            "--dark-mode"
+            "--enable-emoji"
+          ];
         };
       };
     };
@@ -294,7 +286,6 @@
     gopls
     zls
     typescript
-
     nodePackages.typescript-language-server
     cmake-language-server
     basedpyright
