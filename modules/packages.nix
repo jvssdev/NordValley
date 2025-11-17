@@ -27,6 +27,7 @@ let
 
     zig
     go
+
     # CLI tools
     lazygit
     fzf
@@ -89,13 +90,16 @@ let
 
     # Qt
     libsForQt5.qt5.qtgraphicaleffects
+    qt6.qtwayland
+    kdePackages.qtwayland
 
     # Wayland bar/menu
     mako
     pavucontrol
 
     base16-schemes
-    nordic.sddm
+
+    (nordic.override { sddmTheme = true; })
 
     # Custom packages from inputs
     # zen-browser.packages.${pkgs.system}.default

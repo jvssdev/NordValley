@@ -12,10 +12,14 @@ let
   mako = "${pkgs.mako}/bin/mako";
   nm-applet = "${pkgs.networkmanagerapplet}/bin/nm-applet";
   blueman-applet = "${pkgs.blueman}/bin/blueman-applet";
-  wl-paste = "${pkgs.wl-clipboard}/bin/wl-paste";
   quickshell = "${pkgs.quickshell}/bin/quickshell";
+  dbus-update = "${pkgs.dbus}/bin/dbus-update-activation-environment";
+  systemctl = "${pkgs.systemd}/bin/systemctl";
 
   spawns = [
+    "${dbus-update} --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=river"
+    "${systemctl} --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+
     "${wpaperd}"
     "${waybar} -d"
     "${mako}"

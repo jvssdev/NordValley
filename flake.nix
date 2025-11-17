@@ -97,16 +97,21 @@
           ./modules/intel-drivers.nix
           ./modules/power-management.nix
           ./modules/thunar.nix
-          # SDDM Desktop Entry for River
+          # RiverWM SDDM Desktop Entry
           {
-            environment.etc."sddm/wayland-sessions/river.desktop".text = ''
-              [Desktop Entry]
-              Name=River
-              Comment=A dynamic tiling Wayland compositor
-              DesktopNames=river
-              Exec=river
-              Type=Application
-            '';
+            services.displayManager.sessionPackages = [
+              (pkgs.writeTextFile {
+                name = "river-session";
+                destination = "/share/wayland-sessions/river.desktop";
+                text = ''
+                  [Desktop Entry]
+                  Name=River
+                  Comment=A dynamic tiling Wayland compositor
+                  Exec=river
+                  Type=Application
+                '';
+              })
+            ];
           }
           home-manager.nixosModules.home-manager
           {
@@ -161,16 +166,21 @@
           {
             programs.mango.enable = true;
           }
+          # MangoWC SDDM Desktop Entry
           {
-            # SDDM Desktop Entry for MangoWC
-            environment.etc."sddm/wayland-sessions/mango.desktop".text = ''
-              [Desktop Entry]
-              Name=MangoWC
-              Comment=A Wayland compositor based on wlroots
-              DesktopNames=mango
-              Exec=mango
-              Type=Application
-            '';
+            services.displayManager.sessionPackages = [
+              (pkgs.writeTextFile {
+                name = "mango-session";
+                destination = "/share/wayland-sessions/mango.desktop";
+                text = ''
+                  [Desktop Entry]
+                  Name=MangoWC
+                  Comment=A Wayland compositor based on wlroots
+                  Exec=dbus-run-session mango
+                  Type=Application
+                '';
+              })
+            ];
           }
           home-manager.nixosModules.home-manager
           {
