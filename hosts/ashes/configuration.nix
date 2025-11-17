@@ -99,11 +99,8 @@
     displayManager.sddm = {
       enable = true;
       wayland.enable = true;
-      theme = "Nordic";
       package = pkgs.kdePackages.sddm;
-      extraPackages = with pkgs; [
-        nordic
-      ];
+      theme = "Nordic";
     };
 
     displayManager.autoLogin = {
@@ -176,7 +173,13 @@
     glib
     qt6.qtwayland
     kdePackages.qtwayland
+    nordic
   ];
+
+  system.activationScripts.sddmTheme = ''
+    mkdir -p /usr/share/sddm/themes
+    ln -sfn ${pkgs.nordic}/share/sddm/themes/Nordic /usr/share/sddm/themes/Nordic
+  '';
 
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";

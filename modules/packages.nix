@@ -99,7 +99,7 @@ let
 
     base16-schemes
 
-    (nordic.override { sddmTheme = true; })
+    nordic
 
     # Custom packages from inputs
     # zen-browser.packages.${pkgs.system}.default
