@@ -200,6 +200,14 @@ if [[ $enable_intel =~ ^[Yy]$ ]]; then
     # This will be handled by the configuration
 fi
 
+# Enable experimental features temporarily for the live environment
+print_info "Enabling Nix experimental features..."
+mkdir -p ~/.config/nix
+cat > ~/.config/nix/nix.conf << 'NIXCONF'
+experimental-features = nix-command flakes
+NIXCONF
+print_success "Experimental features enabled"
+
 # Git configuration
 if [ -d "$FLAKE_DIR/.git" ]; then
     print_info "Adding changes to git..."
