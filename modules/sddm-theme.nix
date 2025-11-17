@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   colors = config.colorScheme.palette;
@@ -7,37 +12,49 @@ let
 
   sddmTheme = pkgs.where-is-my-sddm-theme.override {
     variants = [ "qt6" ];
-    themeConfig = {
-      General = {
-        passwordCharacter = "●";
-        passwordInputWidth = "0.4";
-        passwordInputBackground = "#${colors.base01}";
-        passwordInputRadius = "12";
-        passwordFontSize = "32";
-        passwordCursorColor = "#${colors.base0A}";
-        passwordTextColor = "#${colors.base06}";
-        background = "${wallpaper}";
-        backgroundMode = "aspect";
-        backgroundFill = "#${colors.base00}";
-        usersFontSize = "28";
-        usersColor = "#${colors.base06}";
-        sessionsFontSize = "20";
-        sessionsColor = "#${colors.base04}";
-        clockFontSize = "32";
-        clockColor = "#${colors.base06}";
-        accentColor = "#${colors.base0A}";
-        backgroundColor = "#${colors.base00}";
-        foregroundColor = "#${colors.base06}";
-        loginFormWidth = "0.35";
-        avatarFrameColor = "#${colors.base0A}";
-        messageColor = "#${colors.base0D}";
-        selectionColor = "#${colors.base0A}";
-        selectionBackgroundColor = "#${colors.base02}";
-      };
+    themeConfig.General = {
+      background = "${wallpaper}";
+      backgroundMode = "aspect";
+
+      backgroundColor = "#${colors.base00}";
+      backgroundFill = "#${colors.base00}";
+      foregroundColor = "#${colors.base06}";
+      accentColor = "#${colors.base0D}";
+      selectionColor = "#${colors.base0D}";
+      selectionBackgroundColor = "#${colors.base02}";
+
+      passwordInputBackground = "#${colors.base01}";
+      passwordTextColor = "#${colors.base06}";
+      passwordCursorColor = "#${colors.base0D}";
+
+      usersColor = "#${colors.base06}";
+      sessionsColor = "#${colors.base04}";
+      clockColor = "#${colors.base06}";
+      messageColor = "#${colors.base0A}";
+      avatarFrameColor = "#${colors.base0D}";
+
+      passwordInputWidth = "0.4";
+      loginFormWidth = "0.35";
+      passwordInputRadius = "12";
+      clockFontSize = "32";
+      usersFontSize = "28";
+      sessionsFontSize = "20";
     };
   };
 in
 {
   environment.systemPackages = [ sddmTheme ];
-  services.displayManager.sddm.settings.Theme.Current = "where_is_my_sddm_theme_qt6";
+
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+    package = pkgs.kdePackages.sddm;
+    theme = "where_is_my_sddm_theme_qt6";
+
+    settings.Theme = {
+      Current = "where_is_my_sddm_theme_qt6";
+      CursorTheme = "Bibata-Modern-Ice";
+      CursorSize = 24;
+    };
+  };
 }

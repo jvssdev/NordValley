@@ -18,12 +18,8 @@
         "nix-command"
         "flakes"
       ];
-      substituters = [
-        "https://cache.nixos.org"
-      ];
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      ];
+      substituters = [ "https://cache.nixos.org" ];
+      trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
       auto-optimise-store = true;
     };
     gc = {
@@ -94,6 +90,8 @@
     kdePackages.qtwayland
     kdePackages.qt6ct
     where-is-my-sddm-theme
+    nordic
+    nordzy-icon-theme
   ];
 
   services = {
@@ -102,21 +100,6 @@
       xkb = {
         layout = "br";
         variant = "";
-      };
-    };
-
-    displayManager.sddm = {
-      enable = true;
-      wayland.enable = true;
-      package = pkgs.kdePackages.sddm;
-      theme = "where_is_my_sddm_theme_qt6";
-
-      settings = {
-        Theme = {
-          Current = "where_is_my_sddm_theme_qt6";
-          CursorTheme = "Bibata-Modern-Ice";
-          CursorSize = 24;
-        };
       };
     };
 
@@ -184,19 +167,6 @@
     LC_TELEPHONE = "pt_BR.UTF-8";
     LC_TIME = "pt_BR.UTF-8";
   };
-
-  environment.systemPackages = with pkgs; [
-    dconf
-    glib
-    qt6.qtwayland
-    kdePackages.qtwayland
-    nordic
-  ];
-
-  system.activationScripts.sddmTheme = ''
-    mkdir -p /usr/share/sddm/themes
-    ln -sfn ${pkgs.nordic}/share/sddm/themes/Nordic /usr/share/sddm/themes/Nordic
-  '';
 
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
