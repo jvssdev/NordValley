@@ -97,7 +97,8 @@
           ./modules/intel-drivers.nix
           ./modules/power-management.nix
           ./modules/thunar.nix
-          # RiverWM SDDM Desktop Entry
+          ./modules/sddm-theme.nix
+          # River SDDM Desktop Entry
           {
             services.displayManager.sessionPackages = [
               (pkgs.writeTextFile {
@@ -166,7 +167,7 @@
           {
             programs.mango.enable = true;
           }
-          # MangoWC SDDM Desktop Entry
+          # ManoWC SDDM Desktop Entry
           {
             services.displayManager.sessionPackages = [
               (pkgs.writeTextFile {

@@ -87,6 +87,15 @@
     ];
   };
 
+  environment.systemPackages = with pkgs; [
+    dconf
+    glib
+    qt6.qtwayland
+    kdePackages.qtwayland
+    kdePackages.qt6ct
+    where-is-my-sddm-theme
+  ];
+
   services = {
     xserver = {
       enable = false;
@@ -100,7 +109,15 @@
       enable = true;
       wayland.enable = true;
       package = pkgs.kdePackages.sddm;
-      theme = "Nordic";
+      theme = "where_is_my_sddm_theme_qt6";
+
+      settings = {
+        Theme = {
+          Current = "where_is_my_sddm_theme_qt6";
+          CursorTheme = "Bibata-Modern-Ice";
+          CursorSize = 24;
+        };
+      };
     };
 
     displayManager.autoLogin = {

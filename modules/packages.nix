@@ -9,7 +9,6 @@ with pkgs;
 let
   basePackages = [
     # Build essentials
-    efibootmgr
     gcc
     gnumake
     cargo
@@ -96,10 +95,6 @@ let
     # Wayland bar/menu
     mako
     pavucontrol
-
-    base16-schemes
-
-    nordic
 
     # Custom packages from inputs
     # zen-browser.packages.${pkgs.system}.default
