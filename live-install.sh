@@ -12,6 +12,10 @@ NC='\033[0m' # No Color
 FLAKE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_NAME="NordValley"
 
+# Ensure no NIX_PATH interference
+unset NIX_PATH
+export NIX_PATH=""
+
 # Helper functions
 print_success() {
     echo -e "${GREEN}✓${NC} $1"
@@ -201,6 +205,11 @@ if [ -d "$FLAKE_DIR/.git" ]; then
     print_info "Adding changes to git..."
     cd "$FLAKE_DIR"
     git add -A
+    
+    # Update flake lock
+    print_info "Updating flake lock file..."
+    nix flake update --commit-lock-file 2>/dev/null || nix flake lock
+    print_success "Flake lock updated"
     print_success "Changes added to git"
 fi
 
@@ -250,9 +259,9 @@ echo
 
 if [ -n "$BUILD_FLAGS" ]; then
     print_info "Using build flags: $BUILD_FLAGS"
-    build_success=$(sudo nixos-rebuild switch --flake "${FLAKE_DIR}#${WM_CONFIG}" $BUILD_FLAGS && echo "true" || echo "false")
+    build_success=$(sudo nixos-rebuild switch --flake "${FLAKE_DIR}#${WM_CONFIG}" $BUILD_FLAGS --option pure-eval false && echo "true" || echo "false")
 else
-    build_success=$(sudo nixos-rebuild switch --flake "${FLAKE_DIR}#${WM_CONFIG}" && echo "true" || echo "false")
+    build_success=$(sudo nixos-rebuild switch --flake "${FLAKE_DIR}#${WM_CONFIG}" --option pure-eval false && echo "true" || echo "false")
 fi
 
 if [ "$build_success" = "true" ]; then

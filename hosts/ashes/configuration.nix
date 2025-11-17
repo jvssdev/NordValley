@@ -19,6 +19,8 @@
         "flakes"
       ];
       auto-optimise-store = true;
+      # Critical: Use XDG base directories for better flakes support
+      use-xdg-base-directories = true;
     };
     gc = {
       automatic = true;

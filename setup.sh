@@ -12,6 +12,10 @@ NC='\033[0m' # No Color
 FLAKE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_NAME="NordValley"
 
+# Ensure no NIX_PATH interference
+unset NIX_PATH
+export NIX_PATH=""
+
 # Helper functions
 print_success() {
     echo -e "${GREEN}✓${NC} $1"
@@ -193,6 +197,11 @@ if [ -d "$FLAKE_DIR/.git" ]; then
     print_info "Adding changes to git..."
     cd "$FLAKE_DIR"
     git add -A
+    
+    # Update flake lock
+    print_info "Updating flake lock file..."
+    nix flake update --commit-lock-file 2>/dev/null || nix flake lock
+    print_success "Flake lock updated"
     print_success "Changes added to git"
 fi
 
@@ -229,7 +238,7 @@ print_info "Building NixOS configuration..."
 print_warning "This may take a while..."
 echo
 
-if sudo nixos-rebuild switch --flake "${FLAKE_DIR}#${WM_CONFIG}"; then
+if sudo nixos-rebuild switch --flake "${FLAKE_DIR}#${WM_CONFIG}" --option pure-eval false; then
     echo
     print_success "═══════════════════════════════════════════════════════════"
     print_success "  Installation completed successfully!"
