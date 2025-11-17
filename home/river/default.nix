@@ -84,8 +84,8 @@
 
         # GTK/GNOME settings
         gsettings set "org.gnome.desktop.interface" color-scheme "prefer-dark"
-        gsettings set "org.gnome.desktop.interface" gtk-theme "Nordic"
-        gsettings set "org.gnome.desktop.interface" icon-theme "Nordzy-dark"
+        gsettings set "org.gnome.desktop.interface" gtk-theme "Colloid-Dark"
+        gsettings set "org.gnome.desktop.interface" icon-theme "Colloid-Dark"
         gsettings set "org.gnome.desktop.interface" cursor-theme "Bibata-Modern-Ice"
       '';
   };

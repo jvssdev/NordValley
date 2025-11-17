@@ -32,12 +32,12 @@ in
   gtk = {
     enable = true;
     theme = {
-      name = "Nordic";
-      package = pkgs.nordic;
+      name = "Colloid-Dark";
+      package = pkgs.colloid-icon-theme;
     };
     iconTheme = {
-      name = "Nordzy-dark";
-      package = pkgs.nordzy-icon-theme;
+      name = "Colloid-Dark";
+      package = pkgs.colloid-gtk-theme;
     };
     gtk3.extraConfig = {
       gtk-application-prefer-dark-theme = 1;

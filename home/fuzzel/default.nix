@@ -9,7 +9,7 @@ in
       settings = {
         main = {
           font = lib.mkForce "JetBrainsMono Nerd Font:size=10";
-          icon-theme = "Nordzy-dark";
+          icon-theme = "Colloid-Dark";
           dpi-aware = "no";
         };
         colors = {

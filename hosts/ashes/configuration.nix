@@ -18,8 +18,6 @@
         "nix-command"
         "flakes"
       ];
-      substituters = [ "https://cache.nixos.org" ];
-      trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
       auto-optimise-store = true;
     };
     gc = {
@@ -90,8 +88,8 @@
     kdePackages.qtwayland
     kdePackages.qt6ct
     where-is-my-sddm-theme
-    nordic
-    nordzy-icon-theme
+    colloid-gtk-theme
+    colloid-icon-theme
   ];
 
   services = {
