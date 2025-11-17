@@ -2,11 +2,12 @@
   config,
   pkgs,
   lib,
+  nix-colors,
   ...
 }:
 
 let
-  colors = config.colorScheme.palette;
+  colors = nix-colors.colorSchemes.nord.palette;
 
   wallpaper = ./../../Wallpapers/nord_valley.png;
 
