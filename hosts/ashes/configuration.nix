@@ -186,7 +186,7 @@
     XDG_SESSION_TYPE = "wayland";
   };
 
-  qt5.platformTheme = "qt5ct"
+  qt5.platformTheme = "qt5ct";
 
   system.stateVersion = "25.05";
 }
