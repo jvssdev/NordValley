@@ -8,7 +8,7 @@
 
 let
   colors = nix-colors.colorSchemes.nord.palette;
-  silentTheme = args.inputs.silentSDDM.packages.${pkgs.system}.default;
+  silentTheme = args.silentSDDM.packages.${pkgs.system}.default;
 in
 {
   environment.systemPackages = with pkgs; [
