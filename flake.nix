@@ -101,7 +101,7 @@
           # River SDDM Desktop Entry
           {
             services.displayManager.sessionPackages = [
-              (pkgs.writeTextFile {
+              (pkgs.writeTextFile rec {
                 name = "river-session";
                 destination = "/share/wayland-sessions/river.desktop";
                 text = ''
@@ -111,6 +111,7 @@
                   Exec=river
                   Type=Application
                 '';
+                passthru.providedSessions = [ "river" ];
               })
             ];
           }
@@ -170,7 +171,7 @@
           # ManoWC SDDM Desktop Entry
           {
             services.displayManager.sessionPackages = [
-              (pkgs.writeTextFile {
+              (pkgs.writeTextFile rec {
                 name = "mango-session";
                 destination = "/share/wayland-sessions/mango.desktop";
                 text = ''
@@ -180,6 +181,7 @@
                   Exec=dbus-run-session mango
                   Type=Application
                 '';
+                passthru.providedSessions = [ "mango" ];
               })
             ];
           }
