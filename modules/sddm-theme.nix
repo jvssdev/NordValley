@@ -9,7 +9,7 @@
 let
   colors = nix-colors.colorSchemes.nord.palette;
 
-  wallpaper = ./../../Wallpapers/nord_valley.png;
+  wallpaper = ../Wallpapers/nord_valley.png;
 
   sddmTheme = pkgs.where-is-my-sddm-theme.override {
     variants = [ "qt6" ];

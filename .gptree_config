@@ -25,6 +25,6 @@ showIgnoredInTree: false
 # Whether to show only default ignored files in the directory tree while still respecting gitignore
 showDefaultIgnoredInTree: false
 # Previously selected files (when using the -s or --save flag previously)
-previousFiles: modules/sddm-theme.nix,home/theme/default.nix,flake.nix,hosts/ashes/configuration.nix,hosts/ashes/hardware-configuration.nix
+previousFiles: home/wpaperd/default.nix,home/gtklock/default.nix,modules/sddm-theme.nix,modules/home.nix
 # Excluded directories (when using the -s or --save flag previously or edited in UI)
 excludeDirs: 
