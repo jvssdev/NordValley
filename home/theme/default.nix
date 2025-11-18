@@ -58,6 +58,6 @@ in
   qt = {
     enable = true;
     style.name = "kvantum";
-    platformTheme.name = "qt6ct";
+    platformTheme.name = "qt5ct";
   };
 }
