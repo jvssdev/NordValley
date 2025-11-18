@@ -2,24 +2,18 @@
   config,
   pkgs,
   lib,
-  inputs,
+  silentSDDM,
   nix-colors,
   ...
 }:
-
 let
-
   colors = nix-colors.colorSchemes.nord.palette;
-
   wallpaper = ../Wallpapers/nord_valley.png;
-
   background-derivation = pkgs.runCommandLocal "nord_valley.png" { } ''
     cp ${wallpaper} $out
   '';
-
-  silentTheme = inputs.silentSDDM.packages.${pkgs.system}.default.override {
+  silentTheme = silentSDDM.packages.${pkgs.system}.default.override {
     extraBackgrounds = [ background-derivation ];
-
     theme-overrides = {
       General = {
         background = builtins.baseNameOf background-derivation;
@@ -35,9 +29,7 @@ let
         blurRadius = "30";
         enable-animations = true;
       };
-
       Theme.CursorTheme = "Bibata-Modern-Ice";
-
       LoginScreen.LoginArea.PasswordInput = {
         width = 460;
         height = 60;
@@ -48,7 +40,6 @@ let
         border-size = 2;
         border-color = "#${colors.base0D}";
       };
-
       LoginScreen.LoginArea.LoginButton = {
         font-size = 22;
         content-color = "#${colors.base05}";
@@ -58,24 +49,19 @@ let
         border-size = 2;
         border-color = "#${colors.base0D}";
       };
-
       LoginScreen.LoginArea.Avatar = {
         shape = "circle";
         active-size = 140;
       };
-
       LoginScreen.MenuArea.Layout.position = "bottom-center";
-
       LockScreen = {
         background = builtins.baseNameOf background-derivation;
         blur = 50;
       };
-
       LockScreen.Clock = {
         font-size = 92;
         color = "#${colors.base06}";
       };
-
       LockScreen.Date = {
         font-size = 32;
         color = "#${colors.base0A}";
@@ -93,20 +79,17 @@ in
     kdePackages.qtwayland
     qt6.qtwayland
   ];
-
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
     package = pkgs.kdePackages.sddm;
     theme = "Silent";
   };
-
   environment.sessionVariables = {
     XCURSOR_THEME = "Bibata-Modern-Ice";
     XCURSOR_SIZE = "24";
     QT_QPA_PLATFORMTHEME = "qt6ct";
   };
-
   environment.etc."sddm.conf.d/00-silent-theme.conf".text = ''
     [Theme]
     Current=Silent

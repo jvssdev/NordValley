@@ -92,6 +92,7 @@
             isRiver = true;
             isMango = false;
             inherit nix-colors;
+            silentSDDM = inputs.silentSDDM;
           };
         modules = [
           ./hosts/ashes/configuration.nix
@@ -160,6 +161,7 @@
             isRiver = false;
             isMango = true;
             inherit nix-colors;
+            silentSDDM = inputs.silentSDDM;
           };
         modules = [
           ./hosts/ashes/configuration.nix
