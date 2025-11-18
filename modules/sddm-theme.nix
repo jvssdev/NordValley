@@ -7,77 +7,78 @@
 }:
 
 let
-  # Directly use the Nord color scheme from nix-colors
+
   colors = nix-colors.colorSchemes.nord.palette;
 
   wallpaper = ../Wallpapers/nord_valley.png;
 
-  sddmTheme = pkgs.where-is-my-sddm-theme.override {
-    variants = [ "qt6" ];
-    themeConfig.General = {
-      background = "${wallpaper}";
-      backgroundMode = "aspect";
+  sddmTheme = pkgs.where-is-my-sddm-theme.overrideAttrs (old: {
+    variant = "qt6";
 
-      backgroundColor = "#${colors.base00}";
-      backgroundFill = "#${colors.base00}";
-      foregroundColor = "#${colors.base06}";
-      accentColor = "#${colors.base0D}";
-      selectionColor = "#${colors.base0D}";
-      selectionBackgroundColor = "#${colors.base02}";
+    themeConfig = old.themeConfig // {
+      General = {
 
-      passwordInputBackground = "#${colors.base01}";
-      passwordTextColor = "#${colors.base06}";
-      passwordCursorColor = "#${colors.base0D}";
+        background = "${wallpaper}";
+        backgroundMode = "aspect";
 
-      usersColor = "#${colors.base06}";
-      sessionsColor = "#${colors.base04}";
-      clockColor = "#${colors.base06}";
-      messageColor = "#${colors.base0A}";
-      avatarFrameColor = "#${colors.base0D}";
+        backgroundColor = "#${colors.base00}";
+        backgroundFill = "#${colors.base00}";
+        foregroundColor = "#${colors.base06}";
+        accentColor = "#${colors.base0D}";
+        selectionColor = "#${colors.base0D}";
+        selectionBackgroundColor = "#${colors.base02}";
 
-      passwordInputWidth = "0.4";
-      loginFormWidth = "0.35";
-      passwordInputRadius = "12";
-      clockFontSize = "32";
-      usersFontSize = "28";
-      sessionsFontSize = "20";
+        passwordInputBackground = "#${colors.base01}";
+        passwordTextColor = "#${colors.base06}";
+        passwordCursorColor = "#${colors.base0D}";
+
+        usersColor = "#${colors.base06}";
+        sessionsColor = "#${colors.base04}";
+        clockColor = "#${colors.base06}";
+        messageColor = "#${colors.base0A}";
+        avatarFrameColor = "#${colors.base0D}";
+
+        passwordInputWidth = "0.4";
+        loginFormWidth = "0.35";
+        passwordInputRadius = "12";
+        clockFontSize = "32";
+        usersFontSize = "28";
+        sessionsFontSize = "20";
+      };
     };
-  };
+  });
 in
 {
   environment.systemPackages = with pkgs; [
-    sddmTheme
+    kdePackages.sddm
+    libsForQt5.qtgraphicaleffects
+    libsForQt5.qtquickcontrols2
+    qt6Packages.qtgraphicaleffects
+    qt6Packages.qtsvg
     bibata-cursors
-    libsForQt5.qt5.qtgraphicaleffects
-    libsForQt5.qt5.qtquickcontrols2
   ];
 
   services.displayManager.sddm = {
     enable = true;
-    wayland.enable = true;
     package = pkgs.kdePackages.sddm;
-    theme = "where_is_my_sddm_theme_qt6";
+    wayland.enable = true;
+    wayland.compositor = "kwin";
+
+    theme = "${sddmTheme.pname}";
+
+    extraThemes = [ sddmTheme ];
 
     settings = {
       Theme = {
-        Current = "where_is_my_sddm_theme_qt6";
         CursorTheme = "Bibata-Modern-Ice";
-        CursorSize = 24;
-        ThemeDir = "${sddmTheme}/share/sddm/themes";
-      };
-
-      General = {
-        InputMethod = "";
       };
 
       Wayland = {
-        SessionDir = "/run/current-system/sw/share/wayland-sessions";
+
+        SessionDir = "/usr/share/wayland-sessions";
       };
     };
   };
 
-  environment.sessionVariables = {
-    XCURSOR_THEME = "Bibata-Modern-Ice";
-    XCURSOR_SIZE = "24";
-  };
+  services.displayManager.sddm.settings.Theme.CursorTheme = "Bibata-Modern-Ice";
 }
