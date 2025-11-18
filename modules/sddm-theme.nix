@@ -80,9 +80,4 @@ in
     XCURSOR_THEME = "Bibata-Modern-Ice";
     XCURSOR_SIZE = "24";
   };
-
-  qt = {
-    enable = true;
-    platformTheme = "qt6ct";
-  };
 }
