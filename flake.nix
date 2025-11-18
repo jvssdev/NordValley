@@ -1,7 +1,7 @@
 {
   description = "NordValley NixOS with River and MangoWC window manager";
-  inputs = {
 
+  inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
@@ -45,17 +45,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
+
   outputs =
-    inputs@{
-      nixpkgs,
-      home-manager,
-      nur,
-      mango,
-      nixpkgs-unstable,
-      nix-colors,
-      zsh-hlx,
-      ...
-    }:
+    inputs@{ nixpkgs, home-manager, ... }:
     let
       userInfo = {
         userName = "joaov";
@@ -63,6 +55,7 @@
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
       system = "x86_64-linux";
+
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
@@ -74,24 +67,23 @@
           })
         ];
       };
+
       defaults = {
         withGUI = true;
         homeDir = "/home/${userInfo.userName}";
       };
     in
     {
-      # RiverWM configuration
       nixosConfigurations.river = nixpkgs.lib.nixosSystem {
         inherit system pkgs;
         specialArgs =
           inputs
           // userInfo
+          // defaults
           // {
-            withGUI = defaults.withGUI;
-            homeDir = defaults.homeDir;
             isRiver = true;
             isMango = false;
-            inherit nix-colors;
+            inherit (inputs) nix-colors;
           };
         modules = [
           ./hosts/ashes/configuration.nix
@@ -103,7 +95,7 @@
           ./modules/power-management.nix
           ./modules/thunar.nix
           ./modules/sddm-theme.nix
-          # River SDDM Desktop Entry
+
           {
             services.displayManager.sessionPackages = [
               (pkgs.writeTextFile rec {
@@ -120,46 +112,38 @@
               })
             ];
           }
+
           home-manager.nixosModules.home-manager
           {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.${userInfo.userName} = import ./modules/home.nix;
-              extraSpecialArgs = {
-                inherit (inputs)
-                  helix
-                  zen-browser
-                  helium-browser
-                  quickshell
-                  nix-colors
-                  zsh-hlx
-                  ;
-                inherit (userInfo) userName userEmail fullName;
-                inherit (defaults) withGUI homeDir;
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.${userInfo.userName} = import ./modules/home.nix;
+            home-manager.extraSpecialArgs =
+              inputs
+              // userInfo
+              // defaults
+              // {
                 isRiver = true;
                 isMango = false;
               };
-              sharedModules = [
-                inputs.zen-browser.homeModules.default
-                nix-colors.homeManagerModules.default
-              ];
-            };
+            home-manager.sharedModules = [
+              inputs.zen-browser.homeModules.default
+              inputs.nix-colors.homeManagerModules.default
+            ];
           }
         ];
       };
-      # MangoWC
+
       nixosConfigurations.mangowc = nixpkgs.lib.nixosSystem {
         inherit system pkgs;
         specialArgs =
           inputs
           // userInfo
+          // defaults
           // {
-            withGUI = defaults.withGUI;
-            homeDir = defaults.homeDir;
             isRiver = false;
             isMango = true;
-            inherit nix-colors;
+            inherit (inputs) nix-colors;
           };
         modules = [
           ./hosts/ashes/configuration.nix
@@ -170,12 +154,10 @@
           ./modules/power-management.nix
           ./modules/intel-drivers.nix
           ./modules/thunar.nix
-          mango.nixosModules.mango
-          {
-            programs.mango.enable = true;
-          }
+          inputs.mango.nixosModules.mango
+          { programs.mango.enable = true; }
           ./modules/sddm-theme.nix
-          # ManoWC SDDM Desktop Entry
+
           {
             services.displayManager.sessionPackages = [
               (pkgs.writeTextFile rec {
@@ -192,55 +174,44 @@
               })
             ];
           }
+
           home-manager.nixosModules.home-manager
           {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.${userInfo.userName} = import ./modules/home.nix;
-              extraSpecialArgs = {
-                inherit (inputs)
-                  helix
-                  zen-browser
-                  helium-browser
-                  mango
-                  quickshell
-                  nix-colors
-                  zsh-hlx
-                  ;
-                inherit (userInfo) userName userEmail fullName;
-                inherit (defaults) withGUI homeDir;
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.${userInfo.userName} = import ./modules/home.nix;
+            home-manager.extraSpecialArgs =
+              inputs
+              // userInfo
+              // defaults
+              // {
                 isRiver = false;
                 isMango = true;
               };
-              sharedModules = [
-                inputs.zen-browser.homeModules.default
-                nix-colors.homeManagerModules.default
-              ];
-            };
+            home-manager.sharedModules = [
+              inputs.zen-browser.homeModules.default
+              inputs.nix-colors.homeManagerModules.default
+            ];
           }
         ];
       };
+
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = {
-          withGUI = defaults.withGUI;
-          homeDir = defaults.homeDir;
-          helix = inputs.helix;
-          quickshell = inputs.quickshell;
-          zen-browser = inputs.zen-browser;
-          helium-browser = inputs.helium-browser;
-          nix-colors = inputs.nix-colors;
-          zsh-hlx = inputs.zsh-hlx;
-          isRiver = true;
-          isMango = false;
-        }
-        // userInfo;
+        extraSpecialArgs =
+          inputs
+          // userInfo
+          // defaults
+          // {
+            isRiver = true;
+            isMango = false;
+          };
         modules = [
           ./modules/home.nix
-          nix-colors.homeManagerModules.default
+          inputs.nix-colors.homeManagerModules.default
         ];
       };
+
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [ ./hosts/iso/configuration.nix ];
