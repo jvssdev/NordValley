@@ -41,6 +41,12 @@ let
       clockFontSize = "32";
       usersFontSize = "28";
       sessionsFontSize = "20";
+
+      passwordCharacter = "●";
+      showUserRealNameByDefault = "true";
+
+      font = "JetBrainsMono Nerd Font";
+      fontSize = "12";
     };
   };
 in
@@ -48,6 +54,8 @@ in
   environment.systemPackages = with pkgs; [
     sddmTheme
     bibata-cursors
+    kdePackages.qtsvg
+    kdePackages.qtdeclarative
     libsForQt5.qt5.qtgraphicaleffects
     libsForQt5.qt5.qtquickcontrols2
   ];
@@ -64,14 +72,24 @@ in
         CursorTheme = "Bibata-Modern-Ice";
         CursorSize = 24;
         ThemeDir = "${sddmTheme}/share/sddm/themes";
+
+        FacesDir = "${sddmTheme}/share/sddm/faces";
       };
 
       General = {
         InputMethod = "";
+
+        DisplayServer = "wayland";
+        GreeterEnvironment = "QT_WAYLAND_FORCE_DPI=physical,XCURSOR_THEME=Bibata-Modern-Ice,XCURSOR_SIZE=24";
       };
 
       Wayland = {
         SessionDir = "/run/current-system/sw/share/wayland-sessions";
+        CompositorCommand = "kwin_wayland --drm --no-lockscreen --no-global-shortcuts --locale1";
+      };
+
+      X11 = {
+        SessionDir = "/run/current-system/sw/share/xsessions";
       };
     };
   };
@@ -79,5 +97,12 @@ in
   environment.sessionVariables = {
     XCURSOR_THEME = "Bibata-Modern-Ice";
     XCURSOR_SIZE = "24";
+    QT_QPA_PLATFORMTHEME = "qt6ct";
+  };
+
+  qt = {
+    enable = true;
+    platformTheme = "qt6ct";
+    style = "kvantum";
   };
 }

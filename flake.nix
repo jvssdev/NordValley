@@ -87,6 +87,7 @@
             homeDir = defaults.homeDir;
             isRiver = true;
             isMango = false;
+            inherit nix-colors;
           };
         modules = [
           ./hosts/ashes/configuration.nix
@@ -154,6 +155,7 @@
             homeDir = defaults.homeDir;
             isRiver = false;
             isMango = true;
+            inherit nix-colors;
           };
         modules = [
           ./hosts/ashes/configuration.nix
@@ -168,6 +170,7 @@
           {
             programs.mango.enable = true;
           }
+          ./modules/sddm-theme.nix
           # ManoWC SDDM Desktop Entry
           {
             services.displayManager.sessionPackages = [
