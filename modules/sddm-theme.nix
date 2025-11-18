@@ -3,13 +3,12 @@
   pkgs,
   lib,
   nix-colors,
-  inputs,
   ...
-}:
+}@args:
 
 let
   colors = nix-colors.colorSchemes.nord.palette;
-  silentTheme = inputs.silentSDDM.packages.${pkgs.system}.default;
+  silentTheme = args.inputs.silentSDDM.packages.${pkgs.system}.default;
 in
 {
   environment.systemPackages = with pkgs; [
