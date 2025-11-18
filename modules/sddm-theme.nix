@@ -17,7 +17,6 @@ let
 
     themeConfig = old.themeConfig // {
       General = {
-
         background = "${wallpaper}";
         backgroundMode = "aspect";
 
@@ -69,9 +68,7 @@ in
     extraThemes = [ sddmTheme ];
 
     settings = {
-      Theme = {
-        CursorTheme = "Bibata-Modern-Ice";
-      };
+      Theme.CursorTheme = "Bibata-Modern-Ice";
 
       Wayland = {
 
@@ -79,6 +76,4 @@ in
       };
     };
   };
-
-  services.displayManager.sddm.settings.Theme.CursorTheme = "Bibata-Modern-Ice";
 }
