@@ -93,12 +93,12 @@ in
   environment.sessionVariables = {
     XCURSOR_THEME = "Bibata-Modern-Ice";
     XCURSOR_SIZE = "24";
-    QT_QPA_PLATFORMTHEME = "qtct";
+    QT_QPA_PLATFORMTHEME = "qt5ct";
   };
 
   qt = {
     enable = true;
-    platformTheme.name = "qtct";
+    platformTheme.name = "qt5ct";
     style.name = "kvantum";
   };
 }
