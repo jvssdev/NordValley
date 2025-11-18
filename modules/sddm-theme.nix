@@ -15,7 +15,8 @@ in
     silentTheme
     bibata-cursors
     kdePackages.qt6ct
-    kdePackages.kvantum
+    libsForQt5.qtstyleplugin-kvantum
+    kdePackages.qtstyleplugin-kvantum
   ];
 
   services.displayManager.sddm = {
