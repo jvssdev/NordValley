@@ -13,9 +13,7 @@
     XCURSOR_THEME = "Bibata-Modern-Ice";
     XCURSOR_SIZE = "24";
   };
-
   programs.dconf.enable = true;
-
   nix = {
     settings = {
       experimental-features = [
@@ -32,10 +30,8 @@
       options = "--delete-older-than 30d";
     };
   };
-
   programs.zsh.enable = true;
   programs.starship.enable = true;
-
   users.users.${userName} = {
     isNormalUser = true;
     description = fullName;
@@ -48,14 +44,12 @@
     ];
     shell = pkgs.zsh;
   };
-
   environment.etc."direnv/direnv.toml".text = ''
     [global]
     hide_env_diff = true
     warn_timeout = 0
     log_filter="^$"
   '';
-
   zramSwap = {
     enable = true;
     algorithm = "zstd";
@@ -68,15 +62,23 @@
       device = "nodev";
       efiSupport = true;
       useOSProber = false;
+
+      configurationLimit = 30;
+
+      extraConfig = ''
+        set timeout=10
+        set timeout_style=menu
+      '';
     };
     efi.canTouchEfiVariables = true;
+
+    timeout = 10;
   };
 
   powerManagement = {
     powertop.enable = true;
     cpuFreqGovernor = lib.mkDefault "powersave";
   };
-
   fonts = {
     enableDefaultPackages = true;
     packages = with pkgs; [
@@ -86,7 +88,6 @@
       montserrat
     ];
   };
-
   environment.systemPackages = with pkgs; [
     dconf
     glib
@@ -101,7 +102,6 @@
     colloid-icon-theme
     bibata-cursors
   ];
-
   services = {
     xserver = {
       enable = false;
@@ -110,31 +110,25 @@
         variant = "";
       };
     };
-
     displayManager.autoLogin = {
       enable = false;
       user = userName;
     };
-
     dbus = {
       enable = true;
       packages = [ pkgs.dconf ];
     };
-
     libinput.enable = true;
     upower.enable = true;
     fstrim.enable = true;
     gvfs.enable = true;
     openssh.enable = true;
     flatpak.enable = false;
-
     printing = {
       enable = false;
       drivers = [ pkgs.hplipWithPlugin ];
     };
-
     power-profiles-daemon.enable = false;
-
     auto-cpufreq = {
       enable = true;
       settings = {
@@ -148,21 +142,17 @@
         };
       };
     };
-
     syncthing = {
       enable = true;
       user = userName;
       dataDir = "/home/${userName}";
     };
   };
-
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
   };
-
   time.timeZone = "America/Sao_Paulo";
-
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "pt_BR.UTF-8";
@@ -175,7 +165,6 @@
     LC_TELEPHONE = "pt_BR.UTF-8";
     LC_TIME = "pt_BR.UTF-8";
   };
-
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     MOZ_ENABLE_WAYLAND = "1";
@@ -185,6 +174,5 @@
     _JAVA_AWT_WM_NONREPARENTING = "1";
     XDG_SESSION_TYPE = "wayland";
   };
-
   system.stateVersion = "25.05";
 }
