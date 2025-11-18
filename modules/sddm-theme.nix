@@ -3,13 +3,12 @@
   pkgs,
   lib,
   nix-colors,
-  inputs,
   ...
 }:
 
 let
   colors = nix-colors.colorSchemes.nord.palette;
-  silentTheme = inputs.silentSDDM.packages.${pkgs.system}.default;
+  silentTheme = pkgs.silentSDDM;
 in
 {
   environment.systemPackages = with pkgs; [
@@ -29,6 +28,7 @@ in
       General = {
         DisplayServer = "wayland";
         GreeterEnvironment = "QT_WAYLAND_FORCE_DPI=physical,XCURSOR_THEME=Bibata-Modern-Ice,XCURSOR_SIZE=24,QT_QPA_PLATFORMTHEME=qt6ct";
+
         background = "${../Wallpapers/nord_valley.png}";
         backgroundMode = "fill";
         primaryColor = "#${colors.base0D}";
@@ -44,6 +44,7 @@ in
         showRealName = "true";
         clock24h = "false";
       };
+
       Theme = {
         Current = "Silent";
         CursorTheme = "Bibata-Modern-Ice";
