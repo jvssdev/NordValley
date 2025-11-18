@@ -39,17 +39,19 @@
     };
     silentSDDM = {
       url = "github:uiriansan/SilentSDDM";
-      inputs.nixpkgs.follow family = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = inputs:
+  outputs =
+    inputs:
     let
       userInfo = {
         userName = "joaov";
         fullName = "João Víctor Santos Silva";
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
+
       system = "x86_64-linux";
 
       pkgs = import inputs.nixpkgs {
@@ -57,7 +59,7 @@
         config.allowUnfree = true;
         overlays = [
           inputs.nur.overlays.default
-          (final:Tenemos: {
+          (final: prev: {
             quickshell = inputs.quickshell.packages.${system}.default;
             mango = inputs.mango.packages.${system}.default;
           })
@@ -72,10 +74,16 @@
     {
       nixosConfigurations.river = inputs.nixpkgs.lib.nixosSystem {
         inherit system pkgs;
-        specialArgs = inputs // userInfo // defaults // {
-          isRiver = true;
-          isMango = false;
-        };
+        specialArgs =
+          inputs
+          // userInfo
+          // defaults
+          // defaults
+          // {
+            isRiver = true;
+            isMango = false;
+          };
+
         modules = [
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
@@ -109,7 +117,14 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.${userInfo.userName} = import ./modules/home.nix;
-            home-manager.extraSpecialArgs = inputs // userInfo // defaults // { isRiver = true; isMango = false; };
+            home-manager.extraSpecialArgs =
+              inputs
+              // userInfo
+              // defaults
+              // {
+                isRiver = true;
+                isMango = false;
+              };
             home-manager.sharedModules = [
               inputs.zen-browser.homeModules.default
               inputs.nix-colors.homeManagerModules.default
@@ -120,10 +135,15 @@
 
       nixosConfigurations.mangowc = inputs.nixpkgs.lib.nixosSystem {
         inherit system pkgs;
-        specialArgs = inputs // userInfo // defaults // {
-          isRiver = false;
-          isMango = true;
-        };
+        specialArgs =
+          inputs
+          // userInfo
+          // defaults
+          // {
+            isRiver = false;
+            isMango = true;
+          };
+
         modules = [
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
@@ -159,7 +179,14 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.${userInfo.userName} = import ./modules/home.nix;
-            home-manager.extraSpecialArgs = inputs // userInfo // defaults // { isRiver = false; isMango = true; };
+            home-manager.extraSpecialArgs =
+              inputs
+              // userInfo
+              // defaults
+              // {
+                isRiver = false;
+                isMango = true;
+              };
             home-manager.sharedModules = [
               inputs.zen-browser.homeModules.default
               inputs.nix-colors.homeManagerModules.default
@@ -170,10 +197,14 @@
 
       homeConfigurations.universal = inputs.home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = inputs // userInfo // defaults // {
-          isRiver = true;
-          isMango = false;
-        };
+        extraSpecialArgs =
+          inputs
+          // userInfo
+          // defaults
+          // {
+            isRiver = true;
+            isMango = false;
+          };
         modules = [
           ./modules/home.nix
           inputs.nix-colors.homeManagerModules.default
