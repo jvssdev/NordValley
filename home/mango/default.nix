@@ -219,7 +219,7 @@
       windowrule=appid:clipse,isfloating:1,width:600,height:800
       windowrule=title:Mission Center,isfloating:1,width:1400,height:800
 
-      env=QT_QPA_PLATFORMTHEME,qt6ct
+      env=QT_QPA_PLATFORMTHEME,qt5ct
       env=QT_AUTO_SCREEN_SCALE_FACTOR,1
       env=QT_QPA_PLATFORM,Wayland;xcb
       env=QT_WAYLAND_FORCE_DPI,100
