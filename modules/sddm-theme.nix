@@ -7,9 +7,10 @@
 }:
 
 let
+  # Directly use the Nord color scheme from nix-colors
   colors = nix-colors.colorSchemes.nord.palette;
 
-  wallpaper = ../Wallpapers/nord_valley.png;
+  wallpaper = ./../../Wallpapers/nord_valley.png;
 
   sddmTheme = pkgs.where-is-my-sddm-theme.override {
     variants = [ "qt6" ];
@@ -44,7 +45,12 @@ let
   };
 in
 {
-  environment.systemPackages = [ sddmTheme ];
+  environment.systemPackages = with pkgs; [
+    sddmTheme
+    bibata-cursors
+    libsForQt5.qt5.qtgraphicaleffects
+    libsForQt5.qt5.qtquickcontrols2
+  ];
 
   services.displayManager.sddm = {
     enable = true;
@@ -52,10 +58,31 @@ in
     package = pkgs.kdePackages.sddm;
     theme = "where_is_my_sddm_theme_qt6";
 
-    settings.Theme = {
-      Current = "where_is_my_sddm_theme_qt6";
-      CursorTheme = "Bibata-Modern-Ice";
-      CursorSize = 24;
+    settings = {
+      Theme = {
+        Current = "where_is_my_sddm_theme_qt6";
+        CursorTheme = "Bibata-Modern-Ice";
+        CursorSize = 24;
+        ThemeDir = "${sddmTheme}/share/sddm/themes";
+      };
+
+      General = {
+        InputMethod = "";
+      };
+
+      Wayland = {
+        SessionDir = "/run/current-system/sw/share/wayland-sessions";
+      };
     };
+  };
+
+  environment.sessionVariables = {
+    XCURSOR_THEME = "Bibata-Modern-Ice";
+    XCURSOR_SIZE = "24";
+  };
+
+  qt = {
+    enable = true;
+    platformTheme = "qt6ct";
   };
 }

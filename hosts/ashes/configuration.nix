@@ -8,7 +8,11 @@
   ...
 }:
 {
-  environment.variables.EDITOR = "hx";
+  environment.variables = {
+    EDITOR = "hx";
+    XCURSOR_THEME = "Bibata-Modern-Ice";
+    XCURSOR_SIZE = "24";
+  };
 
   programs.dconf.enable = true;
 
@@ -89,9 +93,13 @@
     qt6.qtwayland
     kdePackages.qtwayland
     kdePackages.qt6ct
+    libsForQt5.qt5.qtwayland
+    libsForQt5.qt5.qtgraphicaleffects
+    libsForQt5.qt5.qtquickcontrols2
     where-is-my-sddm-theme
     colloid-gtk-theme
     colloid-icon-theme
+    bibata-cursors
   ];
 
   services = {
@@ -176,6 +184,11 @@
     SDL_VIDEODRIVER = "wayland";
     _JAVA_AWT_WM_NONREPARENTING = "1";
     XDG_SESSION_TYPE = "wayland";
+  };
+
+  qt = {
+    enable = true;
+    platformTheme = "qt6ct";
   };
 
   system.stateVersion = "25.05";
