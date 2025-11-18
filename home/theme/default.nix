@@ -35,16 +35,15 @@ in
     montserrat
   ];
 
-  # GTK Theme
   gtk = {
     enable = true;
     theme = {
       name = "Colloid-Dark";
-      package = pkgs.colloid-icon-theme;
+      package = pkgs.colloid-gtk-theme;
     };
     iconTheme = {
       name = "Colloid-Dark";
-      package = pkgs.colloid-gtk-theme;
+      package = pkgs.colloid-icon-theme;
     };
     gtk3.extraConfig = {
       gtk-application-prefer-dark-theme = 1;
@@ -54,10 +53,9 @@ in
     };
   };
 
-  # Qt Theme
   qt = {
     enable = true;
+    platformTheme.name = "qtct";
     style.name = "kvantum";
-    platformTheme.name = "qt6ct";
   };
 }

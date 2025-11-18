@@ -7,9 +7,7 @@
 }:
 
 let
-
   colors = nix-colors.colorSchemes.nord.palette;
-
   wallpaper = ../Wallpapers/nord_valley.png;
 
   sddmTheme = pkgs.where-is-my-sddm-theme.override {
@@ -72,13 +70,11 @@ in
         CursorTheme = "Bibata-Modern-Ice";
         CursorSize = 24;
         ThemeDir = "${sddmTheme}/share/sddm/themes";
-
         FacesDir = "${sddmTheme}/share/sddm/faces";
       };
 
       General = {
         InputMethod = "";
-
         DisplayServer = "wayland";
         GreeterEnvironment = "QT_WAYLAND_FORCE_DPI=physical,XCURSOR_THEME=Bibata-Modern-Ice,XCURSOR_SIZE=24";
       };
@@ -97,7 +93,7 @@ in
   environment.sessionVariables = {
     XCURSOR_THEME = "Bibata-Modern-Ice";
     XCURSOR_SIZE = "24";
-    QT_QPA_PLATFORMTHEME = "qt6ct";
+    QT_QPA_PLATFORMTHEME = "qtct";
   };
 
   qt = {

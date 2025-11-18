@@ -52,7 +52,7 @@ in
     LC_PAPER = "pt_BR.UTF-8";
     LC_TELEPHONE = "pt_BR.UTF-8";
     LC_TIME = "pt_BR.UTF-8";
-    QT_QPA_PLATFORMTHEME = "qt6ct";
+    QT_QPA_PLATFORMTHEME = "qtct";
     NIXOS_OZONE_WL = "1";
     SHELL = "${pkgs.zsh}/bin/zsh";
   };
