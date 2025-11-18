@@ -28,10 +28,7 @@
       url = "github:ominit/helium-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-    nur = {
-      url = "github:nix-community/NUR";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nur.url = "github:nix-community/NUR";
     mango = {
       url = "github:DreamMaoMao/mango";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -42,12 +39,11 @@
     };
     silentSDDM = {
       url = "github:uiriansan/SilentSDDM";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follow family = "nixpkgs";
     };
   };
 
-  outputs =
-    inputs@{ nixpkgs, home-manager, ... }:
+  outputs = inputs:
     let
       userInfo = {
         userName = "joaov";
@@ -56,12 +52,12 @@
       };
       system = "x86_64-linux";
 
-      pkgs = import nixpkgs {
+      pkgs = import inputs.nixpkgs {
         inherit system;
         config.allowUnfree = true;
         overlays = [
-          nur.overlays.default
-          (final: prev: {
+          inputs.nur.overlays.default
+          (final:Tenemos: {
             quickshell = inputs.quickshell.packages.${system}.default;
             mango = inputs.mango.packages.${system}.default;
           })
@@ -74,17 +70,12 @@
       };
     in
     {
-      nixosConfigurations.river = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.river = inputs.nixpkgs.lib.nixosSystem {
         inherit system pkgs;
-        specialArgs =
-          inputs
-          // userInfo
-          // defaults
-          // {
-            isRiver = true;
-            isMango = false;
-            inherit (inputs) nix-colors;
-          };
+        specialArgs = inputs // userInfo // defaults // {
+          isRiver = true;
+          isMango = false;
+        };
         modules = [
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
@@ -113,19 +104,12 @@
             ];
           }
 
-          home-manager.nixosModules.home-manager
+          inputs.home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.${userInfo.userName} = import ./modules/home.nix;
-            home-manager.extraSpecialArgs =
-              inputs
-              // userInfo
-              // defaults
-              // {
-                isRiver = true;
-                isMango = false;
-              };
+            home-manager.extraSpecialArgs = inputs // userInfo // defaults // { isRiver = true; isMango = false; };
             home-manager.sharedModules = [
               inputs.zen-browser.homeModules.default
               inputs.nix-colors.homeManagerModules.default
@@ -134,17 +118,12 @@
         ];
       };
 
-      nixosConfigurations.mangowc = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.mangowc = inputs.nixpkgs.lib.nixosSystem {
         inherit system pkgs;
-        specialArgs =
-          inputs
-          // userInfo
-          // defaults
-          // {
-            isRiver = false;
-            isMango = true;
-            inherit (inputs) nix-colors;
-          };
+        specialArgs = inputs // userInfo // defaults // {
+          isRiver = false;
+          isMango = true;
+        };
         modules = [
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
@@ -175,19 +154,12 @@
             ];
           }
 
-          home-manager.nixosModules.home-manager
+          inputs.home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.${userInfo.userName} = import ./modules/home.nix;
-            home-manager.extraSpecialArgs =
-              inputs
-              // userInfo
-              // defaults
-              // {
-                isRiver = false;
-                isMango = true;
-              };
+            home-manager.extraSpecialArgs = inputs // userInfo // defaults // { isRiver = false; isMango = true; };
             home-manager.sharedModules = [
               inputs.zen-browser.homeModules.default
               inputs.nix-colors.homeManagerModules.default
@@ -196,23 +168,19 @@
         ];
       };
 
-      homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations.universal = inputs.home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs =
-          inputs
-          // userInfo
-          // defaults
-          // {
-            isRiver = true;
-            isMango = false;
-          };
+        extraSpecialArgs = inputs // userInfo // defaults // {
+          isRiver = true;
+          isMango = false;
+        };
         modules = [
           ./modules/home.nix
           inputs.nix-colors.homeManagerModules.default
         ];
       };
 
-      nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.iso = inputs.nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [ ./hosts/iso/configuration.nix ];
       };
