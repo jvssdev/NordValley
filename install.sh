@@ -19,6 +19,57 @@ export NIX_PATH=""
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Function to check internet connectivity
+check_connectivity() {
+    print_info "Checking internet connectivity..."
+    
+    local test_urls=(
+        "https://cache.nixos.org"
+        "https://github.com"
+        "https://nixos.org"
+    )
+    
+    local connected=false
+    for url in "${test_urls[@]}"; do
+        if curl -Is --connect-timeout 5 "$url" >/dev/null 2>&1; then
+            connected=true
+            print_success "Connected to: $url"
+            break
+        fi
+    done
+    
+    if [ "$connected" = false ]; then
+        print_error "No internet connection detected!"
+        print_warning "Please check your network connection and try again"
+        print_info "Tested URLs:"
+        for url in "${test_urls[@]}"; do
+            echo "  - $url"
+        done
+        return 1
+    fi
+    
+    print_success "Internet connectivity confirmed"
+    return 0
+}
+
+# Display banner
+cat << "EOF"
+╔═══════════════════════════════════════════════════════════╗
+║                  NixOS Installation Script                ║
+║                      Nord Valley                          ║
+╚═══════════════════════════════════════════════════════════╝
+EOF
+echo
+
+# Check internet connectivity first
+if ! check_connectivity; then
+    echo
+    print_error "Cannot proceed without internet connection"
+    exit 1
+fi
+
+echo
+
 # Check if running in live environment
 if [ -d "/iso" ] || [ "$(findmnt -o FSTYPE -n /)" = "tmpfs" ]; then
     print_info "Detected NixOS live environment"
@@ -30,7 +81,14 @@ if [ -d "/iso" ] || [ "$(findmnt -o FSTYPE -n /)" = "tmpfs" ]; then
         exit 1
     fi
     
-    sudo bash "$SCRIPT_DIR/live-install.sh"
+    # Check if running as root
+    if [[ $EUID -eq 0 ]]; then
+        print_error "This script should not be executed as root!"
+        print_info "Run it as your regular user (nixos)"
+        exit 1
+    fi
+    
+    bash "$SCRIPT_DIR/live-install.sh"
     exit $?
 fi
 
