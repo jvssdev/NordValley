@@ -17,8 +17,10 @@ let
   systemctl = "${pkgs.systemd}/bin/systemctl";
 
   spawns = [
-    "${dbus-update} --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=river"
-    "${systemctl} --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+    "${dbus-update} --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=river XCURSOR_THEME XCURSOR_SIZE"
+    "${systemctl} --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XCURSOR_THEME XCURSOR_SIZE"
+
+    "seat seat0 xcursor-theme Bibata-Modern-Ice 24"
 
     "${wpaperd}"
     "${waybar} -d"

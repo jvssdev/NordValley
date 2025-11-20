@@ -16,6 +16,8 @@
     QT_QPA_PLATFORM = "wayland";
     GDK_BACKEND = "wayland";
     ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+    XCURSOR_THEME = "Bibata-Modern-Ice";
+    XCURSOR_SIZE = "24";
   };
 
   home.packages = with pkgs; [
@@ -53,6 +55,8 @@
         wideriver = "${pkgs.wideriver}/bin/wideriver";
       in
       ''
+        riverctl xcursor-theme Bibata-Modern-Ice 24
+
         ${wideriver} \
           --layout left \
           --stack dwindle \
@@ -87,6 +91,7 @@
         gsettings set "org.gnome.desktop.interface" gtk-theme "Colloid-Dark"
         gsettings set "org.gnome.desktop.interface" icon-theme "Colloid-Dark"
         gsettings set "org.gnome.desktop.interface" cursor-theme "Bibata-Modern-Ice"
+        gsettings set "org.gnome.desktop.interface" cursor-size 24
       '';
   };
 

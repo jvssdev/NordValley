@@ -26,6 +26,9 @@ in
 
   home.file.".icons/default".source = "${pkgs.bibata-cursors}/share/icons/Bibata-Modern-Ice";
 
+  home.file.".local/share/icons/default".source =
+    "${pkgs.bibata-cursors}/share/icons/Bibata-Modern-Ice";
+
   fonts.fontconfig.enable = true;
   home.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
@@ -45,11 +48,20 @@ in
       name = "Colloid-Dark";
       package = pkgs.colloid-icon-theme;
     };
+    cursorTheme = {
+      name = "Bibata-Modern-Ice";
+      package = pkgs.bibata-cursors;
+      size = 24;
+    };
     gtk3.extraConfig = {
       gtk-application-prefer-dark-theme = 1;
+      gtk-cursor-theme-name = "Bibata-Modern-Ice";
+      gtk-cursor-theme-size = 24;
     };
     gtk4.extraConfig = {
       gtk-application-prefer-dark-theme = 1;
+      gtk-cursor-theme-name = "Bibata-Modern-Ice";
+      gtk-cursor-theme-size = 24;
     };
   };
 
@@ -58,4 +70,11 @@ in
     platformTheme.name = "qtct";
     style.name = "kvantum";
   };
+
+  xdg.dataFile."icons/default/index.theme".text = ''
+    [Icon Theme]
+    Name=Default
+    Comment=Default Cursor Theme
+    Inherits=Bibata-Modern-Ice
+  '';
 }
