@@ -124,6 +124,7 @@
           home-manager.nixosModules.home-manager
           {
             home-manager = {
+              home-manager.backupFileExtension = "hm-backup";
               useGlobalPkgs = true;
               useUserPackages = true;
               users.${userInfo.userName} = import ./modules/home.nix;
@@ -197,6 +198,7 @@
           home-manager.nixosModules.home-manager
           {
             home-manager = {
+              home-manager.backupFileExtension = "hm-backup";
               useGlobalPkgs = true;
               useUserPackages = true;
               users.${userInfo.userName} = import ./modules/home.nix;
