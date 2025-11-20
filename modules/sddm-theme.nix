@@ -8,16 +8,11 @@
 }:
 
 let
-
-  wallpaper = builtins.path {
-    path = ../Wallpapers/nord_valley.png;
-    name = "nord-valley-wallpaper";
-  };
+  wallpaper = ../Wallpapers/nord_valley.png;
 
   colors = nix-colors.colorSchemes.nord.palette;
 
   silentTheme = silentSDDM.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
-
     extraBackgrounds = [ wallpaper ];
 
     theme-overrides = {
@@ -26,7 +21,7 @@ let
       };
 
       "LoginScreen" = {
-        background = "${wallpaper}";
+        background = wallpaper;
         blur = 30;
       };
 
@@ -160,7 +155,7 @@ let
       };
 
       "LockScreen" = {
-        background = "${wallpaper}";
+        background = wallpaper;
         blur = 50;
       };
 
