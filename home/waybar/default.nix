@@ -37,9 +37,8 @@ in
         height = 30;
         modules-left = [
           "river/tags"
-          "river/window"
         ];
-        modules-center = [ "river/layout" ];
+
         modules-right = [
           "pulseaudio"
           "network"
@@ -51,11 +50,7 @@ in
         ];
 
         "river/tags" = {
-          num-tags = 9;
-        };
-
-        "river/window" = {
-          max-length = 50;
+          "hide-vacant" = true;
         };
 
         "clock" = {
