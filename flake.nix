@@ -191,7 +191,7 @@
           ./modules/sddm-theme.nix
 
           mango.nixosModules.mango
-          { programs.mango.enable = true; }
+          # { programs.mango.enable = true; }
 
           home-manager.nixosModules.home-manager
           {
