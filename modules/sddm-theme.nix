@@ -9,8 +9,13 @@
 
 let
 
-  wallpaper = ../Wallpapers/nord_valley.png;
+  wallpaper = builtins.path {
+    path = ../Wallpapers/nord_valley.png;
+    name = "nord-valley-wallpaper";
+  };
+
   colors = nix-colors.colorSchemes.nord.palette;
+
   silentTheme = silentSDDM.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
 
     extraBackgrounds = [ wallpaper ];
