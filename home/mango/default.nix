@@ -21,7 +21,7 @@
 
       quickshell >/dev/null 2>&1 &
 
-      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=mangowc
+      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
 
       /usr/lib/xdg-desktop-portal-wlr &
     '';
@@ -29,7 +29,6 @@
     settings = ''
       xkb_rules_layout = "br"
 
-      # Monitores virtuais (fallback caso não detecte)
       monitorrule=Virtual-1,0.55,1,tile,0,1,0,0,1920,1080,60
       monitorrule=eDP-1,0.55,1,tile,0,1,0,0,1920,1080,60
 
