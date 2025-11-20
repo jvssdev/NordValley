@@ -33,9 +33,9 @@ print_warning() {
     echo -e "${YELLOW}⚠${NC} $1"
 }
 
-# Function to clean Nix channels (we use flakes instead)
+# Function to clean Nix channels - MOVED TO POST-INSTALL
 clean_nix_channels() {
-    print_info "Cleaning legacy Nix channels (flakes-only setup)..."
+    print_info "Cleaning legacy Nix channels (post-installation cleanup)..."
     
     # Get current user
     local current_user=$(whoami)
@@ -63,6 +63,34 @@ clean_nix_channels() {
     print_success "Channel cleanup completed"
 }
 
+# Function to check internet connectivity
+check_connectivity() {
+    print_info "Checking internet connectivity..."
+    
+    local test_urls=(
+        "https://cache.nixos.org"
+        "https://github.com"
+        "https://nixos.org"
+    )
+    
+    local connected=false
+    for url in "${test_urls[@]}"; do
+        if curl -Is --connect-timeout 5 "$url" >/dev/null 2>&1; then
+            connected=true
+            break
+        fi
+    done
+    
+    if [ "$connected" = false ]; then
+        print_error "No internet connection detected!"
+        print_warning "Please check your network connection and try again"
+        return 1
+    fi
+    
+    print_success "Internet connectivity confirmed"
+    return 0
+}
+
 # Check if running as root
 if [[ $EUID -eq 0 ]]; then
     print_error "This script should not be executed as root! Exiting..."
@@ -84,6 +112,11 @@ cat << "EOF"
 ╚═══════════════════════════════════════════════════════════╝
 EOF
 echo
+
+# Check connectivity before proceeding
+if ! check_connectivity; then
+    exit 1
+fi
 
 # Get current user
 currentUser=$(whoami)
@@ -182,8 +215,7 @@ mkdir -p ~/.config
 
 print_success "Directories created"
 
-# Clean Nix channels before rebuild
-clean_nix_channels
+# NOTE: Channel cleanup moved to AFTER successful installation
 
 # Enable Intel drivers if needed
 read -p "Enable Intel graphics drivers? (y/n) [n]: " enable_intel
@@ -212,7 +244,14 @@ if [ -d "$FLAKE_DIR/.git" ]; then
     
     # Update flake lock
     print_info "Updating flake lock file..."
-    nix flake update --commit-lock-file 2>/dev/null || nix flake lock
+    if ! nix flake update --commit-lock-file 2>/dev/null && ! nix flake lock; then
+        print_error "Failed to update flake lock. Check your internet connection."
+        # Restore backup
+        if [ -f "${FLAKE_DIR}/flake.nix.backup" ]; then
+            mv "${FLAKE_DIR}/flake.nix.backup" "${FLAKE_DIR}/flake.nix"
+        fi
+        exit 1
+    fi
     print_success "Flake lock updated"
     print_success "Changes added to git"
 fi
@@ -255,6 +294,11 @@ if sudo nixos-rebuild switch --flake "${FLAKE_DIR}#${WM_CONFIG}" --option pure-e
     print_success "═══════════════════════════════════════════════════════════"
     print_success "  Installation completed successfully!"
     print_success "═══════════════════════════════════════════════════════════"
+    
+    # NOW clean channels after successful installation
+    echo
+    clean_nix_channels
+    
     echo
     print_warning "Important: Please reboot your system to apply all changes"
     echo
@@ -277,6 +321,9 @@ else
     print_error "  Installation failed!"
     print_error "═══════════════════════════════════════════════════════════"
     echo
+    print_warning "Channels were NOT cleaned since installation failed"
+    print_info "Your system should still be in a recoverable state"
+    echo
     print_info "Restoring backup configuration..."
     if [ -f "${FLAKE_DIR}/flake.nix.backup" ]; then
         mv "${FLAKE_DIR}/flake.nix.backup" "${FLAKE_DIR}/flake.nix"
@@ -284,6 +331,11 @@ else
     fi
     echo
     print_info "Check the error messages above for details"
+    print_info "Common issues:"
+    print_info "  1. Network connectivity problems"
+    print_info "  2. Missing dependencies in cache"
+    print_info "  3. Syntax errors in configuration"
+    echo
     print_info "You can try running the installation again"
     exit 1
 fi
