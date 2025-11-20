@@ -187,9 +187,11 @@
                 text = ''
                   [Desktop Entry]
                   Name=MangoWC
-                  Comment=A Wayland compositor based on wlroots
-                  Exec=dbus-run-session mango
+                  Comment=A dynamic tiling Wayland compositor based on wlroots
+                  Exec=${pkgs.dbus}/bin/dbus-run-session ${pkgs.mango}/bin/mango
+                  TryExec=${pkgs.mango}/bin/mango
                   Type=Application
+                  DesktopNames=mango
                 '';
                 passthru.providedSessions = [ "mango" ];
               })
