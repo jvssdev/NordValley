@@ -16,7 +16,7 @@ in
     enable = true;
     settings = {
       eDP-1 = {
-        path = "${homeDir}/Wallpapers";
+        path = ../../Wallpapers;
         sorting = "random";
         duration = "10m";
       };
