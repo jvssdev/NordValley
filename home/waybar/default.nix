@@ -18,12 +18,23 @@ in
         color: #${colors.base05};
         border-bottom: 2px solid #${colors.base02};
       }
+      #tags {
+        padding: 0px 6px;
+      }
       #tags button {
-        padding: 0 10px;
+        padding: 0px 6px;
+        min-width: 0px;
+        border-radius: 0px;
+        color: #${base05};
+      }
+      #tags button.occupied {
+        color: #${base05};
       }
       #tags button.focused {
-        background: #${colors.base0D};
-        color: #${colors.base00};
+        color: #${base0E};
+      }
+      #tags button.urgent {
+        color: #${base08};
       }
       #clock, #battery, #cpu, #memory, #network, #pulseaudio, #tray {
         padding: 0 10px;
