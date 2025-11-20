@@ -7,33 +7,33 @@
 {
   wayland.windowManager.mango = {
     enable = true;
+
     autostart_sh = ''
-      set +e
+      systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=MangoWC
+
+      ${pkgs.xdg-desktop-portal-wlr}/libexec/xdg-desktop-portal-wlr >/dev/null 2>&1 &
 
       waybar >/dev/null 2>&1 &
       wpaperd >/dev/null 2>&1 &
       mako >/dev/null 2>&1 &
-      nm-applet >/dev/null 2>&1 &
-      easyeffects --gapplication-service >/dev/null 2>&1 &
-      wl-clip-persist --clipboard regular --reconnect-tries 0 &
+      nm-applet --indicator >/dev/null 2>&1 &
 
-      wl-paste --type text --watch cliphist store & 
-      wl-paste --type image --watch cliphist store & 
+      # Polkit
+      ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 >/dev/null 2>&1 &
 
-      # Use mate-polkit instead of the full path
-      ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 &
+      # Clipboard manager
+      wl-paste --type text --watch cliphist store >/dev/null 2>&1 & 
+      wl-paste --type image --watch cliphist store >/dev/null 2>&1 &
 
-      # Quickshell idle management
       quickshell >/dev/null 2>&1 &
 
-      # Screen share
-      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
-
-      # XDG Desktop Portal
-      ${pkgs.xdg-desktop-portal-wlr}/libexec/xdg-desktop-portal-wlr &
+      if command -v easyeffects >/dev/null 2>&1; then
+        easyeffects --gapplication-service >/dev/null 2>&1 &
+      fi
     '';
-    settings = ''
 
+    settings = ''
       xkb_rules_layout = "br"
 
       monitorrule=Virtial-1,0.55,1,tile,0,1,0,0,1920,1080,60
@@ -43,7 +43,6 @@
       bind=SUPER,a,spawn,fuzzel 
       bind=SUPER,e,spawn,thunar
       bind = SUPER,P,spawn 'grim -g "$(slurp)" - | wl-copy'
-      #bind=SUPER+CTRL,w,spawn,cliphist wipe
       bind=SUPER,l,spawn,gtklock
       bind=CTRL+alt,p,spawn,wleave
       bind=SUPER,m,quit
@@ -208,7 +207,6 @@
       bind = NONE,XF86AudioPlay,spawn,playerctl play-pause
       bind = NONE,XF86AudioPrev,spawn,playerctl previous
 
-      #cursor_size=24
       env=XCURSOR_SIZE,24
 
       windowrule=title:Authentication required,isfloating:1
@@ -229,10 +227,8 @@
       env=XDG_SESSION_TYPE,wayland
       env=GDK_BACKEND,wayland,x11
       env=CLUTTER_BACKEND,wayland
-
-      env = MOZ_ENABLE_WAYLAND,1
-
-      env = ELECTRON_OZONE_PLATFORM_HINT,auto
+      env=MOZ_ENABLE_WAYLAND,1
+      env=ELECTRON_OZONE_PLATFORM_HINT,auto
 
       HandleLidSwitch=ignore
       HandleLidSwitchExternalPower=ignore

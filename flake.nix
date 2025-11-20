@@ -171,32 +171,10 @@
           ./modules/intel-drivers.nix
           ./modules/thunar.nix
           ./modules/sddm-theme.nix
+
           mango.nixosModules.mango
           {
             programs.mango.enable = true;
-          }
-
-          # MangoWC SDDM Desktop
-          {
-            services.displayManager.sessionPackages = [
-              (pkgs.writeTextFile rec {
-                name = "mango-session";
-                destination = "/share/wayland-sessions/MangoWC.desktop";
-                text = ''
-                  [Desktop Entry]
-                  Name=MangoWC
-                  Comment=A Wayland compositor based on wlroots
-                  Exec=MangoWC
-                  Type=Application
-                '';
-                passthru.providedSessions = [ "MangoWC" ];
-              })
-            ];
-
-            services.displayManager.sddm = {
-              enable = true;
-              wayland.enable = true;
-            };
           }
 
           home-manager.nixosModules.home-manager
