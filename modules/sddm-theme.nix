@@ -9,9 +9,11 @@
 let
   colors = nix-colors.colorSchemes.nord.palette;
   wallpaper = ../Wallpapers/nord_valley.png;
-  background-derivation = pkgs.runCommand "nord_valley.png" { } ''
+
+  background-derivation = pkgs.runCommand "bg.jpg" { } ''
     cp ${wallpaper} $out
   '';
+
   silentTheme = silentSDDM.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
     extraBackgrounds = [ background-derivation ];
     theme-overrides = {
@@ -19,7 +21,7 @@ let
         enable-animations = true;
       };
       "LoginScreen" = {
-        background = "nord_valley.png";
+        background = "${background-derivation.name}";
         blur = 30;
       };
       "LoginScreen.LoginArea" = {
@@ -139,7 +141,7 @@ let
         border-color = "#${colors.base0D}";
       };
       "LockScreen" = {
-        background = "nord_valley.png";
+        background = "${background-derivation.name}";
         blur = 50;
       };
       "LockScreen.Clock" = {
@@ -170,8 +172,10 @@ let
   };
 in
 {
+
   environment.systemPackages = with pkgs; [
     silentTheme
+    silentTheme.test
     bibata-cursors
     kdePackages.qt6ct
     libsForQt5.qtstyleplugin-kvantum
@@ -179,12 +183,27 @@ in
     kdePackages.qtwayland
     qt6.qtwayland
   ];
+
+  qt.enable = true;
+
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
     package = pkgs.kdePackages.sddm;
-    theme = "Silent";
+
+    theme = silentTheme.pname;
+
+    extraPackages = silentTheme.propagatedBuildInputs;
+
+    settings = {
+      General = {
+
+        GreeterEnvironment = "QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard";
+        InputMethod = "qtvirtualkeyboard";
+      };
+    };
   };
+
   environment.sessionVariables = {
     XCURSOR_THEME = "Bibata-Modern-Ice";
     XCURSOR_SIZE = "24";
