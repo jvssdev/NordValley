@@ -159,7 +159,15 @@ print_info "Updating user configuration..."
 # Backup original flake.nix
 cp "${FLAKE_DIR}/flake.nix" "${FLAKE_DIR}/flake.nix.backup"
 
-# Handle hardware configuration FIRST (before updating flake.nix)
+# Update user information in flake.nix
+sed -i -e "s/userName = \".*\"/userName = \"$currentUser\"/" \
+       -e "s/fullName = \".*\"/fullName = \"$fullName\"/" \
+       -e "s/userEmail = \".*\"/userEmail = \"$userEmail\"/" \
+    "${FLAKE_DIR}/flake.nix"
+
+print_success "User configuration updated"
+
+# Handle hardware configuration
 print_info "Configuring hardware..."
 
 HARDWARE_CONFIG="${FLAKE_DIR}/hosts/ashes/hardware-configuration.nix"
@@ -170,15 +178,6 @@ sudo nixos-generate-config --show-hardware-config > /tmp/hardware-configuration.
 sudo mv /tmp/hardware-configuration.nix "$HARDWARE_CONFIG"
 sudo chown $currentUser:users "$HARDWARE_CONFIG"
 print_success "Hardware configuration generated and saved"
-
-# Update user information in flake.nix
-print_info "Updating user configuration..."
-sed -i -e "s/userName = \".*\"/userName = \"$currentUser\"/" \
-       -e "s/fullName = \".*\"/fullName = \"$fullName\"/" \
-       -e "s/userEmail = \".*\"/userEmail = \"$userEmail\"/" \
-    "${FLAKE_DIR}/flake.nix"
-
-print_success "User configuration updated"
 
 # Create .gitignore if it doesn't exist
 GITIGNORE_FILE="${FLAKE_DIR}/.gitignore"
@@ -195,6 +194,13 @@ result-*
 # Backup files
 *.backup
 *.old
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
 # OS files
 .DS_Store
@@ -270,11 +276,9 @@ fi
 
 # Git configuration
 if [ -d "$FLAKE_DIR/.git" ]; then
-    print_info "Configuring Git..."
+    print_info "Adding changes to git..."
     cd "$FLAKE_DIR"
-    
-    # Add flake.nix changes (but hardware config is gitignored)
-    git add flake.nix .gitignore 2>/dev/null || true
+    git add -A
     
     # Update flake lock
     print_info "Updating flake lock file..."
@@ -287,7 +291,7 @@ if [ -d "$FLAKE_DIR/.git" ]; then
         exit 1
     fi
     print_success "Flake lock updated"
-    print_success "Git configured"
+    print_success "Changes added to git"
 fi
 
 # Final confirmation
