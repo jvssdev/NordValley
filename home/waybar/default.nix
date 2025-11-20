@@ -1,139 +1,107 @@
-{ config, pkgs, ... }:
+{ pkgs, config, ... }:
 
 let
-  palette = config.colorScheme.palette;
+  colors = config.colorScheme.palette;
 in
 {
   programs.waybar = {
     enable = true;
     systemd.enable = true;
 
-    settings = [
-      {
-        layer = "top";
-        reload_style_on_change = true;
+    style = ''
+      * {
+        font-family: JetBrainsMono Nerd Font, Montserrat;
+        font-size: 13px;
+      }
+      window#waybar {
+        background: #${colors.base00};
+        color: #${colors.base05};
+        border-bottom: 2px solid #${colors.base02};
+      }
+      #tags button {
+        padding: 0 10px;
+      }
+      #tags button.focused {
+        background: #${colors.base0D};
+        color: #${colors.base00};
+      }
+      #clock, #battery, #cpu, #memory, #network, #pulseaudio, #tray {
+        padding: 0 10px;
+      }
+    '';
 
+    settings = {
+      mainBar = {
+        layer = "top";
+        position = "top";
+        height = 30;
         modules-left = [
           "river/tags"
-          "custom/player"
+          "river/window"
         ];
-        modules-center = [ ];
+        modules-center = [ "river/layout" ];
         modules-right = [
-          "bluetooth"
+          "pulseaudio"
+          "network"
+          "cpu"
+          "memory"
           "battery"
-          "custom/clock"
+          "clock"
+          "tray"
         ];
 
-        "custom/clock" = {
-          exec = "date +'%a %I:%M'";
-          interval = 15;
-          tooltip = false;
-          "on-click" = "month";
+        "river/tags" = {
+          num-tags = 9;
         };
 
-        battery = {
-          bat = "BAT1";
-          adapter = "ACAD";
-          interval = 60;
-          states = {
-            warning = 50;
-            critical = 25;
-          };
-          format = "{icon} {capacity}%";
-          "format-charging" = "<span color=\"#${palette.base0B}\">Charging</span> {capacity}%";
-          "format-icons" = [
-            "<span color=\"#${palette.base08}\">Low</span>"
-            "<span color=\"#${palette.base08}\">Low</span>"
-            "<span color=\"#${palette.base0A}\">Low</span>"
-            "<span color=\"#${palette.base0B}\">Low</span>"
-            "<span color=\"#${palette.base0B}\">Low</span>"
+        "river/window" = {
+          max-length = 50;
+        };
+
+        "clock" = {
+          format = "{:%H:%M  %d/%m}";
+        };
+
+        "battery" = {
+          format = "{capacity}% {icon}";
+          format-icons = [
+            ""
+            ""
+            ""
+            ""
+            ""
           ];
         };
 
-        bluetooth = {
-          format = "";
-          "format-off" = "Bluetooth OFF";
-          "format-disabled" = "Bluetooth OFF";
-          "format-connected" = "<span color=\"#${palette.base0D}\">Bluetooth</span> {num_connections}";
-          "format-connected-battery" =
-            "<span color=\"#${palette.base0D}\">Bluetooth</span> {num_connections}";
-          "tooltip-format-enumerate-connected" = "{device_alias}";
-          "tooltip-format-enumerate-connected-battery" = "{device_alias}: {device_battery_percentage}%";
-          "tooltip-format" = "{device_enumerate}";
+        "network" = {
+          format-wifi = "{essid} ({signalStrength}%) ";
+          format-ethernet = "";
+          format-disconnected = "Disconnected";
         };
 
-        "custom/player" = {
-          exec = "player";
-          "exec-if" = "pgrep mpd";
-          tooltip = false;
-          "on-click" = "mpc toggle";
-          signal = 1;
+        "pulseaudio" = {
+          format = "{volume}% {icon}";
+          format-muted = "";
+          format-icons = {
+            default = [
+              ""
+              ""
+            ];
+          };
         };
 
-        "river/tags" = {
-          "hide-vacant" = true;
+        "cpu" = {
+          format = "{usage}% ";
         };
-      }
-    ];
 
-    style = with palette; ''
-      * {
-        border: none;
-        border-radius: 0px;
-        font-family: "JetBrainsMono Nerd Font";
-        font-weight: bold;
-        font-size: 15px;
-        min-height: 13px;
-      }
+        "memory" = {
+          format = "{}% ";
+        };
 
-      window#waybar {
-        background: #${base00};
-        color: #${base05};
-      }
-
-      window#waybar.hidden {
-        background: transparent;
-      }
-
-      #tags {
-        padding: 0px 6px;
-      }
-
-      #custom-player,
-      #bluetooth,
-      #custom-mute,
-      #battery,
-      #custom-clock {
-        padding: 0px 12px;
-      }
-
-      #tags button {
-        padding: 0px 6px;
-        min-width: 0px;
-        border-radius: 0px;
-        color: #${base05};
-      }
-
-      #tags button.occupied {
-        color: #${base05};
-      }
-
-      #tags button.focused {
-        color: #${base0E};
-      }
-
-      #tags button.urgent {
-        color: #${base08};
-      }
-
-      #battery.warning,
-      #battery.critical {
-        color: #${base08};
-      }
-
-      #bluetooth.on {
-        color: #${base0D};
-      }
-    '';
+        "tray" = {
+          spacing = 10;
+        };
+      };
+    };
   };
 }
