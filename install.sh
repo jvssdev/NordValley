@@ -72,36 +72,32 @@ echo
 
 # Check if running in live environment
 if [ -d "/iso" ] || [ "$(findmnt -o FSTYPE -n /)" = "tmpfs" ]; then
-    print_info "Detected NixOS live environment"
-    print_info "Starting installation wizard..."
+    print_warning "Detected NixOS live environment"
     echo
-    
-    if [ ! -f "$SCRIPT_DIR/live-install.sh" ]; then
-        print_error "live-install.sh not found!"
-        exit 1
-    fi
-    
-    # Check if running as root
-    if [[ $EUID -eq 0 ]]; then
-        print_error "This script should not be executed as root!"
-        print_info "Run it as your regular user (nixos)"
-        exit 1
-    fi
-    
-    bash "$SCRIPT_DIR/live-install.sh"
-    exit $?
+    print_info "Please install NixOS first using the official installer:"
+    print_info "  1. Use the graphical installer (Calamares) or manual installation"
+    print_info "  2. Reboot into your installed NixOS system"
+    print_info "  3. Then run this script"
+    echo
+    print_info "For manual installation, see: https://nixos.org/manual/nixos/stable/#sec-installation"
+    exit 1
 fi
 
 # Check if running on NixOS
 if [[ ! "$(grep -i nixos </etc/os-release 2>/dev/null)" ]]; then
     print_error "This script only works on NixOS!"
-    echo "Download an ISO at https://nixos.org/download/"
+    echo
+    print_info "Please install NixOS first:"
+    print_info "  1. Download ISO: https://nixos.org/download/"
+    print_info "  2. Boot and install using the graphical installer"
+    print_info "  3. Reboot into your new NixOS system"
+    print_info "  4. Then run this script"
     exit 1
 fi
 
 # Check if running as root
 if [[ $EUID -eq 0 ]]; then
-    print_error "This script should not be executed as root in installed system!"
+    print_error "This script should not be executed as root!"
     print_info "Run it as your regular user"
     exit 1
 fi
