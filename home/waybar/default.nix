@@ -72,19 +72,6 @@ in
           "tooltip-format" = "{device_enumerate}";
         };
 
-        "custom/inbox" = {
-          exec = "inbox";
-          tooltip = false;
-          "on-click" = "mailsync";
-          signal = 4;
-        };
-
-        "custom/record" = {
-          exec = "record";
-          tooltip = false;
-          signal = 3;
-        };
-
         "custom/player" = {
           exec = "player";
           "exec-if" = "pgrep mpd";
@@ -123,8 +110,6 @@ in
       }
 
       #custom-player,
-      #custom-record,
-      #custom-inbox,
       #bluetooth,
       #custom-mute,
       #battery,
