@@ -22,7 +22,7 @@ let
       };
       "LoginScreen" = {
         background = "${background-derivation.name}";
-        blur = 30;
+        blur = 0;
       };
       "LoginScreen.LoginArea" = {
         position = "center";
@@ -159,7 +159,7 @@ let
         font-size = 32;
       };
       "LockScreen.Message" = {
-        text = "Pressione qualquer tecla";
+        text = "Press any key";
         font-size = 32;
         color = "#${colors.base0A}";
         icon-size = 44;
@@ -197,7 +197,6 @@ in
 
     settings = {
       General = {
-
         GreeterEnvironment = "QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard";
         InputMethod = "qtvirtualkeyboard";
       };
