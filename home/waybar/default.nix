@@ -25,16 +25,16 @@ in
         padding: 0px 6px;
         min-width: 0px;
         border-radius: 0px;
-        color: #${base05};
+        color: #${colors.base05};
       }
       #tags button.occupied {
-        color: #${base05};
+        color: #${colors.base05};
       }
       #tags button.focused {
-        color: #${base0E};
+        color: #${colors.base0E};
       }
       #tags button.urgent {
-        color: #${base08};
+        color: #${colors.base08};
       }
       #clock, #battery, #cpu, #memory, #network, #pulseaudio, #tray {
         padding: 0 10px;
