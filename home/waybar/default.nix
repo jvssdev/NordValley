@@ -19,8 +19,6 @@ in
         ];
         modules-center = [ ];
         modules-right = [
-          "custom/record"
-          "custom/inbox"
           "bluetooth"
           "custom/mute"
           "battery"
