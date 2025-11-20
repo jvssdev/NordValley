@@ -8,27 +8,28 @@
 }:
 
 let
-  colors = nix-colors.colorSchemes.nord.palette;
+
   wallpaper = ../Wallpapers/nord_valley.png;
-
-  background-derivation = pkgs.runCommand "bg.jpg" { } ''
-    cp ${wallpaper} $out
-  '';
-
+  colors = nix-colors.colorSchemes.nord.palette;
   silentTheme = silentSDDM.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
-    extraBackgrounds = [ background-derivation ];
+
+    extraBackgrounds = [ wallpaper ];
+
     theme-overrides = {
       "General" = {
         enable-animations = true;
       };
+
       "LoginScreen" = {
-        background = "${background-derivation.name}";
+        background = "${wallpaper}";
         blur = 30;
       };
+
       "LoginScreen.LoginArea" = {
         position = "center";
         margin = -1;
       };
+
       "LoginScreen.LoginArea.Avatar" = {
         shape = "circle";
         active-size = 140;
@@ -36,6 +37,7 @@ let
         active-border-size = 2;
         active-border-color = "#${colors.base0D}";
       };
+
       "LoginScreen.LoginArea.LoginButton" = {
         font-size = 22;
         icon-size = 30;
@@ -48,6 +50,7 @@ let
         border-size = 2;
         border-color = "#${colors.base0D}";
       };
+
       "LoginScreen.LoginArea.PasswordInput" = {
         width = 460;
         height = 60;
@@ -61,6 +64,7 @@ let
         border-color = "#${colors.base0D}";
         margin-top = 20;
       };
+
       "LoginScreen.LoginArea.Spinner" = {
         text = "Logging in";
         font-size = 36;
@@ -68,23 +72,28 @@ let
         color = "#${colors.base06}";
         spacing = 1;
       };
+
       "LoginScreen.LoginArea.Username" = {
         font-size = 40;
         color = "#${colors.base06}";
         margin = 5;
       };
+
       "LoginScreen.LoginArea.WarningMessage" = {
         font-size = 22;
         normal-color = "#${colors.base06}";
         warning-color = "#${colors.base0A}";
         error-color = "#${colors.base08}";
       };
+
       "LoginScreen.MenuArea.Buttons" = {
         size = 60;
       };
+
       "LoginScreen.MenuArea.Keyboard" = {
         display = false;
       };
+
       "LoginScreen.MenuArea.Layout" = {
         index = 2;
         position = "bottom-center";
@@ -97,6 +106,7 @@ let
         border-size = 2;
         border-color = "#${colors.base0D}";
       };
+
       "LoginScreen.MenuArea.Popups" = {
         max-height = 600;
         item-height = 60;
@@ -114,6 +124,7 @@ let
         border-color = "#${colors.base0D}";
         display-scrollbar = true;
       };
+
       "LoginScreen.MenuArea.Power" = {
         index = 0;
         popup-width = 200;
@@ -126,6 +137,7 @@ let
         border-size = 2;
         border-color = "#${colors.base0D}";
       };
+
       "LoginScreen.MenuArea.Session" = {
         index = 1;
         position = "bottom-center";
@@ -141,10 +153,12 @@ let
         border-size = 2;
         border-color = "#${colors.base0D}";
       };
+
       "LockScreen" = {
-        background = "${background-derivation.name}";
+        background = "${wallpaper}";
         blur = 50;
       };
+
       "LockScreen.Clock" = {
         position = "center";
         align = "center";
@@ -152,6 +166,7 @@ let
         color = "#${colors.base06}";
         font-size = 92;
       };
+
       "LockScreen.Date" = {
         margin-top = 1;
         format = "dd/MM/yyyy";
@@ -159,6 +174,7 @@ let
         color = "#${colors.base0A}";
         font-size = 32;
       };
+
       "LockScreen.Message" = {
         text = "Pressione qualquer tecla";
         font-size = 32;
@@ -166,12 +182,12 @@ let
         icon-size = 44;
         paint-icon = true;
       };
+
       "Tooltips" = {
         enable = false;
       };
     };
   };
-
 in
 {
   environment.systemPackages = with pkgs; [
