@@ -85,7 +85,7 @@ in
   ]
   ++ lib.optionals isMango [
     ../home/mango/default.nix
-    mango.hmModules.mango
+    # mango.hmModules.mango
   ]
   ++ [
     (import ../home/wleave {
