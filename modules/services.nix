@@ -49,7 +49,8 @@
     jack.enable = true;
   };
 
-  # Syncthing - obrigatório
+  hardware.bluetooth.enable = true;
+
   services.syncthing = {
     enable = true;
     user = userName;

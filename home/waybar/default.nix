@@ -20,7 +20,6 @@ in
         modules-center = [ ];
         modules-right = [
           "bluetooth"
-          "custom/mute"
           "battery"
           "custom/clock"
         ];
@@ -49,13 +48,6 @@ in
             "<span color=\"#${palette.base0B}\">Low</span>"
             "<span color=\"#${palette.base0B}\">Low</span>"
           ];
-        };
-
-        "custom/mute" = {
-          exec = "mute";
-          format = "<span color=\"#${palette.base0E}\">{}</span>";
-          tooltip = false;
-          signal = 5;
         };
 
         bluetooth = {
