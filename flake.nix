@@ -1,46 +1,58 @@
 {
   description = "NordValley NixOS with River and MangoWC window manager";
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     nix-colors.url = "github:misterio77/nix-colors";
+
     helix = {
       url = "github:helix-editor/helix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     zsh-hlx = {
       url = "github:multirious/zsh-helix-mode/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     helium-browser = {
       url = "github:ominit/helium-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     mango = {
       url = "github:DreamMaoMao/mango";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
     silentSDDM = {
       url = "github:uiriansan/SilentSDDM";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
+
   outputs =
     inputs@{
       nixpkgs,
@@ -49,7 +61,6 @@
       mango,
       nixpkgs-unstable,
       nix-colors,
-      zsh-hlx,
       ...
     }:
     let
@@ -58,7 +69,9 @@
         fullName = "João Víctor Santos Silva";
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
+
       system = "x86_64-linux";
+
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
@@ -70,13 +83,15 @@
           })
         ];
       };
+
       defaults = {
         withGUI = true;
         homeDir = "/home/${userInfo.userName}";
       };
+
     in
     {
-      # RiverWM configuration
+      # ========================= RIVER =========================
       nixosConfigurations.river = nixpkgs.lib.nixosSystem {
         inherit system pkgs;
         specialArgs =
@@ -90,6 +105,7 @@
             inherit nix-colors;
             silentSDDM = inputs.silentSDDM;
           };
+
         modules = [
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
@@ -100,7 +116,7 @@
           ./modules/power-management.nix
           ./modules/thunar.nix
           ./modules/sddm-theme.nix
-          # River SDDM Desktop Entry
+
           {
             services.displayManager.sessionPackages = [
               (pkgs.writeTextFile rec {
@@ -117,6 +133,7 @@
               })
             ];
           }
+
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -147,7 +164,7 @@
         ];
       };
 
-      # MangoWC
+      # ========================= MANGOWC =========================
       nixosConfigurations.mangowc = nixpkgs.lib.nixosSystem {
         inherit system pkgs;
         specialArgs =
@@ -161,21 +178,20 @@
             inherit nix-colors;
             silentSDDM = inputs.silentSDDM;
           };
+
         modules = [
           ./hosts/ashes/configuration.nix
           ./hosts/ashes/hardware-configuration.nix
           ./modules/path.nix
           ./modules/services.nix
           ./modules/elevated-packages.nix
-          ./modules/power-management.nix
           ./modules/intel-drivers.nix
+          ./modules/power-management.nix
           ./modules/thunar.nix
           ./modules/sddm-theme.nix
 
           mango.nixosModules.mango
-          {
-            programs.mango.enable = true;
-          }
+          { programs.mango.enable = true; }
 
           home-manager.nixosModules.home-manager
           {
