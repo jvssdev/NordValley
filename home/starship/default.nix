@@ -13,12 +13,12 @@ in
       add_newline = true;
 
       format = ''
-        [░▒▓](#${c.base03})[ ](bg:#${c.base03} fg:#${c.base07})[](bg:#${c.base0B} fg:#${c.base03})$directory[](fg:#${c.base0B} bg:#${c.base01})$git_branch$git_status[](fg:#${c.base01} bg:#${c.base02})$nodejs$rust$golang$php[](fg:#${c.base02} bg:#${c.base03})$time[](fg:#${c.base03})
+        [░▒▓](#${c.base03})[ ](bg:#${c.base03} fg:#${c.base06})[](bg:#${c.base07} fg:#${c.base03})$directory[](fg:#${c.base07} bg:#${c.base01})$git_branch$git_status[](fg:#${c.base01} bg:#${c.base02})$nodejs$rust$golang$php[](fg:#${c.base02} bg:#${c.base03})$time[](fg:#${c.base03})
         $character
       '';
 
       directory = {
-        style = "fg:#${c.base03} bg:#${c.base0B}";
+        style = "fg:#${c.base03} bg:#${c.base07}";
         format = "[ $path ]($style)";
         truncation_length = 3;
         truncation_symbol = "…/";
