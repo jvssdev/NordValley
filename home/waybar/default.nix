@@ -31,13 +31,16 @@ in
         color: #${colors.base05};
       }
       #tags button.focused {
-        color: #${colors.base0E};
+        color: #${colors.base0F};
       }
       #tags button.urgent {
         color: #${colors.base08};
       }
-      #clock, #battery, #cpu, #memory, #network, #pulseaudio, #tray {
+      #clock, #battery, #cpu, #memory, #network, #bluetooth,#pulseaudio, #tray {
         padding: 0 10px;
+      }
+      #bluetooth.connected {
+        color: #${colors.base0F};
       }
     '';
 
@@ -50,14 +53,16 @@ in
           "river/tags"
         ];
 
+        modules-center = [ "clock" ];
+
         modules-right = [
-          "pulseaudio"
-          "network"
           "cpu"
           "memory"
           "battery"
-          "clock"
           "tray"
+          "network"
+          "bluetooth"
+          "pulseaudio"
         ];
 
         "river/tags" = {
@@ -83,6 +88,17 @@ in
           format-wifi = "{essid} ({signalStrength}%) ";
           format-ethernet = "";
           format-disconnected = "Disconnected";
+        };
+
+        "bluetooth" = {
+          format = " {status}";
+          format-connected = " {num_connections} conected";
+          format-disabled = "󰂲 off";
+          format-off = "󰂲 off";
+          format-on = " on";
+          tooltip-format = "{controller_alias}\t{controller_address}";
+          on-click = "blueman-manager";
+          on-click-right = "rfkill toggle bluetooth";
         };
 
         "pulseaudio" = {
