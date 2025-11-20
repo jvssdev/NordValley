@@ -1,17 +1,13 @@
 {
   description = "NordValley NixOS with River and MangoWC window manager";
   inputs = {
-
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nix-colors.url = "github:misterio77/nix-colors";
-
     helix = {
       url = "github:helix-editor/helix/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -150,6 +146,7 @@
           }
         ];
       };
+
       # MangoWC
       nixosConfigurations.mangowc = nixpkgs.lib.nixosSystem {
         inherit system pkgs;
@@ -173,30 +170,35 @@
           ./modules/power-management.nix
           ./modules/intel-drivers.nix
           ./modules/thunar.nix
+          ./modules/sddm-theme.nix
           mango.nixosModules.mango
           {
             programs.mango.enable = true;
           }
-          ./modules/sddm-theme.nix
-          # ManoWC SDDM Desktop Entry
+
+          # MangoWC SDDM Desktop
           {
             services.displayManager.sessionPackages = [
               (pkgs.writeTextFile rec {
                 name = "mango-session";
-                destination = "/share/wayland-sessions/mango.desktop";
+                destination = "/share/wayland-sessions/MangoWC.desktop";
                 text = ''
                   [Desktop Entry]
                   Name=MangoWC
-                  Comment=A dynamic tiling Wayland compositor based on wlroots
-                  Exec=${pkgs.dbus}/bin/dbus-run-session ${pkgs.mango}/bin/mango
-                  TryExec=${pkgs.mango}/bin/mango
+                  Comment=A Wayland compositor based on wlroots
+                  Exec=MangoWC
                   Type=Application
-                  DesktopNames=mango
                 '';
-                passthru.providedSessions = [ "mango" ];
+                passthru.providedSessions = [ "MangoWC" ];
               })
             ];
+
+            services.displayManager.sddm = {
+              enable = true;
+              wayland.enable = true;
+            };
           }
+
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -222,11 +224,13 @@
               sharedModules = [
                 inputs.zen-browser.homeModules.default
                 nix-colors.homeManagerModules.default
+                mango.hmModules.mango
               ];
             };
           }
         ];
       };
+
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = {
@@ -247,6 +251,7 @@
           nix-colors.homeManagerModules.default
         ];
       };
+
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [ ./hosts/iso/configuration.nix ];
