@@ -10,7 +10,7 @@
       set +e
 
       waybar >/dev/null 2>&1 &
-      #wpaperd -i $HOME/Wallpapers/ >/dev/null 2>&1 &
+      wpaperd >/dev/null 2>&1 &
       mako >/dev/null 2>&1 &
       nm-applet >/dev/null 2>&1 &
       easyeffects --gapplication-service >/dev/null 2>&1 &
@@ -24,8 +24,8 @@
       quickshell >/dev/null 2>&1 &
 
       # Screen share
-      # dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
-      systemctl --user set-environment XDG_CURRENT_DESKTOP=wlroots
+      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
+      # systemctl --user set-environment XDG_CURRENT_DESKTOP=wlroots
     '';
 
     settings = ''
