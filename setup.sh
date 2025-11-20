@@ -337,6 +337,13 @@ if sudo nixos-rebuild switch --flake "${FLAKE_DIR}#${WM_CONFIG}" --option pure-e
     echo
     clean_nix_channels
     
+    # Unstage hardware-configuration.nix after successful build
+    if [ -d "$FLAKE_DIR/.git" ]; then
+        cd "$FLAKE_DIR"
+        git reset HEAD hosts/ashes/hardware-configuration.nix 2>/dev/null || true
+        print_info "Hardware configuration unstaged (remains gitignored)"
+    fi
+    
     echo
     print_warning "Important: Please reboot your system to apply all changes"
     echo
@@ -362,6 +369,13 @@ else
     print_warning "Channels were NOT cleaned since installation failed"
     print_info "Your system should still be in a recoverable state"
     echo
+    
+    # Unstage hardware-configuration.nix after failed build
+    if [ -d "$FLAKE_DIR/.git" ]; then
+        cd "$FLAKE_DIR"
+        git reset HEAD hosts/ashes/hardware-configuration.nix 2>/dev/null || true
+    fi
+    
     print_info "Restoring backup configuration..."
     if [ -f "${FLAKE_DIR}/flake.nix.backup" ]; then
         mv "${FLAKE_DIR}/flake.nix.backup" "${FLAKE_DIR}/flake.nix"
