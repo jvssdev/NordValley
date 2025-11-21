@@ -54,33 +54,40 @@ in
         }
       ];
     };
+
     "wleave/style.css".text = ''
       * {
+        background-image: none;
         font-family: "Montserrat", sans-serif;
         font-size: 20pt;
       }
+
       window {
+        background-color: rgba(${toString (lib.toInt "0x${c.base00}")} / 0.95);
         color: #${c.base05};
-        background-color: #${c.base00};
       }
+
       button {
-        border-radius: 10px;
+        color: #${c.base05};
+        background-color: #${c.base01};
         background-repeat: no-repeat;
         background-position: center;
         background-size: 50%;
+        border-radius: 20px;
         border: none;
-        background-color: transparent;
         margin: 5px;
         transition: box-shadow 0.1s ease-in-out, background-color 0.1s ease-in-out;
       }
-      button:hover {
-        background-color: #${c.base01};
+
+      button:focus, button:active, button:hover {
+        background-color: #${c.base02};
+        outline-style: none;
       }
+
       button:focus {
-        background-color: #${c.base0D};
-        color: #${c.base00};
         box-shadow: 0 0 10px #${c.base0D};
       }
+
       #lock {
         background-image: image(url("${pkgs.wleave}/share/wleave/icons/lock.svg"));
       }
@@ -106,12 +113,4 @@ in
       }
     '';
   };
-  # home.file = {
-  #   ".config/wleave/icons/lock.png".source = ./icons/lock.png;
-  #   ".config/wleave/icons/logout.png".source = ./icons/logout.png;
-  #   ".config/wleave/icons/suspend.png".source = ./icons/suspend.png;
-  #   ".config/wleave/icons/shutdown.png".source = ./icons/shutdown.png;
-  #   ".config/wleave/icons/reboot.png".source = ./icons/reboot.png;
-  #   ".config/wleave/icons/hibernate.png".source = ./icons/hibernate.png;
-  # };
 }
