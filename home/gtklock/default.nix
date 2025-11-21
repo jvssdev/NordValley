@@ -76,14 +76,6 @@ let
 
     #input-field.error {
       border-color: #${c.base08};
-      animation: shake 0.3s;
-    }
-
-    @keyframes shake {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-10px); }
-      75% { transform: translateX(10px); }
-      100% { transform: translateX(0); }
     }
 
     #unlock-button {
