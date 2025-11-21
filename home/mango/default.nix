@@ -118,8 +118,6 @@
 
       bind=SUPER,p,spawn,grim -g "$(slurp)" - | wl-copy
 
-      bind=SUPER,l,spawn,gtklock
-
       bind=SUPER,q,killclient
       bind=SUPER,space,togglefloating
       bind=SUPER,f,togglefullscreen

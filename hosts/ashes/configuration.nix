@@ -77,6 +77,10 @@
     timeout = 10;
   };
 
+  security.pam.services.gtklock = {
+    text = lib.readFile "${pkgs.gtklock}/etc/pam.d/gtklock";
+  };
+
   powerManagement = {
     powertop.enable = true;
     cpuFreqGovernor = lib.mkDefault "powersave";

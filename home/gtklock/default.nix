@@ -6,9 +6,7 @@
   ...
 }:
 let
-  inherit (specialArgs)
-    homeDir
-    ;
+  inherit (specialArgs) homeDir;
   c = config.colorScheme.palette;
 
   gtklockConfig = pkgs.writeText "gtklock-config" ''
@@ -27,7 +25,7 @@ let
   gtklockStyle = pkgs.writeText "gtklock-style.css" ''
     window {
       background-color: #${c.base00};
-      background-image: url("../../Wallpapers/a6116535-4a72-453e-83c9-ea97b8597d8c.png");
+      background-image: url("${homeDir}/Wallpapers/a6116535-4a72-453e-83c9-ea97b8597d8c.png");
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
@@ -47,6 +45,19 @@ let
       margin-top: 32em;
     }
 
+    #input-field {
+      background-color: rgba(46, 52, 64, 0.9);
+      color: #${c.base05};
+      border: 2px solid #${c.base0D};
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 1.2em;
+    }
+
+    #input-field:focus {
+      border-color: #${c.base0C};
+    }
+
     #unlock-button {
       color: #${c.base05};
       background-color: #${c.base02};
@@ -61,7 +72,10 @@ let
   '';
 in
 {
-  home.packages = [ pkgs.gtklock ];
+  home.packages = with pkgs; [
+    gtklock
+    gtklock-userinfo-module
+  ];
 
   xdg.configFile."gtklock/config.ini".source = gtklockConfig;
   xdg.configFile."gtklock/style.css".source = gtklockStyle;
