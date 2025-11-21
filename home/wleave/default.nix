@@ -98,12 +98,12 @@ in
       }
     '';
   };
-  # home.file = {
-  #   ".config/wleave/icons/lock.png".source = ./icons/lock.png;
-  #   ".config/wleave/icons/logout.png".source = ./icons/logout.png;
-  #   ".config/wleave/icons/suspend.png".source = ./icons/suspend.png;
-  #   ".config/wleave/icons/shutdown.png".source = ./icons/shutdown.png;
-  #   ".config/wleave/icons/reboot.png".source = ./icons/reboot.png;
-  #   ".config/wleave/icons/hibernate.png".source = ./icons/hibernate.png;
-  # };
+  home.file = {
+    ".config/wleave/icons/lock.png".source = ./icons/lock.png;
+    ".config/wleave/icons/logout.png".source = ./icons/logout.png;
+    ".config/wleave/icons/suspend.png".source = ./icons/suspend.png;
+    ".config/wleave/icons/shutdown.png".source = ./icons/shutdown.png;
+    ".config/wleave/icons/reboot.png".source = ./icons/reboot.png;
+    ".config/wleave/icons/hibernate.png".source = ./icons/hibernate.png;
+  };
 }
