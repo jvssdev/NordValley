@@ -82,28 +82,36 @@ in
         box-shadow: 0 0 10px #${c.base0D};
       }
       #lock {
-        background-image: url("${./icons/lock.png}");
+        background-image: image(url("${pkgs.wleave}/share/wleave/icons/lock.svg"));
       }
+
       #logout {
-        background-image: url("${./icons/logout.png}")
+        background-image: image(url("${pkgs.wleave}/share/wleave/icons/logout.svg"));
       }
+
       #suspend {
-        background-image: url("${./icons/suspend.png}")
+        background-image: image(url("${pkgs.wleave}/share/wleave/icons/suspend.svg"));
       }
+
+      #hibernate {
+        background-image: image(url("${pkgs.wleave}/share/wleave/icons/hibernate.svg"));
+      }
+
       #shutdown {
-        background-image: url("${./icons/shutdown.png}")
+        background-image: image(url("${pkgs.wleave}/share/wleave/icons/shutdown.svg"));
       }
+
       #reboot {
-        background-image: url("${./icons/reboot.png}")
+        background-image: image(url("${pkgs.wleave}/share/wleave/icons/reboot.svg"));
       }
     '';
   };
-  home.file = {
-    ".config/wleave/icons/lock.png".source = ./icons/lock.png;
-    ".config/wleave/icons/logout.png".source = ./icons/logout.png;
-    ".config/wleave/icons/suspend.png".source = ./icons/suspend.png;
-    ".config/wleave/icons/shutdown.png".source = ./icons/shutdown.png;
-    ".config/wleave/icons/reboot.png".source = ./icons/reboot.png;
-    ".config/wleave/icons/hibernate.png".source = ./icons/hibernate.png;
-  };
+  # home.file = {
+  #   ".config/wleave/icons/lock.png".source = ./icons/lock.png;
+  #   ".config/wleave/icons/logout.png".source = ./icons/logout.png;
+  #   ".config/wleave/icons/suspend.png".source = ./icons/suspend.png;
+  #   ".config/wleave/icons/shutdown.png".source = ./icons/shutdown.png;
+  #   ".config/wleave/icons/reboot.png".source = ./icons/reboot.png;
+  #   ".config/wleave/icons/hibernate.png".source = ./icons/hibernate.png;
+  # };
 }
