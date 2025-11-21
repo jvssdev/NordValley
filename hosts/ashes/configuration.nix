@@ -41,6 +41,8 @@
       "docker"
       "libvirtd"
       "kvm"
+      "video"
+      "input"
     ];
     shell = pkgs.zsh;
   };

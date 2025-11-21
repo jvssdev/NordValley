@@ -13,7 +13,7 @@ let
 
   gtklockConfig = pkgs.writeText "gtklock-config" ''
     [main]
-    gtk-theme=Nordic
+    gtk-theme=Colloid-Dark
     idle-hide=true
     start-hidden=true
     modules=userinfo-module
@@ -27,7 +27,7 @@ let
   gtklockStyle = pkgs.writeText "gtklock-style.css" ''
     window {
       background-color: #${c.base00};
-      background-image: url("${homeDir}/Wallpapers/a6116535-4a72-453e-83c9-ea97b8597d8c.png");
+      background-image: url("../../Wallpapers/a6116535-4a72-453e-83c9-ea97b8597d8c.png");
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
