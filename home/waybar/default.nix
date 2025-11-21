@@ -1,4 +1,3 @@
-# File: home/waybar/default.nix
 {
   pkgs,
   config,
@@ -37,7 +36,7 @@ let
     "dwl/tags" = {
       "num-tags" = 9;
       "hide-vacant" = true;
-      "expand" = false;
+      expand = false;
       "disable-click" = true;
     };
     "dwl/window" = {
@@ -64,22 +63,63 @@ in
     systemd.enable = true;
 
     style = ''
-      * { font-family: JetBrainsMono Nerd Font, Montserrat; font-size: 13px; margin: 0; padding: 0; }
-      window#waybar { background: #${colors.base00}; color: #${colors.base05}; border-bottom: 2px solid #${colors.base02}; }
-
-      #tags button, #dwl-tags .tag {
-        padding: 0 8px; margin: 0 2px; border-radius: 4px; color: #${colors.base05};
+      * {
+        font-family: JetBrainsMono Nerd Font, Montserrat;
+        font-size: 13px;
+        margin: 0;
+        padding: 0;
       }
-      #tags button.occupied, #dwl-tags .occupied { color: #${colors.base05}; }
-      #tags button.focused, #dwl-tags .focused { background: #${colors.base0D}; color: #${colors.base00}; }
-      #tags button.urgent, #dwl-tags .urgent { color: #${colors.base08}; }
 
-      #window, #mpris, #clock, #battery, #pulseaudio, #custom-notification, #tray, #custom-power { padding: 0 10px; }
-      #mpris.paused { color: #${colors.base03}; font347-style: italic; }
+      window#waybar {
+        background: #${colors.base00};
+        color: #${colors.base05};
+        border-bottom: 2px solid #${colors.base02};
+      }
+
+      #tags button,
+      #dwl-tags .tag {
+        padding: 0 8px;
+        margin: 0 2px;
+        border-radius: 4px;
+        color: #${colors.base05};
+      }
+
+      #tags button.occupied,
+      #dwl-tags .occupied { color: #${colors.base05}; }
+
+      #tags button.focused,
+      #dwl-tags .focused {
+        background: #${colors.base0D};
+        color: #${colors.base00};
+      }
+
+      #tags button.urgent,
+      #dwl-tags .urgent { color: #${colors.base08}; }
+
+      #window,
+      #mpris,
+      #clock,
+      #battery,
+      #pulseaudio,
+      #custom-notification,
+      #tray,
+      #custom-power {
+        padding: 0 10px;
+      }
+
+      #mpris.paused {
+        color: #${colors.base03};
+        font-style: italic;
+      }
+
       #battery.warning { color: #${colors.base0A}; }
       #battery.critical { color: #${colors.base08}; }
       #pulseaudio.muted { color: #${colors.base03}; }
-      #custom-power:hover { background: #${colors.base08}; color: #${colors.base00}; }
+
+      #custom-power:hover {
+        background: #${colors.base08};
+        color: #${colors.base00};
+      }
     '';
 
     settings.mainBar = {
@@ -113,7 +153,6 @@ in
         };
         format = "{icon} {capacity}%";
         tooltip = false;
-        "menu" = "on-click";
         "format-icons" = [
           "battery_full"
           "battery_good"
