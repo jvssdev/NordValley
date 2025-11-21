@@ -92,6 +92,24 @@ in
       button:focus {
         box-shadow: 0 0 10px #${c.base0D};
       }
+      #lock {
+        background-image: image(url("${pkgs.wleave}/share/wleave/icons/lock.svg"));
+      }
+      #logout {
+        background-image: image(url("${pkgs.wleave}/share/wleave/icons/logout.svg"));
+      }
+      #suspend {
+        background-image: image(url("${pkgs.wleave}/share/wleave/icons/suspend.svg"));
+      }
+      #hibernate {
+        background-image: image(url("${pkgs.wleave}/share/wleave/icons/hibernate.svg"));
+      }
+      #shutdown {
+        background-image: image(url("${pkgs.wleave}/share/wleave/icons/shutdown.svg"));
+      }
+      #reboot {
+        background-image: image(url("${pkgs.wleave}/share/wleave/icons/reboot.svg"));
+      }
     '';
   };
 }
