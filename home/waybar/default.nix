@@ -13,11 +13,16 @@ let
     "mpris"
     "clock"
   ];
+
   commonModulesRight = [
-    "battery"
-    "pulseaudio"
+    "cpu"
+    "memory"
     "custom/notification"
     "tray"
+    "battery"
+    "pulseaudio"
+    "bluetooth"
+    "network"
     "custom/power"
   ];
 
@@ -38,8 +43,6 @@ let
       "hide-vacant" = true;
       expand = false;
       "disable-click" = true;
-      "tag-labels" = [
-      ];
     };
     "dwl/window" = {
       format = "{app_id} | {title}";
@@ -70,6 +73,8 @@ in
         font-size: 13px;
         margin: 0;
         padding: 0;
+        border: none;
+        border-radius: 0;
       }
 
       window#waybar {
@@ -78,47 +83,28 @@ in
         border-bottom: 2px solid #${colors.base02};
       }
 
-      #tags button,
-      #dwl-tags .tag {
+      #tags button, #dwl-tags .tag {
+        padding: 0 8px;
+        margin: 0 2px;
+        border-radius: 4px;
         color: #${colors.base05};
       }
 
-      #tags button.occupied,
-      #dwl-tags .occupied { color: #${colors.base05}; }
+      #tags button.occupied, #dwl-tags .occupied { color: #${colors.base05}; }
+      #tags button.focused, #dwl-tags .focused { background: #${colors.base0D}; color: #${colors.base00}; }
+      #tags button.urgent, #dwl-tags .urgent { color: #${colors.base08}; }
 
-      #tags button.focused,
-      #dwl-tags .focused {
-        background: #${colors.base0D};
-        color: #${colors.base00};
-      }
-
-      #tags button.urgent,
-      #dwl-tags .urgent { color: #${colors.base08}; }
-
-      #window,
-      #mpris,
-      #clock,
-      #battery,
-      #pulseaudio,
-      #custom-notification,
-      #tray,
-      #custom-power {
+      #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
+      #bluetooth, #network, #custom-notification, #tray, #custom-power {
         padding: 0 10px;
       }
 
-      #mpris.paused {
-        color: #${colors.base03};
-        font-style: italic;
-      }
-
+      #mpris.paused { color: #${colors.base03}; font-style: italic; }
       #battery.warning { color: #${colors.base0A}; }
       #battery.critical { color: #${colors.base08}; }
       #pulseaudio.muted { color: #${colors.base03}; }
-
-      #custom-power:hover {
-        background: #${colors.base08};
-        color: #${colors.base00};
-      }
+      #bluetooth.connected { color: #${colors.base0F}; }
+      #custom-power:hover { background: #${colors.base08}; color: #${colors.base Medical00}; }
     '';
 
     settings.mainBar = {
@@ -138,12 +124,16 @@ in
       mpris = {
         format = "{player_icon} {artist} - {title}";
         "format-paused" = "{status_icon} <i>{artist} - {title}</i>";
-        "player-icons".default = "music_note";
-        "status-icons".paused = "pause";
+        "player-icons".default = "";
+        "status-icons".paused = "";
         "max-length" = 80;
       };
 
       clock.format = "{:%H:%M %d/%m}";
+
+      cpu.format = "{usage}% ";
+
+      memory.format = "{}% ";
 
       battery = {
         states = {
@@ -153,12 +143,12 @@ in
         format = "{icon} {capacity}%";
         tooltip = false;
         "format-icons" = [
-          "battery_full"
-          "battery_good"
-          "battery_half"
-          "battery_low"
-          "battery_caution"
-          "battery_empty"
+          "󰂎"
+          "󰁻"
+          "󰁽"
+          "󰁿"
+          "󰂁"
+          "󰁹"
         ];
       };
 
@@ -167,11 +157,33 @@ in
         format = "{icon} {volume}%";
         "format-muted" = "muted";
         "format-icons".default = [
-          "volume_off"
-          "volume_low"
-          "volume_high"
+          ""
+          ""
+          ""
         ];
         "on-click" = "pavucontrol";
+      };
+
+      bluetooth = {
+        format = "{icon}";
+        "format-connected" = "bluetooth {num_connections}";
+        format-icons = {
+          connected = "bluetooth";
+          on = "";
+          off = "";
+          disabled = "";
+          default = "";
+        };
+        tooltip-format = "{status} {num_connections}";
+        "on-click" = "blueman-manager";
+        "on-click-right" = "rfkill toggle bluetooth";
+      };
+      network = {
+        "format-wifi" = "";
+        "format-ethernet" = "󰲝";
+        "format-disconnected" = "";
+        "tooltip-format" = "ssid : {essid}\naddr : {ipaddr}/{cidr}\ngate : {gwaddr}\ndev  : {ifname}";
+        "format-linked" = "󰲝";
       };
 
       tray = {
@@ -185,7 +197,7 @@ in
       };
 
       "custom/power" = {
-        format = "power";
+        format = "⏻";
         tooltip = false;
         "on-click" = "wleave";
       };
