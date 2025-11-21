@@ -19,9 +19,10 @@ let
       "loginctl terminate-user $USER";
 in
 {
-  programs.wleave = {
-    enable = true;
-    settings = {
+  home.packages = [ pkgs.wleave ];
+
+  xdg.configFile = {
+    "wleave/layout.json".text = builtins.toJSON {
       close-on-lost-focus = true;
       show-keybinds = true;
       no-version-info = true;
@@ -63,7 +64,7 @@ in
         }
       ];
     };
-    style = ''
+    "wleave/style.css".text = ''
       * {
         background-image: none;
         font-family: "Montserrat", sans-serif;
