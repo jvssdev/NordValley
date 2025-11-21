@@ -53,7 +53,6 @@ let
     playerctl
 
     # Wayland tools
-    wleave
     wlopm
     wpaperd
     gammastep

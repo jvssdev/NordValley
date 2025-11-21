@@ -31,9 +31,10 @@ in
         "Super Return" = "zoom";
 
         # Application launchers
-        "Super B" = "spawn zen-browser";
+        "Super B" = "spawn helium";
         "Super A" = "spawn fuzzel";
         "Super T" = "spawn ghostty";
+        "Super X" = "spawn wlogout";
 
         # Screenshots
         "Super P" = "spawn '${grim} -g \"$(${slurp})\" - | ${wl-copy}'";

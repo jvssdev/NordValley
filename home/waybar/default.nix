@@ -199,7 +199,7 @@ in
       "custom/power" = {
         format = "⏻";
         tooltip = false;
-        "on-click" = "wleave";
+        "on-click" = "wlogout";
       };
     }
     // selectedConfig;

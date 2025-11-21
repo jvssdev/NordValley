@@ -111,7 +111,7 @@
       bind=SUPER,a,spawn,fuzzel
       bind=SUPER,b,spawn,helium
       bind=SUPER,e,spawn,thunar
-      bind=SUPER,x,spawn,wleave
+      bind=SUPER,x,spawn,wlogout
 
       bind=SUPER,p,spawn,grim -g "$(slurp)" - | wl-copy
 

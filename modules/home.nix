@@ -83,7 +83,7 @@ in
     ../home/mango/default.nix
   ]
   ++ [
-    (import ../home/wleave {
+    (import ../home/wlogout {
       inherit
         pkgs
         config
