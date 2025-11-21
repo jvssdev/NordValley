@@ -27,46 +27,48 @@ in
           action = "systemctl poweroff";
           text = "Shutdown";
           keybind = "s";
+          icon = "${pkgs.wleave}/share/wleave/icons/shutdown.svg";
         }
         {
           label = "reboot";
           action = "systemctl reboot";
           text = "Reboot";
           keybind = "r";
+          icon = "${pkgs.wleave}/share/wleave/icons/reboot.svg";
         }
         {
           label = "lock";
           action = "gtklock";
           text = "Lock";
           keybind = "l";
+          icon = "${pkgs.wleave}/share/wleave/icons/lock.svg";
         }
         {
           label = "suspend";
           action = "systemctl suspend";
           text = "Suspend";
           keybind = "u";
+          icon = "${pkgs.wleave}/share/wleave/icons/suspend.svg";
         }
         {
           label = "logout";
           action = logoutAction;
           text = "Logout";
           keybind = "e";
+          icon = "${pkgs.wleave}/share/wleave/icons/logout.svg";
         }
       ];
     };
-
-    "wleave/style.css".text = ''
+    ".config/wleave/style.css".text = ''
       * {
         background-image: none;
         font-family: "Montserrat", sans-serif;
         font-size: 20pt;
       }
-
       window {
         background-color: #${c.base00};
         color: #${c.base05};
       }
-
       button {
         color: #${c.base05};
         background-color: #${c.base01};
@@ -78,36 +80,28 @@ in
         margin: 5px;
         transition: box-shadow 0.1s ease-in-out, background-color 0.1s ease-in-out;
       }
-
       button:focus, button:active, button:hover {
         background-color: #${c.base02};
         outline-style: none;
       }
-
       button:focus {
         box-shadow: 0 0 10px #${c.base0D};
       }
-
       #lock {
         background-image: image(url("${pkgs.wleave}/share/wleave/icons/lock.svg"));
       }
-
       #logout {
         background-image: image(url("${pkgs.wleave}/share/wleave/icons/logout.svg"));
       }
-
       #suspend {
         background-image: image(url("${pkgs.wleave}/share/wleave/icons/suspend.svg"));
       }
-
       #hibernate {
         background-image: image(url("${pkgs.wleave}/share/wleave/icons/hibernate.svg"));
       }
-
       #shutdown {
         background-image: image(url("${pkgs.wleave}/share/wleave/icons/shutdown.svg"));
       }
-
       #reboot {
         background-image: image(url("${pkgs.wleave}/share/wleave/icons/reboot.svg"));
       }
