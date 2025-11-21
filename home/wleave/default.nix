@@ -63,7 +63,7 @@ in
       }
 
       window {
-        background-color: rgba(${toString (lib.toInt "0x${c.base00}")} / 0.95);
+        background-color: #${c.base00};
         color: #${c.base05};
       }
 
