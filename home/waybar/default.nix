@@ -36,7 +36,7 @@ let
   mangoConfig = {
     modules-left = [
       "dwl/tags"
-      "dwl/window"
+      # "dwl/window"
     ];
     "dwl/tags" = {
       "num-tags" = 9;
@@ -65,7 +65,7 @@ in
 {
   programs.waybar = {
     enable = true;
-    systemd.enable = true;
+    systemd.enable = isRiver;
 
     style = ''
       * {
