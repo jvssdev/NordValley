@@ -26,14 +26,7 @@ in
   home.stateVersion = "25.05";
 
   home.packages = import ./packages.nix {
-    inherit
-      pkgs
-      withGUI
-      helix
-      zen-browser
-      helium-browser
-      quickshell
-      ;
+    inherit pkgs specialArgs;
   };
 
   home.sessionPath = [
