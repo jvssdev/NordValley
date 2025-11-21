@@ -38,8 +38,8 @@ let
       "hide-vacant" = true;
       expand = false;
       "disable-click" = true;
-      "tag-labels": [
-      ],
+      "tag-labels" = [
+      ];
     };
     "dwl/window" = {
       format = "{app_id} | {title}";
