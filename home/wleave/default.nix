@@ -19,8 +19,8 @@ let
       "loginctl terminate-user $USER";
 in
 {
-  xdg.configFile = {
-    "wleave/layout".text = builtins.toJSON {
+  home.file = {
+    ".config/wleave/layout".text = builtins.toJSON {
       buttons = [
         {
           label = "shutdown";
