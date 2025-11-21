@@ -24,7 +24,7 @@ let
 
     window {
       background-color: #${c.base00};
-      background-image: url("file://${wallpaperPath}");
+      background-image: image(url("${wallpaperPath}"));
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
