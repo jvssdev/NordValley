@@ -26,7 +26,7 @@
         "systemctl --user reset-failed"
         "systemctl --user start mango-session.target"
       ];
-      xdgAutostart = true;
+      # xdgAutostart = true;
     };
 
     autostart_sh = ''
