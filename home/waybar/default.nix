@@ -9,14 +9,17 @@
 let
   colors = config.colorScheme.palette;
 
+  commonModulesCenter = [
+    "mpris"
+    "clock"
+  ];
+
   commonModulesRight = [
-    "cpu"
-    "memory"
     "battery"
-    "tray"
-    "network"
-    "bluetooth"
     "pulseaudio"
+    # "custom/notification"
+    "tray"
+    "custom/power"
   ];
 
   # ---------- RIVER ----------
@@ -28,7 +31,7 @@ let
     };
   };
 
-  # ---------- MANGOWC  ----------
+  # ---------- MANGOWC ----------
   mangoConfig = {
     modules-left = [
       "custom/dwl-tags"
@@ -38,24 +41,28 @@ let
     "custom/dwl-tags" = {
       num-tags = 9;
       hide-vacant = true;
+      expand = false;
+      disable-click = true;
       format = "{index}";
       format-icons = [
-        "一"
-        "二"
-        "三"
-        "四"
-        "五"
-        "六"
-        "七"
-        "八"
-        "九"
+        "1"
+        "2"
+        "3"
+        "4"
+        "5"
+        "6"
+        "7"
+        "8"
+        "9"
       ];
     };
 
     "dwl/window" = {
-      format = "{title}";
+      format = "{app_id} | {title}";
       max-length = 50;
-      separate-by-spaces = true;
+      rewrite = {
+        "\\| " = "";
+      };
     };
   };
 
@@ -77,86 +84,156 @@ in
       * {
         font-family: JetBrainsMono Nerd Font, Montserrat;
         font-size: 13px;
+        margin: 0px;
+        padding: 0px;
       }
       window#waybar {
         background: #${colors.base00};
         color: #${colors.base05};
         border-bottom: 2px solid #${colors.base02};
       }
-      #tags button,
-      #custom-dwl-tags .tag {
+
+      #tags, #custom-dwl-tags {
+        padding: 0 6px;
+      }
+      #tags button, #custom-dwl-tags .tag {
         padding: 0 8px;
         margin: 0 2px;
         border-radius: 4px;
-      }
-      #tags button.occupied,
-      #custom-dwl-tags .occupied {
         color: #${colors.base05};
       }
-      #tags button.focused,
-      #custom-dwl-tags .focused {
+      #tags button.occupied, #custom-dwl-tags .occupied {
+        color: #${colors.base05};
+      }
+      #tags button.focused, #custom-dwl-tags .focused {
         background: #${colors.base0D};
         color: #${colors.base00};
       }
-      #tags button.urgent,
-      #custom-dwl-tags .urgent {
+      #tags button.urgent, #custom-dwl-tags .urgent {
         color: #${colors.base08};
       }
-
-      #clock, #battery, #cpu, #memory, #network, #bluetooth, #pulseaudio, #tray {
+      #window {
+        padding: 0 10px;
+        color: #${colors.base05};
+      }
+      #mpris {
+        padding: 0 10px;
+        color: #${colors.base0B};
+      }
+      #mpris.paused {
+        color: #${colors.base03};
+        font-style: italic;
+      }
+      #clock {
+        padding: 0 10px;
+        color: #${colors.base05};
+      }
+      #battery {
+        padding: 0 10px;
+        color: #${colors.base05};
+      }
+      #battery.warning {
+        color: #${colors.base0A};
+      }
+      #battery.critical {
+        color: #${colors.base08};
+      }
+      #pulseaudio {
+        padding: 0 10px;
+        color: #${colors.base05};
+      }
+      #pulseaudio.muted {
+        color: #${colors.base03};
+      }
+      #tray {
         padding: 0 10px;
       }
-      #bluetooth.connected { color: #${colors.base0F}; }
+      #custom-notification {
+        padding: 0 10px;
+        color: #${colors.base05};
+      }
+      #custom-power {
+        padding: 0 10px;
+        color: #${colors.base08};
+      }
+      #custom-power:hover {
+        background: #${colors.base08};
+        color: #${colors.base00};
+      }
     '';
 
     settings.mainBar = {
       layer = "top";
       position = "top";
-      height = 30;
+      exclusive = true;
+      passthrough = false;
+      gtk-layer-shell = true;
+      ipc = false;
+      height = 25;
+      margin = "0";
 
       modules-left = selectedConfig.modules-left or [ ];
-      modules-center = [ "clock" ];
+      modules-center = commonModulesCenter;
       modules-right = commonModulesRight;
 
-      clock.format = "{:%H:%M %d/%m}";
+      mpris = {
+        format = "{player_icon} {artist} - {title}";
+        "format-paused" = "{status_icon} <i>{artist} - {title}</i>";
+        "player-icons".default = "";
+        "status-icons".paused = "";
+        max-length = 80;
+        # "ignored-players" = [ "firefox" ];
+      };
+
+      clock = {
+        format = "{:%H:%M %d/%m}";
+      };
 
       battery = {
-        format = "{capacity}% {icon}";
+        states = {
+          warning = 30;
+          critical = 15;
+        };
+        format = "{icon} {capacity}%";
+        tooltip = false;
+        "menu" = "on-click";
         "format-icons" = [
-          "four_level_battery"
-          "three_level_battery"
-          "two_level_battery"
-          "one_level_battery"
-          "empty_battery"
+          "󰂎"
+          "󰁻"
+          "󰁽"
+          "󰁿"
+          "󰂁"
+          "󰁹"
         ];
-      };
-
-      network = {
-        "format-wifi" = "{essid} ({signalStrength}%) wifi";
-        "format-ethernet" = "ethernet";
-        "format-disconnected" = "Disconnected";
-      };
-
-      bluetooth = {
-        format = "bluetooth {status}";
-        "format-connected" = "bluetooth {num_connections} conected";
-        "format-off" = "bluetooth off";
-        "on-click" = "blueman-manager";
       };
 
       pulseaudio = {
-        format = "{volume}% {icon}";
-        "format-muted" = "muted";
+        "disable-scroll" = true;
+        format = "{icon} {volume}%";
+        "format-muted" = "";
         "format-icons".default = [
-          "volume_low"
-          "volume_medium"
-          "volume_high"
+          ""
+          ""
+          ""
         ];
+        "on-click" = "pavucontrol";
       };
 
-      cpu.format = "{usage}% cpu";
-      memory.format = "{}% memory";
-      tray.spacing = 10;
+      tray = {
+        "icon-size" = 21;
+        spacing = 10;
+      };
+
+      # "custom/notification" = {
+      #   format = "{}";
+      #   tooltip = false;
+      # };
+
+      "custom/power" = {
+        format = "⏻";
+        tooltip = false;
+        "on-click" = "wleave";
+      };
     }
     // selectedConfig;
   };
