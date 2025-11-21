@@ -38,6 +38,8 @@ let
       "hide-vacant" = true;
       expand = false;
       "disable-click" = true;
+      "tag-labels": [
+      ],
     };
     "dwl/window" = {
       format = "{app_id} | {title}";
@@ -78,9 +80,6 @@ in
 
       #tags button,
       #dwl-tags .tag {
-        padding: 0 8px;
-        margin: 0 2px;
-        border-radius: 4px;
         color: #${colors.base05};
       }
 
