@@ -32,16 +32,13 @@
     autostart_sh = ''
       set -x
 
-      sleep 2
-
       ${pkgs.gsettings-desktop-schemas}/bin/gsettings set org.gnome.desktop.interface cursor-theme "Bibata-Modern-Ice" || true
       ${pkgs.gsettings-desktop-schemas}/bin/gsettings set org.gnome.desktop.interface cursor-size 24 || true
 
       ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 &
-      sleep 1 
 
       ${pkgs.wpaperd}/bin/wpaperd &
-      sleep 1
+
 
       ${pkgs.waybar}/bin/waybar &
 
@@ -114,6 +111,7 @@
       bind=SUPER,a,spawn,fuzzel
       bind=SUPER,b,spawn,helium
       bind=SUPER,e,spawn,thunar
+      bind=SUPER,x,spawn,wleave
 
       bind=SUPER,p,spawn,grim -g "$(slurp)" - | wl-copy
 
