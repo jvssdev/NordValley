@@ -24,8 +24,10 @@ in
   home.homeDirectory = homeDir;
   xdg.enable = true;
   home.stateVersion = "25.05";
-  home.packages = pkgs.callPackage ./packages.nix {
+
+  home.packages = import ./packages.nix {
     inherit
+      pkgs
       withGUI
       helix
       zen-browser
@@ -33,6 +35,7 @@ in
       quickshell
       ;
   };
+
   home.sessionPath = [
     "$HOME/.nix-profile/bin"
     "/nix/var/nix/profiles/default/bin"
@@ -85,7 +88,6 @@ in
   ]
   ++ lib.optionals isMango [
     ../home/mango/default.nix
-    # mango.hmModules.mango
   ]
   ++ [
     (import ../home/wleave {
