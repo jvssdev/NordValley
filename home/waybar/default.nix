@@ -84,9 +84,9 @@ in
       }
 
       #tags button, #dwl-tags .tag {
-        padding: 0 8px;
+        padding: 0 0px;
         margin: 0 2px;
-        border-radius: 4px;
+        border-radius: 0px;
         color: #${colors.base05};
       }
 
