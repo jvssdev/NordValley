@@ -1,8 +1,15 @@
 {
   pkgs,
   withGUI ? true,
+  specialArgs,
   ...
 }:
+let
+  inherit (specialArgs)
+    helium-browser
+    quickshell
+    ;
+in
 
 with pkgs;
 
@@ -100,7 +107,7 @@ let
     # zen-browser.packages.${pkgs.system}.default
     helium-browser.packages.${pkgs.system}.default
     # helix.packages.${pkgs.system}.default
-    # quickshell.packages.${pkgs.system}.default
+    quickshell.packages.${pkgs.system}.default
   ];
 in
 basePackages
