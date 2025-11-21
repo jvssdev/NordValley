@@ -23,7 +23,6 @@ let
     }
 
     window {
-      background-color: #${c.base00};
       background-image: image(url("${wallpaperPath}"));
       background-size: cover;
       background-repeat: no-repeat;
@@ -98,7 +97,6 @@ let
 
     #unlock-button:hover {
       background-color: #${c.base0C};
-      cursor: pointer;
     }
 
     #unlock-button:active {
