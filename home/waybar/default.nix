@@ -37,7 +37,7 @@ let
 
     "custom/dwl-tags" = {
       num-tags = 9;
-      hide-empty = true;
+      hide-vacant = true;
       format = "{index}";
       format-icons = [
         "一"
