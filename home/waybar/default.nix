@@ -104,7 +104,7 @@ in
       #battery.critical { color: #${colors.base08}; }
       #pulseaudio.muted { color: #${colors.base03}; }
       #bluetooth.connected { color: #${colors.base0F}; }
-      #custom-power:hover { background: #${colors.base08}; color: #${colors.base Medical00}; }
+      #custom-power:hover { background: #${colors.base08}; color: #${colors.base07}; }
     '';
 
     settings.mainBar = {
