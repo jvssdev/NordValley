@@ -23,6 +23,7 @@ let
     }
 
     window {
+      background-color: #${c.base00};
       background-image: image(url("${wallpaperPath}"));
       background-size: cover;
       background-repeat: no-repeat;
