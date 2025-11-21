@@ -8,7 +8,6 @@
 let
   inherit (specialArgs) homeDir;
   c = config.colorScheme.palette;
-  wallpaperPath = "${homeDir}/Wallpapers/a6116535-4a72-453e-83c9-ea97b8597d8c.png";
 
   gtklockConfig = pkgs.writeText "gtklock-config" ''
     [main]
@@ -24,7 +23,7 @@ let
 
     window {
       background-color: #${c.base00};
-      background-image: image(url("${wallpaperPath}"));
+      background-image: url("${../../Wallpapers/a6116535-4a72-453e-83c9-ea97b8597d8c.png}");
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
