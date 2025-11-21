@@ -62,7 +62,7 @@
       gappoh=6
       gappov=6
       borderpx=2
-      border_radius=7
+      border_radius=0
       no_border_when_single=0
 
       rootcolor=0x2e3440ff
@@ -81,10 +81,9 @@
       warpcursor=1
       cursor_hide_timeout=5000
 
-      # Touchpad (se aplicável)
       trackpad_natural_scrolling=0
 
-      animations=1
+      animations=0
       animation_type_open=zoom
       animation_type_close=zoom
 
