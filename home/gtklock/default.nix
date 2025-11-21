@@ -135,12 +135,4 @@ in
   home.sessionVariables = {
     GTK_THEME = config.gtk.theme.name;
   };
-
-  home.activation.checkGtklockWallpaper = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if [ ! -f "${wallpaperPath}" ]; then
-      $DRY_RUN_CMD echo "Warning: GTKLock wallpaper not found at ${wallpaperPath}"
-    else
-      $DRY_RUN_CMD echo "GTKLock wallpaper found: ${wallpaperPath}"
-    fi
-  '';
 }
