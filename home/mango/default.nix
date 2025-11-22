@@ -4,7 +4,11 @@
   lib,
   ...
 }:
+let
+  palette = config.colorScheme.palette;
 
+  hexToMango = hex: "0x${hex}ff";
+in
 {
   wayland.windowManager.mango = {
     enable = true;
@@ -39,7 +43,6 @@
 
       ${pkgs.wpaperd}/bin/wpaperd &
 
-
       ${pkgs.waybar}/bin/waybar &
 
       ${pkgs.mako}/bin/mako &
@@ -62,10 +65,10 @@
       border_radius=0
       no_border_when_single=0
 
-      rootcolor=0x2e3440ff
-      bordercolor=0x4c566aff
-      focuscolor=0x88c0d0ff
-      urgentcolor=0xbf616aff
+      rootcolor=${hexToMango palette.base00}
+      bordercolor=${hexToMango palette.base03}
+      focuscolor=${hexToMango palette.base0D}
+      urgentcolor=${hexToMango palette.base08}
 
       focus_on_activate=0
       focus_cross_monitor=1
@@ -89,7 +92,7 @@
       shadow_only_floating=1
       shadows_size=12
       shadows_blur=15
-      shadowscolor=0x000000ff
+      shadowscolor=${hexToMango palette.base00}
 
       scroller_structs=20
       scroller_default_proportion=0.6
