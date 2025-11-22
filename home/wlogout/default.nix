@@ -54,31 +54,34 @@ in
       }
     ];
     style = ''
-      * {
-        font-family: "Montserrat", sans-serif;
-        font-size: 20pt;
-      }
       window {
         color: #${c.base05};
         background-color: #${c.base00};
+        font-family: "Montserrat", sans-serif;
+        font-size: 16pt;
       }
       button {
         border-radius: 10px;
         background-repeat: no-repeat;
         background-position: center;
-        background-size: 50%;
-        border: none;
-        background-color: transparent;
-        margin: 5px;
-        transition: box-shadow 0.1s ease-in-out, background-color 0.1s ease-in-out;
+        background-size: 20%;
+        border-radius: 36px; 
+        background-color: #${c.base01};
+        margin: 10px;
+        box-shadow: 0 0 10px 2px transparent;
+        transition: all 0.3s ease-in;
+        animation: gradient_f 20s ease-in infinite;
       }
       button:hover {
-        background-color: #${c.base01};
+        background-color: #${c.base02};
+        box-shadow: 0 0 10px 3px rgba(136, 192, 208, 0.4);
+        background-size: 50%;
+        color: #${c.base0D};
+        transition: all 0.3s cubic-bezier(.55, 0.0, .28, 1.682), box-shadow 0.5s ease-in;
       }
       button:focus {
-        background-color: #${c.base0D};
-        color: #${c.base00};
-        box-shadow: 0 0 10px #${c.base0D};
+        box-shadow: none;
+        background-size : 20%;
       }
       #lock {
         background-image: image(url("${./icons/lock.png}"));
