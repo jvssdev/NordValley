@@ -53,7 +53,7 @@ in
 
       widgets = [
         "label"
-        "mpris"
+        # "mpris"
         "title"
         "dnd"
         "notifications"
@@ -75,6 +75,7 @@ in
         mpris = {
           image-size = 96;
           image-radius = 12;
+          blur = false;
         };
       };
     };
