@@ -25,6 +25,6 @@ showIgnoredInTree: false
 # Whether to show only default ignored files in the directory tree while still respecting gitignore
 showDefaultIgnoredInTree: false
 # Previously selected files (when using the -s or --save flag previously)
-previousFiles: flake.nix,modules/home.nix,modules/packages.nix,home/swaync/default.nix,home/waybar/default.nix,modules/services.nix
+previousFiles: flake.nix,modules/home.nix,modules/packages.nix,modules/services.nix,home/mpd/default.nix,home/swaync/default.nix,home/waybar/default.nix
 # Excluded directories (when using the -s or --save flag previously or edited in UI)
 excludeDirs: 
