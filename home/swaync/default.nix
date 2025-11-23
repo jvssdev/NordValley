@@ -86,7 +86,7 @@ in
       @define-color background-alt  #${c.base01};
       @define-color selected        #${c.base03};
       @define-color hover           #${c.base05};
-      @define-color urgent          #${c.base02};
+      @define-color urgent          #${c.base08};
 
       * {
         color: @text;
@@ -186,7 +186,7 @@ in
 
       /* CENTRAL CONTROL.CSS */
       @define-color background-alt-ctrl  alpha(#${c.base01}, .4);
-      @define-color selected-ctrl        #${c.base0E};
+      @define-color selected-ctrl        #${c.base02};
       @define-color hover-ctrl           alpha(#${c.base0E}, .4);
       @define-color background-sec       #${c.base00};
 
