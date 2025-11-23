@@ -1,3 +1,4 @@
+# File: modules/home.nix
 {
   pkgs,
   config,
@@ -151,7 +152,9 @@ in
   };
   xdg.configFile."mimeapps.list".force = true;
   systemd.user.services.waybar = lib.mkIf (isRiver || isMango) {
-    requires = [ "playerctld.service" ];
-    after = [ "playerctld.service" ];
+    unitConfig = {
+      After = "playerctld.service";
+      Requires = "playerctld.service";
+    };
   };
 }
