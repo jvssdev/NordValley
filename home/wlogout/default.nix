@@ -39,7 +39,7 @@ in
       }
       {
         label = "logout";
-        action = "loginctl terminate-user ${userName}";
+        action = "loginctl kill-session $XDG_SESSION_ID";
         text = "Logout";
         keybind = "e";
       }
@@ -52,51 +52,68 @@ in
     ];
     style = ''
       window {
-        color: #${c.base05};
-        background-color: #${c.base00};
-        font-family: "Montserrat", sans-serif;
-        font-size: 16pt;
+          font-family: JetBrainsMono Nerd Font;
+          font-size: 16pt;
+          color: #${c.base05}; /* text */
+          background-color: #${c.base00}33;
       }
       button {
-        border-radius: 10px;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: 20%;
-        border-radius: 36px; 
-        background-color: #${c.base01};
-        margin: 10px;
-        box-shadow: 0 0 10px 2px transparent;
-        transition: all 0.3s ease-in;
-        animation: gradient_f 20s ease-in infinite;
-      }
-      button:hover {
-        background-color: #${c.base02};
-        box-shadow: 0 0 10px 3px rgba(136, 192, 208, 0.4);
-        background-size: 50%;
-        color: #${c.base0D};
-        transition: all 0.3s cubic-bezier(.55, 0.0, .28, 1.682), box-shadow 0.5s ease-in;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: 20%;
+          background-color: transparent;
+          animation: gradient_f 20s ease-in infinite;
+          transition: all 0.3s ease-in;
+          box-shadow: 0 0 10px 2px transparent;
+          border-radius: 36px;
+          margin: 10px;
       }
       button:focus {
-        box-shadow: none;
-        background-size : 20%;
+          box-shadow: none;
+          background-size : 20%;
       }
-      #lock {
-        background-image: image(url("${./icons/lock.png}"));
-      }
-      #logout {
-        background-image: image(url("${./icons/logout.png}"));
-      }
-      #suspend {
-        background-image: image(url("${./icons/suspend.png}"));
+      button:hover {
+          background-size: 50%;
+          box-shadow: 0 0 10px 3px rgba(0,0,0,.4);
+          background-color: #${c.base0D};
+          color: transparent;
+          transition: all 0.3s cubic-bezier(.55, 0.0, .28, 1.682), box-shadow 0.5s ease-in;
       }
       #shutdown {
-        background-image: image(url("${./icons/shutdown.png}"));
+          background-image: image(url("${./icons/power.png}"));
+      }
+      #shutdown:hover {
+        background-image: image(url("${./icons/power-hover.png}"));
+      }
+      #logout {
+          background-image: image(url("${./icons/logout.png}"));
+      }
+      #logout:hover {
+        background-image: image(url("${./icons/logout-hover.png}"));
       }
       #reboot {
-        background-image: image(url("${./icons/reboot.png}"));
+          background-image: image(url("${./icons/restart.png}"));
+      }
+      #reboot:hover {
+        background-image: image(url("${./icons/restart-hover.png}"));
+      }
+      #lock {
+          background-image: image(url("${./icons/lock.png}"));
+      }
+      #lock:hover {
+        background-image: image(url("${./icons/lock-hover.png}"));
       }
       #hibernate {
-        background-image: image(url("${./icons/hibernate.png}"));
+          background-image: image(url("${./icons/hibernate.png}"));
+      }
+      #hibernate:hover {
+        background-image: image(url("${./icons/hibernate-hover.png}"));
+      }
+      #suspend {
+          background-image: image(url("${./icons/suspend.png}"));
+      }
+      #suspend:hover {
+        background-image: image(url("${./icons/suspend-hover.png}"));
       }
     '';
   };
