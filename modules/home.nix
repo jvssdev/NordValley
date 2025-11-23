@@ -58,23 +58,14 @@ in
 
   systemd.user.services.waybar = lib.mkIf (isRiver || isMango) {
     Unit = {
-      Description = "Highly customizable Wayland bar";
-      After = [
+      After = lib.mkForce [
         "graphical-session-pre.target"
         "playerctld.service"
       ];
-      Wants = "playerctld.service";
-      PartOf = [ "graphical-session.target" ];
+      Wants = [ "playerctld.service" ];
     };
     Service = {
-      Type = "simple";
       ExecStartPre = "${pkgs.coreutils}/bin/sleep 1";
-      ExecStart = "${pkgs.waybar}/bin/waybar";
-      Restart = "on-failure";
-      RestartSec = 3;
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
     };
   };
 
