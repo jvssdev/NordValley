@@ -5,15 +5,12 @@
   isMango ? false,
   ...
 }:
-
 let
   colors = config.colorScheme.palette;
-
   commonModulesCenter = [
     "mpris"
     "clock"
   ];
-
   commonModulesRight = [
     "cpu"
     "memory"
@@ -25,14 +22,12 @@ let
     "network"
     "custom/power"
   ];
-
   riverConfig = {
     modules-left = [ "river/tags" ];
     "river/tags" = {
       "hide-vacant" = true;
     };
   };
-
   mangoConfig = {
     modules-left = [
       "dwl/tags"
@@ -52,7 +47,6 @@ let
       };
     };
   };
-
   selectedConfig =
     if isRiver then
       riverConfig
@@ -60,13 +54,11 @@ let
       mangoConfig
     else
       riverConfig;
-
 in
 {
   programs.waybar = {
     enable = true;
-    systemd.enable = isRiver;
-
+    systemd.enable = (isRiver || isMango);
     style = ''
       * {
         font-family: JetBrainsMono Nerd Font, Montserrat;
@@ -76,29 +68,24 @@ in
         border: none;
         border-radius: 0;
       }
-
       window#waybar {
         background: #${colors.base00};
         color: #${colors.base05};
         border-bottom: 2px solid #${colors.base02};
       }
-
       #tags button, #dwl-tags .tag {
         padding: 0 0px;
         margin: 0 2px;
         border-radius: 0px;
         color: #${colors.base05};
       }
-
       #tags button.occupied, #dwl-tags .occupied { color: #${colors.base05}; }
       #tags button.focused, #dwl-tags .focused { background: #${colors.base0D}; color: #${colors.base00}; }
       #tags button.urgent, #dwl-tags .urgent { color: #${colors.base08}; }
-
       #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
       #bluetooth, #network, #custom-notification, #tray, #custom-power {
         padding: 0 10px;
       }
-
       #mpris.paused { color: #${colors.base03}; font-style: italic; }
       #battery.warning { color: #${colors.base0A}; }
       #battery.critical { color: #${colors.base08}; }
@@ -106,7 +93,6 @@ in
       #bluetooth.connected { color: #${colors.base0F}; }
       #custom-power:hover { background: #${colors.base08}; color: #${colors.base07}; }
     '';
-
     settings.mainBar = {
       layer = "top";
       position = "top";
@@ -116,11 +102,9 @@ in
       ipc = false;
       height = 25;
       margin = "0";
-
       modules-left = selectedConfig.modules-left or [ ];
       modules-center = commonModulesCenter;
       modules-right = commonModulesRight;
-
       mpris = {
         format = "{player_icon} {artist} - {title}";
         "format-paused" = "{status_icon} <i>{artist} - {title}</i>";
@@ -130,13 +114,9 @@ in
         "ignored-players" = [ ];
         interval = 1;
       };
-
       clock.format = "{:%H:%M %d/%m}";
-
       cpu.format = "{usage}% ";
-
       memory.format = "{}% ";
-
       battery = {
         states = {
           warning = 30;
@@ -153,7 +133,6 @@ in
           "󰁹"
         ];
       };
-
       pulseaudio = {
         "disable-scroll" = true;
         format = "{icon} {volume}%";
@@ -165,7 +144,6 @@ in
         ];
         "on-click" = "pavucontrol";
       };
-
       bluetooth = {
         format = "{icon}";
         "format-connected" = "bluetooth {num_connections}";
@@ -184,15 +162,13 @@ in
         "format-wifi" = "";
         "format-ethernet" = "󰲝";
         "format-disconnected" = "";
-        "tooltip-format" = "ssid : {essid}\naddr : {ipaddr}/{cidr}\ngate : {gwaddr}\ndev  : {ifname}";
+        "tooltip-format" = "ssid : {essid}\naddr : {ipaddr}/{cidr}\ngate : {gwaddr}\ndev : {ifname}";
         "format-linked" = "󰲝";
       };
-
       tray = {
         "icon-size" = 21;
         spacing = 10;
       };
-
       "custom/swaync" = {
         tooltip = true;
         format = "{icon} {}";
@@ -213,7 +189,6 @@ in
         on-click-right = "swaync-client -d -sw";
         escape = true;
       };
-
       "custom/power" = {
         format = "⏻";
         tooltip = false;

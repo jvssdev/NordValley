@@ -24,11 +24,9 @@ in
   home.homeDirectory = homeDir;
   xdg.enable = true;
   home.stateVersion = "25.05";
-
   home.packages = import ./packages.nix {
     inherit pkgs specialArgs;
   };
-
   home.sessionPath = [
     "$HOME/.nix-profile/bin"
     "/nix/var/nix/profiles/default/bin"
@@ -52,6 +50,9 @@ in
     NIXOS_OZONE_WL = "1";
     WLR_NO_HARDWARE_CURSORS = "1";
     SHELL = "${pkgs.zsh}/bin/zsh";
+  };
+  services.playerctld = {
+    enable = true;
   };
   imports = [
     ./programs.nix
@@ -94,14 +95,8 @@ in
         ;
     })
   ];
-
-  services.playerctld = {
-    enable = true;
-  };
-
   xdg.mimeApps = {
     enable = true;
-
     defaultApplications = {
       # Web browser
       "x-scheme-handler/http" = [ "Helium.desktop" ];
@@ -114,32 +109,25 @@ in
       "application/xhtml+xml" = [ "Helium.desktop" ];
       "application/x-extension-xhtml" = [ "Helium.desktop" ];
       "application/x-extension-xht" = [ "Helium.desktop" ];
-
       # File manager
       "inode/directory" = [ "thunar.desktop" ];
-
       # Images
       "image/png" = [ "imv.desktop" ];
       "image/jpeg" = [ "imv.desktop" ];
       "image/gif" = [ "imv.desktop" ];
       "image/webp" = [ "imv.desktop" ];
       "image/svg+xml" = [ "imv.desktop" ];
-
       # PDF
       "application/pdf" = [ "org.pwmt.zathura.desktop" ];
-
       # Video
       "video/mp4" = [ "mpv.desktop" ];
       "video/x-matroska" = [ "mpv.desktop" ];
-
       # Audio
       "audio/mpeg" = [ "mpv.desktop" ];
-
       # Text files
       "text/plain" = [ "helix.desktop" ];
       "text/txt" = [ "helix.desktop" ];
     };
-
     associations.added = {
       # Web browser
       "x-scheme-handler/http" = [ "Helium.desktop" ];
@@ -152,18 +140,18 @@ in
       "application/xhtml+xml" = [ "Helium.desktop" ];
       "application/x-extension-xhtml" = [ "Helium.desktop" ];
       "application/x-extension-xht" = [ "Helium.desktop" ];
-
       # File manager
       "inode/directory" = [ "thunar.desktop" ];
-
       # Images
       "image/png" = [ "imv.desktop" ];
       "image/jpeg" = [ "imv.desktop" ];
-
       # PDF
       "application/pdf" = [ "org.pwmt.zathura.desktop" ];
     };
   };
-
   xdg.configFile."mimeapps.list".force = true;
+  systemd.user.services.waybar = lib.mkIf (isRiver || isMango) {
+    requires = [ "playerctld.service" ];
+    after = [ "playerctld.service" ];
+  };
 }
