@@ -56,6 +56,7 @@ let
     wlopm
     wpaperd
     gammastep
+    swaynotificationcenter
 
     # System utilities
     p7zip
