@@ -56,19 +56,6 @@ in
     enable = true;
   };
 
-  systemd.user.services.waybar = lib.mkIf (isRiver || isMango) {
-    Unit = {
-      After = lib.mkForce [
-        "graphical-session-pre.target"
-        "playerctld.service"
-      ];
-      Wants = [ "playerctld.service" ];
-    };
-    Service = {
-      ExecStartPre = "${pkgs.coreutils}/bin/sleep 1";
-    };
-  };
-
   imports = [
     ./programs.nix
     ../home/btop/default.nix
