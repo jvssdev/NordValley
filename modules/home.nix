@@ -1,4 +1,3 @@
-# File: modules/home.nix
 {
   pkgs,
   config,
@@ -52,9 +51,48 @@ in
     WLR_NO_HARDWARE_CURSORS = "1";
     SHELL = "${pkgs.zsh}/bin/zsh";
   };
+
   services.playerctld = {
     enable = true;
   };
+
+  # Configuração do serviço playerctld para iniciar antes do Waybar
+  systemd.user.services.playerctld = {
+    Unit = {
+      Description = "Player control daemon";
+      Before = "waybar.service";
+    };
+    Service = {
+      Type = "simple";
+      Restart = "on-failure";
+    };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+  };
+
+  systemd.user.services.waybar = lib.mkIf (isRiver || isMango) {
+    Unit = {
+      Description = "Highly customizable Wayland bar";
+      After = [
+        "graphical-session.target"
+        "playerctld.service"
+      ];
+      Requires = "playerctld.service";
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "simple";
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
+      ExecStart = "${pkgs.waybar}/bin/waybar";
+      Restart = "on-failure";
+      RestartSec = 3;
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
   imports = [
     ./programs.nix
     ../home/btop/default.nix
@@ -96,6 +134,7 @@ in
         ;
     })
   ];
+
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
@@ -151,10 +190,4 @@ in
     };
   };
   xdg.configFile."mimeapps.list".force = true;
-  systemd.user.services.waybar = lib.mkIf (isRiver || isMango) {
-    unitConfig = {
-      After = "playerctld.service";
-      Requires = "playerctld.service";
-    };
-  };
 }
