@@ -32,12 +32,6 @@ in
         keybind = "l";
       }
       {
-        label = "suspend";
-        action = "systemctl suspend";
-        text = "Suspend";
-        keybind = "u";
-      }
-      {
         label = "logout";
         action = "loginctl kill-session $XDG_SESSION_ID";
         text = "Logout";
@@ -108,12 +102,6 @@ in
       }
       #hibernate:hover {
         background-image: image(url("${./icons/hibernate-hover.png}"));
-      }
-      #suspend {
-          background-image: image(url("${./icons/suspend.png}"));
-      }
-      #suspend:hover {
-        background-image: image(url("${./icons/suspend-hover.png}"));
       }
     '';
   };
