@@ -30,7 +30,6 @@ in
         "systemctl --user reset-failed"
         "systemctl --user start mango-session.target"
       ];
-      # xdgAutostart = true;
     };
 
     autostart_sh = ''
@@ -43,9 +42,9 @@ in
 
       ${pkgs.wpaperd}/bin/wpaperd &
 
-      ${pkgs.waybar}/bin/waybar &
+      ${pkgs.swaynotificationcenter}/bin/swaync &
 
-      ${pkgs.swaynotificationcenter}/bin/swaync-client &
+      ${pkgs.waybar}/bin/waybar &
 
       ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
 

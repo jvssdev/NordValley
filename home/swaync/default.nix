@@ -10,14 +10,13 @@ in
 {
   services.swaync = {
     enable = true;
-    package = pkgs.swaynotificationcenter;
 
     settings = {
-      "$schema" = "/etc/xdg/swaync/configSchema.json";
       positionX = "right";
       positionY = "top";
       cssPriority = "user";
       layer = "overlay";
+      control-center-layer = "overlay";
       layer-shell = true;
 
       control-center-width = 380;
@@ -43,13 +42,6 @@ in
       hide-on-clear = false;
       hide-on-action = false;
       script-fail-notify = true;
-
-      scripts = {
-        example-script = {
-          exec = "echo 'Do something...'";
-          urgency = "Normal";
-        };
-      };
 
       notification-visibility = {
         example-name = {
@@ -84,10 +76,6 @@ in
           image-size = 96;
           image-radius = 12;
         };
-        volume = {
-          label = "󰕾";
-          show-per-app = true;
-        };
       };
     };
 
@@ -103,7 +91,7 @@ in
         color: @text;
         all: unset;
         font-size: 14px;
-        font-family: "JetBrains Mono Nerd Font 10";
+        font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free";
         transition: 200ms;
       }
 
