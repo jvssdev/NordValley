@@ -127,6 +127,8 @@ in
         "player-icons".default = "";
         "status-icons".paused = "";
         "max-length" = 80;
+        "ignored-players" = [ ];
+        interval = 1;
       };
 
       clock.format = "{:%H:%M %d/%m}";
