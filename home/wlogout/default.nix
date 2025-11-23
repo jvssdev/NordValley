@@ -48,7 +48,7 @@ in
       }
       {
         label = "logout";
-        action = logoutAction;
+        action = "loginctl terminate-user $USER";
         text = "Logout";
         keybind = "e";
       }
