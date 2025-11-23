@@ -56,34 +56,19 @@ in
     enable = true;
   };
 
-  # Configuração do serviço playerctld para iniciar antes do Waybar
-  systemd.user.services.playerctld = {
-    Unit = {
-      Description = "Player control daemon";
-      Before = "waybar.service";
-    };
-    Service = {
-      Type = "simple";
-      Restart = "on-failure";
-    };
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
-  };
-
   systemd.user.services.waybar = lib.mkIf (isRiver || isMango) {
     Unit = {
       Description = "Highly customizable Wayland bar";
       After = [
-        "graphical-session.target"
+        "graphical-session-pre.target"
         "playerctld.service"
       ];
-      Requires = "playerctld.service";
+      Wants = "playerctld.service";
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
       Type = "simple";
-      ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 1";
       ExecStart = "${pkgs.waybar}/bin/waybar";
       Restart = "on-failure";
       RestartSec = 3;
