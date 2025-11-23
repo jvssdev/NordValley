@@ -59,22 +59,13 @@
   };
 
   boot.loader = {
-    grub = {
+    systemd-boot = {
       enable = true;
-      device = "nodev";
-      efiSupport = true;
-      useOSProber = false;
-
       configurationLimit = 30;
-
-      extraConfig = ''
-        set timeout=10
-        set timeout_style=menu
-      '';
+      consoleMode = "auto";
     };
     efi.canTouchEfiVariables = true;
-
-    timeout = 10;
+    timeout = 15;
   };
 
   security.pam.services.gtklock = {
