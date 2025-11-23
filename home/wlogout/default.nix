@@ -3,20 +3,11 @@
   config,
   specialArgs,
   lib,
-  isRiver ? false,
-  isMango ? false,
   ...
 }:
 let
-  inherit (specialArgs) homeDir;
+  inherit (specialArgs) homeDir userName;
   c = config.colorScheme.palette;
-  logoutAction =
-    if isRiver then
-      "riverctl exit"
-    else if isMango then
-      "mango quit"
-    else
-      "loginctl terminate-user $USER";
 in
 {
   programs.wlogout = {
@@ -48,9 +39,15 @@ in
       }
       {
         label = "logout";
-        action = "loginctl terminate-user $USER";
+        action = "loginctl terminate-user ${userName}";
         text = "Logout";
         keybind = "e";
+      }
+      {
+        label = "hibernate";
+        action = "systemctl hibernate";
+        text = "Hibernate";
+        keybind = "h";
       }
     ];
     style = ''
@@ -97,6 +94,9 @@ in
       }
       #reboot {
         background-image: image(url("${./icons/reboot.png}"));
+      }
+      #hibernate {
+        background-image: image(url("${./icons/hibernate.png}"));
       }
     '';
   };
