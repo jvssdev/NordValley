@@ -56,7 +56,6 @@ let
     wlopm
     wpaperd
     gammastep
-    swaynotificationcenter
 
     # System utilities
     p7zip
@@ -100,7 +99,7 @@ let
     kdePackages.qtwayland
 
     # Wayland bar/menu
-    mako
+    swaynotificationcenter
     pavucontrol
 
     # Custom packages from inputs

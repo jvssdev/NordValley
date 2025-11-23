@@ -61,7 +61,7 @@ in
     ../home/ghostty/default.nix
     ../home/gtklock/default.nix
     ../home/helix/default.nix
-    ../home/mako/default.nix
+    ../home/swaync/default.nix
     ../home/mpd/default.nix
     ../home/mpv/default.nix
     ../home/quickshell/default.nix

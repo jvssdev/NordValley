@@ -45,7 +45,7 @@ in
 
       ${pkgs.waybar}/bin/waybar &
 
-      ${pkgs.mako}/bin/mako &
+      ${pkgs.swaynotificationcenter}/bin/swaync-client &
 
       ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
 

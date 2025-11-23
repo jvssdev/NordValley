@@ -9,7 +9,7 @@ let
 
   wpaperd = "${pkgs.wpaperd}/bin/wpaperd";
   waybar = "${pkgs.waybar}/bin/waybar";
-  mako = "${pkgs.mako}/bin/mako";
+  swaync-client = "${pkgs.swaynotificationcenter}/bin/swaync-client";
   nm-applet = "${pkgs.networkmanagerapplet}/bin/nm-applet";
   blueman-applet = "${pkgs.blueman}/bin/blueman-applet";
   quickshell = "${pkgs.quickshell}/bin/quickshell";
@@ -24,7 +24,7 @@ let
 
     "${wpaperd}"
     "${waybar} -d"
-    "${mako}"
+    "${swaync-client}"
     "${nm-applet} --indicator"
     "${blueman-applet}"
     "${quickshell}"
