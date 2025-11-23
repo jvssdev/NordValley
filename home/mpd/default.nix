@@ -5,6 +5,7 @@ in
 {
   home.packages = with pkgs; [
     rmpc
+    mpc-cli
   ];
 
   services = {
@@ -24,10 +25,18 @@ in
         }
       '';
     };
+
     mpd-mpris = {
       enable = true;
+      mpd = {
+        host = "127.0.0.1";
+        port = 6600;
+      };
     };
   };
+
+  home.file."Music/.keep".text = "";
+  home.file."Music/Playlists/.keep".text = "";
 
   xdg.configFile."rmpc/config.ron".text = ''
     #![enable(implicit_some)]
