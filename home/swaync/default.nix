@@ -10,12 +10,15 @@ in
 {
   services.swaync = {
     enable = true;
+    package = pkgs.swaynotificationcenter;
 
     settings = {
       "$schema" = "/etc/xdg/swaync/configSchema.json";
       positionX = "right";
       positionY = "top";
       cssPriority = "user";
+      layer = "overlay";
+      layer-shell = true;
 
       control-center-width = 380;
       control-center-height = 860;
