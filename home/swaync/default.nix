@@ -158,15 +158,12 @@
         font-size: 16px;
         background: transparent;
         text-shadow: none;
-        font-size: 16px;
       }
 
       .time {
         color: @subtext0;
-        /* color: alpha(@theme_text_color, 0.9); */
         font-size: 16px;
         background: transparent;
-        font-size: 16px;
         text-shadow: none;
         margin-right: 18px;
       }
@@ -176,14 +173,12 @@
         font-size: 15px;
         font-weight: 500;
         color: @subtext1;
-        /* color: alpha(@theme_text_color, 0.9); */
         text-shadow: none;
       }
 
       /* The "Notifications" and "Do Not Disturb" text widget */
       .top-action-title {
         color: @theme_text_color;
-        /* color: @theme_text_color; */
         text-shadow: none;
       }
 
@@ -205,7 +200,6 @@
         padding: 0;
         background: transparent;
         border: none;
-        /* background: alpha(@mantle, .80); */
       }
 
       .notification-group {
@@ -219,9 +213,6 @@
       .widget-title {
         margin: 0px;
         background: transparent;
-        /* background: @theme_bg_color; */
-        border-radius: 4px 4px 0px 0px;
-        /* border: 1px solid @surface1; */
         border-radius: 8px;
         border-bottom: none;
       }
@@ -238,14 +229,11 @@
         margin-right: 10px;
         background: transparent;
         color: @theme_text_color;
-        /* color: @theme_text_color; */
         border: none;
-        /* border: none; */
         border-radius: 4px;
       }
       .widget-title > button:hover {
         background: @base;
-        /* background: alpha(currentColor, 0.1); */
       }
 
       /* Label widget */
@@ -254,9 +242,7 @@
         padding: 0px;
         min-height: 5px;
         background: alpha(@theme_bg_color, .80);
-        /* background: @theme_bg_color; */
         border-radius: 0px 0px 4px 4px;
-        /* border: 1px solid @surface1; */
         border-top: none;
       }
       .widget-label > label {
@@ -267,8 +253,6 @@
       /* Menubar */
       .widget-menubar {
         background: transparent;
-        /* background: @theme_bg_color; */
-        /* border: 1px solid @surface1; */
         border-radius: 4px;
         border-top: none;
         border-bottom: none;
@@ -281,7 +265,6 @@
       }
       .widget-menubar > box > box > button {
         background: alpha(@theme_bg_color, .80);
-        /* background: alpha(currentColor, 0.05); */
         min-width: 185px;
         min-height: 50px;
         margin-right: 25px;
@@ -294,14 +277,12 @@
       }
       .widget-menubar button:hover {
         background: @theme_selected_bg_color;
-        /* background: alpha(currentColor,0.1); */
         box-shadow: none;
       }
 
       .widget-menubar > box > revealer > box {
         margin: 5px 10px 5px 10px;
         background: alpha(@theme_bg_color, .80);
-        /* background: alpha(currentColor, 0.05); */
         border-radius: 4px;
       }
       .widget-menubar > box > revealer > box > button {
@@ -313,9 +294,7 @@
 
       /* Buttons grid */
       .widget-buttons-grid {
-        /* background-color: @theme_bg_color; */
         background: transparent;
-        /* border: 1px solid @surface1; */
         border-top: none;
         border-bottom: none;
         font-size: 14px;
@@ -327,7 +306,6 @@
 
       .widget-buttons-grid > flowbox > flowboxchild {
         background: @theme_bg_color;
-        /* background: alpha(currentColor, 0.05); */
         border-radius: 4px;
         min-height: 40px;
         min-width: 85px;
@@ -343,10 +321,8 @@
         box-shadow: none;
       }
 
-
       .widget-buttons-grid > flowbox > flowboxchild > button:hover {
         background: @theme_selected_bg_color;
-        /* background: alpha(currentColor, 0.1); */
       }
 
       /* Mpris widget */
@@ -369,7 +345,6 @@
       .widget-backlight,
       .widget-volume {
         background: transparent;
-        /* background-color: @theme_bg_color; */
         border-top: none;
         border-bottom: none;
         font-size: 13px;
@@ -380,7 +355,6 @@
       }
       .widget-volume > box {
         background: alpha(@theme_bg_color, .80);
-        /* background: alpha(currentColor, 0.05); */
         border-radius: 4px;
         margin: 5px 10px 5px 10px;
         min-height: 50px;
@@ -395,12 +369,10 @@
         padding: 0px;
       }
       .widget-volume > box > button:hover {
-        /* background: alpha(currentColor, 0.05); */
         background: @surface0;
       }
       .widget-volume > revealer > list {
         background: alpha(@theme_bg_color, .80);
-        /* background: alpha(currentColor, 0.05); */
         border-radius: 4px;
         margin-top: 5px;
         padding: 0px;
@@ -417,7 +389,6 @@
       }
       .widget-backlight > scale {
         background: alpha(@theme_bg_color, .80);
-        /* background: alpha(currentColor, 0.05); */
         border-radius: 0px 4px 4px 0px;
         margin: 5px 10px 5px 0px;
         padding: 0px 10px 0px 0px;
@@ -425,7 +396,6 @@
       }
       .widget-backlight > label {
         background: @surface0;
-        /* background: alpha(currentColor, 0.05); */
         margin: 5px 0px 5px 10px;
         border-radius: 4px 0px 0px 4px;
         padding: 0px;
@@ -468,26 +438,18 @@
       /* Toggles */
       .toggle:checked {
         background: @surface1;
-        /* background: @theme_selected_bg_color; */
       }
-      /*.toggle:not(:checked) {
-        color: rgba(128, 128, 128, 0.5);
-      }*/
       .toggle:checked:hover {
         background: @surface2;
-        /* background: alpha(@theme_selected_bg_color, 0.75); */
       }
 
       scale trough {
         border-radius: 4px;
         background: @surface0;
-        /* background: alpha(currentColor, 0.1); */
       }
 
       scale slider {
         background: @theme_fg_color;
-      }
-      scale slider:hover {
       }
 
       /* Hide scrollbars */
