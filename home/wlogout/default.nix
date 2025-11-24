@@ -49,7 +49,7 @@ in
           font-family: JetBrainsMono Nerd Font;
           font-size: 16pt;
           color: #${c.base05}; /* text */
-          background-color: #${c.base00}33;
+          background-color: rgba(#${c.base00}, 0.2);
       }
       button {
           background-repeat: no-repeat;
