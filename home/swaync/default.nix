@@ -364,7 +364,7 @@
       }
       .widget-mpris > box > button,
       .widget-mpris-player,
-      .widget-mpris-album-art, {
+      .widget-mpris-album-art {
         box-shadow: none;
         margin: 10px 0 0 0;
         padding: 5px 10px;

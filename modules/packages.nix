@@ -51,6 +51,7 @@ let
     # Media
     mpc
     playerctl
+    pamixer
 
     # Wayland tools
     wlopm
