@@ -1,121 +1,110 @@
+{ config, pkgs, ... }:
+let
+  c = config.colorScheme.palette;
+in
+
 {
-  config,
-  pkgs,
-  ...
-}: {
-  programs.wlogout.enable = true;
-  home.file.".config/wlogout/icons" = {
-    source = ./icons;
-    recursive = true;
+  xdg.configFile."wlogout/icons".source = ./icons;
+  programs.wlogout = {
+    enable = true;
+    layout = [
+      {
+        label = "lock";
+        action = "${pkgs.gtklock}/bin/gtklock";
+        text = "Lock";
+        keybind = "l";
+      }
+      # {
+      #   label = "hibernate";
+      #   action = "systemctl hibernate";
+      #   text = "Hibernate";
+      #   keybind = "h";
+      # }
+      {
+        label = "logout";
+        action = "loginctl kill-session $XDG_SESSION_ID";
+        text = "Exit";
+        keybind = "e";
+      }
+      {
+        label = "shutdown";
+        action = "systemctl poweroff";
+        text = "Shutdown";
+        keybind = "s";
+      }
+      {
+        label = "suspend";
+        action = "systemctl suspend";
+        text = "Suspend";
+        keybind = "u";
+      }
+      {
+        label = "reboot";
+        action = "systemctl reboot";
+        text = "Reboot";
+        keybind = "r";
+      }
+    ];
+    style = ''
+      window {
+        font-family: monospace;
+        font-size: 14pt;
+        color: #${c.base05}; /* text */
+        background-color: rgba(30, 30, 46, 0.5);
+      }
+
+      button {
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 25%;
+        border: none;
+        background-color: rgba(30, 30, 46, 0);
+        margin: 5px;
+        transition: box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
+      }
+
+      button:hover {
+        background-color: rgba(49, 50, 68, 0.1);
+      }
+
+      button:focus {
+        background-color: #${c.base0F};
+        color: #${c.base00};
+      }
+      #lock {
+        background-image: image(url("icons/lock.png"));
+      }
+      #lock:focus {
+        background-image: image(url("icons/lock-hover.png"));
+      }
+
+      #logout {
+        background-image: image(url("icons/logout.png"));
+      }
+      #logout:focus {
+        background-image: image(url("icons/logout-hover.png"));
+      }
+
+      #suspend {
+        background-image: image(url("icons/sleep.png"));
+      }
+      #suspend:focus {
+        background-image: image(url("icons/sleep-hover.png"));
+      }
+
+      #shutdown {
+        background-image: image(url("icons/power.png"));
+      }
+      #shutdown:focus {
+        background-image: image(url("icons/power-hover.png"));
+      }
+
+      #reboot {
+        background-image: image(url("icons/restart.png"));
+      }
+      #reboot:focus {
+        background-image: image(url("icons/restart-hover.png"));
+      }
+    '';
   };
-
-  home.file.".config/wlogout/layout".text = ''
-    {
-    	"label" : "lock",
-    		"action" : "swaylock",
-    		"text" : "Lock"
-    }
-    {
-    	"label" : "hibernate",
-    		"action" : "systemctl hibernate",
-    		"text" : "Hibernate"
-    }
-    {
-    	"label" : "logout",
-    		"action" : "hyprctl dispatch exit 0",
-    		"text" : "Logout"
-    }
-    {
-    	"label" : "shutdown",
-    		"action" : "systemctl poweroff",
-    		"text" : "Shutdown"
-    }
-    {
-    	"label" : "suspend",
-    		"action" : "systemctl suspend",
-    		"text" : "Suspend"
-    }
-    {
-    	"label" : "reboot",
-    		"action" : "systemctl reboot",
-    		"text" : "Reboot"
-    }
-  '';
-  home.file.".config/wlogout/style.css".text = ''
-    		* {
-    			background-image: none;
-    		}
-    	window {
-    		background-color: transparent;
-    	}
-    	button {
-    color: #53565c;
-           background-color: rgba(24, 26, 31, .5);
-           border-style: solid;
-           border-color: rgba(24, 26, 31, .5);
-           border-width: 2px;
-           border-radius: 7px;
-           background-repeat: no-repeat;
-           background-position: center;
-           background-size: 25%;
-    margin: 10px;
-    	}
-
-    button:focus,
-    	       button:active,
-    	       button:hover {
-    		       background-color: rgba(24, 26, 31, .7);
-    		       border-color: rgba(24, 26, 31, .7);
-    color: #d4d4d6;
-           outline-style: none;
-    	       }
-
-    #lock {
-    	background-image: image(
-    			url("./icons/lock.png"),
-    			url("/usr/share/wlogout/icons/lock.png"),
-    			url("/usr/local/share/wlogout/icons/lock.png")
-    			);
-    }
-
-    #logout {
-    	background-image: image(
-    			url("./icons/logout.png"),
-    			url("/usr/share/wlogout/icons/logout.png"),
-    			url("/usr/local/share/wlogout/icons/logout.png")
-    			);
-    }
-
-    #suspend {
-    	background-image: image(
-    			url("./icons/suspend.png"),
-    			url("/usr/share/wlogout/icons/suspend.png"),
-    			url("/usr/local/share/wlogout/icons/suspend.png")
-    			);
-    }
-
-    #hibernate {
-    	background-image: image(
-    			url("./icons/hibernate.png"),
-    			url("/usr/share/wlogout/icons/hibernate.png"),
-    			url("/usr/local/share/wlogout/icons/hibernate.png")
-    			);
-    }
-
-    #shutdown {
-    	background-image: image(
-    			url("./icons/shutdown.png"),
-    			url("/usr/share/wlogout/icons/shutdown.png"),
-    			url("/usr/local/share/wlogout/icons/shutdown.png")
-    			);
-    }
-
-    #reboot {
-    	background-image: image(
-    			url("./icons/reboot.png"),
-    			url("/usr/share/wlogout/icons/reboot.png"),
-    			url("/usr/local/share/wlogout/icons/reboot.png")
-    			);
-    }
-  '';
 }
