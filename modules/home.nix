@@ -52,10 +52,6 @@ in
     SHELL = "${pkgs.zsh}/bin/zsh";
   };
 
-  services.playerctld = {
-    enable = true;
-  };
-
   imports = [
     ./programs.nix
     ../home/btop/default.nix
