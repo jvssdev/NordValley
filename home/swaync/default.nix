@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 {
   home.file.".config/swaync/config.json".text = ''
     {
@@ -42,7 +42,6 @@
       "widgets": [
         "title",
         "dnd",
-        "menubar#desktop",
         "volume",
         "mpris",
         "notifications"
@@ -52,30 +51,6 @@
           "text": " Quick settings",
           "clear-all-button": true,
           "button-text": ""
-        },
-        "menubar#desktop": {
-          "menu#power": {
-            "label": "\t   Power Menu\t  ",
-            "position": "left",
-            "actions": [
-              {
-                "label": "   Logout",
-                "command": "hyprctl dispatch exit 0"
-              },
-              {
-                "label": "   Shut down",
-                "command": "systemctl poweroff"
-              },
-              {
-                "label": "󰤄   Suspend",
-                "command": "systemctl suspend"
-              },
-              {
-                "label": "   Reboot",
-                "command": "systemctl reboot"
-              }
-            ]
-          }
         },
         "volume": {
           "label": "",
@@ -191,7 +166,6 @@
       background: transparent;
       border: none;
     }
-
 
     .notification-default-action {
       border-radius: 4px;
