@@ -40,7 +40,7 @@
         title = {
           text = " Quick settings";
           clear-all-button = true;
-          button-text = "";
+          button-text = "";
         };
         "menubar#desktop" = {
           "backlight" = {
@@ -48,9 +48,9 @@
           };
         };
         volume = {
-          label = "";
-          expand-button-label = "";
-          collapse-button-label = "";
+          label = "";
+          expand-button-label = "";
+          collapse-button-label = "";
           show-per-app = true;
           show-per-app-icon = true;
           show-per-app-label = true;
@@ -61,11 +61,12 @@
         mpris = {
           image-size = 96;
           image-radius = 4;
+          blur = true;
         };
         notifications = {
           text = "Notifications";
           clear-all-button = true;
-          button-text = " Clear";
+          button-text = " Clear";
         };
 
         "buttons-grid" = {
