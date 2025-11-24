@@ -30,7 +30,6 @@
       widgets = [
         "title"
         "dnd"
-        "menubar#desktop"
         "volume"
         "mpris"
         "notifications"
@@ -41,11 +40,6 @@
           text = " Quick settings";
           clear-all-button = true;
           button-text = "";
-        };
-        "menubar#desktop" = {
-          "backlight" = {
-            label = "       󰃟  ";
-          };
         };
         volume = {
           label = "";
@@ -61,7 +55,6 @@
         mpris = {
           image-size = 96;
           image-radius = 4;
-          blur = true;
         };
         notifications = {
           text = "Notifications";
