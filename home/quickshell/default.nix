@@ -2,6 +2,9 @@
   config,
   pkgs,
   lib,
+  homeDir,
+  isRiver,
+  isMango,
   ...
 }:
 let
@@ -19,6 +22,7 @@ in
   xdg.configFile."quickshell/shell.qml".text = ''
     import Quickshell
     import Quickshell.Wayland
+    import Quickshell.Io
 
     ShellRoot {
         IdleService {}
@@ -44,6 +48,29 @@ in
                 
                 NotificationCenter {}
             }
+            
+            // Toggle visibility when receiving IPC signal
+            Connections {
+                target: NotificationService
+                function onToggleRequested() {
+                    notificationCenter.visible = !notificationCenter.visible
+                }
+            }
+        }
+        
+        // IPC Server for waybar integration
+        Process {
+            id: ipcServer
+            running: true
+            command: ["sh", "-c", "while true; do read line; echo toggle; done"]
+            stdin: Process.Buffer
+            stdout: Process.Buffer
+            
+            onStdout: data => {
+                if (data.trim() === "toggle") {
+                    notificationCenter.visible = !notificationCenter.visible
+                }
+            }
         }
     }
   '';
@@ -61,6 +88,8 @@ in
         property var notifications: []
         property int maxNotifications: 50
         property bool dndEnabled: false
+        
+        signal toggleRequested()
         
         NotificationServer {
             id: notifServer
@@ -88,12 +117,33 @@ in
                 if (!root.dndEnabled) {
                     showNotificationPopup(notification)
                 }
+                
+                // Update status file for waybar
+                updateStatusFile()
             }
             
             onNotificationClosed: (id, reason) => {
                 console.log("Notification closed:", id)
                 removeNotification(id)
+                updateStatusFile()
             }
+        }
+        
+        function getUnreadCount() {
+            return root.notifications.length
+        }
+        
+        function updateStatusFile() {
+            var count = getUnreadCount()
+            var status = {
+                text: count > 0 ? count.toString() : "",
+                tooltip: count > 0 ? count + " notification" + (count > 1 ? "s" : "") : "No notifications",
+                class: root.dndEnabled ? "dnd" : (count > 0 ? "notification" : "none")
+            }
+            
+            // Write to temporary status file
+            var statusJson = JSON.stringify(status)
+            Process.execute("sh", ["-c", "echo '" + statusJson + "' > /tmp/quickshell-notification-status.json"])
         }
         
         function showNotificationPopup(notification) {
@@ -177,11 +227,13 @@ in
         
         function clearAll() {
             root.notifications = []
+            updateStatusFile()
         }
         
         function toggleDND() {
             root.dndEnabled = !root.dndEnabled
             console.log("Do Not Disturb:", root.dndEnabled ? "enabled" : "disabled")
+            updateStatusFile()
             
             // Show DND status notification
             var statusMsg = root.dndEnabled ? "Do Not Disturb enabled" : "Do Not Disturb disabled"
@@ -239,10 +291,14 @@ in
                 }
             ', root)
         }
+        
+        Component.onCompleted: {
+            updateStatusFile()
+        }
     }
   '';
 
-  # MPRIS Service (controla media players)
+  # MPRIS Service
   xdg.configFile."quickshell/MprisService.qml".text = ''
     pragma Singleton
     import QtQuick
@@ -588,4 +644,35 @@ in
         }
     }
   '';
+
+  home.packages = [
+    (pkgs.writeShellScriptBin "quickshell-notification-status" ''
+      #!/usr/bin/env bash
+
+      STATUS_FILE="/tmp/quickshell-notification-status.json"
+
+      # Initialize status file if it doesn't exist
+      if [ ! -f "$STATUS_FILE" ]; then
+        echo '{"text":"","tooltip":"No notifications","class":"none"}' > "$STATUS_FILE"
+      fi
+
+      # Watch for changes and output status
+      while true; do
+        if [ -f "$STATUS_FILE" ]; then
+          cat "$STATUS_FILE"
+        fi
+        sleep 0.5
+      done
+    '')
+
+    (pkgs.writeShellScriptBin "quickshell-notification-toggle" ''
+      #!/usr/bin/env bash
+
+      # Send signal to quickshell to toggle notification center
+      pkill -SIGUSR1 quickshell || true
+
+      # Alternative: use a socket or named pipe if available
+      # echo "toggle" > /tmp/quickshell-notification-toggle
+    '')
+  ];
 }

@@ -14,7 +14,7 @@ let
   commonModulesRight = [
     "cpu"
     "memory"
-    "custom/swaync"
+    "custom/quickshell-notification"
     "tray"
     "battery"
     "pulseaudio"
@@ -31,20 +31,12 @@ let
   mangoConfig = {
     modules-left = [
       "dwl/tags"
-      # "dwl/window"
     ];
     "dwl/tags" = {
       "num-tags" = 9;
       "hide-vacant" = true;
       expand = false;
       "disable-click" = true;
-    };
-    "dwl/window" = {
-      format = "{app_id} | {title}";
-      "max-length" = 50;
-      rewrite = {
-        "\\| " = "";
-      };
     };
   };
   selectedConfig =
@@ -82,7 +74,7 @@ in
       #tags button.focused, #dwl-tags .focused { background: #${colors.base0D}; color: #${colors.base00}; }
       #tags button.urgent, #dwl-tags .urgent { color: #${colors.base08}; }
       #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
-      #bluetooth, #network, #custom-notification, #tray, #custom-power {
+      #bluetooth, #network, #custom-quickshell-notification, #tray, #custom-power {
         padding: 0 10px;
       }
       #mpris.paused { color: #${colors.base03}; font-style: italic; }
@@ -90,6 +82,8 @@ in
       #battery.critical { color: #${colors.base08}; }
       #pulseaudio.muted { color: #${colors.base03}; }
       #bluetooth.connected { color: #${colors.base0F}; }
+      #custom-quickshell-notification.notification { color: #${colors.base08}; }
+      #custom-quickshell-notification.dnd { color: #${colors.base0A}; }
       #custom-power:hover { background: #${colors.base08}; color: #${colors.base07}; }
     '';
     settings.mainBar = {
@@ -168,24 +162,48 @@ in
         "icon-size" = 21;
         spacing = 10;
       };
-      "custom/swaync" = {
+      "custom/quickshell-notification" = {
         tooltip = true;
         format = "{icon} {}";
         format-icons = {
-          notification = "<span foreground='red'><sup></sup></span>";
-          none = "";
-          dnd-notification = "<span foreground='red'><sup></sup></span>";
-          dnd-none = "";
-          inhibited-notification = "<span foreground='red'><sup></sup></span>";
-          inhibited-none = "";
-          dnd-inhibited-notification = "<span foreground='red'><sup></sup></span>";
-          dnd-inhibited-none = "";
+          notification = "<span foreground='#${colors.base08}'><sup></sup></span>";
+          none = "";
+          dnd = "<span foreground='#${colors.base0A}'>󰂛</span>";
         };
         return-type = "json";
-        exec-if = "which swaync-client";
-        exec = "swaync-client -swb";
-        on-click = "swaync-client -t -sw";
-        on-click-right = "swaync-client -d -sw";
+        exec = "${pkgs.writeShellScript "quickshell-notif-status" ''
+          STATUS_FILE="/tmp/quickshell-notification-status.json"
+
+          # Initialize if doesn't exist
+          if [ ! -f "$STATUS_FILE" ]; then
+            echo '{"text":"","tooltip":"No notifications","class":"none"}' > "$STATUS_FILE"
+          fi
+
+          # Watch for changes
+          while true; do
+            if [ -f "$STATUS_FILE" ]; then
+              cat "$STATUS_FILE"
+            fi
+            
+            # Use inotifywait if available for better performance
+            if command -v inotifywait &> /dev/null; then
+              inotifywait -e modify "$STATUS_FILE" 2>/dev/null
+            else
+              sleep 1
+            fi
+          done
+        ''}";
+        on-click = "${pkgs.writeShellScript "toggle-quickshell-notif" ''
+          # Toggle notification center visibility
+          # This requires a way to communicate with quickshell
+          # For now, we'll use a simple approach with pkill
+          pkill -SIGUSR1 quickshell 2>/dev/null || true
+        ''}";
+        on-click-right = "${pkgs.writeShellScript "toggle-quickshell-dnd" ''
+          # Toggle DND mode
+          # This would need proper IPC implementation
+          echo "DND toggle - implement IPC" >&2
+        ''}";
         escape = true;
       };
       "custom/power" = {

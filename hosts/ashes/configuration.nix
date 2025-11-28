@@ -94,7 +94,6 @@
     libsForQt5.qt5.qtwayland
     libsForQt5.qt5.qtgraphicaleffects
     libsForQt5.qt5.qtquickcontrols2
-    where-is-my-sddm-theme
     colloid-gtk-theme
     colloid-icon-theme
     bibata-cursors
