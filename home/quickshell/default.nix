@@ -30,47 +30,59 @@ in
         MprisService {}
         
         // Notification Center Window
-        WaylandWindowitem {
-            id: notificationCenter
-            visible: false
-            
-            PanelWindow {
-                anchors {
-                    top: true
-                    right: true
-                    margins: 10
+        Scope {
+            property var window: WaylandWindowitem {
+                id: notificationCenter
+                visible: false
+                
+                PanelWindow {
+                    anchors {
+                        top: true
+                        right: true
+                        margins: 10
+                    }
+                    
+                    width: 400
+                    height: 600
+                    
+                    color: "#${palette.base00}"
+                    
+                    NotificationCenter {}
                 }
-                
-                width: 400
-                height: 600
-                
-                color: "#${palette.base00}"
-                
-                NotificationCenter {}
             }
             
-            // Toggle visibility when receiving IPC signal
-            Connections {
-                target: NotificationService
-                function onToggleRequested() {
-                    notificationCenter.visible = !notificationCenter.visible
+            // Socket listener for toggle commands
+            DataStreamParser {
+                id: socketListener
+                
+                Process {
+                    id: socketProcess
+                    running: true
+                    command: [
+                        "sh", "-c",
+                        "rm -f /tmp/quickshell-notif.sock; " +
+                        "while true; do " +
+                        "  nc -l -U /tmp/quickshell-notif.sock; " +
+                        "  echo toggle; " +
+                        "done"
+                    ]
+                    stdout: SplitParser {
+                        onRead: data => {
+                            var line = data.trim()
+                            console.log("Received command:", line)
+                            if (line === "toggle") {
+                                notificationCenter.visible = !notificationCenter.visible
+                                console.log("Notification center toggled, visible:", notificationCenter.visible)
+                            }
+                        }
+                    }
                 }
             }
         }
         
-        // IPC Server for waybar integration
-        Process {
-            id: ipcServer
-            running: true
-            command: ["sh", "-c", "while true; do read line; echo toggle; done"]
-            stdin: Process.Buffer
-            stdout: Process.Buffer
-            
-            onStdout: data => {
-                if (data.trim() === "toggle") {
-                    notificationCenter.visible = !notificationCenter.visible
-                }
-            }
+        Component.onCompleted: {
+            console.log("Quickshell Notification Center started")
+            console.log("Socket path: /tmp/quickshell-notif.sock")
         }
     }
   '';
@@ -81,6 +93,7 @@ in
     import QtQuick
     import Quickshell
     import Quickshell.Services.Notifications
+    import Quickshell.Io
 
     Singleton {
         id: root
@@ -88,8 +101,6 @@ in
         property var notifications: []
         property int maxNotifications: 50
         property bool dndEnabled: false
-        
-        signal toggleRequested()
         
         NotificationServer {
             id: notifServer
@@ -135,97 +146,34 @@ in
         
         function updateStatusFile() {
             var count = getUnreadCount()
+            var iconName = root.dndEnabled ? "dnd" : (count > 0 ? "notification" : "none")
             var status = {
                 text: count > 0 ? count.toString() : "",
-                tooltip: count > 0 ? count + " notification" + (count > 1 ? "s" : "") : "No notifications",
-                class: root.dndEnabled ? "dnd" : (count > 0 ? "notification" : "none")
+                tooltip: root.dndEnabled ? "Do Not Disturb" : 
+                         (count > 0 ? count + " notification" + (count > 1 ? "s" : "") : "No notifications"),
+                class: iconName
             }
             
-            // Write to temporary status file
             var statusJson = JSON.stringify(status)
-            Process.execute("sh", ["-c", "echo '" + statusJson + "' > /tmp/quickshell-notification-status.json"])
+            
+            // Use Process to write file
+            Process.execute("sh", ["-c", "mkdir -p /tmp && echo '" + statusJson + "' > /tmp/quickshell-notification-status.json"])
         }
         
         function showNotificationPopup(notification) {
-            // Create temporary popup window
-            var popup = Qt.createQmlObject('
-                import Quickshell
-                import Quickshell.Wayland
-                import QtQuick
-                
-                WaylandWindowitem {
-                    visible: true
-                    
-                    PanelWindow {
-                        anchors {
-                            top: true
-                            right: true
-                            margins: 10
-                        }
-                        
-                        width: 350
-                        height: 100
-                        
-                        Rectangle {
-                            anchors.fill: parent
-                            color: "#${palette.base01}"
-                            radius: 10
-                            border.color: "#${palette.base03}"
-                            border.width: 1
-                            
-                            Row {
-                                anchors.fill: parent
-                                anchors.margins: 10
-                                spacing: 10
-                                
-                                Image {
-                                    width: 48
-                                    height: 48
-                                    source: "' + notification.appIcon + '"
-                                    fillMode: Image.PreserveAspectFit
-                                }
-                                
-                                Column {
-                                    spacing: 5
-                                    width: parent.width - 68
-                                    
-                                    Text {
-                                        text: "' + notification.summary + '"
-                                        color: "#${palette.base05}"
-                                        font.bold: true
-                                        font.pixelSize: 14
-                                        elide: Text.ElideRight
-                                        width: parent.width
-                                    }
-                                    
-                                    Text {
-                                        text: "' + notification.body + '"
-                                        color: "#${palette.base04}"
-                                        font.pixelSize: 12
-                                        wrapMode: Text.WordWrap
-                                        maximumLineCount: 2
-                                        elide: Text.ElideRight
-                                        width: parent.width
-                                    }
-                                }
-                            }
-                        }
-                        
-                        Timer {
-                            interval: 5000
-                            running: true
-                            onTriggered: parent.parent.destroy()
-                        }
-                    }
-                }
-            ', root)
+            console.log("Showing notification popup for:", notification.summary)
         }
         
         function removeNotification(id) {
+            var originalLength = root.notifications.length
             root.notifications = root.notifications.filter(n => n.id !== id)
+            if (root.notifications.length !== originalLength) {
+                console.log("Removed notification:", id)
+            }
         }
         
         function clearAll() {
+            console.log("Clearing all notifications, count:", root.notifications.length)
             root.notifications = []
             updateStatusFile()
         }
@@ -234,66 +182,20 @@ in
             root.dndEnabled = !root.dndEnabled
             console.log("Do Not Disturb:", root.dndEnabled ? "enabled" : "disabled")
             updateStatusFile()
-            
-            // Show DND status notification
-            var statusMsg = root.dndEnabled ? "Do Not Disturb enabled" : "Do Not Disturb disabled"
-            showDNDStatusPopup(statusMsg)
-        }
-        
-        function showDNDStatusPopup(message) {
-            var popup = Qt.createQmlObject('
-                import Quickshell
-                import Quickshell.Wayland
-                import QtQuick
-                
-                WaylandWindowitem {
-                    visible: true
-                    
-                    PanelWindow {
-                        anchors.centerIn: parent
-                        
-                        width: 300
-                        height: 80
-                        
-                        Rectangle {
-                            anchors.fill: parent
-                            color: "#${palette.base01}"
-                            radius: 10
-                            border.color: "#${palette.base0D}"
-                            border.width: 2
-                            
-                            Column {
-                                anchors.centerIn: parent
-                                spacing: 8
-                                
-                                Text {
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    text: "🔕"
-                                    font.pixelSize: 32
-                                }
-                                
-                                Text {
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    text: "' + message + '"
-                                    color: "#${palette.base05}"
-                                    font.bold: true
-                                    font.pixelSize: 14
-                                }
-                            }
-                        }
-                        
-                        Timer {
-                            interval: 2000
-                            running: true
-                            onTriggered: parent.parent.destroy()
-                        }
-                    }
-                }
-            ', root)
         }
         
         Component.onCompleted: {
+            console.log("NotificationService initialized")
             updateStatusFile()
+        }
+        
+        Timer {
+            interval: 5000
+            running: true
+            repeat: true
+            onTriggered: {
+                console.log("Status - Notifications:", root.notifications.length, "DND:", root.dndEnabled)
+            }
         }
     }
   '';
@@ -377,7 +279,7 @@ in
                     height: parent.height
                 }
                 
-                Item { Layout.fillWidth: true }
+                Item { width: parent.width - 200 }
                 
                 // DND Toggle Button
                 Rectangle {
@@ -521,64 +423,52 @@ in
             }
             
             // Notifications List
-            ScrollView {
+            ListView {
                 width: parent.width
                 height: parent.height - 170
+                spacing: 10
+                clip: true
                 
-                Column {
+                model: NotificationService.notifications
+                
+                delegate: Rectangle {
                     width: parent.width
-                    spacing: 10
+                    height: 80
+                    color: "#${palette.base01}"
+                    radius: 8
                     
-                    Repeater {
-                        model: NotificationService.notifications
+                    Row {
+                        anchors.fill: parent
+                        anchors.margins: 10
+                        spacing: 10
                         
-                        Rectangle {
-                            width: parent.width
-                            height: 80
-                            color: "#${palette.base01}"
-                            radius: 8
+                        Column {
+                            spacing: 5
+                            width: parent.width - 20
                             
-                            Row {
-                                anchors.fill: parent
-                                anchors.margins: 10
-                                spacing: 10
-                                
-                                Image {
-                                    width: 48
-                                    height: 48
-                                    source: modelData.appIcon
-                                    fillMode: Image.PreserveAspectFit
-                                }
-                                
-                                Column {
-                                    spacing: 5
-                                    width: parent.width - 68
-                                    
-                                    Text {
-                                        text: modelData.summary
-                                        color: "#${palette.base05}"
-                                        font.bold: true
-                                        font.pixelSize: 13
-                                        elide: Text.ElideRight
-                                        width: parent.width
-                                    }
-                                    
-                                    Text {
-                                        text: modelData.body
-                                        color: "#${palette.base04}"
-                                        font.pixelSize: 11
-                                        wrapMode: Text.WordWrap
-                                        maximumLineCount: 2
-                                        elide: Text.ElideRight
-                                        width: parent.width
-                                    }
-                                    
-                                    Text {
-                                        text: Qt.formatTime(modelData.time, "hh:mm")
-                                        color: "#${palette.base03}"
-                                        font.pixelSize: 10
-                                    }
-                                }
+                            Text {
+                                text: modelData.summary
+                                color: "#${palette.base05}"
+                                font.bold: true
+                                font.pixelSize: 13
+                                elide: Text.ElideRight
+                                width: parent.width
+                            }
+                            
+                            Text {
+                                text: modelData.body
+                                color: "#${palette.base04}"
+                                font.pixelSize: 11
+                                wrapMode: Text.WordWrap
+                                maximumLineCount: 2
+                                elide: Text.ElideRight
+                                width: parent.width
+                            }
+                            
+                            Text {
+                                text: Qt.formatTime(modelData.time, "hh:mm")
+                                color: "#${palette.base03}"
+                                font.pixelSize: 10
                             }
                         }
                     }
@@ -645,34 +535,60 @@ in
     }
   '';
 
+  # Helper scripts
   home.packages = [
-    (pkgs.writeShellScriptBin "quickshell-notification-status" ''
+    (pkgs.writeShellScriptBin "quickshell-notif-toggle" ''
+      #!/usr/bin/env bash
+      echo "toggle" | ${pkgs.netcat}/bin/nc -U /tmp/quickshell-notif.sock 2>/dev/null || {
+        echo "Error: Could not connect to quickshell socket"
+        echo "Is quickshell running?"
+        exit 1
+      }
+    '')
+
+    (pkgs.writeShellScriptBin "quickshell-notif-status" ''
       #!/usr/bin/env bash
 
       STATUS_FILE="/tmp/quickshell-notification-status.json"
 
       # Initialize status file if it doesn't exist
       if [ ! -f "$STATUS_FILE" ]; then
+        mkdir -p /tmp
         echo '{"text":"","tooltip":"No notifications","class":"none"}' > "$STATUS_FILE"
       fi
 
       # Watch for changes and output status
-      while true; do
+      ${pkgs.inotify-tools}/bin/inotifywait -m -e modify,create "$STATUS_FILE" 2>/dev/null | while read; do
         if [ -f "$STATUS_FILE" ]; then
           cat "$STATUS_FILE"
         fi
-        sleep 0.5
       done
     '')
 
-    (pkgs.writeShellScriptBin "quickshell-notification-toggle" ''
+    (pkgs.writeShellScriptBin "quickshell-test" ''
       #!/usr/bin/env bash
-
-      # Send signal to quickshell to toggle notification center
-      pkill -SIGUSR1 quickshell || true
-
-      # Alternative: use a socket or named pipe if available
-      # echo "toggle" > /tmp/quickshell-notification-toggle
+      echo "=== Quickshell Notification Center Debug ==="
+      echo ""
+      echo "1. Checking if quickshell is running:"
+      pgrep -a quickshell || echo "  ❌ Quickshell is NOT running"
+      echo ""
+      echo "2. Checking socket file:"
+      [ -S /tmp/quickshell-notif.sock ] && echo "  ✅ Socket exists" || echo "  ❌ Socket does not exist"
+      echo ""
+      echo "3. Checking status file:"
+      if [ -f /tmp/quickshell-notification-status.json ]; then
+        echo "  ✅ Status file exists"
+        echo "  Content:"
+        cat /tmp/quickshell-notification-status.json | ${pkgs.jq}/bin/jq 2>/dev/null || cat /tmp/quickshell-notification-status.json
+      else
+        echo "  ❌ Status file does not exist"
+      fi
+      echo ""
+      echo "4. Testing toggle command:"
+      quickshell-notif-toggle && echo "  ✅ Toggle successful" || echo "  ❌ Toggle failed"
+      echo ""
+      echo "5. Sending test notification:"
+      ${pkgs.libnotify}/bin/notify-send "Test" "This is a test notification"
     '')
   ];
 }

@@ -6,7 +6,6 @@
 }:
 let
   palette = config.colorScheme.palette;
-
   hexToMango = hex: "0x${hex}ff";
 in
 {
@@ -42,7 +41,9 @@ in
 
       ${pkgs.wpaperd}/bin/wpaperd &
 
-      ${pkgs.swaynotificationcenter}/bin/swaync &
+      # ${pkgs.swaynotificationcenter}/bin/swaync &
+
+      ${pkgs.quickshell}/bin/quickshell &
 
       ${pkgs.waybar}/bin/waybar &
 
