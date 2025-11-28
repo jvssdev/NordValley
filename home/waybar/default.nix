@@ -8,7 +8,6 @@
 let
   colors = config.colorScheme.palette;
   commonModulesCenter = [
-    "mpris"
     "clock"
   ];
   commonModulesRight = [
@@ -82,8 +81,19 @@ in
       #battery.critical { color: #${colors.base08}; }
       #pulseaudio.muted { color: #${colors.base03}; }
       #bluetooth.connected { color: #${colors.base0F}; }
-      #custom-quickshell-notification.notification { color: #${colors.base08}; }
-      #custom-quickshell-notification.dnd { color: #${colors.base0A}; }
+
+      /* Notification center styles */
+      #custom-quickshell-notification {
+        color: #${colors.base05};
+      }
+      #custom-quickshell-notification.notification {
+        color: #${colors.base08};
+        font-weight: bold;
+      }
+      #custom-quickshell-notification.dnd {
+        color: #${colors.base0A};
+      }
+
       #custom-power:hover { background: #${colors.base08}; color: #${colors.base07}; }
     '';
     settings.mainBar = {
@@ -98,15 +108,6 @@ in
       modules-left = selectedConfig.modules-left or [ ];
       modules-center = commonModulesCenter;
       modules-right = commonModulesRight;
-      mpris = {
-        format = "{player_icon} {artist} - {title}";
-        "format-paused" = "{status_icon} <i>{artist} - {title}</i>";
-        "player-icons".default = "";
-        "status-icons".paused = "";
-        "max-length" = 80;
-        "ignored-players" = [ ];
-        interval = 1;
-      };
       clock.format = "{:%H:%M %d/%m}";
       cpu.format = "{usage}% ";
       memory.format = "{}% ";
@@ -162,50 +163,38 @@ in
         "icon-size" = 21;
         spacing = 10;
       };
+
+      # Quickshell Notification Center integration
       "custom/quickshell-notification" = {
-        tooltip = true;
         format = "{icon} {}";
-        format-icons = {
-          notification = "<span foreground='#${colors.base08}'><sup></sup></span>";
-          none = "";
-          dnd = "<span foreground='#${colors.base0A}'>󰂛</span>";
-        };
         return-type = "json";
-        exec = "${pkgs.writeShellScript "quickshell-notif-status" ''
+        interval = 1;
+        exec = "${pkgs.writeShellScript "waybar-quickshell-status" ''
           STATUS_FILE="/tmp/quickshell-notification-status.json"
 
           # Initialize if doesn't exist
           if [ ! -f "$STATUS_FILE" ]; then
+            mkdir -p /tmp
             echo '{"text":"","tooltip":"No notifications","class":"none"}' > "$STATUS_FILE"
           fi
 
-          # Watch for changes
-          while true; do
-            if [ -f "$STATUS_FILE" ]; then
-              cat "$STATUS_FILE"
-            fi
-            
-            # Use inotifywait if available for better performance
-            if command -v inotifywait &> /dev/null; then
-              inotifywait -e modify "$STATUS_FILE" 2>/dev/null
-            else
-              sleep 1
-            fi
-          done
+          # Read and output current status
+          cat "$STATUS_FILE" 2>/dev/null || echo '{"text":"","tooltip":"Error reading status","class":"none"}'
         ''}";
-        on-click = "${pkgs.writeShellScript "toggle-quickshell-notif" ''
-          # Toggle notification center visibility
-          # This requires a way to communicate with quickshell
-          # For now, we'll use a simple approach with pkill
-          pkill -SIGUSR1 quickshell 2>/dev/null || true
+        format-icons = {
+          "none" = "";
+          "notification" = "<span foreground='#${colors.base08}'></span>";
+          "dnd" = "<span foreground='#${colors.base0A}'>󰂛</span>";
+        };
+        on-click = "${pkgs.writeShellScript "waybar-quickshell-toggle" ''
+          # Toggle notification center using named pipe
+          echo "toggle" > /tmp/quickshell-toggle 2>/dev/null || {
+            ${pkgs.libnotify}/bin/notify-send "Quickshell Error" "Could not toggle notification center"
+          }
         ''}";
-        on-click-right = "${pkgs.writeShellScript "toggle-quickshell-dnd" ''
-          # Toggle DND mode
-          # This would need proper IPC implementation
-          echo "DND toggle - implement IPC" >&2
-        ''}";
-        escape = true;
+        tooltip = true;
       };
+
       "custom/power" = {
         format = "⏻";
         tooltip = false;
