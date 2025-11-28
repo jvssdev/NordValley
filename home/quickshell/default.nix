@@ -30,59 +30,54 @@ in
         MprisService {}
         
         // Notification Center Window
-        Scope {
-            property var window: WaylandWindowitem {
-                id: notificationCenter
-                visible: false
-                
-                PanelWindow {
-                    anchors {
-                        top: true
-                        right: true
-                        margins: 10
-                    }
-                    
-                    width: 400
-                    height: 600
-                    
-                    color: "#${palette.base00}"
-                    
-                    NotificationCenter {}
-                }
-            }
+        WaylandWindowitem {
+            id: notificationCenter
+            visible: false
             
-            // Socket listener for toggle commands
-            DataStreamParser {
-                id: socketListener
+            PanelWindow {
+                anchors {
+                    top: true
+                    right: true
+                    margins: 10
+                }
                 
-                Process {
-                    id: socketProcess
-                    running: true
-                    command: [
-                        "sh", "-c",
-                        "rm -f /tmp/quickshell-notif.sock; " +
-                        "while true; do " +
-                        "  nc -l -U /tmp/quickshell-notif.sock; " +
-                        "  echo toggle; " +
-                        "done"
-                    ]
-                    stdout: SplitParser {
-                        onRead: data => {
-                            var line = data.trim()
-                            console.log("Received command:", line)
-                            if (line === "toggle") {
-                                notificationCenter.visible = !notificationCenter.visible
-                                console.log("Notification center toggled, visible:", notificationCenter.visible)
-                            }
-                        }
-                    }
+                width: 400
+                height: 600
+                
+                color: "#${palette.base00}"
+                
+                NotificationCenter {}
+            }
+        }
+        
+        // File watcher for toggle command
+        Process {
+            id: toggleWatcher
+            running: true
+            command: [
+                "sh", "-c",
+                "rm -f /tmp/quickshell-toggle; " +
+                "mkfifo /tmp/quickshell-toggle 2>/dev/null || true; " +
+                "while true; do " +
+                "  if read line < /tmp/quickshell-toggle; then " +
+                "    echo \"$line\"; " +
+                "  fi; " +
+                "done"
+            ]
+            stdout: SplitParser {
+                onRead: data => {
+                    var line = data.trim()
+                    console.log("Received toggle command")
+                    notificationCenter.visible = !notificationCenter.visible
+                    console.log("Notification center visible:", notificationCenter.visible)
                 }
             }
         }
         
         Component.onCompleted: {
             console.log("Quickshell Notification Center started")
-            console.log("Socket path: /tmp/quickshell-notif.sock")
+            console.log("Toggle pipe: /tmp/quickshell-toggle")
+            console.log("Status file: /tmp/quickshell-notification-status.json")
         }
     }
   '';
