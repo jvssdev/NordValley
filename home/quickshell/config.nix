@@ -11,6 +11,7 @@ let
   themeQml = pkgs.writeText "Theme.qml" ''
     pragma Singleton
     import QtQuick
+    import Quickshell
 
     QtObject {
         readonly property string bg         : "#${p.base00}"
@@ -51,9 +52,8 @@ in
 
   xdg.configFile."quickshell/shell.qml".source = ./shell.qml;
   xdg.configFile."quickshell/NotificationCenter.qml".source = ./NotificationCenter.qml;
-  xdg.configFile."quickshell/NotificationService.qml".text =
-    builtins.readFile ./NotificationService.qml;
-  xdg.configFile."quickshell/MprisService.qml".text = builtins.readFile ./MprisService.qml;
+  xdg.configFile."quickshell/NotificationService.qml".source = ./NotificationService.qml;
+  xdg.configFile."quickshell/MprisService.qml".source = ./MprisService.qml;
 
   home.packages = with pkgs; [
     (writeShellScriptBin "qs-write-status" ''
