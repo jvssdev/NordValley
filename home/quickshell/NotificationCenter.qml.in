@@ -1,0 +1,129 @@
+import QtQuick
+import Quickshell
+
+Rectangle {
+    id: root
+    color: "#@base00@"
+    radius: 10
+
+    border {
+        width: 2
+        color: "#@base0D@"
+    }
+
+    Column {
+        anchors.fill: parent
+        anchors.margins: 10
+        spacing: 10
+
+        // Header
+        Row {
+            width: parent.width
+            height: 40
+            spacing: 10
+
+            Text {
+                text: "Notifications"
+                color: "#@base05@"
+                font.bold: true
+                font.pixelSize: 16
+                verticalAlignment: Text.AlignVCenter
+                height: parent.height
+            }
+
+            Item { width: parent.width - 140; height: 1 }
+
+            // DND Toggle
+            Rectangle {
+                width: 40; height: 30
+                color: NotificationService.dndEnabled ? "#@base08@" : "#@base02@"
+                radius: 5
+
+                Text {
+                    anchors.centerIn: parent
+                    text: NotificationService.dndEnabled ? "🔕" : "🔔"
+                    font.pixelSize: 16
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: NotificationService.toggleDND()
+                    cursorShape: Qt.PointingHandCursor
+                }
+            }
+
+            // Clear All
+            Rectangle {
+                width: 80; height: 30
+                color: "#@base02@"
+                radius: 5
+
+                Text {
+                    anchors.centerIn: parent
+                    text: "Clear All"
+                    color: "#@base05@"
+                    font.pixelSize: 12
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: NotificationService.clearAll()
+                    cursorShape: Qt.PointingHandCursor
+                }
+            }
+        }
+
+        // Notifications List
+        Rectangle {
+            width: parent.width
+            height: parent.height - 50
+            color: "transparent"
+
+            ListView {
+                id: notifList
+                anchors.fill: parent
+                spacing: 10
+                clip: true
+                model: NotificationService.notifications
+
+                delegate: Rectangle {
+                    width: notifList.width
+                    height: 80
+                    color: "#@base01@"
+                    radius: 8
+
+                    Column {
+                        anchors.fill: parent
+                        anchors.margins: 10
+                        spacing: 5
+
+                        Text {
+                            text: modelData.summary
+                            color: "#@base05@"
+                            font.bold: true
+                            font.pixelSize: 13
+                            elide: Text.ElideRight
+                            width: parent.width
+                        }
+
+                        Text {
+                            text: modelData.body || ""
+                            color: "#@base04@"
+                            font.pixelSize: 11
+                            wrapMode: Text.WordWrap
+                            maximumLineCount: 2
+                            elide: Text.ElideRight
+                            width: parent.width
+                        }
+
+                        Text {
+                            text: Qt.formatTime(modelData.time, "hh:mm")
+                            color: "#@base03@"
+                            font.pixelSize: 10
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

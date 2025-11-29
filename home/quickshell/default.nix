@@ -9,7 +9,7 @@
 }:
 {
   imports = [
-    ./notif-center.nix
+    ./config.nix
     ./idle-service.nix
   ];
 }
