@@ -159,13 +159,8 @@ in
             
             console.log("Updating status file")
             
-            // Use cat with heredoc to avoid quote escaping issues  
-            var targetFile = "/tmp/quickshell-notification-status.json"
-            var cmd = "cat > " + targetFile + " << 'QSEOF'\n" +
-                     '{"text":"' + textVal + '","tooltip":"' + tooltipVal + '","class":"' + iconName + '"}\n' +
-                     "QSEOF"
-            
-            Process.exec("sh", ["-c", cmd])
+            // Use helper script to avoid quote escaping issues
+            Process.exec("qs-write-status", [textVal, tooltipVal, iconName])
         }
         
         function removeNotification(id) {
@@ -380,6 +375,19 @@ in
 
   # Helper scripts - MELHORADOS
   home.packages = [
+    # Script to write status file (avoids quote escaping in QML)
+    (pkgs.writeShellScriptBin "qs-write-status" ''
+      #!/usr/bin/env bash
+      # Args: text tooltip class
+      TEXT="$1"
+      TOOLTIP="$2"
+      CLASS="$3"
+      
+      cat > /tmp/quickshell-notification-status.json << EOF
+{"text":"$TEXT","tooltip":"$TOOLTIP","class":"$CLASS"}
+EOF
+    '')
+
     (pkgs.writeShellScriptBin "quickshell-notif-toggle" ''
       #!/usr/bin/env bash
       TOGGLE_FILE="/tmp/quickshell-toggle-cmd"
