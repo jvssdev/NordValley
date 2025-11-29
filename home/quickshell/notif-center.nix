@@ -14,18 +14,19 @@ in
     singleton MprisService 1.0 MprisService.qml
   '';
 
-  # Main shell entry point for notification center
+  # Main shell entry point
   xdg.configFile."quickshell/shell.qml".text = ''
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Io
+    import QtQuick
 
     ShellRoot {
         NotificationService {}
         MprisService {}
         
         // Notification Center Window
-        WaylandWindowitem {
+        WaylandWindow {
             id: notificationCenter
             visible: false
             
@@ -41,40 +42,46 @@ in
                 
                 color: "#${palette.base00}"
                 
-                NotificationCenter {}
+                NotificationCenter {
+                    anchors.fill: parent
+                }
             }
         }
         
-        // File watcher for toggle command
+        // Simple toggle mechanism usando Process
         Timer {
-            id: toggleFileWatcher
-            interval: 100
+            id: toggleChecker
+            interval: 200
             running: true
             repeat: true
             
-            property string lastContent: ""
+            property string lastToggle: ""
             
             onTriggered: {
-                var result = Process.execute("cat", ["/tmp/quickshell-toggle-cmd"])
-                if (result.exitCode === 0) {
-                    var content = result.stdout.trim()
-                    if (content && content !== lastContent) {
-                        console.log("Toggle command received:", content)
+                var proc = Process.exec("cat", ["/tmp/quickshell-toggle-cmd"])
+                if (proc.exitCode === 0) {
+                    var content = proc.stdout.trim()
+                    if (content && content !== lastToggle) {
+                        console.log("Toggle received:", content)
                         notificationCenter.visible = !notificationCenter.visible
-                        console.log("Notification center visible:", notificationCenter.visible)
-                        lastContent = content
+                        console.log("Notification center now:", notificationCenter.visible ? "visible" : "hidden")
+                        lastToggle = content
                     }
                 }
             }
         }
         
         Component.onCompleted: {
-            console.log("Quickshell Notification Center started")
+            console.log("=== Quickshell Notification Center Started ===")
             console.log("Toggle file: /tmp/quickshell-toggle-cmd")
             console.log("Status file: /tmp/quickshell-notification-status.json")
             
-            // Initialize toggle file
-            Process.execute("touch", ["/tmp/quickshell-toggle-cmd"])
+            // Initialize files
+            Process.exec("touch", ["/tmp/quickshell-toggle-cmd"])
+            Process.exec("sh", ["-c", "echo '' > /tmp/quickshell-toggle-cmd"])
+            
+            // Force initial status update
+            NotificationService.updateStatusFile()
         }
     }
   '';
@@ -85,6 +92,7 @@ in
     import QtQuick
     import Quickshell
     import Quickshell.Services.Notifications
+    import Quickshell.Io
 
     Singleton {
         id: root
@@ -97,33 +105,35 @@ in
             id: notifServer
             
             onNotification: notification => {
-                console.log("New notification:", notification.summary)
+                console.log("=== New Notification ===")
+                console.log("App:", notification.appName)
+                console.log("Summary:", notification.summary)
+                console.log("Body:", notification.body)
                 
-                root.notifications.unshift({
+                var notif = {
                     id: notification.id,
-                    appName: notification.appName,
-                    appIcon: notification.appIcon,
-                    summary: notification.summary,
-                    body: notification.body,
+                    appName: notification.appName || "Unknown",
+                    appIcon: notification.appIcon || "",
+                    summary: notification.summary || "No title",
+                    body: notification.body || "",
                     time: new Date(),
-                    actions: notification.actions
-                })
+                    actions: notification.actions || []
+                }
+                
+                root.notifications.unshift(notif)
                 
                 if (root.notifications.length > root.maxNotifications) {
                     root.notifications.pop()
                 }
                 
-                if (!root.dndEnabled) {
-                    console.log("Would show popup for:", notification.summary)
-                }
+                console.log("Total notifications:", root.notifications.length)
                 
-                updateStatusFile()
+                root.updateStatusFile()
             }
             
             onNotificationClosed: (id, reason) => {
-                console.log("Notification closed:", id)
-                removeNotification(id)
-                updateStatusFile()
+                console.log("Notification closed:", id, "reason:", reason)
+                root.removeNotification(id)
             }
         }
         
@@ -134,15 +144,18 @@ in
         function updateStatusFile() {
             var count = getUnreadCount()
             var iconName = root.dndEnabled ? "dnd" : (count > 0 ? "notification" : "none")
+            
             var status = {
-                text: count > 0 ? count.toString() : "",
+                text: count > 0 ? String(count) : "",
                 tooltip: root.dndEnabled ? "Do Not Disturb" : 
-                         (count > 0 ? count + " notification" + (count > 1 ? "s" : "") : "No notifications"),
+                         (count > 0 ? String(count) + " notification" + (count > 1 ? "s" : "") : "No notifications"),
                 class: iconName
             }
             
             var statusJson = JSON.stringify(status)
-            Process.execute("sh", ["-c", "echo '" + statusJson + "' > /tmp/quickshell-notification-status.json"])
+            console.log("Updating status:", statusJson)
+            
+            Process.exec("sh", ["-c", "echo '" + statusJson + "' > /tmp/quickshell-notification-status.json"])
         }
         
         function removeNotification(id) {
@@ -150,23 +163,24 @@ in
             root.notifications = root.notifications.filter(n => n.id !== id)
             if (root.notifications.length !== originalLength) {
                 console.log("Removed notification:", id)
+                root.updateStatusFile()
             }
         }
         
         function clearAll() {
-            console.log("Clearing all notifications, count:", root.notifications.length)
+            console.log("Clearing all notifications")
             root.notifications = []
-            updateStatusFile()
+            root.updateStatusFile()
         }
         
         function toggleDND() {
             root.dndEnabled = !root.dndEnabled
-            console.log("Do Not Disturb:", root.dndEnabled ? "enabled" : "disabled")
-            updateStatusFile()
+            console.log("DND:", root.dndEnabled ? "ON" : "OFF")
+            root.updateStatusFile()
         }
         
         Component.onCompleted: {
-            console.log("NotificationService initialized")
+            console.log("=== NotificationService Initialized ===")
             updateStatusFile()
         }
     }
@@ -227,9 +241,11 @@ in
     import Quickshell
 
     Rectangle {
-        anchors.fill: parent
+        id: root
         color: "#${palette.base00}"
         radius: 10
+        border.width: 2
+        border.color: "#${palette.base0D}"
         
         Column {
             anchors.fill: parent
@@ -243,17 +259,17 @@ in
                 spacing: 10
                 
                 Text {
-                    text: "Notification Center"
+                    text: "Notifications"
                     color: "#${palette.base05}"
                     font.bold: true
-                    font.pixelSize: 18
+                    font.pixelSize: 16
                     verticalAlignment: Text.AlignVCenter
                     height: parent.height
                 }
                 
-                Item { width: parent.width - 200 }
+                Item { Layout.fillWidth: true }
                 
-                // DND Toggle Button
+                // DND Toggle
                 Rectangle {
                     width: 40
                     height: 30
@@ -262,7 +278,7 @@ in
                     
                     Text {
                         anchors.centerIn: parent
-                        text: "🔕"
+                        text: NotificationService.dndEnabled ? "🔕" : "🔔"
                         font.pixelSize: 16
                     }
                     
@@ -273,7 +289,7 @@ in
                     }
                 }
                 
-                // Clear All Button
+                // Clear All
                 Rectangle {
                     width: 80
                     height: 30
@@ -295,128 +311,30 @@ in
                 }
             }
             
-            // MPRIS Player Widget
+            // Notifications List
             Rectangle {
                 width: parent.width
-                height: 120
-                color: "#${palette.base01}"
-                radius: 8
-                visible: MprisService.activePlayer !== null
+                height: parent.height - 50
+                color: "transparent"
                 
-                Column {
+                ListView {
+                    id: notifList
                     anchors.fill: parent
-                    anchors.margins: 10
-                    spacing: 8
+                    spacing: 10
+                    clip: true
                     
-                    Text {
-                        text: MprisService.activePlayer ? MprisService.activePlayer.title : ""
-                        color: "#${palette.base05}"
-                        font.bold: true
-                        font.pixelSize: 14
-                        elide: Text.ElideRight
-                        width: parent.width
-                    }
+                    model: NotificationService.notifications
                     
-                    Text {
-                        text: MprisService.activePlayer ? MprisService.activePlayer.artist : ""
-                        color: "#${palette.base04}"
-                        font.pixelSize: 12
-                        elide: Text.ElideRight
-                        width: parent.width
-                    }
-                    
-                    Row {
-                        spacing: 10
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        
-                        Rectangle {
-                            width: 40
-                            height: 40
-                            color: "#${palette.base02}"
-                            radius: 20
-                            
-                            Text {
-                                anchors.centerIn: parent
-                                text: "⏮"
-                                color: "#${palette.base05}"
-                                font.pixelSize: 18
-                            }
-                            
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: MprisService.previous()
-                                cursorShape: Qt.PointingHandCursor
-                            }
-                        }
-                        
-                        Rectangle {
-                            width: 40
-                            height: 40
-                            color: "#${palette.base0D}"
-                            radius: 20
-                            
-                            Text {
-                                anchors.centerIn: parent
-                                text: MprisService.activePlayer && 
-                                      MprisService.activePlayer.playbackState === MprisPlaybackState.Playing 
-                                      ? "⏸" : "▶"
-                                color: "#${palette.base00}"
-                                font.pixelSize: 18
-                            }
-                            
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: MprisService.togglePlayPause()
-                                cursorShape: Qt.PointingHandCursor
-                            }
-                        }
-                        
-                        Rectangle {
-                            width: 40
-                            height: 40
-                            color: "#${palette.base02}"
-                            radius: 20
-                            
-                            Text {
-                                anchors.centerIn: parent
-                                text: "⏭"
-                                color: "#${palette.base05}"
-                                font.pixelSize: 18
-                            }
-                            
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: MprisService.next()
-                                cursorShape: Qt.PointingHandCursor
-                            }
-                        }
-                    }
-                }
-            }
-            
-            // Notifications List
-            ListView {
-                width: parent.width
-                height: parent.height - 170
-                spacing: 10
-                clip: true
-                
-                model: NotificationService.notifications
-                
-                delegate: Rectangle {
-                    width: parent.width
-                    height: 80
-                    color: "#${palette.base01}"
-                    radius: 8
-                    
-                    Row {
-                        anchors.fill: parent
-                        anchors.margins: 10
-                        spacing: 10
+                    delegate: Rectangle {
+                        width: notifList.width
+                        height: 80
+                        color: "#${palette.base01}"
+                        radius: 8
                         
                         Column {
+                            anchors.fill: parent
+                            anchors.margins: 10
                             spacing: 5
-                            width: parent.width - 20
                             
                             Text {
                                 text: modelData.summary
@@ -450,66 +368,63 @@ in
     }
   '';
 
-  # Helper scripts
+  # Helper scripts - MELHORADOS
   home.packages = [
     (pkgs.writeShellScriptBin "quickshell-notif-toggle" ''
       #!/usr/bin/env bash
-
       TOGGLE_FILE="/tmp/quickshell-toggle-cmd"
-
-      # Create file if doesn't exist
-      touch "$TOGGLE_FILE"
-
-      # Write toggle command with timestamp
       echo "toggle-$(date +%s%N)" > "$TOGGLE_FILE"
-
-      echo "Toggle command sent"
+      echo "Toggle command sent at $(date)"
     '')
 
     (pkgs.writeShellScriptBin "quickshell-notif-status" ''
       #!/usr/bin/env bash
-
       STATUS_FILE="/tmp/quickshell-notification-status.json"
-
-      # Initialize status file if it doesn't exist
+      
       if [ ! -f "$STATUS_FILE" ]; then
-        mkdir -p /tmp
-        echo '{"text":"","tooltip":"No notifications","class":"none"}' > "$STATUS_FILE"
+        echo '{"text":"","tooltip":"No notifications","class":"none"}'
+      else
+        cat "$STATUS_FILE"
       fi
-
-      # Watch for changes and output status
-      ${pkgs.inotify-tools}/bin/inotifywait -m -e modify,create "$STATUS_FILE" 2>/dev/null | while read; do
-        if [ -f "$STATUS_FILE" ]; then
-          cat "$STATUS_FILE"
-        fi
-      done
     '')
 
     (pkgs.writeShellScriptBin "quickshell-notif-test" ''
       #!/usr/bin/env bash
-      echo "=== Quickshell Notification Center Test ==="
+      echo "=== Quickshell Notification Test ==="
       echo ""
-      echo "1. Checking if quickshell is running:"
-      if pgrep -a quickshell; then
-        echo "  ✅ Quickshell is running"
-      else
-        echo "  ❌ Quickshell is NOT running"
-      fi
+      
+      echo "1. Quickshell process:"
+      pgrep -a quickshell || echo "  ❌ NOT RUNNING"
       echo ""
-      echo "2. Checking files:"
-      [ -f /tmp/quickshell-toggle-cmd ] && echo "  ✅ Toggle file exists" || echo "  ❌ Toggle file missing"
-      [ -f /tmp/quickshell-notification-status.json ] && echo "  ✅ Status file exists" || echo "  ❌ Status file missing"
+      
+      echo "2. Files:"
+      ls -lh /tmp/quickshell-* 2>/dev/null || echo "  ❌ No files found"
       echo ""
-      echo "3. Status content:"
-      cat /tmp/quickshell-notification-status.json 2>/dev/null | ${pkgs.jq}/bin/jq || echo "  No status file"
+      
+      echo "3. Current status:"
+      cat /tmp/quickshell-notification-status.json 2>/dev/null | ${pkgs.jq}/bin/jq || echo "  No status"
       echo ""
-      echo "4. Testing toggle:"
+      
+      echo "4. Sending test notification:"
+      ${pkgs.libnotify}/bin/notify-send "Test Notification" "This is a test from quickshell"
+      sleep 1
+      echo ""
+      
+      echo "5. Updated status:"
+      cat /tmp/quickshell-notification-status.json 2>/dev/null | ${pkgs.jq}/bin/jq
+      echo ""
+      
+      echo "6. Testing toggle:"
       quickshell-notif-toggle
-      sleep 0.5
       echo "  Check if notification center appeared!"
+    '')
+
+    (pkgs.writeShellScriptBin "quickshell-debug" ''
+      #!/usr/bin/env bash
+      echo "=== Quickshell Debug Info ==="
       echo ""
-      echo "5. Sending test notification:"
-      ${pkgs.libnotify}/bin/notify-send "Test" "Test notification from quickshell"
+      echo "Quickshell logs:"
+      journalctl --user -u quickshell -n 50 --no-pager
     '')
   ];
 }
