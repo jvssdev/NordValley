@@ -104,7 +104,7 @@ in
         NotificationServer {
             id: notifServer
             
-            onNotification: notification => {
+            onNotification: function(notification) {
                 console.log("=== New Notification ===")
                 console.log("App:", notification.appName)
                 console.log("Summary:", notification.summary)
@@ -131,7 +131,7 @@ in
                 root.updateStatusFile()
             }
             
-            onNotificationClosed: (id, reason) => {
+            onNotificationClosed: function(id, reason) {
                 console.log("Notification closed:", id, "reason:", reason)
                 root.removeNotification(id)
             }
