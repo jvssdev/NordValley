@@ -272,7 +272,10 @@ in
                     height: parent.height
                 }
                 
-                Item { Layout.fillWidth: true }
+                Item { 
+                    width: parent.width - 140
+                    height: 1
+                }
                 
                 // DND Toggle
                 Rectangle {
