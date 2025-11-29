@@ -187,10 +187,10 @@ in
           "dnd" = "<span foreground='#${colors.base0A}'>󰂛</span>";
         };
         on-click = "${pkgs.writeShellScript "waybar-quickshell-toggle" ''
-          # Toggle notification center using named pipe
-          echo "toggle" > /tmp/quickshell-toggle 2>/dev/null || {
-            ${pkgs.libnotify}/bin/notify-send "Quickshell Error" "Could not toggle notification center"
-          }
+          # Toggle notification center using file
+          TOGGLE_FILE="/tmp/quickshell-toggle-cmd"
+          touch "$TOGGLE_FILE"
+          echo "toggle-$(date +%s%N)" > "$TOGGLE_FILE"
         ''}";
         tooltip = true;
       };
