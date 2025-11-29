@@ -35,11 +35,11 @@ let
       "    readonly property int padding      : 14"
       "    readonly property int spacing      : 10"
       ""
-      "    readonly property font font : Qt.font({"
-      "        family: \"FiraCode Nerd Font Mono\","
-      "        pixelSize: 14,"
-      "        weight: Font.Medium"
-      "    })"
+      "    readonly property font font        : Qt.font("
+      "        \"JetBrains Nerd Font Mono\","
+      "        14,"
+      "        Font.Medium"
+      "    )"
       "}"
     ]
   );
