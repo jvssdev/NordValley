@@ -62,9 +62,9 @@ in
                 if (proc.exitCode === 0) {
                     var content = proc.stdout.trim()
                     if (content && content !== lastToggle) {
-                        console.log("Toggle received: " + content)
+                        console.log("Toggle received " + content)
                         notificationCenter.visible = !notificationCenter.visible
-                        console.log("Notification center now: " + (notificationCenter.visible ? "visible" : "hidden"))
+                        console.log("Notification center now " + (notificationCenter.visible ? "visible" : "hidden"))
                         lastToggle = content
                     }
                 }
@@ -73,8 +73,8 @@ in
         
         Component.onCompleted: {
             console.log("Quickshell Notification Center Started")
-            console.log("Toggle file: /tmp/quickshell-toggle-cmd")
-            console.log("Status file: /tmp/quickshell-notification-status.json")
+            console.log("Toggle file /tmp/quickshell-toggle-cmd")
+            console.log("Status file /tmp/quickshell-notification-status.json")
             
             // Initialize files
             Process.exec("touch", ["/tmp/quickshell-toggle-cmd"])
@@ -145,17 +145,27 @@ in
             var count = getUnreadCount()
             var iconName = root.dndEnabled ? "dnd" : (count > 0 ? "notification" : "none")
             
-            var status = {
-                text: count > 0 ? String(count) : "",
-                tooltip: root.dndEnabled ? "Do Not Disturb" : 
-                         (count > 0 ? String(count) + " notification" + (count > 1 ? "s" : "") : "No notifications"),
-                class: iconName
+            var textVal = count > 0 ? String(count) : ""
+            var tooltipVal = "No notifications"
+            
+            if (root.dndEnabled) {
+                tooltipVal = "Do Not Disturb"
+            } else if (count > 0) {
+                tooltipVal = String(count) + " notification"
+                if (count > 1) {
+                    tooltipVal = tooltipVal + "s"
+                }
             }
             
-            var statusJson = JSON.stringify(status)
-            console.log("Updating status " + statusJson)
+            console.log("Updating status file")
             
-            Process.exec("sh", ["-c", "echo '" + statusJson + "' > /tmp/quickshell-notification-status.json"])
+            // Use cat with heredoc to avoid quote escaping issues  
+            var targetFile = "/tmp/quickshell-notification-status.json"
+            var cmd = "cat > " + targetFile + " << 'QSEOF'\n" +
+                     '{"text":"' + textVal + '","tooltip":"' + tooltipVal + '","class":"' + iconName + '"}\n' +
+                     "QSEOF"
+            
+            Process.exec("sh", ["-c", cmd])
         }
         
         function removeNotification(id) {
