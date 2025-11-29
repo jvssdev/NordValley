@@ -259,6 +259,11 @@
           language-servers = [ "basedpyright" ];
           auto-format = true;
         }
+        {
+          name = "qml";
+          language-servers = [ "qmlls" ];
+          auto-format = true;
+        }
       ];
 
       language-server = {
@@ -268,6 +273,9 @@
             "--dark-mode"
             "--enable-emoji"
           ];
+        };
+        qmlls = {
+          command = "${pkgs.qt6.qtdeclarative}/bin/qmlls";
         };
       };
     };
@@ -299,5 +307,6 @@
     nodePackages.prettier
     biome
     mpls
+    kdePackages.qtdeclarative
   ];
 }
