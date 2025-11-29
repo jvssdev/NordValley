@@ -1,6 +1,5 @@
 import QtQuick
 import Quickshell
-import "."
 
 Rectangle {
     color: Theme.bg

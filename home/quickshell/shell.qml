@@ -1,8 +1,6 @@
 import Quickshell
 import Quickshell.Wayland
-import Quickshell.Io
 import QtQuick
-import "."
 
 ShellRoot {
     NotificationService {}
@@ -23,11 +21,20 @@ ShellRoot {
         }
     }
 
-    File {
-        path: "/tmp/quickshell-toggle-cmd"
-        onContentChanged: {
-            notificationCenter.visible = !notificationCenter.visible
-            content = ""
+    Timer {
+        interval: 100
+        running: true
+        repeat: true
+        
+        property string lastContent: ""
+        
+        onTriggered: {
+            var result = Process.exec("cat", ["/tmp/quickshell-toggle-cmd"])
+            if (result.exitCode === 0 && result.stdout !== lastContent && result.stdout !== "") {
+                notificationCenter.visible = !notificationCenter.visible
+                lastContent = result.stdout
+                Process.exec("sh", ["-c", "echo '' > /tmp/quickshell-toggle-cmd"])
+            }
         }
     }
 
