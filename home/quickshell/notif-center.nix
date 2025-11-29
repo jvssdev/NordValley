@@ -106,9 +106,9 @@ in
             
             onNotification: function(notification) {
                 console.log("New Notification")
-                console.log("App: " + notification.appName)
-                console.log("Summary: " + notification.summary)
-                console.log("Body: " + notification.body)
+                console.log("App " + notification.appName)
+                console.log("Summary " + notification.summary)
+                console.log("Body " + notification.body)
                 
                 var notif = {
                     id: notification.id,
@@ -126,13 +126,13 @@ in
                     root.notifications.pop()
                 }
                 
-                console.log("Total notifications: " + root.notifications.length)
+                console.log("Total notifications " + root.notifications.length)
                 
                 root.updateStatusFile()
             }
             
             onNotificationClosed: function(id, reason) {
-                console.log("Notification closed: " + id + " reason: " + reason)
+                console.log("Notification closed " + id + " reason " + reason)
                 root.removeNotification(id)
             }
         }
@@ -153,7 +153,7 @@ in
             }
             
             var statusJson = JSON.stringify(status)
-            console.log("Updating status: " + statusJson)
+            console.log("Updating status " + statusJson)
             
             Process.exec("sh", ["-c", "echo '" + statusJson + "' > /tmp/quickshell-notification-status.json"])
         }
@@ -162,7 +162,7 @@ in
             var originalLength = root.notifications.length
             root.notifications = root.notifications.filter(function(n) { return n.id !== id })
             if (root.notifications.length !== originalLength) {
-                console.log("Removed notification: " + id)
+                console.log("Removed notification " + id)
                 root.updateStatusFile()
             }
         }
@@ -175,7 +175,7 @@ in
         
         function toggleDND() {
             root.dndEnabled = !root.dndEnabled
-            console.log("DND: " + (root.dndEnabled ? "ON" : "OFF"))
+            console.log("DND " + (root.dndEnabled ? "ON" : "OFF"))
             root.updateStatusFile()
         }
         
