@@ -14,9 +14,9 @@ Singleton {
         onNotification: function(n) {
             root.notifications.unshift({
                 id: n.id,
-                appName: n.appName || "Unknown",
                 summary: n.summary || "Notification",
                 body: n.body || "",
+                appName: n.appName || "Unknown",
                 time: new Date()
             })
 
@@ -26,7 +26,7 @@ Singleton {
             root.updateStatusFile()
         }
 
-        onNotificationClosed: (id, reason) => root.removeNotification(id)
+        onNotificationClosed: (id) => root.removeNotification(id)
     }
 
     function removeNotification(id) {
@@ -40,19 +40,19 @@ Singleton {
     }
 
     function toggleDND() {
-        root.dndEnabled = !root.dndEnabled
+        dndEnabled = !dndEnabled
         updateStatusFile()
     }
 
     function updateStatusFile() {
-        var count = root.notifications.length
+        var count = notifications.length
         var text = count > 0 ? String(count) : ""
-        var tooltip = root.dndEnabled ? "Do Not Disturb" :
+        var tooltip = dndEnabled ? "Do Not Disturb" :
                       count === 0 ? "No notifications" :
                       count === 1 ? "1 notification" : count + " notifications"
-        var cls = root.dndEnabled ? "dnd" : count > 0 ? "notification" : "none"
+        var cls = dndEnabled ? "dnd" : count > 0 ? "notification" : "none"
 
-        Process.exec("qs-write-status", [text, tooltip, cls])
+        Process.execute("qs-write-status", [text, tooltip, cls])
     }
 
     Component.onCompleted: updateStatusFile()

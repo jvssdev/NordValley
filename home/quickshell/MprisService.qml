@@ -8,13 +8,14 @@ Singleton {
 
     Mpris {
         onPlayersChanged: {
+            activePlayer = null
             for (var p of players) {
                 if (p.playbackState === MprisPlaybackState.Playing) {
-                    root.activePlayer = p
+                    activePlayer = p
                     return
                 }
             }
-            root.activePlayer = players[0] || null
+            if (players.length > 0) activePlayer = players[0]
         }
     }
 

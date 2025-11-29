@@ -1,48 +1,45 @@
 import QtQuick
 import Quickshell
+import qs.Theme
 
 Rectangle {
-    id: root
-    color: "#@base00@"
-    radius: 10
+    color: Theme.bg
+    radius: Theme.radius
 
-    border {
-        width: 2
-        color: "#@base0D@"
-    }
+    border.width: Theme.borderWidth
+    border.color: Theme.blue
 
     Column {
         anchors.fill: parent
-        anchors.margins: 10
-        spacing: 10
+        anchors.margins: Theme.padding
+        spacing: Theme.spacing
 
-        // Header
         Row {
             width: parent.width
-            height: 40
-            spacing: 10
+            height: 44
+            spacing: Theme.spacing
 
             Text {
                 text: "Notifications"
-                color: "#@base05@"
+                color: Theme.fg
+                font: Theme.font
+                font.pixelSize: 17
                 font.bold: true
-                font.pixelSize: 16
                 verticalAlignment: Text.AlignVCenter
                 height: parent.height
             }
 
-            Item { width: parent.width - 140; height: 1 }
+            Item { width: 1; height: 1 }
 
-            // DND Toggle
             Rectangle {
-                width: 40; height: 30
-                color: NotificationService.dndEnabled ? "#@base08@" : "#@base02@"
-                radius: 5
+                width: 44; height: 32
+                color: NotificationService.dndEnabled ? Theme.red : Theme.bgLighter
+                radius: 8
 
                 Text {
                     anchors.centerIn: parent
                     text: NotificationService.dndEnabled ? "🔕" : "🔔"
-                    font.pixelSize: 16
+                    font.pixelSize: 18
                 }
 
                 MouseArea {
@@ -52,17 +49,16 @@ Rectangle {
                 }
             }
 
-            // Clear All
             Rectangle {
-                width: 80; height: 30
-                color: "#@base02@"
-                radius: 5
+                width: 90; height: 32
+                color: Theme.bgLighter
+                radius: 8
 
                 Text {
                     anchors.centerIn: parent
                     text: "Clear All"
-                    color: "#@base05@"
-                    font.pixelSize: 12
+                    color: Theme.fg
+                    font: Theme.font
                 }
 
                 MouseArea {
@@ -73,43 +69,42 @@ Rectangle {
             }
         }
 
-        // Notifications List
         Rectangle {
             width: parent.width
-            height: parent.height - 50
+            height: parent.height - 60
             color: "transparent"
 
             ListView {
-                id: notifList
                 anchors.fill: parent
                 spacing: 10
                 clip: true
                 model: NotificationService.notifications
 
                 delegate: Rectangle {
-                    width: notifList.width
-                    height: 80
-                    color: "#@base01@"
-                    radius: 8
+                    width: ListView.view.width
+                    height: 86
+                    color: Theme.bgAlt
+                    radius: 10
 
                     Column {
                         anchors.fill: parent
-                        anchors.margins: 10
-                        spacing: 5
+                        anchors.margins: Theme.padding
+                        spacing: 6
 
                         Text {
                             text: modelData.summary
-                            color: "#@base05@"
+                            color: Theme.fg
+                            font: Theme.font
                             font.bold: true
-                            font.pixelSize: 13
+                            font.pixelSize: 14
                             elide: Text.ElideRight
                             width: parent.width
                         }
 
                         Text {
                             text: modelData.body || ""
-                            color: "#@base04@"
-                            font.pixelSize: 11
+                            color: Theme.fgMuted
+                            font: Theme.font
                             wrapMode: Text.WordWrap
                             maximumLineCount: 2
                             elide: Text.ElideRight
@@ -118,8 +113,8 @@ Rectangle {
 
                         Text {
                             text: Qt.formatTime(modelData.time, "hh:mm")
-                            color: "#@base03@"
-                            font.pixelSize: 10
+                            color: Theme.fgSubtle
+                            font.pixelSize: 11
                         }
                     }
                 }

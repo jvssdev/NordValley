@@ -2,6 +2,7 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io
 import QtQuick
+import qs.Theme
 
 ShellRoot {
     NotificationService {}
@@ -14,26 +15,21 @@ ShellRoot {
 
         PanelWindow {
             anchors { top: true; right: true; margins: 10 }
-            width: 400
-            height: 600
-            color: "#@base00@"
+            width: 420
+            height: 650
+            color: Theme.bg
 
             NotificationCenter { anchors.fill: parent }
         }
     }
 
-    // Reactive toggle using file watcher – instant & zero polling-free
     File {
-        id: toggleFile
         path: "/tmp/quickshell-toggle-cmd"
         onContentChanged: {
             notificationCenter.visible = !notificationCenter.visible
-            content = "" // consume the event (prevents double-toggle on rapid key presses)
+            content = ""
         }
     }
 
-    Component.onCompleted: {
-        toggleFile.content = "" // ensure file exists and is empty on start
-        NotificationService.updateStatusFile()
-    }
+    Component.onCompleted: NotificationService.updateStatusFile()
 }
