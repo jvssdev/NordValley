@@ -72,7 +72,7 @@ in
         }
         
         Component.onCompleted: {
-            console.log("=== Quickshell Notification Center Started ===")
+            console.log("Quickshell Notification Center Started")
             console.log("Toggle file: /tmp/quickshell-toggle-cmd")
             console.log("Status file: /tmp/quickshell-notification-status.json")
             
@@ -105,7 +105,7 @@ in
             id: notifServer
             
             onNotification: function(notification) {
-                console.log("=== New Notification ===")
+                console.log("New Notification")
                 console.log("App:", notification.appName)
                 console.log("Summary:", notification.summary)
                 console.log("Body:", notification.body)
@@ -180,7 +180,7 @@ in
         }
         
         Component.onCompleted: {
-            console.log("=== NotificationService Initialized ===")
+            console.log("NotificationService Initialized")
             updateStatusFile()
         }
     }
@@ -390,15 +390,15 @@ in
 
     (pkgs.writeShellScriptBin "quickshell-notif-test" ''
       #!/usr/bin/env bash
-      echo "=== Quickshell Notification Test ==="
+      echo "Quickshell Notification Test"
       echo ""
       
       echo "1. Quickshell process:"
-      pgrep -a quickshell || echo "  ❌ NOT RUNNING"
+      pgrep -a quickshell || echo "  NOT RUNNING"
       echo ""
       
       echo "2. Files:"
-      ls -lh /tmp/quickshell-* 2>/dev/null || echo "  ❌ No files found"
+      ls -lh /tmp/quickshell-* 2>/dev/null || echo "  No files found"
       echo ""
       
       echo "3. Current status:"
@@ -421,7 +421,7 @@ in
 
     (pkgs.writeShellScriptBin "quickshell-debug" ''
       #!/usr/bin/env bash
-      echo "=== Quickshell Debug Info ==="
+      echo "Quickshell Debug Info"
       echo ""
       echo "Quickshell logs:"
       journalctl --user -u quickshell -n 50 --no-pager
