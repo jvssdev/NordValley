@@ -249,8 +249,10 @@ in
         id: root
         color: "#${palette.base00}"
         radius: 10
-        border.width: 2
-        border.color: "#${palette.base0D}"
+        border {
+            width: 2
+            color: "#${palette.base0D}"
+        }
         
         Column {
             anchors.fill: parent
