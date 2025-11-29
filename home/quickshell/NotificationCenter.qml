@@ -22,7 +22,7 @@ Rectangle {
             Text {
                 text: "Notifications"
                 color: Theme.fg
-                font: Theme.font
+                font.family: Theme.fontFamily
                 font.pixelSize: 17
                 font.bold: true
                 verticalAlignment: Text.AlignVCenter
@@ -58,7 +58,8 @@ Rectangle {
                     anchors.centerIn: parent
                     text: "Clear All"
                     color: Theme.fg
-                    font: Theme.font
+                    font.family: Theme.fontFamily
+                    font.pixelSize: Theme.fontSize
                 }
 
                 MouseArea {
@@ -94,7 +95,7 @@ Rectangle {
                         Text {
                             text: modelData.summary
                             color: Theme.fg
-                            font: Theme.font
+                            font.family: Theme.fontFamily
                             font.bold: true
                             font.pixelSize: 14
                             elide: Text.ElideRight
@@ -104,7 +105,8 @@ Rectangle {
                         Text {
                             text: modelData.body || ""
                             color: Theme.fgMuted
-                            font: Theme.font
+                            font.family: Theme.fontFamily
+                            font.pixelSize: Theme.fontSize
                             wrapMode: Text.WordWrap
                             maximumLineCount: 2
                             elide: Text.ElideRight
@@ -114,6 +116,7 @@ Rectangle {
                         Text {
                             text: Qt.formatTime(modelData.time, "hh:mm")
                             color: Theme.fgSubtle
+                            font.family: Theme.fontFamily
                             font.pixelSize: 11
                         }
                     }

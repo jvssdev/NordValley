@@ -11,7 +11,6 @@ let
   themeQml = pkgs.writeText "Theme.qml" ''
     pragma Singleton
     import QtQuick
-    import Quickshell
 
     QtObject {
         readonly property string bg         : "#${p.base00}"
@@ -35,10 +34,8 @@ let
         readonly property int padding      : 14
         readonly property int spacing      : 10
 
-        readonly property font font        : Qt.font({
-            family: "JetBrains Nerd Font Mono",
-            pixelSize: 14
-        })
+        readonly property string fontFamily : "JetBrains Nerd Font Mono"
+        readonly property int fontSize      : 14
     }
   '';
 
