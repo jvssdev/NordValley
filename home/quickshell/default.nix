@@ -534,8 +534,8 @@ in
   home.packages = [
     (pkgs.writeShellScriptBin "quickshell-notif-toggle" ''
       #!/usr/bin/env bash
-      echo "toggle" | ${pkgs.netcat}/bin/nc -U /tmp/quickshell-notif.sock 2>/dev/null || {
-        echo "Error: Could not connect to quickshell socket"
+      echo "toggle" > /tmp/quickshell-toggle 2>/dev/null || {
+        echo "Error: Could not write to toggle pipe"
         echo "Is quickshell running?"
         exit 1
       }
@@ -565,10 +565,20 @@ in
       echo "=== Quickshell Notification Center Debug ==="
       echo ""
       echo "1. Checking if quickshell is running:"
-      pgrep -a quickshell || echo "  ❌ Quickshell is NOT running"
+      if pgrep -a quickshell; then
+        echo "  ✅ Quickshell is running"
+      else
+        echo "  ❌ Quickshell is NOT running"
+        echo "  Start it with: quickshell &"
+      fi
       echo ""
-      echo "2. Checking socket file:"
-      [ -S /tmp/quickshell-notif.sock ] && echo "  ✅ Socket exists" || echo "  ❌ Socket does not exist"
+      echo "2. Checking toggle pipe:"
+      if [ -p /tmp/quickshell-toggle ]; then
+        echo "  ✅ Toggle pipe exists"
+      else
+        echo "  ❌ Toggle pipe does not exist"
+        echo "  Quickshell should create it on startup"
+      fi
       echo ""
       echo "3. Checking status file:"
       if [ -f /tmp/quickshell-notification-status.json ]; then
@@ -580,10 +590,20 @@ in
       fi
       echo ""
       echo "4. Testing toggle command:"
-      quickshell-notif-toggle && echo "  ✅ Toggle successful" || echo "  ❌ Toggle failed"
+      if quickshell-notif-toggle; then
+        echo "  ✅ Toggle command sent"
+        sleep 1
+        echo "  Check if the notification center appeared!"
+      else
+        echo "  ❌ Toggle failed"
+      fi
       echo ""
       echo "5. Sending test notification:"
       ${pkgs.libnotify}/bin/notify-send "Test" "This is a test notification"
+      echo "  ✅ Test notification sent"
+      echo ""
+      echo "=== Quickshell logs (last 10 lines) ==="
+      journalctl --user -n 10 | grep -i quickshell || echo "No quickshell logs found"
     '')
   ];
 }
