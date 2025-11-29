@@ -1,41 +1,48 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
-  p = config.colorScheme.palette
+  p = config.colorScheme.palette;
 
-  themeQml = pkgs.writeText "Theme.qml" ''
-    pragma Singleton
-    import QtQuick
-
-    QtObject {
-        readonly property color bg         : "#${p.base00}"
-        readonly property color bgAlt      : "#${p.base01}"
-        readonly property color bgLighter  : "#${p.base02}"
-
-        readonly property color fg         : "#${p.base05}"
-        readonly property color fgMuted    : "#${p.base04}"
-        readonly property color fgSubtle   : "#${p.base03}"
-
-        readonly property color red        : "#${p.base08}"
-        readonly property color green      : "#${p.base0B}"
-        readonly property color yellow     : "#${p.base0A}"
-        readonly property color blue       : "#${p.base0D}"
-        readonly property color magenta    : "#${p.base0E}"
-        readonly property color cyan       : "#${p.base0C}"
-        readonly property color orange     : "#${p.base09}"
-
-        readonly property int radius       : 12
-        readonly property int borderWidth  : 2
-        readonly property int padding      : 14
-        readonly property int spacing      : 10
-
-        readonly property font font : Qt.font({
-            family: "FiraCode Nerd Font Mono",
-            pixelSize: 14,
-            weight: Font.Medium
-        })
-    }
-  ''
+  themeQml = pkgs.writeText "Theme.qml" (
+    builtins.concatStringsSep "\n" [
+      "pragma Singleton"
+      "import QtQuick"
+      ""
+      "QtObject {"
+      "    readonly property color bg         : \"#${p.base00}\""
+      "    readonly property color bgAlt      : \"#${p.base01}\""
+      "    readonly property color bgLighter  : \"#${p.base02}\""
+      ""
+      "    readonly property color fg         : \"#${p.base05}\""
+      "    readonly property color fgMuted    : \"#${p.base04}\""
+      "    readonly property color fgSubtle   : \"#${p.base03}\""
+      ""
+      "    readonly property color red        : \"#${p.base08}\""
+      "    readonly property green      : \"#${p.base0B}\""
+      "    readonly property yellow     : \"#${p.base0A}\""
+      "    readonly property blue       : \"#${p.base0D}\""
+      "    readonly property magenta    : \"#${p.base0E}\""
+      "    readonly property cyan       : \"#${p.base0C}\""
+      "    readonly property orange     : \"#${p.base09}\""
+      ""
+      "    readonly property int radius       : 12"
+      "    readonly property int borderWidth  : 2"
+      "    readonly property int padding      : 14"
+      "    readonly property int spacing      : 10"
+      ""
+      "    readonly property font font : Qt.font({"
+      "        family: \"FiraCode Nerd Font Mono\","
+      "        pixelSize: 14,"
+      "        weight: Font.Medium"
+      "    })"
+      "}"
+    ]
+  );
 
 in
 {
@@ -47,10 +54,11 @@ in
 
   xdg.configFile."quickshell/Theme.qml".source = themeQml;
 
-  xdg.configFile."quickshell/shell.qml".source              = ./shell.qml;
+  xdg.configFile."quickshell/shell.qml".source = ./shell.qml;
   xdg.configFile."quickshell/NotificationCenter.qml".source = ./NotificationCenter.qml;
-  xdg.configFile."quickshell/NotificationService.qml".text  = builtins.readFile ./NotificationService.qml;
-  xdg.configFile."quickshell/MprisService.qml".text         = builtins.readFile ./MprisService.qml;
+  xdg.configFile."quickshell/NotificationService.qml".text =
+    builtins.readFile ./NotificationService.qml;
+  xdg.configFile."quickshell/MprisService.qml".text = builtins.readFile ./MprisService.qml;
 
   home.packages = with pkgs; [
     (writeShellScriptBin "qs-write-status" ''
