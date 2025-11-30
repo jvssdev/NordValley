@@ -200,6 +200,10 @@ in
         GreeterEnvironment = "QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard";
         InputMethod = "qtvirtualkeyboard";
       };
+      Theme = {
+        CursorTheme = "Bibata-Modern-Ice";
+      };
+      General.GreeterEnvironment = lib.mkForce "XCURSOR_THEME=Bibata-Modern-Ice,XCURSOR_SIZE=24,QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard";
     };
   };
 
