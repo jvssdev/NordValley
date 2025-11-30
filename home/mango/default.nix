@@ -114,8 +114,8 @@ in
       bind=SUPER,x,spawn,wlogout
       bind=SUPER,p,spawn,grim -g "$(slurp)" - | wl-copy
 
-      bind=SUPER,v,spawn,sh -c "cliphist list | tac | fuzzel --dmenu --prompt '󱉥  ' -l 25 -w 70 --lines 25 --width 70 | cliphist decode | wl-copy"
-      bind=SUPER+SHIFT,v,spawn,sh -c "cliphist wipe && notify-send '󰩺 Clipboard cleaned'"
+      bind=SUPER,v,spawn,fuzzel-clipboard
+      bind=SUPER+SHIFT,v,spawn,fuzzel-clipboard-clear
 
       bind=SUPER,q,killclient
       bind=SUPER,space,togglefloating
@@ -138,14 +138,12 @@ in
       bind=SUPER+ALT,j,resizewin,0,+50
 
       bind=SUPER,m,setlayout,tile
-      # bind=SUPER,v,setlayout,vertical_grid
       bind=SUPER,c,setlayout,spiral
       bind=SUPER,s,setlayout,scroller
       bind=SUPER,n,switch_layout
       bind=SUPER,g,togglegaps
       bind=SUPER,Tab,toggleoverview
 
-      # Workspaces
       bind=SUPER,1,comboview,1
       bind=SUPER,2,comboview,2
       bind=SUPER,3,comboview,3
@@ -228,5 +226,30 @@ in
   home.packages = with pkgs; [
     wl-clip-persist
     cliphist
+
+    (writeShellApplication {
+      name = "fuzzel-clipboard";
+      runtimeInputs = [
+        cliphist
+        fuzzel
+        wl-clipboard
+      ];
+      text = ''
+        cliphist list | tac | fuzzel --dmenu \
+          --prompt "󱉥  " \
+          -l 25 -w 70 \
+          --border-width=2 --border-radius=10 \
+          | cliphist decode | wl-copy
+      '';
+    })
+
+    (writeShellApplication {
+      name = "fuzzel-clipboard-clear";
+      runtimeInputs = [
+        cliphist
+        libnotify
+      ];
+      text = ''cliphist wipe && notify-send "󰩺 Clipboard cleaned" -t 1500'';
+    })
   ];
 }
