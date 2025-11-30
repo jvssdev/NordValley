@@ -190,7 +190,7 @@ in
 
   services.displayManager.sddm = {
     enable = true;
-    package = lib.mkForce pkgs.kdePackages.sddm;
+    package = pkgs.kdePackages.sddm;
     theme = silentTheme.pname;
     extraPackages = silentTheme.propagatedBuildInputs;
 
@@ -205,7 +205,7 @@ in
     };
 
     wayland = {
-      enable = true;
+      enable = false;
     };
   };
 
