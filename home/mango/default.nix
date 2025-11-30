@@ -41,20 +41,18 @@ in
 
       ${pkgs.wpaperd}/bin/wpaperd &
 
-      # ${pkgs.swaynotificationcenter}/bin/swaync &
-
       ${pkgs.quickshell}/bin/quickshell &
-
       ${pkgs.waybar}/bin/waybar &
-
       ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
-
       ${pkgs.blueman}/bin/blueman-applet &
+
+      wl-paste --type text   --watch cliphist store & 
+      wl-paste --type image  --watch cliphist store & 
+      wl-clip-persist --clipboard both &
     '';
 
     settings = ''
       monitorrule=eDP-1,0.55,1,tile,0,1,0,0,1920,1080,60
-
       xkb_rules_layout=br
 
       gappih=6
@@ -74,19 +72,16 @@ in
       focus_cross_monitor=1
       new_is_master=0
       default_mfact=0.55
-
       repeat_rate=50
       repeat_delay=300
       focus_follows_cursor=1
       warpcursor=1
       cursor_hide_timeout=5000
-
       trackpad_natural_scrolling=0
 
       animations=0
       animation_type_open=zoom
       animation_type_close=zoom
-
       blur=0
       shadows=1
       shadow_only_floating=1
@@ -115,44 +110,43 @@ in
       bind=SUPER,b,spawn,helium
       bind=SUPER,e,spawn,thunar
       bind=SUPER,x,spawn,wlogout
-
       bind=SUPER,p,spawn,grim -g "$(slurp)" - | wl-copy
+
+      # Clipboard history
+      bind=SUPER,v,spawn,cliphist list | tac | fuzzel --dmenu --prompt "󱉥  " | cliphist decode | wl-copy
+
+      # Clean history
+      bind=SUPER+SHIFT,v,spawn,cliphist wipe && notify-send "󰩺 Cleaned Clipboard"
 
       bind=SUPER,q,killclient
       bind=SUPER,space,togglefloating
       bind=SUPER,f,togglefullscreen
       bind=SUPER+SHIFT,f,togglefakefullscreen
-
       bind=SUPER,j,focusstack,next
       bind=SUPER,k,focusstack,prev
       bind=SUPER,h,focusdir,left
       bind=SUPER,l,focusdir,right
-
       bind=SUPER+SHIFT,j,exchange_client,down
       bind=SUPER+SHIFT,k,exchange_client,up
       bind=SUPER+SHIFT,h,exchange_client,left
       bind=SUPER+SHIFT,l,exchange_client,right
-
       bind=SUPER,i,incnmaster,+1
       bind=SUPER,d,incnmaster,-1
       bind=SUPER,Return,zoom
-
       bind=SUPER+ALT,h,resizewin,-50,0
       bind=SUPER+ALT,l,resizewin,+50,0
       bind=SUPER+ALT,k,resizewin,0,-50
       bind=SUPER+ALT,j,resizewin,0,+50
 
       bind=SUPER,m,setlayout,tile
-      bind=SUPER,v,setlayout,vertical_grid
+      # bind=SUPER,v,setlayout,vertical_grid
       bind=SUPER,c,setlayout,spiral
       bind=SUPER,s,setlayout,scroller
       bind=SUPER,n,switch_layout
-
       bind=SUPER,g,togglegaps
-
       bind=SUPER,Tab,toggleoverview
 
-      # Workspaces (Tags)
+      # Workspaces
       bind=SUPER,1,comboview,1
       bind=SUPER,2,comboview,2
       bind=SUPER,3,comboview,3

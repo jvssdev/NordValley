@@ -11,6 +11,13 @@ in
           font = lib.mkForce "JetBrainsMono Nerd Font:size=10";
           icon-theme = "Colloid-Dark";
           dpi-aware = "no";
+          lines = 25;
+          width = 70;
+          prompt = ''"󰍉  "'';
+        };
+        dmenu = {
+          lines = 25;
+          width = 70;
         };
         colors = {
           background = "${c.base00}f0";
