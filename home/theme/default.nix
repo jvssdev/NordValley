@@ -41,13 +41,13 @@ in
   gtk = {
     enable = true;
     theme = {
-      package = pkgs.colloid-gtk-theme.override {
-        tweaks = [
-          "black"
-          "rimless"
-        ];
-      };
-      name = "Colloid-Dark";
+      package = (
+        pkgs.colloid-gtk-theme.override {
+          tweaks = [ "nord" ];
+          colorVariants = [ "dark" ];
+        }
+      );
+      name = "Colloid-Dark-Nord";
     };
     iconTheme = {
       name = "Colloid-Dark";
