@@ -212,4 +212,8 @@ in
     XCURSOR_SIZE = "24";
     QT_QPA_PLATFORMTHEME = "qt6ct";
   };
+
+  systemd.tmpfiles.rules = [
+    "L+ /usr/share/icons/Bibata-Modern-Ice - - - - ${pkgs.bibata-cursors}/share/icons/Bibata-Modern-Ice"
+  ];
 }
