@@ -9,7 +9,6 @@
 let
   colors = nix-colors.colorSchemes.nord.palette;
   wallpaper = ../Wallpapers/nord_valley.png;
-  cursor-theme = pkgs.bibata-cursors;
 
   background-derivation = pkgs.runCommand "bg.jpg" { } ''
     cp ${wallpaper} $out
@@ -20,7 +19,6 @@ let
     theme-overrides = {
       "General" = {
         enable-animations = true;
-        cursor-theme = "Bibata-Modern-Ice";
       };
       "LoginScreen" = {
         background = "${background-derivation.name}";
@@ -176,9 +174,9 @@ in
 {
 
   environment.systemPackages = with pkgs; [
+    bibata-cursors
     silentTheme
     silentTheme.test
-    bibata-cursors
     kdePackages.qt6ct
     libsForQt5.qtstyleplugin-kvantum
     kdePackages.qtstyleplugin-kvantum
@@ -186,39 +184,26 @@ in
     qt6.qtwayland
   ];
 
-  systemd.tmpfiles.rules = [
-    "L+ /usr/share/icons/Bibata-Modern-Ice - - - - ${cursor-theme}/share/icons/Bibata-Modern-Ice"
-    "d /run/sddm 0755 sddm sddm -"
-    "L+ /run/sddm/.icons/default - - - - ${cursor-theme}/share/icons/Bibata-Modern-Ice"
-  ];
-
-  environment.etc."icons/default/index.theme".text = ''
-    [Icon Theme]
-    Name=Default
-    Comment=Default Cursor Theme
-    Inherits=Bibata-Modern-Ice
-  '';
-
   qt.enable = true;
 
   services.displayManager.sddm = {
     enable = true;
-    wayland.enable = true;
-    package = pkgs.kdePackages.sddm;
-
+    package = lib.mkForce pkgs.kdePackages.sddm;
     theme = silentTheme.pname;
-
-    extraPackages = silentTheme.propagatedBuildInputs ++ [ cursor-theme ];
+    extraPackages = silentTheme.propagatedBuildInputs;
 
     settings = {
       General = {
-        GreeterEnvironment = "QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard,XCURSOR_THEME=Bibata-Modern-Ice,XCURSOR_SIZE=24";
+        GreeterEnvironment = "QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard";
         InputMethod = "qtvirtualkeyboard";
       };
       Theme = {
         CursorTheme = "Bibata-Modern-Ice";
-        CursorSize = 24;
       };
+    };
+
+    wayland = {
+      enable = true;
     };
   };
 
