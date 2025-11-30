@@ -11,11 +11,10 @@ in
 {
   xdg.configFile."quickshell/shell.qml".text = ''
     import Quickshell
-    import Quickshell.Wayland
     import QtQuick
 
-    ShellRoot {
-        // Propriedades de tema inline
+    Scope {
+        // Propriedades de tema
         readonly property string themeBg: "#${p.base00}"
         readonly property string themeBgAlt: "#${p.base01}"
         readonly property string themeBgLighter: "#${p.base02}"
@@ -36,33 +35,29 @@ in
         readonly property string themeFontFamily: "JetBrains Nerd Font Mono"
         readonly property int themeFontSize: 14
 
-        WaylandWindow {
-            id: notificationWindow
-            visible: false
+        PanelWindow {
+            anchors {
+                top: true
+                right: true
+                margins: 10
+            }
+            width: 420
+            height: 650
 
-            PanelWindow {
-                anchors {
-                    top: true
-                    right: true
-                    margins: 10
-                }
-                width: 420
-                height: 650
+            Rectangle {
+                anchors.fill: parent
+                color: themeBg
+                radius: themeRadius
+                
+                border.width: themeBorderWidth
+                border.color: themeBlue
 
-                Rectangle {
-                    anchors.fill: parent
-                    color: themeBg
-                    radius: themeRadius
-                    border.width: themeBorderWidth
-                    border.color: themeBlue
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "Notification Center"
-                        color: themeFg
-                        font.family: themeFontFamily
-                        font.pixelSize: 18
-                    }
+                Text {
+                    anchors.centerIn: parent
+                    text: "Quickshell Notification Center"
+                    color: themeFg
+                    font.family: themeFontFamily
+                    font.pixelSize: 18
                 }
             }
         }
@@ -83,7 +78,7 @@ in
 
     (writeShellScriptBin "quickshell-notif-toggle" ''
       #!/usr/bin/env bash
-      notify-send "Quickshell" "Notification panel toggle"
+      notify-send "Quickshell" "Notification panel"
     '')
   ];
 }
