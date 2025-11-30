@@ -73,7 +73,7 @@
       system = "x86_64-linux";
 
       pkgs = import nixpkgs {
-        system = "x86_64-linux";
+        localSystem = system;
         config.allowUnfree = true;
         overlays = [
           nur.overlays.default
