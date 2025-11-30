@@ -186,11 +186,18 @@ in
     qt6.qtwayland
   ];
 
-  environment.etc."X11/cursors".source = "${cursor-theme}/share/icons";
-
   systemd.tmpfiles.rules = [
     "L+ /usr/share/icons/Bibata-Modern-Ice - - - - ${cursor-theme}/share/icons/Bibata-Modern-Ice"
+    "d /run/sddm 0755 sddm sddm -"
+    "L+ /run/sddm/.icons/default - - - - ${cursor-theme}/share/icons/Bibata-Modern-Ice"
   ];
+
+  environment.etc."icons/default/index.theme".text = ''
+    [Icon Theme]
+    Name=Default
+    Comment=Default Cursor Theme
+    Inherits=Bibata-Modern-Ice
+  '';
 
   qt.enable = true;
 
@@ -201,11 +208,11 @@ in
 
     theme = silentTheme.pname;
 
-    extraPackages = silentTheme.propagatedBuildInputs;
+    extraPackages = silentTheme.propagatedBuildInputs ++ [ cursor-theme ];
 
     settings = {
       General = {
-        GreeterEnvironment = "QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard";
+        GreeterEnvironment = "QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard,XCURSOR_THEME=Bibata-Modern-Ice,XCURSOR_SIZE=24";
         InputMethod = "qtvirtualkeyboard";
       };
       Theme = {
