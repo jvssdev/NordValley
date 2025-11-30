@@ -9,6 +9,7 @@
 let
   colors = nix-colors.colorSchemes.nord.palette;
   wallpaper = ../Wallpapers/nord_valley.png;
+  cursor-theme = pkgs.bibata-cursors;
 
   background-derivation = pkgs.runCommand "bg.jpg" { } ''
     cp ${wallpaper} $out
@@ -19,6 +20,7 @@ let
     theme-overrides = {
       "General" = {
         enable-animations = true;
+        cursor-theme = "Bibata-Modern-Ice";
       };
       "LoginScreen" = {
         background = "${background-derivation.name}";
@@ -184,6 +186,12 @@ in
     qt6.qtwayland
   ];
 
+  environment.etc."X11/cursors".source = "${cursor-theme}/share/icons";
+
+  systemd.tmpfiles.rules = [
+    "L+ /usr/share/icons/Bibata-Modern-Ice - - - - ${cursor-theme}/share/icons/Bibata-Modern-Ice"
+  ];
+
   qt.enable = true;
 
   services.displayManager.sddm = {
@@ -202,6 +210,7 @@ in
       };
       Theme = {
         CursorTheme = "Bibata-Modern-Ice";
+        CursorSize = 24;
       };
     };
   };
