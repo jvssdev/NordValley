@@ -33,7 +33,6 @@ let
     ];
     "dwl/tags" = {
       "num-tags" = 9;
-      "hide-vacant" = true;
       expand = false;
       "disable-click" = true;
     };
@@ -64,14 +63,30 @@ in
         border-bottom: 2px solid #${colors.base02};
       }
       #tags button, #dwl-tags .tag {
-        padding: 0 0px;
-        margin: 0 2px;
+        padding: 0 8px;
+        margin: 0 4px;
         border-radius: 0px;
         color: #${colors.base05};
+        min-width: 0;
       }
-      #tags button.occupied, #dwl-tags .occupied { color: #${colors.base05}; }
-      #tags button.focused, #dwl-tags .focused { background: #${colors.base0D}; color: #${colors.base00}; }
-      #tags button.urgent, #dwl-tags .urgent { color: #${colors.base08}; }
+
+      #tags button.occupied, #dwl-tags .occupied { 
+        color: #${colors.base05}; 
+      }
+      #tags button.focused, #dwl-tags .focused { 
+        background: #${colors.base0D}; 
+        color: #${colors.base00}; 
+      }
+      #tags button.urgent, #dwl-tags .urgent { 
+        color: #${colors.base08}; 
+      }
+      #dwl-tags .tag:not(.focused):not(.occupied) {
+        min-width: 0px;
+        padding: 0 0px;
+        margin: 0 0px;
+        color: transparent;
+        background: transparent;
+      }
       #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
       #bluetooth, #network, #custom-quickshell-notification, #tray, #custom-power {
         padding: 0 10px;
@@ -93,8 +108,10 @@ in
       #custom-quickshell-notification.dnd {
         color: #${colors.base0A};
       }
-
-      #custom-power:hover { background: #${colors.base08}; color: #${colors.base07}; }
+      #custom-power:hover { 
+        background: #${colors.base08}; 
+        color: #${colors.base07}; 
+      }
     '';
     settings.mainBar = {
       layer = "top";
@@ -163,22 +180,16 @@ in
         "icon-size" = 21;
         spacing = 10;
       };
-
-      # Quickshell Notification Center integration
       "custom/quickshell-notification" = {
         format = "{icon} {}";
         return-type = "json";
         interval = 1;
         exec = "${pkgs.writeShellScript "waybar-quickshell-status" ''
           STATUS_FILE="/tmp/quickshell-notification-status.json"
-
-          # Initialize if doesn't exist
           if [ ! -f "$STATUS_FILE" ]; then
             mkdir -p /tmp
             echo '{"text":"","tooltip":"No notifications","class":"none"}' > "$STATUS_FILE"
           fi
-
-          # Read and output current status
           cat "$STATUS_FILE" 2>/dev/null || echo '{"text":"","tooltip":"Error reading status","class":"none"}'
         ''}";
         format-icons = {
@@ -187,14 +198,12 @@ in
           "dnd" = "<span foreground='#${colors.base0A}'>󰂛</span>";
         };
         on-click = "${pkgs.writeShellScript "waybar-quickshell-toggle" ''
-          # Toggle notification center using file
           TOGGLE_FILE="/tmp/quickshell-toggle-cmd"
           touch "$TOGGLE_FILE"
           echo "toggle-$(date +%s%N)" > "$TOGGLE_FILE"
         ''}";
         tooltip = true;
       };
-
       "custom/power" = {
         format = "⏻";
         tooltip = false;
