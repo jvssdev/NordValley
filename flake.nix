@@ -73,7 +73,7 @@
       system = "x86_64-linux";
 
       pkgs = import nixpkgs {
-        inherit system;
+        system = "x86_64-linux";
         config.allowUnfree = true;
         overlays = [
           nur.overlays.default
