@@ -5,7 +5,7 @@ in
 {
   home.packages = with pkgs; [
     rmpc
-    mpc-cli
+    mpc
   ];
 
   services = {
