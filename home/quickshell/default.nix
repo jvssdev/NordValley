@@ -10,6 +10,6 @@
 {
   imports = [
     ./config.nix
-    ./idle-service.nix
+    # ./idle-service.nix
   ];
 }
