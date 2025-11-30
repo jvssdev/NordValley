@@ -10,13 +10,14 @@ in
 {
   xdg.configFile."quickshell/shell.qml".text = ''
     import Quickshell
+    import Quickshell.Io
     import QtQuick
     import Quickshell.Services.Notifications
     import Quickshell.Services.Mpris
 
     ShellRoot {
       QtObject {
-        id: Theme
+        id: theme
         readonly property string bg: "#${p.base00}"
         readonly property string bgAlt: "#${p.base01}"
         readonly property string bgLighter: "#${p.base02}"
@@ -40,23 +41,38 @@ in
 
       NotificationService {}
       MprisService {}
+      IdleService {}
 
       PanelWindow {
-        anchors {
-          top: true
-          right: true
-          margins: 10
-        }
+        id: panel
+        visible: false
+        anchors.top: true
+        anchors.right: true
+        anchors.topMargin: 35
+        anchors.rightMargin: 10
         width: 420
         height: 650
-        color: Theme.bg
+        color: theme.bg
+        radius: theme.radius
+        border.width: theme.borderWidth
+        border.color: theme.blue
 
         NotificationCenter {
           anchors.fill: parent
+          theme: theme
+          panel: panel
         }
       }
 
-      Component.onCompleted: NotificationService.updateStatusFile()
+      Watcher {
+        path: "/tmp/quickshell-toggle-cmd"
+        triggers: Watcher.Created | Watcher.Modified
+        onTriggered: panel.visible = !panel.visible
+      }
+
+      Component.onCompleted: {
+        NotificationService.updateStatusFile()
+      }
     }
   '';
 
@@ -64,11 +80,6 @@ in
     (writeShellScriptBin "qs-write-status" ''
       #!/usr/bin/env bash
       printf '{"text":"%s","tooltip":"%s","class":"%s"}\n' "$1" "$2" "$3" > /tmp/quickshell-notification-status.json
-    '')
-    (writeShellScriptBin "quickshell-notif-status" ''
-      #!/usr/bin/env bash
-      file=/tmp/quickshell-notification-status.json
-      [[ -f "$file" ]] && cat "$file" || echo '{"text":"","tooltip":"No notifications","class":"none"}'
     '')
   ];
 }
