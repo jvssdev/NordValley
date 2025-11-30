@@ -5,33 +5,23 @@
   ...
 }:
 let
-  inherit (lib) concatStringsSep escapeShellArg;
-
-  wpaperd = "${pkgs.wpaperd}/bin/wpaperd";
-  waybar = "${pkgs.waybar}/bin/waybar";
-  swaync = "${pkgs.swaynotificationcenter}/bin/swaync";
-  nm-applet = "${pkgs.networkmanagerapplet}/bin/nm-applet";
-  blueman-applet = "${pkgs.blueman}/bin/blueman-applet";
-  quickshell = "${pkgs.quickshell}/bin/quickshell";
-  dbus-update = "${pkgs.dbus}/bin/dbus-update-activation-environment";
-  systemctl = "${pkgs.systemd}/bin/systemctl";
-  mate-polkit = "${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1";
-
   spawns = [
-    "${dbus-update} --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=river XCURSOR_THEME XCURSOR_SIZE"
-    "${systemctl} --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XCURSOR_THEME XCURSOR_SIZE"
+    "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=river NIXOS_OZONE_WL"
+    "${pkgs.systemd}/bin/systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
 
-    "seat seat0 xcursor-theme Bibata-Modern-Ice 24"
+    "${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 &"
+    "${pkgs.wpaperd}/bin/wpaperd &"
+    "${pkgs.waybar}/bin/waybar &"
+    "${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &"
+    "${pkgs.blueman}/bin/blueman-applet &"
+    "${pkgs.quickshell}/bin/quickshell &"
 
-    "${mate-polkit}"
-    "${wpaperd}"
-    "${swaync}"
-    "${waybar}"
-    "${nm-applet} --indicator"
-    "${blueman-applet}"
-    "${quickshell}"
+    # Clipboard history
+    "${pkgs.wl-clipboard}/bin/wl-paste --type text   --watch ${pkgs.cliphist}/bin/cliphist store &"
+    "${pkgs.wl-clipboard}/bin/wl-paste --type image  --watch ${pkgs.cliphist}/bin/cliphist store &"
+    "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard both &"
   ];
 in
 {
-  wayland.windowManager.river.settings.spawn = map escapeShellArg spawns;
+  wayland.windowManager.river.settings.spawn = spawns;
 }

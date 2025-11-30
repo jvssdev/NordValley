@@ -25,6 +25,6 @@ showIgnoredInTree: false
 # Whether to show only default ignored files in the directory tree while still respecting gitignore
 showDefaultIgnoredInTree: false
 # Previously selected files (when using the -s or --save flag previously)
-previousFiles: home/mango/default.nix,home/fuzzel/default.nix
+previousFiles: home/river/default.nix,home/river/maps.nix,home/river/rules.nix,home/river/spawn.nix
 # Excluded directories (when using the -s or --save flag previously or edited in UI)
 excludeDirs: 
