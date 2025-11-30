@@ -186,6 +186,8 @@ in
 
   qt.enable = true;
 
+  services.xserver.enable = true;
+
   services.displayManager.sddm = {
     enable = true;
     package = lib.mkForce pkgs.kdePackages.sddm;

@@ -99,13 +99,6 @@
     bibata-cursors
   ];
   services = {
-    xserver = {
-      enable = false;
-      xkb = {
-        layout = "br";
-        variant = "";
-      };
-    };
     displayManager.autoLogin = {
       enable = false;
       user = userName;
