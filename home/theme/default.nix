@@ -41,11 +41,16 @@ in
   gtk = {
     enable = true;
     theme = {
-      name = "Colloid";
-      package = pkgs.colloid-gtk-theme;
+      package = pkgs.colloid-gtk-theme.override {
+        tweaks = [
+          "black"
+          "rimless"
+        ];
+      };
+      name = "Colloid-Dark";
     };
     iconTheme = {
-      name = "Colloid";
+      name = "Colloid-Dark";
       package = pkgs.colloid-icon-theme;
     };
     cursorTheme = {
