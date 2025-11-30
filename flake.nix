@@ -93,7 +93,7 @@
     {
       # ========================= RIVER =========================
       nixosConfigurations.river = nixpkgs.lib.nixosSystem {
-        inherit system pkgs;
+        inherit pkgs;
         specialArgs =
           inputs
           // userInfo
@@ -166,7 +166,7 @@
 
       # ========================= MANGOWC =========================
       nixosConfigurations.mangowc = nixpkgs.lib.nixosSystem {
-        inherit system pkgs;
+        inherit pkgs;
         specialArgs =
           inputs
           // userInfo
@@ -247,8 +247,10 @@
       };
 
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
-        inherit system;
-        modules = [ ./hosts/iso/configuration.nix ];
+        modules = [
+          ./hosts/iso/configuration.nix
+          { nixpkgs.hostPlatform = "x86_64-linux"; }
+        ];
       };
     };
 }
