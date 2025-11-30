@@ -39,7 +39,8 @@ in
             anchors {
                 top: true
                 right: true
-                margins: 10
+                topMargin: 10
+                rightMargin: 10
             }
             width: 420
             height: 650
