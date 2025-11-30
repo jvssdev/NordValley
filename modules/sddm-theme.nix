@@ -174,9 +174,9 @@ in
 {
 
   environment.systemPackages = with pkgs; [
-    bibata-cursors
     silentTheme
     silentTheme.test
+    bibata-cursors
     kdePackages.qt6ct
     libsForQt5.qtstyleplugin-kvantum
     kdePackages.qtstyleplugin-kvantum
@@ -186,12 +186,13 @@ in
 
   qt.enable = true;
 
-  services.xserver.enable = true;
-
   services.displayManager.sddm = {
     enable = true;
+    wayland.enable = true;
     package = pkgs.kdePackages.sddm;
+
     theme = silentTheme.pname;
+
     extraPackages = silentTheme.propagatedBuildInputs;
 
     settings = {
@@ -199,13 +200,6 @@ in
         GreeterEnvironment = "QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard";
         InputMethod = "qtvirtualkeyboard";
       };
-      Theme = {
-        CursorTheme = "Bibata-Modern-Ice";
-      };
-    };
-
-    wayland = {
-      enable = false;
     };
   };
 
@@ -214,8 +208,4 @@ in
     XCURSOR_SIZE = "24";
     QT_QPA_PLATFORMTHEME = "qt6ct";
   };
-
-  systemd.tmpfiles.rules = [
-    "L+ /usr/share/icons/Bibata-Modern-Ice - - - - ${pkgs.bibata-cursors}/share/icons/Bibata-Modern-Ice"
-  ];
 }
