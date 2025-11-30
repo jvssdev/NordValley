@@ -68,6 +68,8 @@ in
       focuscolor=${hexToMango palette.base0D}
       urgentcolor=${hexToMango palette.base08}
 
+      bind=SUPER,r,reload_config
+
       focus_on_activate=0
       focus_cross_monitor=1
       new_is_master=0
@@ -112,11 +114,8 @@ in
       bind=SUPER,x,spawn,wlogout
       bind=SUPER,p,spawn,grim -g "$(slurp)" - | wl-copy
 
-      # Clipboard history
-      bind=SUPER,v,spawn,cliphist list | tac | fuzzel --dmenu --prompt "󱉥  " | cliphist decode | wl-copy
-
-      # Clean history
-      bind=SUPER+SHIFT,v,spawn,cliphist wipe && notify-send "󰩺 Cleaned Clipboard"
+      bind=SUPER,v,spawn,sh -c "cliphist list | tac | fuzzel --dmenu --prompt '󱉥  ' -l 25 -w 70 --lines 25 --width 70 | cliphist decode | wl-copy"
+      bind=SUPER+SHIFT,v,spawn,sh -c "cliphist wipe && notify-send '󰩺 Clipboard cleaned'"
 
       bind=SUPER,q,killclient
       bind=SUPER,space,togglefloating
