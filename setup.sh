@@ -135,6 +135,7 @@ echo
 echo "Select window manager:"
 echo "1) River (default)"
 echo "2) MangoWC"
+echo "3) Niri"
 read -p "Enter choice [1]: " wm_choice
 wm_choice=${wm_choice:-1}
 
@@ -146,6 +147,10 @@ case $wm_choice in
     2)
         WM_CONFIG="mangowc"
         print_info "Selected: MangoWC Window Manager"
+        ;;
+    3)
+        WM_CONFIG="niri"
+        print_info "Selected: Niri Window Manager"
         ;;
     *)
         print_warning "Invalid choice, defaulting to River"
