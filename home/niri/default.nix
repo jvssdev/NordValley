@@ -114,6 +114,11 @@ in
         "Mod+T".action.spawn = "ghostty";
         "Mod+B".action.spawn = "helium";
 
+        "Mod+V".action.spawn = "fuzzel-clipboard";
+        "Mod+Shift+V".action.spawn = "fuzzel-clipboard-clear";
+
+        "Mod+N".action.spawn = "mako-fuzzel";
+
         "Mod+1".action.focus-workspace = 1;
         "Mod+2".action.focus-workspace = 2;
         "Mod+3".action.focus-workspace = 3;

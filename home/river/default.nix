@@ -23,8 +23,6 @@
 
   home.packages = with pkgs; [
     wideriver
-    wl-clip-persist
-    cliphist
   ];
 
   xdg.configFile."xdg-desktop-portal/river-portals.conf".text = ''

@@ -13,13 +13,15 @@
     "Super E" = "spawn thunar";
     "Super X" = "spawn wlogout";
 
-    # Clipboard history
-    "Super V" =
-      "spawn 'cliphist list | tac | fuzzel --dmenu --prompt \"󱉥  \" | cliphist decode | wl-copy'";
-    "Super+Shift V" = "spawn 'cliphist wipe && notify-send \"󰩺 Cleaned Clipboard\"'";
-
     # Screenshot area
     "Super P" = "spawn 'grim -g \"$(slurp)\" - | wl-copy'";
+
+    # Clipboard history
+    "Super V" = "spawn fuzzel-clipboard";
+    "Super+Shift V" = "spawn fuzzel-clipboard-clear";
+
+    # Mako history
+    "Super N" = "spawn mako-fuzzel";
 
     # Window control
     "Super Q" = "close";

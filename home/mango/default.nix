@@ -225,34 +225,4 @@ in
     ];
     config.common.default = "*";
   };
-
-  home.packages = with pkgs; [
-    wl-clip-persist
-    cliphist
-
-    (writeShellApplication {
-      name = "fuzzel-clipboard";
-      runtimeInputs = [
-        cliphist
-        fuzzel
-        wl-clipboard
-      ];
-      text = ''
-        cliphist list | tac | fuzzel --dmenu \
-          --prompt "󱉥  " \
-          -l 25 -w 70 \
-          --border-width=2 --border-radius=10 \
-          | cliphist decode | wl-copy
-      '';
-    })
-
-    (writeShellApplication {
-      name = "fuzzel-clipboard-clear";
-      runtimeInputs = [
-        cliphist
-        libnotify
-      ];
-      text = ''cliphist wipe && notify-send "󰩺 Clipboard cleaned" -t 1500'';
-    })
-  ];
 }

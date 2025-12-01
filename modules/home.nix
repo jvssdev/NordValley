@@ -56,6 +56,7 @@ in
   imports = [
     ./programs.nix
     ../home/mako-fuzzel
+    ../home/fuzzel-clipboard
     ../home/btop/default.nix
     ../home/fastfetch/default.nix
     ../home/fuzzel/default.nix
