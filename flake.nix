@@ -94,9 +94,15 @@
         homeDir = "/home/${userInfo.userName}";
       };
 
-      commonModules = [
-        { nixpkgs.pkgs = pkgs; }
+      nixpkgsModule = {
+        nixpkgs = {
+          hostPlatform = system;
+          inherit pkgs;
+        };
+      };
 
+      commonModules = [
+        nixpkgsModule
         ./hosts/ashes/configuration.nix
         ./hosts/ashes/hardware-configuration.nix
         ./modules/path.nix
@@ -111,7 +117,6 @@
       mkSystem =
         isRiver: isMango: isNiri: extraModules: extraSharedModules:
         nixpkgs.lib.nixosSystem {
-          hostPlatform = system;
 
           specialArgs =
             inputs
@@ -232,10 +237,13 @@
 
       # ========================= ISO =========================
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
-        hostPlatform = "x86_64-linux";
-
         modules = [
-          { nixpkgs.pkgs = nixpkgs.legacyPackages.x86_64-linux; }
+          {
+            nixpkgs = {
+              hostPlatform = "x86_64-linux";
+              pkgs = nixpkgs.legacyPackages.x86_64-linux;
+            };
+          }
           ./hosts/iso/configuration.nix
         ];
       };
