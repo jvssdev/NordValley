@@ -26,12 +26,12 @@ in
         "break"
         {
           type = "os";
-          key = " ";
+          key = " ";
           keyColor = accentColor;
         }
         {
           type = "kernel";
-          key = " ";
+          key = " ";
           keyColor = accentColor;
         }
         {
@@ -41,22 +41,22 @@ in
         }
         {
           type = "packages";
-          key = " ";
+          key = " ";
           keyColor = accentColor;
         }
         {
           type = "shell";
-          key = " ";
+          key = " ";
           keyColor = accentColor;
         }
         {
           type = "terminal";
-          key = " ";
+          key = " ";
           keyColor = accentColor;
         }
         {
           type = "wm";
-          key = " ";
+          key = " ";
           keyColor = accentColor;
         }
         {
@@ -66,18 +66,18 @@ in
         }
         {
           type = "terminalfont";
-          key = " ";
+          key = " ";
           keyColor = accentColor;
         }
         {
           type = "uptime";
-          key = " ";
+          key = " ";
           keyColor = accentColor;
         }
         {
           type = "datetime";
           format = "{1}-{3}-{11}";
-          key = " ";
+          key = " ";
           keyColor = accentColor;
         }
         {
@@ -87,7 +87,7 @@ in
         }
         {
           type = "monitor";
-          key = " ";
+          key = " ";
           keyColor = accentColor;
         }
       ];

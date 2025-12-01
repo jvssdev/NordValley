@@ -1,5 +1,5 @@
 {
-  description = "NordValley NixOS with River and MangoWC window manager";
+  description = "NordValley NixOS with River, MangoWC and Niri";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
