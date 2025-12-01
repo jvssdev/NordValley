@@ -14,7 +14,7 @@ in
       background-color = "#${palette.base00}";
       border-color = "#${palette.base01}";
       text-color = "#${palette.base04}";
-      progress-color = "over ${palette.base02}";
+      progress-color = "over #${palette.base02}";
 
       font = "JetBrainsMono Nerd Font 12";
       border-size = 2;
