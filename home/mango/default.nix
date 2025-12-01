@@ -111,6 +111,7 @@ in
 
       bind=SUPER,t,spawn,ghostty
       bind=SUPER,a,spawn,fuzzel
+      bind=SUPER,n,spawn,mako-fuzzel
       bind=SUPER,b,spawn,helium
       bind=SUPER,e,spawn,thunar
       bind=SUPER,x,spawn,wlogout
