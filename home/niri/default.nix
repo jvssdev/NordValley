@@ -40,7 +40,7 @@ in
         {
           sh = "sleep 1 && dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP";
         }
-        { command = [ "swaync" ]; }
+        { command = [ "mako" ]; }
         {
           command = [
             "wl-paste"

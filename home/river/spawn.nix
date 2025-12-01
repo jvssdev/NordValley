@@ -14,7 +14,7 @@ let
     "${pkgs.waybar}/bin/waybar &"
     "${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &"
     "${pkgs.blueman}/bin/blueman-applet &"
-    "${pkgs.quickshell}/bin/quickshell &"
+    "${pkgs.mako}/bin/mako &"
 
     # Clipboard history
     "${pkgs.wl-clipboard}/bin/wl-paste --type text   --watch ${pkgs.cliphist}/bin/cliphist store &"

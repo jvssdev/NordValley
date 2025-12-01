@@ -14,7 +14,7 @@ let
   commonModulesRight = [
     "cpu"
     "memory"
-    "custom/swaync"
+    "custom/notification"
     "tray"
     "battery"
     "pulseaudio"
@@ -192,25 +192,18 @@ in
         "icon-size" = 21;
         spacing = 10;
       };
-      "custom/swaync" = {
-        "tooltip" = true;
-        "format" = "{icon} {}";
-        "format-icons" = {
-          "notification" = "<span foreground='red'><sup></sup></span>";
-          "none" = "";
-          "dnd-notification" = "<span foreground='red'><sup></sup></span>";
-          "dnd-none" = "";
-          "inhibited-notification" = "<span foreground='red'><sup></sup></span>";
-          "inhibited-none" = "";
-          "dnd-inhibited-notification" = "<span foreground='red'><sup></sup></span>";
-          "dnd-inhibited-none" = "";
-        };
-        "return-type" = "json";
-        "exec-if" = "which swaync-client";
-        "exec" = "swaync-client -swb";
-        "on-click" = "sleep 0.1 && swaync-client -t -sw";
-        "on-click-right" = "swaync-client -d -sw";
-        "escape" = true;
+      "custom/notification" = {
+        exec = "${pkgs.writeShellScript "mako-mode-indicator" ''
+          	    if makoctl mode | grep -q "^focus$"; then
+          	      echo '{"text": "🔕", "tooltip": "Focus Mode"}'
+          	    else
+          	      echo '{"text": "🔔", "tooltip": "Normal Mode"}'
+          	    fi
+          	  ''}";
+        return-type = "json";
+        interval = 2;
+        on-click = "makoctl mode -t focus";
+        tooltip = true;
       };
 
       "custom/power" = {

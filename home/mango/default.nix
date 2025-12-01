@@ -41,7 +41,7 @@ in
 
       ${pkgs.wpaperd}/bin/wpaperd &
 
-      ${pkgs.swaynotificationcenter}/bin/swaync-client &
+      ${pkgs.mako}/bin/mako &
 
       # ${pkgs.quickshell}/bin/quickshell &
       ${pkgs.waybar}/bin/waybar &

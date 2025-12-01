@@ -99,7 +99,7 @@ let
     kdePackages.qtwayland
 
     # Wayland bar/menu
-    swaynotificationcenter
+    mako
     pavucontrol
 
     # Custom packages from inputs
