@@ -143,7 +143,7 @@ in
       bind=SUPER,m,setlayout,tile
       bind=SUPER,c,setlayout,spiral
       bind=SUPER,s,setlayout,scroller
-      bind=SUPER,n,switch_layout
+      bind=SUPER,y,switch_layout
       bind=SUPER,g,togglegaps
       bind=SUPER,Tab,toggleoverview
 
