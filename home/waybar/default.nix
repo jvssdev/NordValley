@@ -3,6 +3,7 @@
   config,
   isRiver ? false,
   isMango ? false,
+  isNiri ? false,
   ...
 }:
 let
@@ -38,11 +39,21 @@ let
       "disable-click" = true;
     };
   };
+
+  niriConfig = {
+    modules-left- = [ "niri/workspaces" ];
+    "niri/workspaces" = {
+      "format" = "{icon}";
+    };
+  };
+
   selectedConfig =
     if isRiver then
       riverConfig
     else if isMango then
       mangoConfig
+    else if is Niri then
+      niriConfig
     else
       riverConfig;
 in
