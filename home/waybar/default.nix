@@ -33,6 +33,7 @@ let
     ];
     "dwl/tags" = {
       "num-tags" = 9;
+      "hide-vacant" = true;
       expand = false;
       "disable-click" = true;
     };
