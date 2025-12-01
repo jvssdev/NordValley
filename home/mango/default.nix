@@ -43,7 +43,7 @@ in
 
       ${pkgs.swaynotificationcenter}/bin/swaync-client &
 
-      ${pkgs.quickshell}/bin/quickshell &
+      # ${pkgs.quickshell}/bin/quickshell &
       ${pkgs.waybar}/bin/waybar &
       ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
       ${pkgs.blueman}/bin/blueman-applet &
