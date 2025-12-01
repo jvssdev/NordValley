@@ -6,47 +6,37 @@ let
 
         # Script to view and interact with Mako notifications using Fuzzel
 
-        # Function to format notifications
+        # Function to format notifications from makoctl history text output
         format_notifications() {
             local history=$(${pkgs.mako}/bin/makoctl history)
             
-            # Try different JSON parsing approaches
-            local formatted=""
-            
-            # Method 1: Original parsing
-            formatted=$(echo "$history" | ${pkgs.jq}/bin/jq -r '
-                .data[][][] |
-                select(.type == "notification") |
-                "\(.app_name.data // "Unknown"): \(.summary.data // "No summary") - \(.body.data // "")"
-            ' 2>/dev/null)
-            
-            # Method 2: Alternative parsing if method 1 fails
-            if [ -z "$formatted" ]; then
-                formatted=$(echo "$history" | ${pkgs.jq}/bin/jq -r '
-                    .. | 
-                    select(.type? == "notification") |
-                    "\(.app_name.data // .app_name // "Unknown"): \(.summary.data // .summary // "No summary")"
-                ' 2>/dev/null)
-            fi
-            
-            # Method 3: Simple extraction if method 2 fails
-            if [ -z "$formatted" ]; then
-                formatted=$(echo "$history" | ${pkgs.jq}/bin/jq -r '
-                    .. | 
-                    select(type == "object") |
-                    select(has("app_name") or has("summary")) |
-                    "\(.app_name // "Unknown"): \(.summary // "No summary")"
-                ' 2>/dev/null)
-            fi
-            
-            echo "$formatted"
+            # Parse the text format from makoctl history
+            echo "$history" | ${pkgs.gawk}/bin/awk '
+                /^Notification [0-9]+:/ {
+                    if (summary != "") {
+                        print app ": " summary
+                    }
+                    summary = $3
+                    for (i=4; i<=NF; i++) summary = summary " " $i
+                    app = ""
+                }
+                /^[[:space:]]*App name:/ {
+                    app = $3
+                    for (i=4; i<=NF; i++) app = app " " $i
+                }
+                END {
+                    if (summary != "") {
+                        print app ": " summary
+                    }
+                }
+            '
         }
 
         # Get notifications
         notifications=$(${pkgs.mako}/bin/makoctl history)
 
         # Check if there are notifications in history
-        if [ -z "$notifications" ] || [ "$notifications" = '{"type":"history","data":[[]]}' ]; then
+        if [ -z "$notifications" ]; then
             ${pkgs.libnotify}/bin/notify-send "Mako" "No notifications in history" -a "Mako History"
             exit 0
         fi
@@ -55,10 +45,8 @@ let
         formatted=$(format_notifications)
 
         if [ -z "$formatted" ]; then
-            # Debug: save raw output for inspection
-            echo "$notifications" > /tmp/mako-debug.json
-            ${pkgs.libnotify}/bin/notify-send "Mako" "Error processing notifications. Debug saved to /tmp/mako-debug.json" -a "Mako History"
-            exit 1
+            ${pkgs.libnotify}/bin/notify-send "Mako" "No notifications to display" -a "Mako History"
+            exit 0
         fi
 
         # Action menu
