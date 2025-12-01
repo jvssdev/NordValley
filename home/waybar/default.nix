@@ -52,7 +52,7 @@ let
       riverConfig
     else if isMango then
       mangoConfig
-    else if is Niri then
+    else if isNiri then
       niriConfig
     else
       riverConfig;
