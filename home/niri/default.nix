@@ -14,6 +14,69 @@ in
     settings = {
       prefer-no-csd = true;
 
+      binds = {
+        "Mod+A".action.spawn = "fuzzel";
+        "Mod+T".action.spawn = "ghostty";
+        "Mod+T".action.spawn = "helium";
+
+        
+        "Mod+1".action.focus-workspace = 1;
+        "Mod+2".action.focus-workspace = 2;
+        "Mod+3".action.focus-workspace = 3;
+        "Mod+4".action.focus-workspace = 4;
+        "Mod+5".action.focus-workspace = 5;
+        "Mod+6".action.focus-workspace = 6;
+        "Mod+7".action.focus-workspace = 7;
+        "Mod+8".action.focus-workspace = 8;
+        "Mod+9".action.focus-workspace = 9;
+
+        "Mod+Q".action = actions.close-window;
+        "Mod+Shift+T".action = actions.toggle-window-floating;
+        "Mod+Shift+F".action = actions.fullscreen-window;
+        "Mod+Alt+F".action = actions.toggle-windowed-fullscreen;
+        "Mod+F".action = actions.maximize-column;
+
+        "Mod+W".action = actions.toggle-column-tabbed-display;
+
+        # Tab Navigation
+        "Mod+Left".action = actions.focus-window-down;
+        "Mod+Right".actions = actions.focus-window-up;
+
+        "Mod+Shift+1".action = actions.move-column-to-workspace 1;
+        "Mod+Shift+2".action = actions.move-column-to-workspace 2;
+        "Mod+Shift+3".action = actions.move-column-to-workspace 3;
+        "Mod+Shift+4".action = actions.move-column-to-workspace 4;
+        "Mod+Shift+5".action = actions.move-column-to-workspace 5;
+        "Mod+Shift+6".action = actions.move-column-to-workspace 6;
+        "Mod+Shift+7".action = actions.move-column-to-workspace 7;
+        "Mod+Shift+8".action = actions.move-column-to-workspace 8;
+        "Mod+Shift+9".action = actions.move-column-to-workspace 9;
+
+        "Mod+BracketLeft".action = actions.consume-or-expel-window-left;
+        "Mod+BracketRight".action = actions.consume-or-expel-window-right;
+        "Mod+Period".actions.expel-window-from-column;
+        
+        "Mod+Minus".action = actions.set-column-width "-10%";
+        "Mod+Equal".action = actions.set-column-width "+10%";
+
+        "Mod+Shift+Minus".action = actions.set-window-height "-10%";
+        "Mod+Shift+Equal".action = actions.set-window-height "+10%";
+             
+        "Mod+H".action = actions.focus-column-left;
+        "Mod+L".action = actions.focus-column-right;
+        
+        "Mod+J".action = actions.focus-workspace-up;
+        "Mod+K".action = actions.focus-workspace-down;
+        # "Mod+Page_Up".action = actions.focus-workspace-up;
+        # "Mod+Control+Page_Down".action = actions.focus-workspace-down;
+        # "Mod+Control+Page_Up".action = actions.focus-workspace-up;
+        # "Mod+WheelScrollDown".action = actions.focus-workspace-down;
+        "Mod+WheelScrollUp".action = actions.focus-workspace-up;
+        "Control+Mod+WheelScrollDown".action = actions.focus-workspace-down;
+        "Control+Mod+WheelScrollUp".action = actions.focus-workspace-up;
+      };
+
+
       hotkey-overlay = {
         skip-at-startup = true;
       };

@@ -5,6 +5,7 @@
   homeDir,
   isRiver,
   isMango,
+  isNiri,
   ...
 }:
 {
