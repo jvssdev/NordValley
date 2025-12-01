@@ -94,25 +94,24 @@
         homeDir = "/home/${userInfo.userName}";
       };
 
+      commonModules = [
+        { nixpkgs.pkgs = pkgs; }
+
+        ./hosts/ashes/configuration.nix
+        ./hosts/ashes/hardware-configuration.nix
+        ./modules/path.nix
+        ./modules/services.nix
+        ./modules/elevated-packages.nix
+        ./modules/intel-drivers.nix
+        ./modules/power-management.nix
+        ./modules/thunar.nix
+        ./modules/sddm-theme.nix
+      ];
+
       mkSystem =
-        hostname: isRiver: isMango: isNiri: extraModules: extraSpecialArgs: extraSharedModules:
+        isRiver: isMango: isNiri: extraModules: extraSharedModules:
         nixpkgs.lib.nixosSystem {
           hostPlatform = system;
-
-          modules = [
-            { nixpkgs.pkgs = pkgs; }
-
-            ./hosts/ashes/configuration.nix
-            ./hosts/ashes/hardware-configuration.nix
-            ./modules/path.nix
-            ./modules/services.nix
-            ./modules/elevated-packages.nix
-            ./modules/intel-drivers.nix
-            ./modules/power-management.nix
-            ./modules/thunar.nix
-            ./modules/sddm-theme.nix
-          ]
-          ++ extraModules;
 
           specialArgs =
             inputs
@@ -122,83 +121,95 @@
               inherit nix-colors;
               silentSDDM = inputs.silentSDDM;
               inherit isRiver isMango isNiri;
-            }
-            // extraSpecialArgs;
+            };
 
-          # Home Manager comum a todos
-          modules = modules ++ [
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                backupFileExtension = "hm-backup";
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                users.${userInfo.userName} = import ./modules/home.nix;
+          modules =
+            commonModules
+            ++ extraModules
+            ++ [
+              home-manager.nixosModules.home-manager
 
-                extraSpecialArgs = {
-                  inherit (inputs)
-                    helix
-                    zen-browser
-                    helium-browser
-                    quickshell
-                    nix-colors
-                    zsh-hlx
-                    mango
-                    niri-flake
-                    ;
-                  inherit (userInfo) userName userEmail fullName;
-                  inherit (defaults) homeDir;
-                  inherit isRiver isMango isNiri;
-                }
-                // extraSpecialArgs;
+              {
+                home-manager = {
+                  backupFileExtension = "hm-backup";
+                  useGlobalPkgs = true;
+                  useUserPackages = true;
 
-                sharedModules = [
-                  inputs.zen-browser.homeModules.default
-                  nix-colors.homeManagerModules.default
-                ]
-                ++ extraSharedModules;
-              };
-            }
-          ];
+                  users.${userInfo.userName} = import ./modules/home.nix;
+
+                  extraSpecialArgs = {
+                    inherit (inputs)
+                      helix
+                      zen-browser
+                      helium-browser
+                      quickshell
+                      nix-colors
+                      zsh-hlx
+                      mango
+                      niri-flake
+                      ;
+                    inherit (userInfo) userName userEmail fullName;
+                    inherit (defaults) homeDir;
+                    inherit isRiver isMango isNiri;
+                  };
+
+                  sharedModules = [
+                    inputs.zen-browser.homeModules.default
+                    nix-colors.homeManagerModules.default
+                  ]
+                  ++ extraSharedModules;
+                };
+              }
+            ];
         };
 
     in
     {
       # ========================= RIVER =========================
-      nixosConfigurations.river = mkSystem "river" true false false [
-        {
-          services.displayManager.sessionPackages = [
-            (pkgs.writeTextFile rec {
-              name = "river-session";
-              destination = "/share/wayland-sessions/river.desktop";
-              text = ''
-                [Desktop Entry]
-                Name=River
-                Comment=A dynamic tiling Wayland compositor
-                Exec=river
-                Type=Application
-              '';
-              passthru.providedSessions = [ "river" ];
-            })
-          ];
-        }
-      ] { } [ ];
+      nixosConfigurations.river =
+        mkSystem true false false
+          [
+            {
+              services.displayManager.sessionPackages = [
+                (pkgs.writeTextFile rec {
+                  name = "river-session";
+                  destination = "/share/wayland-sessions/river.desktop";
+                  text = ''
+                    [Desktop Entry]
+                    Name=River
+                    Comment=A dynamic tiling Wayland compositor
+                    Exec=river
+                    Type=Application
+                  '';
+                  passthru.providedSessions = [ "river" ];
+                })
+              ];
+            }
+          ]
+          [ ];
 
       # ========================= MANGOWC =========================
-      nixosConfigurations.mangowc = mkSystem "mangowc" false true false [
-        mango.nixosModules.mango
-        { programs.mango.enable = true; }
-      ] { } [ mango.hmModules.mango ];
+      nixosConfigurations.mangowc =
+        mkSystem false true false
+          [
+            mango.nixosModules.mango
+            { programs.mango.enable = true; }
+          ]
+          [ mango.hmModules.mango ];
 
       # ========================= NIRI =========================
-      nixosConfigurations.niri = mkSystem "niri" false false true [
-        niri-flake.nixosModules.niri
-        { programs.niri.enable = true; }
-      ] { } [ niri-flake.homeModules.niri ];
+      nixosConfigurations.niri =
+        mkSystem false false true
+          [
+            niri-flake.nixosModules.niri
+            { programs.niri.enable = true; }
+          ]
+          [ niri-flake.homeModules.niri ];
 
-      # ========================= UNIVERSAL HM (para hm switch standalone) =========================
+      # ========================= UNIVERSAL HM =========================
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
+
         extraSpecialArgs = {
           homeDir = defaults.homeDir;
           helix = inputs.helix;
