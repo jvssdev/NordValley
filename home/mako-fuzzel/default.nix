@@ -8,11 +8,38 @@ let
 
         # Function to format notifications
         format_notifications() {
-            ${pkgs.mako}/bin/makoctl history | ${pkgs.jq}/bin/jq -r '
+            local history=$(${pkgs.mako}/bin/makoctl history)
+            
+            # Try different JSON parsing approaches
+            local formatted=""
+            
+            # Method 1: Original parsing
+            formatted=$(echo "$history" | ${pkgs.jq}/bin/jq -r '
                 .data[][][] |
                 select(.type == "notification") |
                 "\(.app_name.data // "Unknown"): \(.summary.data // "No summary") - \(.body.data // "")"
-            ' 2>/dev/null
+            ' 2>/dev/null)
+            
+            # Method 2: Alternative parsing if method 1 fails
+            if [ -z "$formatted" ]; then
+                formatted=$(echo "$history" | ${pkgs.jq}/bin/jq -r '
+                    .. | 
+                    select(.type? == "notification") |
+                    "\(.app_name.data // .app_name // "Unknown"): \(.summary.data // .summary // "No summary")"
+                ' 2>/dev/null)
+            fi
+            
+            # Method 3: Simple extraction if method 2 fails
+            if [ -z "$formatted" ]; then
+                formatted=$(echo "$history" | ${pkgs.jq}/bin/jq -r '
+                    .. | 
+                    select(type == "object") |
+                    select(has("app_name") or has("summary")) |
+                    "\(.app_name // "Unknown"): \(.summary // "No summary")"
+                ' 2>/dev/null)
+            fi
+            
+            echo "$formatted"
         }
 
         # Get notifications
@@ -28,7 +55,9 @@ let
         formatted=$(format_notifications)
 
         if [ -z "$formatted" ]; then
-            ${pkgs.libnotify}/bin/notify-send "Mako" "Error processing notifications" -a "Mako History"
+            # Debug: save raw output for inspection
+            echo "$notifications" > /tmp/mako-debug.json
+            ${pkgs.libnotify}/bin/notify-send "Mako" "Error processing notifications. Debug saved to /tmp/mako-debug.json" -a "Mako History"
             exit 1
         fi
 
