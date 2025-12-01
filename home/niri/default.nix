@@ -5,14 +5,79 @@
   ...
 }:
 let
+  system = pkgs.stdenv.hostPlatform.system;
+  niriPackages = inputs.niri-flake.packages.${system};
+  xwaylandSatellitePkg = niriPackages.xwayland-satellite;
   palette = config.colorScheme.palette;
 in
 {
   programs.niri = {
     enable = true;
-    package = pkgs.niri;
+    package = pkgs.niri-unstable;
     settings = {
       prefer-no-csd = true;
+
+      xwayland-satellite = {
+        enable = true;
+        path = lib.getExe xwaylandSatellitePkg;
+      };
+
+      animations = {
+        enable = false;
+      };
+
+      spawn-at-startup = [
+        { command = ["blueman-applet"]; }
+        { command = ["waybar"]; }
+        { command = ["wpaperd"]; }
+        { command = ["nm-applet" "--indicator"]; }
+        # Note: polkit agent is started via systemd service in environment.nix
+        { sh = "sleep 1 && dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"; }
+        { command = ["swaync"]; }
+        { command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"]; }
+        { command = ["wl-paste" "--type" "image" "--watch" "cliphist" "store"]; }
+        { command = ["wl-clip-persist" "--clipboard both"]; }
+      ];
+
+      window-rules = [
+        {
+          matches = [{ app-id = "com.mitchellh.ghostty"; }];
+          opacity = 0.9;
+        }
+        {
+          matches = [
+            { app-id = "(?i)pavucontrol"; }
+            { app-id = "(?i)org\\.pulseaudio\\.pavucontrol"; }
+          ];
+          open-floating = true;
+        }
+        {
+          matches = [{ app-id = "(?i)nm-connection-editor"; }];
+          open-floating = true;
+        }
+        {
+          matches = [
+            { app-id = "(?i)blueman-manager"; }
+            { app-id = "(?i)blueberry"; }
+          ];
+          open-floating = true;
+        }
+        # {
+        #   matches = [{ app-id = "(?i)org\\.gnome\\.Calculator"; }];
+        #   open-floating = true;
+        # }
+        {
+          matches = [
+            { app-id = "(?i)mpv"; }
+            { app-id = "(?i)imv"; }
+          ];
+          open-floating = true;
+        }
+        {
+          matches = [{ title = "(?i)Picture[-\\s]?in[-\\s]?Picture"; }];
+          open-floating = true;
+        }
+      ];
 
       binds = {
         "Mod+A".action.spawn = "fuzzel";
@@ -76,7 +141,6 @@ in
         "Control+Mod+WheelScrollUp".action = actions.focus-workspace-up;
       };
 
-
       hotkey-overlay = {
         skip-at-startup = true;
       };
@@ -85,11 +149,31 @@ in
           enable = true;
           width = 2;
           active = {
+            color = ${palette.base01};
+          };
+          inactive = {
+            color = ${palette.base00};
+          };
+        };
+        border = {
+          enable = true;
+          width = 4;
+          active = {
             color = ${palette.base02};
           };
           inactive = {
-            color = ${palette.base01};
+            color = ${palette.base03};
           };
+        }
+        tab-indicator = {
+          width = 8;
+          corner-radius = 0;
+          place-within-column = true;
+          length.total-proportion = 1.0;
+        };
+        window-rule = {
+          geometry-corner-radius = 0;
+          clip-to-geometry = true;
         };
 
         gaps = 5;
