@@ -1,6 +1,5 @@
 {
   pkgs,
-  withGUI ? true,
   specialArgs,
   ...
 }:
@@ -111,6 +110,3 @@ let
   ];
 in
 basePackages
-++ lib.optionals withGUI [
-  # Additional GUI tools if needed
-]

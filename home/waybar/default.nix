@@ -14,7 +14,7 @@ let
   commonModulesRight = [
     "cpu"
     "memory"
-    "custom/quickshell-notification"
+    "custom/swaync"
     "tray"
     "battery"
     "pulseaudio"
@@ -192,30 +192,27 @@ in
         "icon-size" = 21;
         spacing = 10;
       };
-      "custom/quickshell-notification" = {
-        format = "{icon} {}";
-        return-type = "json";
-        interval = 1;
-        exec = "${pkgs.writeShellScript "waybar-quickshell-status" ''
-          STATUS_FILE="/tmp/quickshell-notification-status.json"
-          if [ ! -f "$STATUS_FILE" ]; then
-            mkdir -p /tmp
-            echo '{"text":"","tooltip":"No notifications","class":"none"}' > "$STATUS_FILE"
-          fi
-          cat "$STATUS_FILE" 2>/dev/null || echo '{"text":"","tooltip":"Error reading status","class":"none"}'
-        ''}";
-        format-icons = {
-          "none" = "";
-          "notification" = "<span foreground='#${colors.base08}'></span>";
-          "dnd" = "<span foreground='#${colors.base0A}'>󰂛</span>";
-        };
-        on-click = "${pkgs.writeShellScript "waybar-quickshell-toggle" ''
-          TOGGLE_FILE="/tmp/quickshell-toggle-cmd"
-          touch "$TOGGLE_FILE"
-          echo "toggle-$(date +%s%N)" > "$TOGGLE_FILE"
-        ''}";
+      "custom/swaync" = {
         tooltip = true;
+        format = "{icon} {}";
+        format-icons = {
+          notification = "<span foreground='red'><sup></sup></span>";
+          none = "";
+          dnd-notification = "<span foreground='red'><sup></sup></span>";
+          dnd-none = "";
+          inhibited-notification = "<span foreground='red'><sup></sup></span>";
+          inhibited-none = "";
+          dnd-inhibited-notification = "<span foreground='red'><sup></sup></span>";
+          dnd-inhibited-none = "";
+        };
+        return-type = "json";
+        exec-if = "which swaync-client";
+        exec = "swaync-client -swb";
+        on-click = "sleep 0.1 && swaync-client -t -sw";
+        on-click-right = "swaync-client -d -sw";
+        escape = true;
       };
+
       "custom/power" = {
         format = "⏻";
         tooltip = false;

@@ -91,7 +91,6 @@
       };
 
       defaults = {
-        withGUI = true;
         homeDir = "/home/${userInfo.userName}";
       };
 
@@ -104,7 +103,6 @@
           inputs
           // userInfo
           // {
-            withGUI = defaults.withGUI;
             homeDir = defaults.homeDir;
             isRiver = true;
             isMango = false;
@@ -158,7 +156,7 @@
                   zsh-hlx
                   ;
                 inherit (userInfo) userName userEmail fullName;
-                inherit (defaults) withGUI homeDir;
+                inherit (defaults) homeDir;
                 isRiver = true;
                 isMango = false;
                 isNiri = false;
@@ -179,7 +177,6 @@
           inputs
           // userInfo
           // {
-            withGUI = defaults.withGUI;
             homeDir = defaults.homeDir;
             isRiver = false;
             isMango = true;
@@ -220,7 +217,7 @@
                   zsh-hlx
                   ;
                 inherit (userInfo) userName userEmail fullName;
-                inherit (defaults) withGUI homeDir;
+                inherit (defaults) homeDir;
                 isRiver = false;
                 isMango = true;
                 isNiri = false;
@@ -242,7 +239,6 @@
           inputs
           // userInfo
           // {
-            withGUI = defaults.withGUI;
             homeDir = defaults.homeDir;
             isRiver = false;
             isMango = false;
@@ -283,7 +279,7 @@
                   zsh-hlx
                   ;
                 inherit (userInfo) userName userEmail fullName;
-                inherit (defaults) withGUI homeDir;
+                inherit (defaults) homeDir;
                 isRiver = false;
                 isMango = false;
                 isNiri = true;
@@ -301,7 +297,6 @@
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = {
-          withGUI = defaults.withGUI;
           homeDir = defaults.homeDir;
           helix = inputs.helix;
           quickshell = inputs.quickshell;

@@ -10,7 +10,6 @@
 }:
 let
   inherit (specialArgs)
-    withGUI
     homeDir
     userName
     helix
