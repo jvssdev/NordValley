@@ -8,6 +8,18 @@
 }:
 let
   colors = config.colorScheme.palette;
+  makoDndScript = pkgs.writeShellScript "mako-dnd" ''
+    #!/usr/bin/env bash
+    if [[ "$1" = "show" ]]; then
+      if [[ "$(makoctl mode)" = "do-not-disturb" ]]; then
+        echo '{"text":"","tooltip":"Do not disturb is on"}'
+      else
+        echo '{"text":"","tooltip":"Do not disturb is off"}'
+      fi
+    elif [[ "$1" = "toggle" ]]; then
+      [[ "$(makoctl mode)" = "do-not-disturb" ]] && makoctl mode -r do-not-disturb || makoctl mode -s do-not-disturb
+    fi
+  '';
   commonModulesCenter = [
     "clock"
   ];
@@ -39,14 +51,12 @@ let
       "disable-click" = true;
     };
   };
-
   niriConfig = {
     modules-left- = [ "niri/workspaces" ];
     "niri/workspaces" = {
       "format" = "{icon}";
     };
   };
-
   selectedConfig =
     if isRiver then
       riverConfig
@@ -81,16 +91,15 @@ in
         color: #${colors.base05};
         min-width: 0;
       }
-
-      #tags button.occupied, #dwl-tags .occupied { 
-        color: #${colors.base05}; 
+      #tags button.occupied, #dwl-tags .occupied {
+        color: #${colors.base05};
       }
-      #tags button.focused, #dwl-tags .focused { 
-        background: #${colors.base0D}; 
-        color: #${colors.base00}; 
+      #tags button.focused, #dwl-tags .focused {
+        background: #${colors.base0D};
+        color: #${colors.base00};
       }
-      #tags button.urgent, #dwl-tags .urgent { 
-        color: #${colors.base08}; 
+      #tags button.urgent, #dwl-tags .urgent {
+        color: #${colors.base08};
       }
       #dwl-tags .tag:not(.focused):not(.occupied) {
         min-width: 0px;
@@ -108,21 +117,17 @@ in
       #battery.critical { color: #${colors.base08}; }
       #pulseaudio.muted { color: #${colors.base03}; }
       #bluetooth.connected { color: #${colors.base0F}; }
-
       /* Notification center styles */
       #custom-quickshell-notification {
         color: #${colors.base05};
-      }
-      #custom-quickshell-notification.notification {
+      }     
+      #custom-notification.dnd-on {
         color: #${colors.base08};
         font-weight: bold;
       }
-      #custom-quickshell-notification.dnd {
-        color: #${colors.base0A};
-      }
-      #custom-power:hover { 
-        background: #${colors.base08}; 
-        color: #${colors.base07}; 
+      #custom-power:hover {
+        background: #${colors.base08};
+        color: #${colors.base07};
       }
     '';
     settings.mainBar = {
@@ -193,19 +198,15 @@ in
         spacing = 10;
       };
       "custom/notification" = {
-        exec = "${pkgs.writeShellScript "mako-mode-indicator" ''
-          	    if makoctl mode | grep -q "^focus$"; then
-          	      echo '{"text": "🔕", "tooltip": "Focus Mode"}'
-          	    else
-          	      echo '{"text": "🔔", "tooltip": "Normal Mode"}'
-          	    fi
-          	  ''}";
+        format = "{}";
+        exec = "${makoDndScript} show";
         return-type = "json";
-        interval = 2;
-        on-click = "makoctl mode -t focus";
+        interval = 30;
+        signal = 8;
+        on-click = "${makoDndScript} toggle && pkill -RTMIN+8 waybar";
         tooltip = true;
+        escape = true;
       };
-
       "custom/power" = {
         format = "⏻";
         tooltip = false;
