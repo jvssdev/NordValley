@@ -94,206 +94,109 @@
         homeDir = "/home/${userInfo.userName}";
       };
 
+      mkSystem =
+        hostname: isRiver: isMango: isNiri: extraModules: extraSpecialArgs: extraSharedModules:
+        nixpkgs.lib.nixosSystem {
+          hostPlatform = system;
+
+          modules = [
+            { nixpkgs.pkgs = pkgs; }
+
+            ./hosts/ashes/configuration.nix
+            ./hosts/ashes/hardware-configuration.nix
+            ./modules/path.nix
+            ./modules/services.nix
+            ./modules/elevated-packages.nix
+            ./modules/intel-drivers.nix
+            ./modules/power-management.nix
+            ./modules/thunar.nix
+            ./modules/sddm-theme.nix
+          ]
+          ++ extraModules;
+
+          specialArgs =
+            inputs
+            // userInfo
+            // {
+              homeDir = defaults.homeDir;
+              inherit nix-colors;
+              silentSDDM = inputs.silentSDDM;
+              inherit isRiver isMango isNiri;
+            }
+            // extraSpecialArgs;
+
+          # Home Manager comum a todos
+          modules = modules ++ [
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                backupFileExtension = "hm-backup";
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                users.${userInfo.userName} = import ./modules/home.nix;
+
+                extraSpecialArgs = {
+                  inherit (inputs)
+                    helix
+                    zen-browser
+                    helium-browser
+                    quickshell
+                    nix-colors
+                    zsh-hlx
+                    mango
+                    niri-flake
+                    ;
+                  inherit (userInfo) userName userEmail fullName;
+                  inherit (defaults) homeDir;
+                  inherit isRiver isMango isNiri;
+                }
+                // extraSpecialArgs;
+
+                sharedModules = [
+                  inputs.zen-browser.homeModules.default
+                  nix-colors.homeManagerModules.default
+                ]
+                ++ extraSharedModules;
+              };
+            }
+          ];
+        };
+
     in
     {
       # ========================= RIVER =========================
-      nixosConfigurations.river = nixpkgs.lib.nixosSystem {
-        inherit pkgs;
-        specialArgs =
-          inputs
-          // userInfo
-          // {
-            homeDir = defaults.homeDir;
-            isRiver = true;
-            isMango = false;
-            isNiri = false;
-            inherit nix-colors;
-            silentSDDM = inputs.silentSDDM;
-          };
-
-        modules = [
-          ./hosts/ashes/configuration.nix
-          ./hosts/ashes/hardware-configuration.nix
-          ./modules/path.nix
-          ./modules/services.nix
-          ./modules/elevated-packages.nix
-          ./modules/intel-drivers.nix
-          ./modules/power-management.nix
-          ./modules/thunar.nix
-          ./modules/sddm-theme.nix
-
-          {
-            services.displayManager.sessionPackages = [
-              (pkgs.writeTextFile rec {
-                name = "river-session";
-                destination = "/share/wayland-sessions/river.desktop";
-                text = ''
-                  [Desktop Entry]
-                  Name=River
-                  Comment=A dynamic tiling Wayland compositor
-                  Exec=river
-                  Type=Application
-                '';
-                passthru.providedSessions = [ "river" ];
-              })
-            ];
-          }
-
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              backupFileExtension = "hm-backup";
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.${userInfo.userName} = import ./modules/home.nix;
-              extraSpecialArgs = {
-                inherit (inputs)
-                  helix
-                  zen-browser
-                  helium-browser
-                  quickshell
-                  nix-colors
-                  zsh-hlx
-                  ;
-                inherit (userInfo) userName userEmail fullName;
-                inherit (defaults) homeDir;
-                isRiver = true;
-                isMango = false;
-                isNiri = false;
-              };
-              sharedModules = [
-                inputs.zen-browser.homeModules.default
-                nix-colors.homeManagerModules.default
-              ];
-            };
-          }
-        ];
-      };
+      nixosConfigurations.river = mkSystem "river" true false false [
+        {
+          services.displayManager.sessionPackages = [
+            (pkgs.writeTextFile rec {
+              name = "river-session";
+              destination = "/share/wayland-sessions/river.desktop";
+              text = ''
+                [Desktop Entry]
+                Name=River
+                Comment=A dynamic tiling Wayland compositor
+                Exec=river
+                Type=Application
+              '';
+              passthru.providedSessions = [ "river" ];
+            })
+          ];
+        }
+      ] { } [ ];
 
       # ========================= MANGOWC =========================
-      nixosConfigurations.mangowc = nixpkgs.lib.nixosSystem {
-        inherit pkgs;
-        specialArgs =
-          inputs
-          // userInfo
-          // {
-            homeDir = defaults.homeDir;
-            isRiver = false;
-            isMango = true;
-            isNiri = false;
-            inherit nix-colors;
-            silentSDDM = inputs.silentSDDM;
-          };
-
-        modules = [
-          ./hosts/ashes/configuration.nix
-          ./hosts/ashes/hardware-configuration.nix
-          ./modules/path.nix
-          ./modules/services.nix
-          ./modules/elevated-packages.nix
-          ./modules/intel-drivers.nix
-          ./modules/power-management.nix
-          ./modules/thunar.nix
-          ./modules/sddm-theme.nix
-
-          mango.nixosModules.mango
-          { programs.mango.enable = true; }
-
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              backupFileExtension = "hm-backup";
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.${userInfo.userName} = import ./modules/home.nix;
-              extraSpecialArgs = {
-                inherit (inputs)
-                  helix
-                  zen-browser
-                  helium-browser
-                  mango
-                  quickshell
-                  nix-colors
-                  zsh-hlx
-                  ;
-                inherit (userInfo) userName userEmail fullName;
-                inherit (defaults) homeDir;
-                isRiver = false;
-                isMango = true;
-                isNiri = false;
-              };
-              sharedModules = [
-                inputs.zen-browser.homeModules.default
-                nix-colors.homeManagerModules.default
-                mango.hmModules.mango
-              ];
-            };
-          }
-        ];
-      };
+      nixosConfigurations.mangowc = mkSystem "mangowc" false true false [
+        mango.nixosModules.mango
+        { programs.mango.enable = true; }
+      ] { } [ mango.hmModules.mango ];
 
       # ========================= NIRI =========================
-      nixosConfigurations.niri = nixpkgs.lib.nixosSystem {
-        inherit pkgs;
-        specialArgs =
-          inputs
-          // userInfo
-          // {
-            homeDir = defaults.homeDir;
-            isRiver = false;
-            isMango = false;
-            isNiri = true;
-            inherit nix-colors;
-            silentSDDM = inputs.silentSDDM;
-          };
+      nixosConfigurations.niri = mkSystem "niri" false false true [
+        niri-flake.nixosModules.niri
+        { programs.niri.enable = true; }
+      ] { } [ niri-flake.homeModules.niri ];
 
-        modules = [
-          ./hosts/ashes/configuration.nix
-          ./hosts/ashes/hardware-configuration.nix
-          ./modules/path.nix
-          ./modules/services.nix
-          ./modules/elevated-packages.nix
-          ./modules/intel-drivers.nix
-          ./modules/power-management.nix
-          ./modules/thunar.nix
-          ./modules/sddm-theme.nix
-
-          niri-flake.nixosModules.niri
-          { programs.niri.enable = true; }
-
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              backupFileExtension = "hm-backup";
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.${userInfo.userName} = import ./modules/home.nix;
-              extraSpecialArgs = {
-                inherit (inputs)
-                  helix
-                  zen-browser
-                  helium-browser
-                  niri-flake
-                  quickshell
-                  nix-colors
-                  zsh-hlx
-                  ;
-                inherit (userInfo) userName userEmail fullName;
-                inherit (defaults) homeDir;
-                isRiver = false;
-                isMango = false;
-                isNiri = true;
-              };
-              sharedModules = [
-                inputs.zen-browser.homeModules.default
-                nix-colors.homeManagerModules.default
-                niri-flake.homeModules.niri
-              ];
-            };
-          }
-        ];
-      };
-
+      # ========================= UNIVERSAL HM (para hm switch standalone) =========================
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = {
@@ -309,16 +212,20 @@
           isNiri = false;
         }
         // userInfo;
+
         modules = [
           ./modules/home.nix
           nix-colors.homeManagerModules.default
         ];
       };
 
+      # ========================= ISO =========================
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
+        hostPlatform = "x86_64-linux";
+
         modules = [
+          { nixpkgs.pkgs = nixpkgs.legacyPackages.x86_64-linux; }
           ./hosts/iso/configuration.nix
-          { nixpkgs.hostPlatform = "x86_64-linux"; }
         ];
       };
     };
