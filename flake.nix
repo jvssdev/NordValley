@@ -42,6 +42,11 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    niri-flake = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -61,6 +66,7 @@
       mango,
       nixpkgs-unstable,
       nix-colors,
+      niri-flake,
       ...
     }:
     let
@@ -102,6 +108,7 @@
             homeDir = defaults.homeDir;
             isRiver = true;
             isMango = false;
+            isNiri = false;
             inherit nix-colors;
             silentSDDM = inputs.silentSDDM;
           };
@@ -154,6 +161,7 @@
                 inherit (defaults) withGUI homeDir;
                 isRiver = true;
                 isMango = false;
+                isNiri = false;
               };
               sharedModules = [
                 inputs.zen-browser.homeModules.default
@@ -175,6 +183,7 @@
             homeDir = defaults.homeDir;
             isRiver = false;
             isMango = true;
+            isNiri = false;
             inherit nix-colors;
             silentSDDM = inputs.silentSDDM;
           };
@@ -214,11 +223,75 @@
                 inherit (defaults) withGUI homeDir;
                 isRiver = false;
                 isMango = true;
+                isNiri = false;
               };
               sharedModules = [
                 inputs.zen-browser.homeModules.default
                 nix-colors.homeManagerModules.default
                 mango.hmModules.mango
+              ];
+            };
+          }
+        ];
+      };
+
+      # ========================= NIRI =========================
+      nixosConfigurations.niri = nixpkgs.lib.nixosSystem {
+        inherit pkgs;
+        specialArgs =
+          inputs
+          // userInfo
+          // {
+            withGUI = defaults.withGUI;
+            homeDir = defaults.homeDir;
+            isRiver = false;
+            isMango = false;
+            isNiri = true;
+            inherit nix-colors;
+            silentSDDM = inputs.silentSDDM;
+          };
+
+        modules = [
+          ./hosts/ashes/configuration.nix
+          ./hosts/ashes/hardware-configuration.nix
+          ./modules/path.nix
+          ./modules/services.nix
+          ./modules/elevated-packages.nix
+          ./modules/intel-drivers.nix
+          ./modules/power-management.nix
+          ./modules/thunar.nix
+          ./modules/sddm-theme.nix
+
+          niri-flake.nixosModules.niri
+          { programs.niri.enable = true; }
+
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              backupFileExtension = "hm-backup";
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.${userInfo.userName} = import ./modules/home.nix;
+              extraSpecialArgs = {
+                inherit (inputs)
+                  helix
+                  zen-browser
+                  helium-browser
+                  niri-flake
+                  quickshell
+                  nix-colors
+                  zsh-hlx
+                  ;
+                inherit (userInfo) userName userEmail fullName;
+                inherit (defaults) withGUI homeDir;
+                isRiver = false;
+                isMango = false;
+                isNiri = true;
+              };
+              sharedModules = [
+                inputs.zen-browser.homeModules.default
+                nix-colors.homeManagerModules.default
+                niri-flake.homeModules.niri
               ];
             };
           }
@@ -238,6 +311,7 @@
           zsh-hlx = inputs.zsh-hlx;
           isRiver = true;
           isMango = false;
+          isNiri = false;
         }
         // userInfo;
         modules = [

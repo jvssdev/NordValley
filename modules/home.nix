@@ -5,6 +5,7 @@
   lib,
   isRiver ? false,
   isMango ? false,
+  isNiri ? false,
   ...
 }:
 let
@@ -17,6 +18,7 @@ let
     helium-browser
     quickshell
     mango
+    niri-flake
     ;
 in
 {
@@ -81,6 +83,9 @@ in
   ++ lib.optionals isMango [
     ../home/mango/default.nix
   ]
+  ++ lib.optionals isNiri [
+    ../home/niri/default.nix
+  ]
   ++ [
     (import ../home/wlogout {
       inherit
@@ -90,6 +95,7 @@ in
         lib
         isRiver
         isMango
+        isNiri
         ;
     })
   ];
