@@ -40,23 +40,25 @@ in
 
       QtObject {
         id: idleService
-        property int monitorTimeout: 240
-        property int lockTimeout: 300
-        property int suspendTimeout: 600
+        property int monitorTimeout: 20     
+        property int lockTimeout: 40        
+        property int suspendTimeout: 80     
         property bool monitorsOff: false
         property bool locked: false
       }
 
       IdleMonitor {
-        timeout: idleService.monitorTimeout
+        enabled: true
         respectInhibitors: true
+        timeout: idleService.monitorTimeout
         onIsIdleChanged: {
+          console.log("[MONITOR] isIdle =", isIdle)
           if (isIdle && !idleService.monitorsOff) {
-            console.log("Turning off monitors")
+            console.log("Turning off monitors with wlopm")
             idleService.monitorsOff = true
             Process.execute("wlopm", ["--off", "*"])
           } else if (!isIdle && idleService.monitorsOff) {
-            console.log("Turning on monitors")
+            console.log("Turning on monitors with wlopm")
             idleService.monitorsOff = false
             Process.execute("wlopm", ["--on", "*"])
           }
@@ -64,13 +66,15 @@ in
       }
 
       IdleMonitor {
-        timeout: idleService.lockTimeout
+        enabled: true
         respectInhibitors: true
+        timeout: idleService.lockTimeout
         onIsIdleChanged: {
+          console.log("[LOCK] isIdle =", isIdle)
           if (isIdle && !idleService.locked) {
-            console.log("Locking screen with gtklock")
+            console.log("Launching gtklock")
             idleService.locked = true
-            Io.command("gtklock -d")
+            Io.command("gtklock", ["-d"])
           } else if (!isIdle) {
             idleService.locked = false
           }
@@ -78,9 +82,11 @@ in
       }
 
       IdleMonitor {
-        timeout: idleService.suspendTimeout
+        enabled: true
         respectInhibitors: true
+        timeout: idleService.suspendTimeout
         onIsIdleChanged: {
+          console.log("[SUSPEND] isIdle =", isIdle)
           if (isIdle) {
             console.log("Suspending system")
             Process.execute("systemctl", ["suspend"])
