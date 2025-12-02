@@ -15,9 +15,12 @@ in
   programs.niri = {
     enable = true;
 
-    package = pkgs.niri-unstable // {
-      inherit (pkgs.niri-unstable) cargoBuildNoDefaultFeatures cargoBuildFeatures;
-    };
+    package = lib.mkForce (
+      pkgs.niri-unstable
+      // {
+        inherit (pkgs.niri-unstable) cargoBuildNoDefaultFeatures cargoBuildFeatures;
+      }
+    );
 
     settings = {
       prefer-no-csd = true;
