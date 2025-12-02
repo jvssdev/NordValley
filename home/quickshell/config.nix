@@ -11,7 +11,6 @@ in
   xdg.configFile."quickshell/shell.qml".text = ''
     import Quickshell
     import Quickshell.Wayland
-    import Quickshell.Io
     import QtQuick
 
     ShellRoot {
@@ -40,57 +39,64 @@ in
 
       QtObject {
         id: idleService
-        property int monitorTimeout: 20     
-        property int lockTimeout: 40        
-        property int suspendTimeout: 80     
+
+        property int monitorTimeout: 240
+        property int lockTimeout: 300
+        property int suspendTimeout: 600
+
         property bool monitorsOff: false
         property bool locked: false
-      }
 
-      IdleMonitor {
-        enabled: true
-        respectInhibitors: true
-        timeout: idleService.monitorTimeout
-        onIsIdleChanged: {
-          console.log("[MONITOR] isIdle =", isIdle)
-          if (isIdle && !idleService.monitorsOff) {
-            console.log("Turning off monitors with wlopm")
-            idleService.monitorsOff = true
-            Process.execute("wlopm", ["--off", "*"])
-          } else if (!isIdle && idleService.monitorsOff) {
-            console.log("Turning on monitors with wlopm")
-            idleService.monitorsOff = false
-            Process.execute("wlopm", ["--on", "*"])
+        Component.onCompleted: {
+          if (typeof(IdleMonitor) === "undefined") {
+            console.warn("IdleMonitor not available - power management disabled")
+            return
           }
-        }
-      }
 
-      IdleMonitor {
-        enabled: true
-        respectInhibitors: true
-        timeout: idleService.lockTimeout
-        onIsIdleChanged: {
-          console.log("[LOCK] isIdle =", isIdle)
-          if (isIdle && !idleService.locked) {
-            console.log("Launching gtklock")
-            idleService.locked = true
-            Io.command("gtklock", ["-d"])
-          } else if (!isIdle) {
-            idleService.locked = false
-          }
-        }
-      }
+          const monitorQml = `
+            import QtQuick
+            import Quickshell.Wayland
+            IdleMonitor {
+              respectInhibitors: true
+              enabled: true
+              timeout: 0
+            }
+          `
 
-      IdleMonitor {
-        enabled: true
-        respectInhibitors: true
-        timeout: idleService.suspendTimeout
-        onIsIdleChanged: {
-          console.log("[SUSPEND] isIdle =", isIdle)
-          if (isIdle) {
-            console.log("Suspending system")
-            Process.execute("systemctl", ["suspend"])
-          }
+          var monOff = Qt.createQmlObject(monitorQml, ShellRoot)
+          monOff.timeout = Qt.binding(() => idleService.monitorTimeout)
+          monOff.onIsIdleChanged.connect(() => {
+            if (monOff.isIdle && !idleService.monitorsOff) {
+              console.log("Turning off monitors")
+              idleService.monitorsOff = true
+              CompositorService.powerOffMonitors()
+            } else if (!monOff.isIdle && idleService.monitorsOff) {
+              console.log("Turning on monitors")
+              idleService.monitorsOff = false
+              CompositorService.powerOnMonitors()
+            }
+          })
+
+          var lockMon = Qt.createQmlObject(monitorQml, ShellRoot)
+          lockMon.timeout = Qt.binding(() => idleService.lockTimeout)
+          lockMon.onIsIdleChanged.connect(() => {
+            if (lockMon.isIdle && !idleService.locked) {
+              console.log("Locking screen with gtklock")
+              idleService.locked = true
+              Process.launch("gtklock", ["-d"])
+            } else if (!lockMon.isIdle) {
+              idleService.locked = false
+            }
+          })
+
+          var suspMon = Qt.createQmlObject(monitorQml, ShellRoot)
+          suspMon.timeout = Qt.binding(() => idleService.suspendTimeout)
+          suspMon.onIsIdleChanged.connect(() => {
+            if (suspMon.isIdle) {
+              console.log("Suspending system")
+              Process.launch("systemctl", ["suspend"])
+            }
+          })
         }
       }
     }
