@@ -12,8 +12,6 @@ in
     import Quickshell
     import Quickshell.Io
     import QtQuick
-    import Quickshell.Services.Notifications
-    import Quickshell.Services.Mpris
 
     ShellRoot {
       QtObject {
@@ -38,9 +36,6 @@ in
         readonly property string fontFamily: "JetBrains Nerd Font Mono"
         readonly property int fontSize: 14
       }
-
-      NotificationService {}
-      MprisService {}
       IdleService {}
 
       PanelWindow {
@@ -68,18 +63,7 @@ in
         path: "/tmp/quickshell-toggle-cmd"
         triggers: Watcher.Created | Watcher.Modified
         onTriggered: panel.visible = !panel.visible
-      }
-
-      Component.onCompleted: {
-        NotificationService.updateStatusFile()
-      }
+      }    
     }
   '';
-
-  home.packages = with pkgs; [
-    (writeShellScriptBin "qs-write-status" ''
-      #!/usr/bin/env bash
-      printf '{"text":"%s","tooltip":"%s","class":"%s"}\n' "$1" "$2" "$3" > /tmp/quickshell-notification-status.json
-    '')
-  ];
 }

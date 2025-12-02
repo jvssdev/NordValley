@@ -26,10 +26,6 @@ let
 
     bibata-cursors
 
-    xdg-desktop-portal-gtk
-    xdg-desktop-portal-wlr
-    xwayland
-
     zig
     go
 

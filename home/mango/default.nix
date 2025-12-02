@@ -218,11 +218,19 @@ in
 
   xdg.portal = {
     enable = true;
+    wlr.enable = true;
     extraPortals = with pkgs; [
-      xdg-desktop-portal
       xdg-desktop-portal-wlr
       xdg-desktop-portal-gtk
     ];
-    config.common.default = "*";
+    config = {
+      mango = {
+        default = [ "gtk" ];
+        "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
+        "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
+        "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
+        "org.freedesktop.impl.portal.Inhibit" = [ ];
+      };
+    };
   };
 }

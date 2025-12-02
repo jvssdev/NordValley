@@ -36,7 +36,6 @@ in
             "--indicator"
           ];
         }
-        # Note: polkit agent is started via systemd service in environment.nix
         {
           sh = "sleep 1 && dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP";
         }
@@ -92,10 +91,6 @@ in
           ];
           open-floating = true;
         }
-        # {
-        #   matches = [{ app-id = "(?i)org\\.gnome\\.Calculator"; }];
-        #   open-floating = true;
-        # }
         {
           matches = [
             { app-id = "(?i)mpv"; }
@@ -113,6 +108,14 @@ in
         "Mod+A".action.spawn = "fuzzel";
         "Mod+T".action.spawn = "ghostty";
         "Mod+B".action.spawn = "helium";
+        "Mod+X".action.spawn = "wlogout";
+        "Mod+E".action.spawn = "thunar";
+
+        "Mod+P".action.spawn = [
+          "bash"
+          "-c"
+          "grim -g \"$(slurp)\" - | wl-copy"
+        ];
 
         "Mod+V".action.spawn = "fuzzel-clipboard";
         "Mod+Shift+V".action.spawn = "fuzzel-clipboard-clear";
@@ -213,12 +216,6 @@ in
 
         gaps = 5;
 
-        # struts = {
-        #   left = 20;
-        #   right = 20;
-        #   top = 20;
-        #   bottom = 20;
-        # };
       };
 
       input = {
