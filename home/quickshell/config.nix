@@ -10,7 +10,7 @@ in
 {
   xdg.configFile."quickshell/shell.qml".text = ''
     import Quickshell
-    import Quickshell.Io
+    import Quickshell.Wayland
     import QtQuick
 
     ShellRoot {
@@ -36,34 +36,8 @@ in
         readonly property string fontFamily: "JetBrains Nerd Font Mono"
         readonly property int fontSize: 14
       }
+
       IdleService {}
-
-      PanelWindow {
-        id: panel
-        visible: false
-        anchors.top: true
-        anchors.right: true
-        anchors.topMargin: 35
-        anchors.rightMargin: 10
-        width: 420
-        height: 650
-        color: theme.bg
-        radius: theme.radius
-        border.width: theme.borderWidth
-        border.color: theme.blue
-
-        NotificationCenter {
-          anchors.fill: parent
-          theme: theme
-          panel: panel
-        }
-      }
-
-      Watcher {
-        path: "/tmp/quickshell-toggle-cmd"
-        triggers: Watcher.Created | Watcher.Modified
-        onTriggered: panel.visible = !panel.visible
-      }    
     }
   '';
 }

@@ -11,6 +11,16 @@
 {
   imports = [
     ./config.nix
-    ./idle-service.nix
+  ];
+
+  xdg.configFile."quickshell/qmldir".text = ''
+    singleton IdleService 1.0 IdleService.qml
+  '';
+
+  xdg.configFile."quickshell/IdleService.qml".source = ./IdleService.qml;
+
+  home.packages = with pkgs; [
+    wlopm
+    gtklock
   ];
 }
