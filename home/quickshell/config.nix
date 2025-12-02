@@ -53,48 +53,58 @@ in
             return
           }
 
-          const monitorQml = `
+          const idleQml = `
             import QtQuick
             import Quickshell.Wayland
             IdleMonitor {
-              respectInhibitors: true
               enabled: true
+              respectInhibitors: true
               timeout: 0
             }
           `
 
-          var monOff = Qt.createQmlObject(monitorQml, ShellRoot)
+          var monOff = Qt.createQmlObject(idleQml, idleService)
           monOff.timeout = Qt.binding(() => idleService.monitorTimeout)
-          monOff.onIsIdleChanged.connect(() => {
+          monOff.isIdleChanged.connect(function() {
             if (monOff.isIdle && !idleService.monitorsOff) {
-              console.log("Turning off monitors")
               idleService.monitorsOff = true
               CompositorService.powerOffMonitors()
             } else if (!monOff.isIdle && idleService.monitorsOff) {
-              console.log("Turning on monitors")
               idleService.monitorsOff = false
               CompositorService.powerOnMonitors()
             }
           })
 
-          var lockMon = Qt.createQmlObject(monitorQml, ShellRoot)
+          var lockMon = Qt.createQmlObject(idleQml, idleService)
           lockMon.timeout = Qt.binding(() => idleService.lockTimeout)
-          lockMon.onIsIdleChanged.connect(() => {
+          lockMon.isIdleChanged.connect(function() {
             if (lockMon.isIdle && !idleService.locked) {
-              console.log("Locking screen with gtklock")
               idleService.locked = true
-              Process.launch("gtklock", ["-d"])
+              const lockCmd = `
+                import Quickshell.Io
+                Command {
+                  command: "gtklock"
+                  args: ["-d"]
+                }
+              `
+              Qt.createQmlObject(lockCmd, idleService)
             } else if (!lockMon.isIdle) {
               idleService.locked = false
             }
           })
 
-          var suspMon = Qt.createQmlObject(monitorQml, ShellRoot)
+          var suspMon = Qt.createQmlObject(idleQml, idleService)
           suspMon.timeout = Qt.binding(() => idleService.suspendTimeout)
-          suspMon.onIsIdleChanged.connect(() => {
+          suspMon.isIdleChanged.connect(function() {
             if (suspMon.isIdle) {
-              console.log("Suspending system")
-              Process.launch("systemctl", ["suspend"])
+              const suspCmd = `
+                import Quickshell.Io
+                Command {
+                  command: "systemctl"
+                  args: ["suspend"]
+                }
+              `
+              Qt.createQmlObject(suspCmd, idleService)
             }
           })
         }
