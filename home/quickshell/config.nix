@@ -11,6 +11,7 @@ in
   xdg.configFile."quickshell/shell.qml".text = ''
     import Quickshell
     import Quickshell.Wayland
+    import Quickshell.Io
     import QtQuick
 
     ShellRoot {
@@ -39,63 +40,51 @@ in
 
       QtObject {
         id: idleService
-        
-        property int monitorTimeout: 240000  // 4 min
-        property int lockTimeout:    300000  // 5 min
-        property int suspendTimeout: 600000  // 10 min
-        
+        property int monitorTimeout: 240
+        property int lockTimeout: 300
+        property int suspendTimeout: 600
         property bool monitorsOff: false
         property bool locked: false
-        
-        Component.onCompleted: {
-          console.log("IdleService started")
-          console.log("Monitor off → " + (monitorTimeout / 60000) + " min")
-          console.log("Lock       → " + (lockTimeout / 60000) + " min")
-          console.log("Suspend    → " + (suspendTimeout / 60000) + " min")
-        }
       }
 
       IdleMonitor {
-        id: monitorOffMonitor
-        enabled: true
-        respectInhibitors: true
         timeout: idleService.monitorTimeout
-
-        onIsIdleChanged: if (isIdle && !idleService.monitorsOff) {
-          console.log("Turning off monitors...")
-          idleService.monitorsOff = true
-          Process.execute("wlopm", ["--off", "*"])
-        } else if (!isIdle && idleService.monitorsOff) {
-          console.log("Turning on monitors...")
-          idleService.monitorsOff = false
-          Process.execute("wlopm", ["--on", "*"])
+        respectInhibitors: true
+        onIsIdleChanged: {
+          if (isIdle && !idleService.monitorsOff) {
+            console.log("Turning off monitors")
+            idleService.monitorsOff = true
+            Process.execute("wlopm", ["--off", "*"])
+          } else if (!isIdle && idleService.monitorsOff) {
+            console.log("Turning on monitors")
+            idleService.monitorsOff = false
+            Process.execute("wlopm", ["--on", "*"])
+          }
         }
       }
 
       IdleMonitor {
-        id: lockMonitor
-        enabled: true
-        respectInhibitors: true
         timeout: idleService.lockTimeout
-
-        onIsIdleChanged: if (isIdle && !idleService.locked) {
-          console.log("Locking with gtklock...")
-          idleService.locked = true
-          Process.execute("gtklock", ["-d"])  // -d = daemon mode
-        } else if (!isIdle) {
-          idleService.locked = false
+        respectInhibitors: true
+        onIsIdleChanged: {
+          if (isIdle && !idleService.locked) {
+            console.log("Locking screen with gtklock")
+            idleService.locked = true
+            Io.command("gtklock -d")
+          } else if (!isIdle) {
+            idleService.locked = false
+          }
         }
       }
 
       IdleMonitor {
-        id: suspendMonitor
-        enabled: true
-        respectInhibitors: true
         timeout: idleService.suspendTimeout
-
-        onIsIdleChanged: if (isIdle) {
-          console.log("Suspending system...")
-          Process.execute("systemctl", ["suspend"])
+        respectInhibitors: true
+        onIsIdleChanged: {
+          if (isIdle) {
+            console.log("Suspending system")
+            Process.execute("systemctl", ["suspend"])
+          }
         }
       }
     }
