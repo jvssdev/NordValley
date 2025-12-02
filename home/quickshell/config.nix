@@ -33,79 +33,69 @@ in
         readonly property int borderWidth: 2
         readonly property int padding: 14
         readonly property int spacing: 10
-        readonly property string fontFamily: "JetBrains Nerd Font Mono"
+        readonly property string fontFamily: "JetBrainsMono Nerd Font"
         readonly property int fontSize: 14
       }
 
-      // Idle management
       QtObject {
         id: idleService
         
-        property int monitorTimeout: 240000   // 4 minutes
-        property int lockTimeout: 300000      // 5 minutes
-        property int suspendTimeout: 600000   // 10 minutes
+        property int monitorTimeout: 240000  // 4 min
+        property int lockTimeout:    300000  // 5 min
+        property int suspendTimeout: 600000  // 10 min
         
         property bool monitorsOff: false
         property bool locked: false
         
-        // Monitor to turn off screen
-        IdleMonitor {
-          id: monitorOffMonitor
-          enabled: true
-          respectInhibitors: true
-          timeout: idleService.monitorTimeout
-          
-          onIsIdleChanged: {
-            if (isIdle && !idleService.monitorsOff) {
-              console.log("Turning off monitors...")
-              idleService.monitorsOff = true
-              Process.execute("wlopm", ["--off", "*"])
-            } else if (!isIdle && idleService.monitorsOff) {
-              console.log("Turning on monitors...")
-              idleService.monitorsOff = false
-              Process.execute("wlopm", ["--on", "*"])
-            }
-          }
-        }
-        
-        // Monitor to lock with gtklock
-        IdleMonitor {
-          id: lockMonitor
-          enabled: true
-          respectInhibitors: true
-          timeout: idleService.lockTimeout
-          
-          onIsIdleChanged: {
-            if (isIdle && !idleService.locked) {
-              console.log("Locking with gtklock...")
-              idleService.locked = true
-              Process.execute("gtklock", ["-d"])
-            } else if (!isIdle) {
-              idleService.locked = false
-            }
-          }
-        }
-        
-        // Monitor to suspend system
-        IdleMonitor {
-          id: suspendMonitor
-          enabled: true
-          respectInhibitors: true
-          timeout: idleService.suspendTimeout
-          
-          onIsIdleChanged: {
-            if (isIdle) {
-              console.log("Suspending system...")
-              Process.execute("systemctl", ["suspend"])
-            }
-          }
-        }
-        
         Component.onCompleted: {
-          console.log("IdleService started with timeouts:")
-          console.log("  Monitor off: " + (monitorTimeout / 1000) + "s (" + (monitorTimeout / 60000) + " min)")
-          console.log("  Lock:        " + (lockTimeout / 1000) + "s (" + (lockTimeout / 60000) + " min)")
-          console.log("  Suspend:     " + (suspendTimeout / 1000) + "s (" + (suspendTimeout / 60000) + " min)")
+          console.log("IdleService started")
+          console.log("Monitor off → " + (monitorTimeout / 60000) + " min")
+          console.log("Lock       → " + (lockTimeout / 60000) + " min")
+          console.log("Suspend    → " + (suspendTimeout / 60000) + " min")
+        }
+      }
+
+      IdleMonitor {
+        id: monitorOffMonitor
+        enabled: true
+        respectInhibitors: true
+        timeout: idleService.monitorTimeout
+
+        onIsIdleChanged: if (isIdle && !idleService.monitorsOff) {
+          console.log("Turning off monitors...")
+          idleService.monitorsOff = true
+          Process.execute("wlopm", ["--off", "*"])
+        } else if (!isIdle && idleService.monitorsOff) {
+          console.log("Turning on monitors...")
+          idleService.monitorsOff = false
+          Process.execute("wlopm", ["--on", "*"])
+        }
+      }
+
+      IdleMonitor {
+        id: lockMonitor
+        enabled: true
+        respectInhibitors: true
+        timeout: idleService.lockTimeout
+
+        onIsIdleChanged: if (isIdle && !idleService.locked) {
+          console.log("Locking with gtklock...")
+          idleService.locked = true
+          Process.execute("gtklock", ["-d"])  // -d = daemon mode
+        } else if (!isIdle) {
+          idleService.locked = false
+        }
+      }
+
+      IdleMonitor {
+        id: suspendMonitor
+        enabled: true
+        respectInhibitors: true
+        timeout: idleService.suspendTimeout
+
+        onIsIdleChanged: if (isIdle) {
+          console.log("Suspending system...")
+          Process.execute("systemctl", ["suspend"])
         }
       }
     }
