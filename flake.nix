@@ -78,11 +78,16 @@
 
       system = "x86_64-linux";
 
+      niriUnstableOverlay = final: prev: {
+        niri = prev.niri-unstable;
+      };
+
       pkgs = import nixpkgs {
         localSystem = system;
         config.allowUnfree = true;
         overlays = [
           nur.overlays.default
+          niriUnstableOverlay
           (final: prev: {
             quickshell = inputs.quickshell.packages.${system}.default;
             mango = inputs.mango.packages.${system}.default;
