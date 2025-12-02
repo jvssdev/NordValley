@@ -1,9 +1,8 @@
-pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
 
-Singleton {
+QtObject {
     id: root
     
     // Timeouts in milliseconds

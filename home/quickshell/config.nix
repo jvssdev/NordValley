@@ -37,7 +37,9 @@ in
         readonly property int fontSize: 14
       }
 
-      IdleService {}
+      IdleService {
+        id: idleService
+      }
     }
   '';
 }
