@@ -209,7 +209,9 @@
             niri-flake.nixosModules.niri
             { programs.niri.enable = true; }
           ]
-          [ niri-flake.homeModules.niri ];
+          [
+            niri-flake.homeModules.niri
+          ];
 
       # ========================= UNIVERSAL HM =========================
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {

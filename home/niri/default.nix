@@ -14,7 +14,11 @@ in
 {
   programs.niri = {
     enable = true;
-    package = pkgs.niri-unstable;
+
+    package = pkgs.niri-unstable // {
+      inherit (pkgs.niri-unstable) cargoBuildNoDefaultFeatures cargoBuildFeatures;
+    };
+
     settings = {
       prefer-no-csd = true;
 
@@ -141,7 +145,6 @@ in
 
         "Mod+W".action = "toggle-column-tabbed-display";
 
-        # Tab Navigation
         "Mod+Left".action = "focus-window-down";
         "Mod+Right".action = "focus-window-up";
 
@@ -170,10 +173,7 @@ in
 
         "Mod+J".action = "focus-workspace-up";
         "Mod+K".action = "focus-workspace-down";
-        # "Mod+Page_Up".action = "focus-workspace-up";
-        # "Mod+Control+Page_Down".action = "focus-workspace-down";
-        # "Mod+Control+Page_Up".action = "focus-workspace-up";
-        # "Mod+WheelScrollDown".action = "focus-workspace-down";
+
         "Mod+WheelScrollUp".action = "focus-workspace-up";
         "Control+Mod+WheelScrollDown".action = "focus-workspace-down";
         "Control+Mod+WheelScrollUp".action = "focus-workspace-up";
@@ -216,7 +216,6 @@ in
         };
 
         gaps = 5;
-
       };
 
       input = {
