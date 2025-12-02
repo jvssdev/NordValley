@@ -2,31 +2,26 @@
   config,
   pkgs,
   lib,
-  inputs,
   ...
 }:
+
 let
-  system = pkgs.stdenv.hostPlatform.system;
-  niriPackages = inputs.niri-flake.packages.${system};
-  xwaylandSatellitePkg = niriPackages.xwayland-satellite;
   palette = config.colorScheme.palette;
 in
 {
   programs.niri = {
     enable = true;
+    package = pkgs.niri-unstable;
 
     settings = {
       prefer-no-csd = true;
-
       xwayland-satellite = {
         enable = true;
-        path = lib.getExe xwaylandSatellitePkg;
+        path = lib.getExe pkgs.xwayland-satellite-unstable;
       };
-
       animations = {
         enable = false;
       };
-
       spawn-at-startup = [
         { command = [ "blueman-applet" ]; }
         { command = [ "waybar" ]; }
@@ -68,7 +63,6 @@ in
           ];
         }
       ];
-
       window-rules = [
         {
           matches = [ { app-id = "com.mitchellh.ghostty"; } ];
@@ -104,25 +98,20 @@ in
           open-floating = true;
         }
       ];
-
       binds = {
         "Mod+A".action.spawn = "fuzzel";
         "Mod+T".action.spawn = "ghostty";
         "Mod+B".action.spawn = "helium";
         "Mod+X".action.spawn = "wlogout";
         "Mod+E".action.spawn = "thunar";
-
         "Mod+P".action.spawn = [
           "bash"
           "-c"
           "grim -g \"$(slurp)\" - | wl-copy"
         ];
-
         "Mod+V".action.spawn = "fuzzel-clipboard";
         "Mod+Shift+V".action.spawn = "fuzzel-clipboard-clear";
-
         "Mod+N".action.spawn = "mako-fuzzel";
-
         "Mod+1".action.focus-workspace = 1;
         "Mod+2".action.focus-workspace = 2;
         "Mod+3".action.focus-workspace = 3;
@@ -132,18 +121,14 @@ in
         "Mod+7".action.focus-workspace = 7;
         "Mod+8".action.focus-workspace = 8;
         "Mod+9".action.focus-workspace = 9;
-
         "Mod+Q".action = "close-window";
         "Mod+Shift+T".action = "toggle-window-floating";
         "Mod+Shift+F".action = "fullscreen-window";
         "Mod+Alt+F".action = "toggle-windowed-fullscreen";
         "Mod+F".action = "maximize-column";
-
         "Mod+W".action = "toggle-column-tabbed-display";
-
         "Mod+Left".action = "focus-window-down";
         "Mod+Right".action = "focus-window-up";
-
         "Mod+Shift+1".action.move-column-to-workspace = 1;
         "Mod+Shift+2".action.move-column-to-workspace = 2;
         "Mod+Shift+3".action.move-column-to-workspace = 3;
@@ -153,32 +138,24 @@ in
         "Mod+Shift+7".action.move-column-to-workspace = 7;
         "Mod+Shift+8".action.move-column-to-workspace = 8;
         "Mod+Shift+9".action.move-column-to-workspace = 9;
-
         "Mod+BracketLeft".action = "consume-or-expel-window-left";
         "Mod+BracketRight".action = "consume-or-expel-window-right";
         "Mod+Period".action = "expel-window-from-column";
-
         "Mod+Minus".action.set-column-width = "-10%";
         "Mod+Equal".action.set-column-width = "+10%";
-
         "Mod+Shift+Minus".action.set-window-height = "-10%";
         "Mod+Shift+Equal".action.set-window-height = "+10%";
-
         "Mod+H".action = "focus-column-left";
         "Mod+L".action = "focus-column-right";
-
         "Mod+J".action = "focus-workspace-up";
         "Mod+K".action = "focus-workspace-down";
-
         "Mod+WheelScrollUp".action = "focus-workspace-up";
         "Control+Mod+WheelScrollDown".action = "focus-workspace-down";
         "Control+Mod+WheelScrollUp".action = "focus-workspace-up";
       };
-
       hotkey-overlay = {
         skip-at-startup = true;
       };
-
       layout = {
         focus-ring = {
           enable = true;
@@ -210,16 +187,13 @@ in
           geometry-corner-radius = 0;
           clip-to-geometry = true;
         };
-
         gaps = 5;
       };
-
       input = {
         keyboard.xkb = {
           layout = "br";
           variant = "abnt2";
         };
-
         touchpad = {
           click-method = "button-areas";
           dwt = true;
@@ -234,7 +208,6 @@ in
         focus-follows-mouse.enable = true;
         warp-mouse-to-focus.enable = false;
       };
-
       outputs = {
         "DP-1" = {
           mode = {
@@ -249,12 +222,10 @@ in
           };
         };
       };
-
       cursor = {
         size = 24;
         theme = "Bibata-Modern-Ice";
       };
-
       environment = {
         CLUTTER_BACKEND = "wayland";
         GDK_BACKEND = "wayland,x11";
@@ -264,7 +235,6 @@ in
         QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
         ELECTRON_OZONE_PLATFORM_HINT = "auto";
         ELECTRON_ENABLE_HARDWARE_ACCELERATION = "1";
-
         XDG_SESSION_TYPE = "wayland";
         XDG_CURRENT_DESKTOP = "niri";
         DISPLAY = ":0";

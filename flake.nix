@@ -212,11 +212,12 @@
         mkSystem false false true
           [
             niri-flake.nixosModules.niri
-            { programs.niri.enable = true; }
+            {
+              programs.niri.enable = true;
+              programs.niri.package = pkgs.niri-unstable;
+            }
           ]
-          [
-            niri-flake.homeModules.niri
-          ];
+          [ ];
 
       # ========================= UNIVERSAL HM =========================
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
