@@ -131,6 +131,10 @@ in
         transition: all 0.2s ease-in-out;
       }
 
+      #dwl-tags {
+        padding-right: 0.5rem;
+      }
+
       #dwl-tags button,
       #dwl-tags > * {
         padding: 0 8px;
@@ -140,8 +144,8 @@ in
         font-weight: normal;
       }
 
-      #dwl-tags button:not(.occupied):not(.focused):not(.urgent),
-      #dwl-tags > *:not(.occupied):not(.focused):not(.urgent) {
+      #dwl-tags button:not(.occupied):not(.focused),
+      #dwl-tags > *:not(.occupied):not(.focused) {
         font-size: 0;
         min-width: 0;
         padding: 0;
@@ -177,12 +181,8 @@ in
         background-color: #${colors.base03};
       }
 
-      #dwl-tags button.occupied,
-      #dwl-tags button.focused,
-      #dwl-tags button.urgent,
-      #dwl-tags > *.occupied,
-      #dwl-tags > *.focused,
-      #dwl-tags > *.urgent {
+      #dwl-tags button,
+      #dwl-tags > * {
         transition: all 0.2s ease-in-out;
       }
 
