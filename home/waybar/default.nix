@@ -94,6 +94,7 @@ in
       }
       #tags button.occupied {
         color: #${colors.base05};
+        background: #${colors.base02};
       }
       #tags button.focused {
         background: #${colors.base0D};
@@ -102,8 +103,7 @@ in
       #tags button.urgent {
         color: #${colors.base08};
       }
-      /* CORREÇÃO PRINCIPAL: Esconder tags vazias do River */
-      #tags button:not(.occupied):not(.focused) {
+      #tags button:not(.occupied):not(.focused):not(.urgent) {
         font-size: 0;
         min-width: 0;
         padding: 0;
@@ -113,6 +113,13 @@ in
         box-shadow: none;
         outline: none;
         transition: none;
+      }
+      #tags button.occupied {
+        font-size: 13px;
+        min-width: auto;
+        padding: 0 8px;
+        margin: 0 4px;
+        background: #${colors.base02};
       }
       #dwl-tags .tag {
         padding: 0 8px;
@@ -124,6 +131,7 @@ in
       }
       #dwl-tags .occupied {
         color: #${colors.base05};
+        background: #${colors.base02};
       }
       #dwl-tags .focused {
         background: #${colors.base0D};
@@ -132,7 +140,7 @@ in
       #dwl-tags .urgent {
         color: #${colors.base08};
       }
-      #dwl-tags .tag:not(.focused):not(.occupied) {
+      #dwl-tags .tag:not(.focused):not(.occupied):not(.urgent) {
         font-size: 0;
         min-width: 0;
         padding: 0;
@@ -142,6 +150,13 @@ in
         box-shadow: none;
         outline: none;
         transition: none;
+      }
+      #dwl-tags .occupied {
+        font-size: 13px;
+        min-width: auto;
+        padding: 0 8px;
+        margin: 0 4px;
+        background: #${colors.base02};
       }
 
       #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
