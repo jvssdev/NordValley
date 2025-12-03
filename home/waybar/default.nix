@@ -43,17 +43,16 @@ let
   mangoConfig = {
     modules-left = [
       "dwl/tags"
-      "dwl/window"
     ];
-    "dwl/tags" = { };
-    "dwl/window" = {
-      format = "{title}";
-      on-click = "";
-      tooltip = false;
+    "dwl/tags" = {
+      # "num-tags" = 9;
+      # "hide-vacant" = true;
+      # expand = false;
+      # "disable-click" = true;
     };
   };
   niriConfig = {
-    modules-left = [ "niri/workspaces" ];
+    modules-left- = [ "niri/workspaces" ];
     "niri/workspaces" = {
       "format" = "{icon}";
     };
@@ -86,106 +85,105 @@ in
         border-bottom: 2px solid #${colors.base02};
       }
 
-      #tags {
-        margin: 0px;
-        margin-left: 0px;
-        margin-right: 2px;
-        padding: 0px;
-        background-color: transparent;
-        color: #${colors.base05};
-      }
-
       #tags button {
-        min-width: 0;
-        min-height: 0;
-        margin: 0px;
-        margin-left: -2px;
-        padding: 0px;
-        background-color: transparent;
-        border-radius: 4px;
-        font-size: 0;
-        font-weight: bold;
+        padding: 0 8px;
+        margin: 0 4px;
+        border-radius: 0px;
+        color: #${colors.base05};
+        font-weight: normal;
       }
 
-      #tags button.occupied,
-      #tags button.focused,
-      #tags button.urgent {
-        padding-left: 24px;
-        padding-right: 23px;
-        margin-left: 1px;
-        font-size: 13px;
+      #tags button:not(.occupied):not(.focused):not(.urgent) {
+        font-size: 0;
+        min-width: 0;
+        padding: 0;
+        margin: -50px;
+        color: transparent;
+        background-color: transparent;
+        box-shadow: none;
+        outline: none;
+        transition: none;
       }
 
       #tags button.occupied {
-        background-color: transparent;
+        background-color: #${colors.base02};
         color: #${colors.base05};
       }
 
       #tags button.focused {
         background-color: #${colors.base0D};
         color: #${colors.base00};
+        font-weight: bold;
       }
 
       #tags button.urgent {
         background-color: #${colors.base08};
-        color: #${colors.base05};
-      }
-
-      #dwl-tags {
-        margin: 0px;
-        margin-left: 0px;
-        margin-right: 2px;
-        padding: 0px;
-        background-color: transparent;
-        color: #${colors.base05};
-      }
-
-      #dwl-tags button {
-        min-width: 0;
-        min-height: 0;
-        margin: 0px;
-        margin-left: -2px;
-        padding: 0px;
-        background-color: transparent;
-        border-radius: 4px;
-        font-size: 0;
-        font-weight: bold;
-      }
-
-      #dwl-tags button.occupied,
-      #dwl-tags button.focused,
-      #dwl-tags button.urgent {
-        padding-left: 24px;
-        padding-right: 23px;
-        margin-left: 1px;
-        font-size: 13px;
-      }
-
-      #dwl-tags button.occupied {
-        background-color: transparent;
-        color: #${colors.base05};
-      }
-
-      #dwl-tags button.focused {
-        background-color: #${colors.base0D};
         color: #${colors.base00};
       }
 
-      #dwl-tags button.urgent {
-        background-color: #${colors.base08};
+      #tags button:hover {
+        background-color: #${colors.base03};
+      }
+
+      #tags button.occupied,
+      #tags button.focused,
+      #tags button.urgent {
+        transition: all 0.2s ease-in-out;
+      }
+
+      #dwl-tags {
+        padding-right: 0.5rem;
+      }
+
+      #dwl-tags button,
+      #dwl-tags > * {
+        padding: 0 8px;
+        margin: 0 4px;
+        border-radius: 0px;
+        color: #${colors.base05};
+        font-weight: normal;
+      }
+
+      #dwl-tags button:not(.occupied):not(.focused),
+      #dwl-tags > *:not(.occupied):not(.focused) {
+        font-size: 0;
+        min-width: 0;
+        padding: 0;
+        margin: -50px;
+        color: transparent;
+        background-color: transparent;
+        box-shadow: none;
+        outline: none;
+        transition: none;
+      }
+
+      #dwl-tags button.occupied,
+      #dwl-tags > *.occupied {
+        background-color: #${colors.base02};
         color: #${colors.base05};
       }
 
-      #dwl-window {
-        margin: 0px;
-        margin-left: 6px;
-        margin-right: 4px;
-        padding: 0px;
-        padding-left: 4px;
-        padding-right: 4px;
-        font-size: 14px;
-        background-color: transparent;
-        color: #${colors.base05};
+      #dwl-tags button.focused,
+      #dwl-tags > *.focused {
+        background-color: #${colors.base0D};
+        color: #${colors.base00};
+        font-weight: bold;
+      }
+
+      #dwl-tags button.urgent,
+      #dwl-tags > *.urgent {
+        background-color: #${colors.base08};
+        color: #${colors.base00};
+      }
+
+      #dwl-tags button:hover,
+      #dwl-tags > *:hover {
+        background-color: #${colors.base03};
+      }
+
+      #dwl-tags button,
+      #dwl-tags > * {
+        transition: all 0.2s ease-in-out;
       }
 
       #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
