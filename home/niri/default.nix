@@ -4,15 +4,21 @@
   lib,
   ...
 }:
+
 let
   palette = config.colorScheme.palette;
 in
 {
   programs.niri.settings = {
     prefer-no-csd = true;
-    animations = {
-      enable = false;
+
+    xwayland-satellite = {
+      enable = true;
+      path = lib.getExe pkgs.xwayland-satellite-unstable;
     };
+
+    animations.enable = false;
+
     spawn-at-startup = [
       { command = [ "blueman-applet" ]; }
       { command = [ "waybar" ]; }
@@ -54,6 +60,7 @@ in
         ];
       }
     ];
+
     window-rules = [
       {
         matches = [ { app-id = "com.mitchellh.ghostty"; } ];
@@ -89,6 +96,7 @@ in
         open-floating = true;
       }
     ];
+
     binds = {
       "Mod+A".action.spawn = "fuzzel";
       "Mod+T".action.spawn = "ghostty";
@@ -144,9 +152,9 @@ in
       "Control+Mod+WheelScrollDown".action = "focus-workspace-down";
       "Control+Mod+WheelScrollUp".action = "focus-workspace-up";
     };
-    hotkey-overlay = {
-      skip-at-startup = true;
-    };
+
+    hotkey-overlay.skip-at-startup = true;
+
     layout = {
       focus-ring = {
         enable = true;
@@ -154,29 +162,35 @@ in
         active.color = "#${palette.base01}";
         inactive.color = "#${palette.base00}";
       };
+
       border = {
         enable = true;
         width = 4;
         active.color = "#${palette.base02}";
         inactive.color = "#${palette.base03}";
       };
+
       tab-indicator = {
         width = 8;
         corner-radius = 0;
         place-within-column = true;
         length.total-proportion = 1.0;
       };
+
       window-rule = {
         geometry-corner-radius = 0;
         clip-to-geometry = true;
       };
+
       gaps = 5;
     };
+
     input = {
       keyboard.xkb = {
         layout = "br";
         variant = "abnt2";
       };
+
       touchpad = {
         click-method = "button-areas";
         dwt = true;
@@ -188,9 +202,11 @@ in
         middle-emulation = true;
         accel-profile = "adaptive";
       };
+
       focus-follows-mouse.enable = true;
       warp-mouse-to-focus.enable = false;
     };
+
     outputs = {
       "DP-1" = {
         mode = {
@@ -205,10 +221,12 @@ in
         };
       };
     };
+
     cursor = {
       size = 24;
       theme = "Bibata-Modern-Ice";
     };
+
     environment = {
       CLUTTER_BACKEND = "wayland";
       GDK_BACKEND = "wayland,x11";
