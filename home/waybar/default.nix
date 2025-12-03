@@ -43,12 +43,13 @@ let
   mangoConfig = {
     modules-left = [
       "dwl/tags"
+      "dwl/window"
     ];
-    "dwl/tags" = {
-      "num-tags" = 9;
-      "hide-vacant" = true;
-      expand = false;
-      "disable-click" = true;
+    "dwl/tags" = { };
+    "dwl/window" = {
+      format = "{title}";
+      on-click = "";
+      tooltip = false;
     };
   };
   niriConfig = {
@@ -86,17 +87,20 @@ in
       }
 
       #tags {
-        margin: 0;
-        padding: 0;
+        margin: 0px;
+        margin-left: 0px;
+        margin-right: 2px;
+        padding: 0px;
         background-color: transparent;
+        color: #${colors.base05};
       }
 
       #tags button {
         min-width: 0;
         min-height: 0;
-        margin: 0;
+        margin: 0px;
         margin-left: -2px;
-        padding: 0;
+        padding: 0px;
         background-color: transparent;
         border-radius: 4px;
         font-size: 0;
@@ -113,14 +117,13 @@ in
       }
 
       #tags button.occupied {
-        background-color: #${colors.base02};
+        background-color: transparent;
         color: #${colors.base05};
       }
 
       #tags button.focused {
         background-color: #${colors.base0D};
         color: #${colors.base00};
-        font-weight: bold;
       }
 
       #tags button.urgent {
@@ -129,18 +132,20 @@ in
       }
 
       #dwl-tags {
-        margin: 0;
-        padding: 0;
+        margin: 0px;
+        margin-left: 0px;
+        margin-right: 2px;
+        padding: 0px;
         background-color: transparent;
+        color: #${colors.base05};
       }
 
-      #dwl-tags button,
-      #dwl-tags > * {
+      #dwl-tags button {
         min-width: 0;
         min-height: 0;
-        margin: 0;
+        margin: 0px;
         margin-left: -2px;
-        padding: 0;
+        padding: 0px;
         background-color: transparent;
         border-radius: 4px;
         font-size: 0;
@@ -149,32 +154,37 @@ in
 
       #dwl-tags button.occupied,
       #dwl-tags button.focused,
-      #dwl-tags button.urgent,
-      #dwl-tags > *.occupied,
-      #dwl-tags > *.focused,
-      #dwl-tags > *.urgent {
+      #dwl-tags button.urgent {
         padding-left: 24px;
         padding-right: 23px;
         margin-left: 1px;
         font-size: 13px;
       }
 
-      #dwl-tags button.occupied,
-      #dwl-tags > *.occupied {
-        background-color: #${colors.base02};
+      #dwl-tags button.occupied {
+        background-color: transparent;
         color: #${colors.base05};
       }
 
-      #dwl-tags button.focused,
-      #dwl-tags > *.focused {
+      #dwl-tags button.focused {
         background-color: #${colors.base0D};
         color: #${colors.base00};
-        font-weight: bold;
       }
 
-      #dwl-tags button.urgent,
-      #dwl-tags > *.urgent {
+      #dwl-tags button.urgent {
         background-color: #${colors.base08};
+        color: #${colors.base05};
+      }
+
+      #dwl-window {
+        margin: 0px;
+        margin-left: 6px;
+        margin-right: 4px;
+        padding: 0px;
+        padding-left: 4px;
+        padding-right: 4px;
+        font-size: 14px;
+        background-color: transparent;
         color: #${colors.base05};
       }
 
