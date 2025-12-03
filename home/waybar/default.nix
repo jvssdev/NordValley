@@ -123,36 +123,60 @@ in
         color: #${colors.base08};
       }
 
-      #dwl-tags .tag {
+      #dwl-tags, .dwl-tags, #dwl-tags-wrapper {
+        display: block;
+      }
+
+      #dwl-tags .tag,
+      .dwl-tags .tag,
+      #dwl-tags .tag button,
+      .dwl-tags .tag button,
+      #dwl-tags .tag > .label,
+      .dwl-tags .tag > .label {
         padding: 0 8px;
         margin: 0 4px;
         min-width: 0;
         color: #${colors.base05};
+        line-height: 1;
       }
 
-      #dwl-tags .tag:not(.occupied):not(.focused) {
-        font-size: 0;
-        min-width: 0;
-        padding: 0;
-        margin: 0;
-        color: transparent;
-        background: transparent;
-        box-shadow: none;
-        outline: none;
+      #dwl-tags .tag:not(.occupied):not(.focused),
+      .dwl-tags .tag:not(.occupied):not(.focused),
+      #dwl-tags .tag:not(.occupied):not(.focused) button,
+      .dwl-tags .tag:not(.occupied):not(.focused) button,
+      #dwl-tags .tag:not(.occupied):not(.focused) > .label,
+      .dwl-tags .tag:not(.occupied):not(.focused) > .label,
+      #dwl-tags .tag[aria-hidden="true"],
+      .dwl-tags .tag[aria-hidden="true"] {
+        display: inline-block !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+        font-size: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
       }
 
-      #dwl-tags .tag.occupied {
+      #dwl-tags .tag.occupied,
+      .dwl-tags .tag.occupied {
         background: #${colors.base01};
         color: #${colors.base05};
       }
 
-      #dwl-tags .tag.focused {
+      #dwl-tags .tag.focused,
+      .dwl-tags .tag.focused {
         background: #${colors.base0D};
         color: #${colors.base00};
         font-weight: bold;
       }
 
-      #dwl-tags .tag.urgent {
+      #dwl-tags .tag.urgent,
+      .dwl-tags .tag.urgent {
         background: #${colors.base08};
         color: #${colors.base00};
         animation: blink 1s infinite;
