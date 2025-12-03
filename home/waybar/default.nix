@@ -143,7 +143,7 @@ in
         outline: none;
         transition: none;
       }
-      
+
       #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
       #bluetooth, #network, #custom-quickshell-notification, #tray, #custom-power {
         padding: 0 10px;
@@ -251,4 +251,4 @@ in
     }
     // selectedConfig;
   };
-}"
+}
