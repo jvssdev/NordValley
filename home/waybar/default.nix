@@ -19,25 +19,13 @@ let
         echo '{"text":"","tooltip":"Do not disturb is off"}'
       fi
     elif [[ "$1" = "toggle" ]]; then
-      [[ "$(makoctl mode)" = "do-not-disturb" ]] &&
-        makoctl mode -r do-not-disturb ||
+      if [[ "$(makoctl mode)" = "do-not-disturb" ]]; then
+        makoctl mode -r do-not-disturb
+      else
         makoctl mode -s do-not-disturb
+      fi
     fi
   '';
-
-  commonModulesCenter = [ "clock" ];
-
-  commonModulesRight = [
-    "cpu"
-    "memory"
-    "custom/notification"
-    "tray"
-    "battery"
-    "pulseaudio"
-    "bluetooth"
-    "network"
-    "custom/power"
-  ];
 
   riverConfig = {
     modules-left = [ "river/tags" ];
@@ -51,14 +39,12 @@ let
       "dwl/tags"
       "dwl/window"
     ];
-
     "dwl/tags" = {
-      "num-tags" = 9;
-      "hide-vacant" = true;
+      num-tags = 9;
+      hide-vacant = true;
       expand = false;
-      "disable-click" = true;
+      disable-click = true;
     };
-
     "dwl/window" = {
       format = "{app_id} | {title}";
       max-length = 50;
@@ -94,7 +80,6 @@ in
         font-size: 13px;
         margin: 0;
         padding: 0;
-        border: none;
         border-radius: 0;
       }
 
@@ -104,120 +89,54 @@ in
         border-bottom: 2px solid #${colors.base02};
       }
 
-      #tags button {
+      #tags button,
+      #dwl-tags .tag,
+      #dwl-tags .tag button {
         padding: 0 8px;
         margin: 0 4px;
-        min-width: 0;
       }
 
-      #tags button.occupied {
-        color: #${colors.base05};
-      }
-
-      #tags button.focused {
+      #tags button.focused,
+      #dwl-tags .tag.focused {
         background: #${colors.base0D};
         color: #${colors.base00};
       }
 
-      #tags button.urgent {
-        color: #${colors.base08};
-      }
-
-      #dwl-tags, .dwl-tags, #dwl-tags-wrapper {
-        display: block;
-      }
-
-      #dwl-tags .tag,
-      .dwl-tags .tag,
-      #dwl-tags .tag button,
-      .dwl-tags .tag button,
-      #dwl-tags .tag > .label,
-      .dwl-tags .tag > .label {
-        padding: 0 8px;
-        margin: 0 4px;
-        min-width: 0;
-        color: #${colors.base05};
-        line-height: 1;
-      }
-
-      #dwl-tags .tag:not(.occupied):not(.focused),
-      .dwl-tags .tag:not(.occupied):not(.focused),
-      #dwl-tags .tag:not(.occupied):not(.focused) button,
-      .dwl-tags .tag:not(.occupied):not(.focused) button,
-      #dwl-tags .tag:not(.occupied):not(.focused) > .label,
-      .dwl-tags .tag:not(.occupied):not(.focused) > .label,
-      #dwl-tags .tag[aria-hidden="true"],
-      .dwl-tags .tag[aria-hidden="true"] {
-        display: inline-block !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        width: 0 !important;
-        height: 0 !important;
-        font-size: 0 !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        overflow: hidden !important;
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-      }
-
-      #dwl-tags .tag.occupied,
-      .dwl-tags .tag.occupied {
+      #dwl-tags .tag.occupied {
         background: #${colors.base01};
         color: #${colors.base05};
       }
 
-      #dwl-tags .tag.focused,
-      .dwl-tags .tag.focused {
-        background: #${colors.base0D};
-        color: #${colors.base00};
-        font-weight: bold;
-      }
-
-      #dwl-tags .tag.urgent,
-      .dwl-tags .tag.urgent {
+      #dwl-tags .tag.urgent {
         background: #${colors.base08};
         color: #${colors.base00};
-        animation: blink 1s infinite;
       }
 
-      @keyframes blink {
-        0%   { opacity: 1; }
-        50%  { opacity: 0.5; }
-        100% { opacity: 1; }
-      }
-
-      #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
-      #bluetooth, #network, #custom-notification, #tray, #custom-power {
+      #window,
+      #mpris,
+      #clock,
+      #cpu,
+      #memory,
+      #battery,
+      #pulseaudio,
+      #bluetooth,
+      #network,
+      #custom-notification,
+      #tray,
+      #custom-power {
         padding: 0 10px;
       }
 
       #mpris.paused {
-        color: #${colors.base03};
         font-style: italic;
       }
 
-      #battery.warning {
-        color: #${colors.base0A};
-      }
+      #battery.warning { color: #${colors.base0A}; }
+      #battery.critical { color: #${colors.base08}; }
 
-      #battery.critical {
-        color: #${colors.base08};
-      }
+      #pulseaudio.muted { color: #${colors.base03}; }
 
-      #pulseaudio.muted {
-        color: #${colors.base03};
-      }
-
-      #bluetooth.connected {
-        color: #${colors.base0F};
-      }
-
-      #custom-notification.dnd-on {
-        color: #${colors.base08};
-        font-weight: bold;
-      }
+      #bluetooth.connected { color: #${colors.base0F}; }
 
       #custom-power:hover {
         background: #${colors.base08};
@@ -230,14 +149,22 @@ in
       position = "top";
       exclusive = true;
       passthrough = false;
-      "gtk-layer-shell" = true;
-      ipc = false;
       height = 25;
       margin = "0";
 
       modules-left = selectedConfig.modules-left or [ ];
-      modules-center = commonModulesCenter;
-      modules-right = commonModulesRight;
+      modules-center = [ "clock" ];
+      modules-right = [
+        "cpu"
+        "memory"
+        "custom/notification"
+        "tray"
+        "battery"
+        "pulseaudio"
+        "bluetooth"
+        "network"
+        "custom/power"
+      ];
 
       clock.format = "{:%H:%M %d/%m}";
       cpu.format = "{usage}% ";
@@ -291,7 +218,7 @@ in
         "format-wifi" = "";
         "format-ethernet" = "󰲝";
         "format-disconnected" = "";
-        "tooltip-format" = "ssid : {essid}\naddr : {ipaddr}/{cidr}\ngate : {gwaddr}\ndev : {ifname}";
+        "tooltip-format" = "ssid: {essid}\naddr: {ipaddr}/{cidr}\ngate: {gwaddr}\ndev: {ifname}";
         "format-linked" = "󰲝";
       };
 
