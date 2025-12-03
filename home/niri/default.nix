@@ -129,7 +129,6 @@ in
       "Mod+Q".action = "close-window";
       "Mod+Shift+T".action = "toggle-window-floating";
       "Mod+Shift+F".action = "fullscreen-window";
-      "Mod+Alt+F".action = "toggle-windowed-fullscreen";
       "Mod+F".action = "maximize-column";
       "Mod+W".action = "toggle-column-tabbed-display";
       "Mod+Left".action = "focus-window-down";
