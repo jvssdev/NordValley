@@ -154,9 +154,6 @@ in
       "Mod+L".action = "focus-column-right";
       "Mod+J".action = "focus-workspace-up";
       "Mod+K".action = "focus-workspace-down";
-      "Mod+WheelScrollUp".action = "focus-workspace-up";
-      "Control+Mod+WheelScrollDown".action = "focus-workspace-down";
-      "Control+Mod+WheelScrollUp".action = "focus-workspace-up";
     };
 
     hotkey-overlay.skip-at-startup = true;
