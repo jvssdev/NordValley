@@ -131,7 +131,8 @@ in
         transition: all 0.2s ease-in-out;
       }
 
-      #dwl-tags button {
+      #dwl-tags button,
+      #dwl-tags > * {
         padding: 0 8px;
         margin: 0 4px;
         border-radius: 0px;
@@ -139,7 +140,8 @@ in
         font-weight: normal;
       }
 
-      #dwl-tags button:not(.occupied):not(.focused):not(.urgent) {
+      #dwl-tags button:not(.occupied):not(.focused):not(.urgent),
+      #dwl-tags > *:not(.occupied):not(.focused):not(.urgent) {
         font-size: 0;
         min-width: 0;
         padding: 0;
@@ -151,29 +153,36 @@ in
         transition: none;
       }
 
-      #dwl-tags button.occupied {
+      #dwl-tags button.occupied,
+      #dwl-tags > *.occupied {
         background-color: #${colors.base02};
         color: #${colors.base05};
       }
 
-      #dwl-tags button.focused {
+      #dwl-tags button.focused,
+      #dwl-tags > *.focused {
         background-color: #${colors.base0D};
         color: #${colors.base00};
         font-weight: bold;
       }
 
-      #dwl-tags button.urgent {
+      #dwl-tags button.urgent,
+      #dwl-tags > *.urgent {
         background-color: #${colors.base08};
         color: #${colors.base00};
       }
 
-      #dwl-tags button:hover {
+      #dwl-tags button:hover,
+      #dwl-tags > *:hover {
         background-color: #${colors.base03};
       }
 
       #dwl-tags button.occupied,
       #dwl-tags button.focused,
-      #dwl-tags button.urgent {
+      #dwl-tags button.urgent,
+      #dwl-tags > *.occupied,
+      #dwl-tags > *.focused,
+      #dwl-tags > *.urgent {
         transition: all 0.2s ease-in-out;
       }
 
