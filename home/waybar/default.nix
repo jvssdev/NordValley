@@ -52,7 +52,7 @@ let
     };
   };
   niriConfig = {
-    modules-left- = [ "niri/workspaces" ];
+    modules-left = [ "niri/workspaces" ];
     "niri/workspaces" = {
       "format" = "{icon}";
     };
@@ -85,24 +85,31 @@ in
         border-bottom: 2px solid #${colors.base02};
       }
 
-      #tags button {
-        padding: 0 8px;
-        margin: 0 4px;
-        border-radius: 0px;
-        color: #${colors.base05};
-        font-weight: normal;
+      #tags {
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
       }
 
-      #tags button:not(.occupied):not(.focused):not(.urgent) {
-        font-size: 0;
+      #tags button {
         min-width: 0;
+        min-height: 0;
+        margin: 0;
+        margin-left: -2px;
         padding: 0;
-        margin: -50px;
-        color: transparent;
         background-color: transparent;
-        box-shadow: none;
-        outline: none;
-        transition: none;
+        border-radius: 4px;
+        font-size: 0;
+        font-weight: bold;
+      }
+
+      #tags button.occupied,
+      #tags button.focused,
+      #tags button.urgent {
+        padding-left: 24px;
+        padding-right: 23px;
+        margin-left: 1px;
+        font-size: 13px;
       }
 
       #tags button.occupied {
@@ -118,43 +125,38 @@ in
 
       #tags button.urgent {
         background-color: #${colors.base08};
-        color: #${colors.base00};
-      }
-
-      #tags button:hover {
-        background-color: #${colors.base03};
-      }
-
-      #tags button.occupied,
-      #tags button.focused,
-      #tags button.urgent {
-        transition: all 0.2s ease-in-out;
+        color: #${colors.base05};
       }
 
       #dwl-tags {
-        padding-right: 0.5rem;
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
       }
 
       #dwl-tags button,
       #dwl-tags > * {
-        padding: 0 8px;
-        margin: 0 4px;
-        border-radius: 0px;
-        color: #${colors.base05};
-        font-weight: normal;
+        min-width: 0;
+        min-height: 0;
+        margin: 0;
+        margin-left: -2px;
+        padding: 0;
+        background-color: transparent;
+        border-radius: 4px;
+        font-size: 0;
+        font-weight: bold;
       }
 
-      #dwl-tags button:not(.occupied):not(.focused),
-      #dwl-tags > *:not(.occupied):not(.focused) {
-        font-size: 0;
-        min-width: 0;
-        padding: 0;
-        margin: -50px;
-        color: transparent;
-        background-color: transparent;
-        box-shadow: none;
-        outline: none;
-        transition: none;
+      #dwl-tags button.occupied,
+      #dwl-tags button.focused,
+      #dwl-tags button.urgent,
+      #dwl-tags > *.occupied,
+      #dwl-tags > *.focused,
+      #dwl-tags > *.urgent {
+        padding-left: 24px;
+        padding-right: 23px;
+        margin-left: 1px;
+        font-size: 13px;
       }
 
       #dwl-tags button.occupied,
@@ -173,17 +175,7 @@ in
       #dwl-tags button.urgent,
       #dwl-tags > *.urgent {
         background-color: #${colors.base08};
-        color: #${colors.base00};
-      }
-
-      #dwl-tags button:hover,
-      #dwl-tags > *:hover {
-        background-color: #${colors.base03};
-      }
-
-      #dwl-tags button,
-      #dwl-tags > * {
-        transition: all 0.2s ease-in-out;
+        color: #${colors.base05};
       }
 
       #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
