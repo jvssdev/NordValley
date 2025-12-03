@@ -84,93 +84,97 @@ in
         color: #${colors.base05};
         border-bottom: 2px solid #${colors.base02};
       }
+
       #tags button {
         padding: 0 8px;
         margin: 0 4px;
         border-radius: 0px;
         color: #${colors.base05};
-        min-width: 0;
-        transition: all 0.2s ease-in-out;
+        font-weight: normal;
       }
+
       #tags button:not(.occupied):not(.focused):not(.urgent) {
-        font-size: 0 !important;
-        min-width: 0 !important;
-        padding: 0 !important;
-        margin: -50px !important;
-        color: transparent !important;
-        background-color: transparent !important;
-        box-shadow: none !important;
-        outline: none !important;
-        transition: none !important;
+        font-size: 0;
+        min-width: 0;
+        padding: 0;
+        margin: -50px;
+        color: transparent;
+        background-color: transparent;
+        box-shadow: none;
+        outline: none;
+        transition: none;
       }
+
       #tags button.occupied {
-        font-size: 13px !important;
-        min-width: 20px !important;
-        padding: 0 8px !important;
-        margin: 0 4px !important;
-        color: #${colors.base05} !important;
-        background: #${colors.base02} !important;
+        background-color: #${colors.base02};
+        color: #${colors.base05};
       }
 
       #tags button.focused {
-        background: #${colors.base0D} !important;
-        color: #${colors.base00} !important;
-        font-size: 13px !important;
-        min-width: 20px !important;
-        padding: 0 8px !important;
-        margin: 0 4px !important;
+        background-color: #${colors.base0D};
+        color: #${colors.base00};
+        font-weight: bold;
       }
 
       #tags button.urgent {
-        color: #${colors.base08} !important;
-        font-size: 13px !important;
-        min-width: 20px !important;
-        padding: 0 8px !important;
-        margin: 0 4px !important;
+        background-color: #${colors.base08};
+        color: #${colors.base00};
       }
-      #dwl-tags .tag {
+
+      #tags button:hover {
+        background-color: #${colors.base03};
+      }
+
+      #tags button.occupied,
+      #tags button.focused,
+      #tags button.urgent {
+        transition: all 0.2s ease-in-out;
+      }
+
+      #dwl-tags button {
         padding: 0 8px;
         margin: 0 4px;
         border-radius: 0px;
         color: #${colors.base05};
+        font-weight: normal;
+      }
+
+      #dwl-tags button:not(.occupied):not(.focused):not(.urgent) {
+        font-size: 0;
         min-width: 0;
+        padding: 0;
+        margin: -50px;
+        color: transparent;
+        background-color: transparent;
+        box-shadow: none;
+        outline: none;
+        transition: none;
+      }
+
+      #dwl-tags button.occupied {
+        background-color: #${colors.base02};
+        color: #${colors.base05};
+      }
+
+      #dwl-tags button.focused {
+        background-color: #${colors.base0D};
+        color: #${colors.base00};
+        font-weight: bold;
+      }
+
+      #dwl-tags button.urgent {
+        background-color: #${colors.base08};
+        color: #${colors.base00};
+      }
+
+      #dwl-tags button:hover {
+        background-color: #${colors.base03};
+      }
+
+      #dwl-tags button.occupied,
+      #dwl-tags button.focused,
+      #dwl-tags button.urgent {
         transition: all 0.2s ease-in-out;
-      }
-      #dwl-tags .tag:not(.focused):not(.occupied):not(.urgent) {
-        font-size: 0 !important;
-        min-width: 0 !important;
-        padding: 0 !important;
-        margin: -50px !important;
-        color: transparent !important;
-        background: transparent !important;
-        box-shadow: none !important;
-        outline: none !important;
-        transition: none !important;
-      }
-      #dwl-tags .occupied {
-        font-size: 13px !important;
-        min-width: 20px !important;
-        padding: 0 8px !important;
-        margin: 0 4px !important;
-        color: #${colors.base05} !important;
-        background: #${colors.base02} !important;
-      }
-
-      #dwl-tags .focused {
-        background: #${colors.base0D} !important;
-        color: #${colors.base00} !important;
-        font-size: 13px !important;
-        min-width: 20px !important;
-        padding: 0 8px !important;
-        margin: 0 4px !important;
-      }
-
-      #dwl-tags .urgent {
-        color: #${colors.base08} !important;
-        font-size: 13px !important;
-        min-width: 20px !important;
-        padding: 0 8px !important;
-        margin: 0 4px !important;
       }
 
       #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
@@ -182,7 +186,9 @@ in
       #battery.critical { color: #${colors.base08}; }
       #pulseaudio.muted { color: #${colors.base03}; }
       #bluetooth.connected { color: #${colors.base0F}; }
-
+      #custom-quickshell-notification {
+        color: #${colors.base05};
+      }     
       #custom-notification.dnd-on {
         color: #${colors.base08};
         font-weight: bold;
