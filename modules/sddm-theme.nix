@@ -197,7 +197,7 @@ in
 
     settings = {
       General = {
-        GreeterEnvironment = "QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard";
+        GreeterEnvironment = "WLR_NO_HARDWARE_CURSORS=1,XCURSOR_THEME=Bibata-Modern-Ice,XCURSOR_SIZE=24,QT_QPA_PLATFORM=wayland,QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard";
         InputMethod = "qtvirtualkeyboard";
       };
       Theme = {
