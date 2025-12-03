@@ -6,8 +6,10 @@
   isNiri ? false,
   ...
 }:
+
 let
   colors = config.colorScheme.palette;
+
   makoDndScript = pkgs.writeShellScript "mako-dnd" ''
     #!/usr/bin/env bash
     if [[ "$1" = "show" ]]; then
@@ -17,12 +19,14 @@ let
         echo '{"text":"","tooltip":"Do not disturb is off"}'
       fi
     elif [[ "$1" = "toggle" ]]; then
-      [[ "$(makoctl mode)" = "do-not-disturb" ]] && makoctl mode -r do-not-disturb || makoctl mode -s do-not-disturb
+      [[ "$(makoctl mode)" = "do-not-disturb" ]] &&
+        makoctl mode -r do-not-disturb ||
+        makoctl mode -s do-not-disturb
     fi
   '';
-  commonModulesCenter = [
-    "clock"
-  ];
+
+  commonModulesCenter = [ "clock" ];
+
   commonModulesRight = [
     "cpu"
     "memory"
@@ -34,29 +38,41 @@ let
     "network"
     "custom/power"
   ];
+
   riverConfig = {
     modules-left = [ "river/tags" ];
     "river/tags" = {
       "hide-vacant" = true;
     };
   };
+
   mangoConfig = {
     modules-left = [
       "dwl/tags"
+      "dwl/window"
     ];
+
     "dwl/tags" = {
       "num-tags" = 9;
       "hide-vacant" = true;
       expand = false;
       "disable-click" = true;
     };
-  };
-  niriConfig = {
-    modules-left- = [ "niri/workspaces" ];
-    "niri/workspaces" = {
-      "format" = "{icon}";
+
+    "dwl/window" = {
+      format = "{app_id} | {title}";
+      max-length = 50;
+      rewrite." \\| " = "";
     };
   };
+
+  niriConfig = {
+    modules-left = [ "niri/workspaces" ];
+    "niri/workspaces" = {
+      format = "{icon}";
+    };
+  };
+
   selectedConfig =
     if isRiver then
       riverConfig
@@ -66,10 +82,12 @@ let
       niriConfig
     else
       riverConfig;
+
 in
 {
   programs.waybar = {
     enable = true;
+
     style = ''
       * {
         font-family: JetBrainsMono Nerd Font, Montserrat;
@@ -79,57 +97,110 @@ in
         border: none;
         border-radius: 0;
       }
+
       window#waybar {
         background: #${colors.base00};
         color: #${colors.base05};
         border-bottom: 2px solid #${colors.base02};
       }
-      #tags button, #dwl-tags .tag {
+
+      #tags button {
         padding: 0 8px;
         margin: 0 4px;
-        border-radius: 0px;
-        color: #${colors.base05};
         min-width: 0;
       }
-      #tags button.occupied, #dwl-tags .occupied {
+
+      #tags button.occupied {
         color: #${colors.base05};
       }
-      #tags button.focused, #dwl-tags .focused {
+
+      #tags button.focused {
         background: #${colors.base0D};
         color: #${colors.base00};
       }
-      #tags button.urgent, #dwl-tags .urgent {
+
+      #tags button.urgent {
         color: #${colors.base08};
       }
-      #dwl-tags .tag:not(.focused):not(.occupied) {
-        min-width: 0px;
-        padding: 0 0px;
-        margin: 0 0px;
+
+      #dwl-tags .tag {
+        padding: 0 8px;
+        margin: 0 4px;
+        min-width: 0;
+        color: #${colors.base05};
+      }
+
+      #dwl-tags .tag:not(.occupied):not(.focused) {
+        font-size: 0;
+        min-width: 0;
+        padding: 0;
+        margin: 0;
         color: transparent;
         background: transparent;
+        box-shadow: none;
+        outline: none;
       }
+
+      #dwl-tags .tag.occupied {
+        background: #${colors.base01};
+        color: #${colors.base05};
+      }
+
+      #dwl-tags .tag.focused {
+        background: #${colors.base0D};
+        color: #${colors.base00};
+        font-weight: bold;
+      }
+
+      #dwl-tags .tag.urgent {
+        background: #${colors.base08};
+        color: #${colors.base00};
+        animation: blink 1s infinite;
+      }
+
+      @keyframes blink {
+        0%   { opacity: 1; }
+        50%  { opacity: 0.5; }
+        100% { opacity: 1; }
+      }
+
       #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
-      #bluetooth, #network, #custom-quickshell-notification, #tray, #custom-power {
+      #bluetooth, #network, #custom-notification, #tray, #custom-power {
         padding: 0 10px;
       }
-      #mpris.paused { color: #${colors.base03}; font-style: italic; }
-      #battery.warning { color: #${colors.base0A}; }
-      #battery.critical { color: #${colors.base08}; }
-      #pulseaudio.muted { color: #${colors.base03}; }
-      #bluetooth.connected { color: #${colors.base0F}; }
-      /* Notification center styles */
-      #custom-quickshell-notification {
-        color: #${colors.base05};
-      }     
+
+      #mpris.paused {
+        color: #${colors.base03};
+        font-style: italic;
+      }
+
+      #battery.warning {
+        color: #${colors.base0A};
+      }
+
+      #battery.critical {
+        color: #${colors.base08};
+      }
+
+      #pulseaudio.muted {
+        color: #${colors.base03};
+      }
+
+      #bluetooth.connected {
+        color: #${colors.base0F};
+      }
+
       #custom-notification.dnd-on {
         color: #${colors.base08};
         font-weight: bold;
       }
+
       #custom-power:hover {
         background: #${colors.base08};
         color: #${colors.base07};
       }
     '';
+
     settings.mainBar = {
       layer = "top";
       position = "top";
@@ -139,12 +210,15 @@ in
       ipc = false;
       height = 25;
       margin = "0";
+
       modules-left = selectedConfig.modules-left or [ ];
       modules-center = commonModulesCenter;
       modules-right = commonModulesRight;
+
       clock.format = "{:%H:%M %d/%m}";
       cpu.format = "{usage}% ";
       memory.format = "{}% ";
+
       battery = {
         states = {
           warning = 30;
@@ -161,6 +235,7 @@ in
           "󰁹"
         ];
       };
+
       pulseaudio = {
         "disable-scroll" = true;
         format = "{icon} {volume}%";
@@ -172,6 +247,7 @@ in
         ];
         "on-click" = "pavucontrol";
       };
+
       bluetooth = {
         format = "{icon}";
         "format-connected" = "bluetooth {num_connections}";
@@ -186,6 +262,7 @@ in
         "on-click" = "blueman-manager";
         "on-click-right" = "rfkill toggle bluetooth";
       };
+
       network = {
         "format-wifi" = "";
         "format-ethernet" = "󰲝";
@@ -193,10 +270,12 @@ in
         "tooltip-format" = "ssid : {essid}\naddr : {ipaddr}/{cidr}\ngate : {gwaddr}\ndev : {ifname}";
         "format-linked" = "󰲝";
       };
+
       tray = {
         "icon-size" = 21;
         spacing = 10;
       };
+
       "custom/notification" = {
         format = "{}";
         exec = "${makoDndScript} show";
@@ -207,11 +286,13 @@ in
         tooltip = true;
         escape = true;
       };
+
       "custom/power" = {
         format = "⏻";
         tooltip = false;
         "on-click" = "wlogout";
       };
+
     }
     // selectedConfig;
   };
