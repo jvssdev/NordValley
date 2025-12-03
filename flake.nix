@@ -191,9 +191,12 @@
           ]
           [
             niri-flake.homeModules.niri
-            {
-              programs.niri.package = pkgs.niri-unstable;
-            }
+            (
+              { lib, ... }:
+              {
+                programs.niri.package = lib.mkForce pkgs.niri-unstable;
+              }
+            )
           ];
 
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
