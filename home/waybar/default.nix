@@ -116,7 +116,7 @@ in
       }
       #tags button.occupied {
         font-size: 13px;
-        min-width: auto;
+        min-width: 20px;
         padding: 0 8px;
         margin: 0 4px;
         background: #${colors.base02};
