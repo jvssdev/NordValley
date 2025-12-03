@@ -92,34 +92,41 @@ in
         min-width: 0;
         transition: all 0.2s ease-in-out;
       }
-      #tags button.occupied {
-        color: #${colors.base05};
-        background: #${colors.base02};
-      }
-      #tags button.focused {
-        background: #${colors.base0D};
-        color: #${colors.base00};
-      }
-      #tags button.urgent {
-        color: #${colors.base08};
-      }
       #tags button:not(.occupied):not(.focused):not(.urgent) {
-        font-size: 0;
-        min-width: 0;
-        padding: 0;
-        margin: -50px;
-        color: transparent;
-        background-color: transparent;
-        box-shadow: none;
-        outline: none;
-        transition: none;
+        font-size: 0 !important;
+        min-width: 0 !important;
+        padding: 0 !important;
+        margin: -50px !important;
+        color: transparent !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+        outline: none !important;
+        transition: none !important;
       }
       #tags button.occupied {
-        font-size: 13px;
-        min-width: 20px;
-        padding: 0 8px;
-        margin: 0 4px;
-        background: #${colors.base02};
+        font-size: 13px !important;
+        min-width: 20px !important;
+        padding: 0 8px !important;
+        margin: 0 4px !important;
+        color: #${colors.base05} !important;
+        background: #${colors.base02} !important;
+      }
+
+      #tags button.focused {
+        background: #${colors.base0D} !important;
+        color: #${colors.base00} !important;
+        font-size: 13px !important;
+        min-width: 20px !important;
+        padding: 0 8px !important;
+        margin: 0 4px !important;
+      }
+
+      #tags button.urgent {
+        color: #${colors.base08} !important;
+        font-size: 13px !important;
+        min-width: 20px !important;
+        padding: 0 8px !important;
+        margin: 0 4px !important;
       }
       #dwl-tags .tag {
         padding: 0 8px;
@@ -129,34 +136,41 @@ in
         min-width: 0;
         transition: all 0.2s ease-in-out;
       }
-      #dwl-tags .occupied {
-        color: #${colors.base05};
-        background: #${colors.base02};
-      }
-      #dwl-tags .focused {
-        background: #${colors.base0D};
-        color: #${colors.base00};
-      }
-      #dwl-tags .urgent {
-        color: #${colors.base08};
-      }
       #dwl-tags .tag:not(.focused):not(.occupied):not(.urgent) {
-        font-size: 0;
-        min-width: 0;
-        padding: 0;
-        margin: -50px;
-        color: transparent;
-        background: transparent;
-        box-shadow: none;
-        outline: none;
-        transition: none;
+        font-size: 0 !important;
+        min-width: 0 !important;
+        padding: 0 !important;
+        margin: -50px !important;
+        color: transparent !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        outline: none !important;
+        transition: none !important;
       }
       #dwl-tags .occupied {
-        font-size: 13px;
-        min-width: 20px;
-        padding: 0 8px;
-        margin: 0 4px;
-        background: #${colors.base02};
+        font-size: 13px !important;
+        min-width: 20px !important;
+        padding: 0 8px !important;
+        margin: 0 4px !important;
+        color: #${colors.base05} !important;
+        background: #${colors.base02} !important;
+      }
+
+      #dwl-tags .focused {
+        background: #${colors.base0D} !important;
+        color: #${colors.base00} !important;
+        font-size: 13px !important;
+        min-width: 20px !important;
+        padding: 0 8px !important;
+        margin: 0 4px !important;
+      }
+
+      #dwl-tags .urgent {
+        color: #${colors.base08} !important;
+        font-size: 13px !important;
+        min-width: 20px !important;
+        padding: 0 8px !important;
+        margin: 0 4px !important;
       }
 
       #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
@@ -168,10 +182,7 @@ in
       #battery.critical { color: #${colors.base08}; }
       #pulseaudio.muted { color: #${colors.base03}; }
       #bluetooth.connected { color: #${colors.base0F}; }
-      /* Notification center styles */
-      #custom-quickshell-notification {
-        color: #${colors.base05};
-      }     
+
       #custom-notification.dnd-on {
         color: #${colors.base08};
         font-weight: bold;
