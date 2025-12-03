@@ -95,6 +95,12 @@ in
         matches = [ { title = "(?i)Picture[-\\s]?in[-\\s]?Picture"; } ];
         open-floating = true;
       }
+
+      {
+        matches = [ { } ];
+        geometry-corner-radius = 0;
+        clip-to-geometry = true;
+      }
     ];
 
     binds = {
@@ -176,12 +182,6 @@ in
         place-within-column = true;
         length.total-proportion = 1.0;
       };
-
-      window-rule = {
-        geometry-corner-radius = 0;
-        clip-to-geometry = true;
-      };
-
       gaps = 5;
     };
 
