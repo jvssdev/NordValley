@@ -63,7 +63,6 @@
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
       system = "x86_64-linux";
-
       pkgs = import nixpkgs {
         localSystem = system;
         config.allowUnfree = true;
@@ -76,18 +75,15 @@
           })
         ];
       };
-
       defaults = {
         homeDir = "/home/${userInfo.userName}";
       };
-
       nixpkgsModule = {
         nixpkgs = {
           hostPlatform = system;
           inherit pkgs;
         };
       };
-
       commonModules = [
         nixpkgsModule
         ./hosts/ashes/configuration.nix
@@ -100,7 +96,6 @@
         ./modules/thunar.nix
         ./modules/sddm-theme.nix
       ];
-
       mkSystem =
         isRiver: isMango: isNiri: extraModules: extraSharedModules:
         nixpkgs.lib.nixosSystem {
@@ -171,7 +166,6 @@
             }
           ]
           [ ];
-
       nixosConfigurations.mangowc =
         mkSystem false true false
           [
@@ -179,7 +173,6 @@
             { programs.mango.enable = true; }
           ]
           [ mango.hmModules.mango ];
-
       nixosConfigurations.niri =
         mkSystem false false true
           [
@@ -191,14 +184,8 @@
           ]
           [
             niri-flake.homeModules.niri
-            (
-              { lib, ... }:
-              {
-                programs.niri.package = lib.mkForce pkgs.niri-unstable;
-              }
-            )
+            niri-flake.homeModules.config
           ];
-
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = {
@@ -219,7 +206,6 @@
           nix-colors.homeManagerModules.default
         ];
       };
-
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
         modules = [
           {
