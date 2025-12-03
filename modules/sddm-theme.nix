@@ -186,6 +186,17 @@ in
 
   qt.enable = true;
 
+  systemd.tmpfiles.rules = [
+    "L+ /var/lib/sddm/.icons/default - - - - ${pkgs.bibata-cursors}/share/icons/Bibata-Modern-Ice"
+    "d /var/lib/sddm/.icons 0755 sddm sddm"
+  ];
+
+  environment.etc."sddm.conf.d/cursor.conf".text = ''
+    [Theme]
+    CursorTheme=Bibata-Modern-Ice
+    CursorSize=24
+  '';
+
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
@@ -197,7 +208,7 @@ in
 
     settings = {
       General = {
-        GreeterEnvironment = "WLR_NO_HARDWARE_CURSORS=1,XCURSOR_THEME=Bibata-Modern-Ice,XCURSOR_SIZE=24,QT_QPA_PLATFORM=wayland,QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard";
+        GreeterEnvironment = "QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard,XCURSOR_THEME=Bibata-Modern-Ice,XCURSOR_SIZE=24,XCURSOR_PATH=/usr/share/icons:${pkgs.bibata-cursors}/share/icons";
         InputMethod = "qtvirtualkeyboard";
       };
       Theme = {
