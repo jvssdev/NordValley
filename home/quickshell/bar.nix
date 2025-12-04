@@ -159,20 +159,17 @@ in
                 }
 
                 Battery {
-                  id: bat
                   device: Upower.primaryDevice
                   visible: available
-                  text: {
-                    if (percentage <= 10) "󰂎"
-                    else if (percentage <= 20) "󰁺"
-                    else if (percentage <= 30) "󰁻"
-                    else if (percentage <= 40) "󰁼"
-                    else if (percentage <= 50) "󰁽"
-                    else if (percentage <= 60) "󰁾"
-                    else if (percentage <= 80) "󰁿"
-                    else if (percentage <= 90) "󰂀"
-                    else "󰂂"
-                  } + " " + percentage + "%" + (charging ? " 󰂄" : "")
+                  text: (if (percentage <= 10) "󰂎"
+                  else if (percentage <= 20) "󰁺"
+                  else if (percentage <= 30) "󰁻"
+                  else if (percentage <= 40) "󰁼"
+                  else if (percentage <= 50) "󰁽"
+                  else if (percentage <= 60) "󰁾"
+                  else if (percentage <= 80) "󰁿"
+                  else if (percentage <= 90) "󰂀"
+                  else "󰂂") + " " + percentage + "%" + (charging ? " 󰂄" : "")
                   color: percentage <= 15 ? "#${p.base08}" : percentage <= 30 ? "#${p.base0A}" : "#${p.base05}"
                   font { family: "JetBrainsMono Nerd Font"; pixelSize: 14 }
                 }
