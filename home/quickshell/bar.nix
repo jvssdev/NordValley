@@ -14,10 +14,12 @@ in
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Io
-    import "IdleService.qml"
 
     QtObject {
-      id: theme
+      id: root
+
+      QtObject {
+        id: theme
       readonly property string bg: "#${p.base00}"
       readonly property string bgAlt: "#${p.base01}"
       readonly property string bgLighter: "#${p.base02}"
@@ -39,11 +41,66 @@ in
       readonly property int fontSize: 14
     }
 
-    IdleService {
-      id: idleService
+    Component {
+      id: idleManagerComponent
+      QtObject {
+        property int monitorTimeout: 240
+        property int lockTimeout: 300
+        property int suspendTimeout: 600
+        property bool monitorsOff: false
+        property bool locked: false
+        property var monitorOffTimer: null
+        property var lockTimer: null
+        property var suspendTimer: null
+
+        Component.onCompleted: {
+          if (typeof(IdleMonitor) === "undefined") {
+            console.warn("IdleMonitor not available")
+            return
+          }
+
+          var monOffQml = 'import QtQuick; import Quickshell.Wayland; IdleMonitor { enabled: true; respectInhibitors: true; timeout: 240 }'
+          monitorOffTimer = Qt.createQmlObject(monOffQml, this)
+          
+          monitorOffTimer.isIdleChanged.connect(function() {
+            if (monitorOffTimer.isIdle && !monitorsOff) {
+              monitorsOff = true
+              Qt.createQmlObject('import Quickshell.Io; Process { command: ["wlopm", "--off", "*"]; running: true }', this)
+            } else if (!monitorOffTimer.isIdle && monitorsOff) {
+              monitorsOff = false
+              Qt.createQmlObject('import Quickshell.Io; Process { command: ["wlopm", "--on", "*"]; running: true }', this)
+            }
+          })
+
+          var lockQml = 'import QtQuick; import Quickshell.Wayland; IdleMonitor { enabled: true; respectInhibitors: true; timeout: 300 }'
+          lockTimer = Qt.createQmlObject(lockQml, this)
+          
+          lockTimer.isIdleChanged.connect(function() {
+            if (lockTimer.isIdle && !locked) {
+              locked = true
+              Qt.createQmlObject('import Quickshell.Io; Process { command: ["gtklock", "-d"]; running: true }', this)
+            } else if (!lockTimer.isIdle) {
+              locked = false
+            }
+          })
+
+          var suspQml = 'import QtQuick; import Quickshell.Wayland; IdleMonitor { enabled: true; respectInhibitors: true; timeout: 600 }'
+          suspendTimer = Qt.createQmlObject(suspQml, this)
+          
+          suspendTimer.isIdleChanged.connect(function() {
+            if (suspendTimer.isIdle) {
+              Qt.createQmlObject('import Quickshell.Io; Process { command: ["systemctl", "suspend"]; running: true }', this)
+            }
+          })
+        }
+      }
     }
 
-    Variants {
+    Loader {
+      sourceComponent: idleManagerComponent
+    }
+
+    property var panelVariants: Variants {
       model: Quickshell.screens
       delegate: PanelWindow {
         screen: modelData
@@ -366,6 +423,7 @@ in
           }
         }
       }
+    }
     }
   '';
 }
