@@ -15,404 +15,284 @@ in
     import Quickshell.Wayland
     import Quickshell.Io
 
-    QtObject {
-      id: root
-
+    ShellRoot {
       QtObject {
         id: theme
-      readonly property string bg: "#${p.base00}"
-      readonly property string bgAlt: "#${p.base01}"
-      readonly property string bgLighter: "#${p.base02}"
-      readonly property string fg: "#${p.base05}"
-      readonly property string fgMuted: "#${p.base04}"
-      readonly property string fgSubtle: "#${p.base03}"
-      readonly property string red: "#${p.base08}"
-      readonly property string green: "#${p.base0B}"
-      readonly property string yellow: "#${p.base0A}"
-      readonly property string blue: "#${p.base0D}"
-      readonly property string magenta: "#${p.base0E}"
-      readonly property string cyan: "#${p.base0C}"
-      readonly property string orange: "#${p.base09}"
-      readonly property int radius: 12
-      readonly property int borderWidth: 2
-      readonly property int padding: 14
-      readonly property int spacing: 10
-      readonly property string font: "JetBrainsMono Nerd Font"
-      readonly property int fontSize: 14
-    }
-
-    Component {
-      id: idleManagerComponent
-      QtObject {
-        property int monitorTimeout: 240
-        property int lockTimeout: 300
-        property int suspendTimeout: 600
-        property bool monitorsOff: false
-        property bool locked: false
-        property var monitorOffTimer: null
-        property var lockTimer: null
-        property var suspendTimer: null
-
-        Component.onCompleted: {
-          if (typeof(IdleMonitor) === "undefined") {
-            console.warn("IdleMonitor not available")
-            return
-          }
-
-          var monOffQml = 'import QtQuick; import Quickshell.Wayland; IdleMonitor { enabled: true; respectInhibitors: true; timeout: 240 }'
-          monitorOffTimer = Qt.createQmlObject(monOffQml, this)
-          
-          monitorOffTimer.isIdleChanged.connect(function() {
-            if (monitorOffTimer.isIdle && !monitorsOff) {
-              monitorsOff = true
-              Qt.createQmlObject('import Quickshell.Io; Process { command: ["wlopm", "--off", "*"]; running: true }', this)
-            } else if (!monitorOffTimer.isIdle && monitorsOff) {
-              monitorsOff = false
-              Qt.createQmlObject('import Quickshell.Io; Process { command: ["wlopm", "--on", "*"]; running: true }', this)
-            }
-          })
-
-          var lockQml = 'import QtQuick; import Quickshell.Wayland; IdleMonitor { enabled: true; respectInhibitors: true; timeout: 300 }'
-          lockTimer = Qt.createQmlObject(lockQml, this)
-          
-          lockTimer.isIdleChanged.connect(function() {
-            if (lockTimer.isIdle && !locked) {
-              locked = true
-              Qt.createQmlObject('import Quickshell.Io; Process { command: ["gtklock", "-d"]; running: true }', this)
-            } else if (!lockTimer.isIdle) {
-              locked = false
-            }
-          })
-
-          var suspQml = 'import QtQuick; import Quickshell.Wayland; IdleMonitor { enabled: true; respectInhibitors: true; timeout: 600 }'
-          suspendTimer = Qt.createQmlObject(suspQml, this)
-          
-          suspendTimer.isIdleChanged.connect(function() {
-            if (suspendTimer.isIdle) {
-              Qt.createQmlObject('import Quickshell.Io; Process { command: ["systemctl", "suspend"]; running: true }', this)
-            }
-          })
-        }
+        readonly property string bg: "#${p.base00}"
+        readonly property string bgAlt: "#${p.base01}"
+        readonly property string bgLighter: "#${p.base02}"
+        readonly property string fg: "#${p.base05}"
+        readonly property string fgMuted: "#${p.base04}"
+        readonly property string fgSubtle: "#${p.base03}"
+        readonly property string red: "#${p.base08}"
+        readonly property string green: "#${p.base0B}"
+        readonly property string yellow: "#${p.base0A}"
+        readonly property string blue: "#${p.base0D}"
+        readonly property string magenta: "#${p.base0E}"
+        readonly property string cyan: "#${p.base0C}"
+        readonly property string orange: "#${p.base09}"
+        readonly property int radius: 12
+        readonly property int borderWidth: 2
+        readonly property int padding: 14
+        readonly property int spacing: 10
+        readonly property string font: "JetBrainsMono Nerd Font"
+        readonly property int fontSize: 14
       }
-    }
 
-    Loader {
-      sourceComponent: idleManagerComponent
-    }
+      Variants {
+        model: Quickshell.screens
+        delegate: PanelWindow {
+          screen: modelData
+          anchors { top: true; left: true; right: true }
+          height: 36
+          color: theme.bg
+          exclusionMode: ExclusionMode.Normal
 
-    property var panelVariants: Variants {
-      model: Quickshell.screens
-      delegate: PanelWindow {
-        screen: modelData
-        anchors { top: true; left: true; right: true }
-        height: 36
-        color: theme.bg
-        exclusionMode: ExclusionMode.Normal
-
-        Rectangle {
-          anchors.fill: parent
-          color: "transparent"
-          border.width: theme.borderWidth
-          border.color: theme.bgLighter
-          radius: theme.radius
-          anchors.margins: 8
-
-          RowLayout {
+          Rectangle {
             anchors.fill: parent
-            anchors.margins: theme.padding
-            spacing: theme.spacing
+            color: "transparent"
+            border.width: theme.borderWidth
+            border.color: theme.bgLighter
+            radius: theme.radius
+            anchors.margins: 8
 
-            Loader {
-              Layout.alignment: Qt.AlignVCenter
-              sourceComponent: {
-                if (typeof(RiverTags) !== "undefined") return riverTagsService
-                if (typeof(NiriWorkspaces) !== "undefined") return niriWorkspacesService
-                if (typeof(DwlTags) !== "undefined") return dwlTagsService
-                if (Quickshell.env("RIVER_SOCKET")?.length > 0) return riverManual
-                if (Quickshell.env("NIRI_SOCKET")?.length > 0) return niriManual
-                return null
-              }
-
-              Component { id: riverTagsService; RiverTags { occupiedColor: theme.bgLighter; focusedColor: theme.blue; urgentColor: theme.red; vacantHidden: true; textColorFocused: theme.bg; textColorDefault: theme.fg; font.pixelSize: 14 } }
-              Component { id: niriWorkspacesService; NiriWorkspaces { activeColor: theme.blue; inactiveColor: theme.bgLighter; textColorActive: theme.bg; textColorInactive: theme.fg; font.pixelSize: 14 } }
-              Component { id: dwlTagsService; DwlTags { occupiedColor: theme.bgLighter; selectedColor: theme.blue; urgentColor: theme.red; textColorSelected: theme.bg; textColorDefault: theme.fg; font.pixelSize: 14 } }
-
-              Component {
-                id: riverManual
-                RowLayout {
-                  spacing: 6
-                  Repeater {
-                    model: 9
-                    delegate: Rectangle {
-                      width: 36; height: 26
-                      color: riverTagState.focused ? theme.blue : riverTagState.occupied ? theme.bgLighter : "transparent"
-                      radius: 6
-                      Text {
-                        anchors.centerIn: parent
-                        color: riverTagState.focused ? theme.bg : theme.fg
-                        font { family: theme.font; pixelSize: 13; bold: riverTagState.focused }
-                        text: model.index + 1
-                      }
-                      MouseArea {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: Process { command: ["riverctl", "set-focused-tags", String(1 << model.index)]; running: true }
-                      }
-                      QtObject {
-                        id: riverTagState
-                        property bool focused: false
-                        property bool occupied: false
-                        Timer {
-                          interval: 200; running: true; repeat: true
-                          onTriggered: Process {
-                            command: ["riverctl", "get-focused-tags"]
-                            running: true
-                            onExited: riverTagState.focused = (parseInt(stdout.trim()) & (1 << model.index)) !== 0
-                          }
-                        }
-                        Timer {
-                          interval: 500; running: true; repeat: true
-                          onTriggered: Process {
-                            command: ["river-tag-overlay"]
-                            running: true
-                            onExited: riverTagState.occupied = stdout.trim().split(" ").includes(String(model.index + 1))
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-
-              Component {
-                id: niriManual
-                RowLayout {
-                  spacing: 6
-                  Repeater {
-                    model: niriWsModel.workspaces
-                    delegate: Rectangle {
-                      width: 40; height: 26
-                      color: modelData.active ? theme.blue : theme.bgLighter
-                      radius: 6
-                      Text {
-                        anchors.centerIn: parent
-                        color: modelData.active ? theme.bg : theme.fg
-                        font { family: theme.font; pixelSize: 13; bold: modelData.active }
-                        text: modelData.name
-                      }
-                      MouseArea {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: Process { command: ["niri", "msg", "action", "focus-workspace", modelData.name]; running: true }
-                      }
-                    }
-                  }
-                  QtObject {
-                    id: niriWsModel
-                    property var workspaces: []
-                    Timer {
-                      interval: 500; running: true; repeat: true
-                      onTriggered: Process {
-                        command: ["niri", "msg", "-j", "workspaces"]
-                        running: true
-                        onExited: {
-                          try {
-                            const data = JSON.parse(stdout)
-                            let list = []
-                            for (let ws of data) {
-                              list.push({ name: ws.name || String(ws.id), active: ws.is_focused })
-                            }
-                            niriWsModel.workspaces = list
-                          } catch(e) {}
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-
-            Item { Layout.fillWidth: true }
-
-            Text {
-              color: theme.fg
-              font { family: theme.font; pixelSize: 14; bold: true }
-              text: Qt.formatDateTime(new Date(), "HH:mm dd/MM")
-              Timer { interval: 1000; running: true; repeat: true; onTriggered: parent.text = Qt.formatDateTime(new Date(), "HH:mm dd/MM") }
-            }
-
-            Item { Layout.fillWidth: true }
-
-            Row {
-              spacing: 14
-              layoutDirection: Qt.RightToLeft
+            RowLayout {
+              anchors.fill: parent
+              anchors.margins: theme.padding
+              spacing: theme.spacing
 
               Text {
-                text: "⏻"
-                color: powerMouse.hovered ? theme.bg : theme.fg
-                font { family: theme.font; pixelSize: 15 }
-                MouseArea {
-                  id: powerMouse
-                  anchors.fill: parent
-                  hoverEnabled: true
-                  cursorShape: Qt.PointingHandCursor
-                  onClicked: Process { command: ["wlogout"]; running: true }
-                }
-                background: Rectangle { color: theme.red; radius: 8; opacity: powerMouse.hovered ? 1 : 0 }
-              }
-
-              Text {
-                text: makoDnd.isDnd ? "" : ""
-                color: makoDnd.isDnd ? theme.red : theme.fg
-                font { family: theme.font; pixelSize: 16; bold: makoDnd.isDnd }
-                MouseArea {
-                  anchors.fill: parent
-                  cursorShape: Qt.PointingHandCursor
-                  onClicked: Process { command: ["sh", "-c", "makoctl mode | grep -q do-not-disturb && makoctl mode -r do-not-disturb || makoctl mode -a do-not-disturb"]; running: true }
-                }
-                QtObject {
-                  id: makoDnd
-                  property bool isDnd: false
-                  Timer {
-                    interval: 1000; running: true; repeat: true
-                    onTriggered: Process {
-                      command: ["makoctl", "mode"]
-                      running: true
-                      onExited: makoDnd.isDnd = stdout.trim() === "do-not-disturb"
-                    }
-                  }
-                }
-              }
-
-              Text {
-                text: btInfo.connected ? "" : ""
-                color: btInfo.connected ? theme.cyan : theme.fgMuted
-                font { family: theme.font; pixelSize: 15 }
-                MouseArea {
-                  anchors.fill: parent
-                  cursorShape: Qt.PointingHandCursor
-                  onClicked: Process { command: ["blueman-manager"]; running: true }
-                }
-                QtObject {
-                  id: btInfo
-                  property bool connected: false
-                  Timer {
-                    interval: 5000; running: true; repeat: true
-                    onTriggered: Process {
-                      command: ["bluetoothctl", "info"]
-                      running: true
-                      onExited: btInfo.connected = stdout.includes("Connected: yes")
-                    }
-                  }
-                }
-              }
-
-              Text {
-                text: volume.muted ? "󰖁" : volume.volume > 66 ? "󰕾" : volume.volume > 33 ? "󰖀" : "󰕿" + (volume.volume > 0 && !volume.muted ? " " + volume.volume + "%" : "")
-                color: volume.muted ? theme.fgMuted : theme.fg
+                Layout.alignment: Qt.AlignVCenter
+                color: theme.fg
                 font { family: theme.font; pixelSize: 14 }
-                MouseArea {
-                  anchors.fill: parent
-                  cursorShape: Qt.PointingHandCursor
-                  onClicked: Process { command: ["pavucontrol"]; running: true }
-                }
-                QtObject {
-                  id: volume
-                  property int volume: 0
-                  property bool muted: false
-                  Timer {
-                    interval: 1000; running: true; repeat: true
-                    onTriggered: Process {
-                      command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
-                      running: true
-                      onExited: {
-                        const out = stdout.trim()
-                        volume.muted = out.includes("[MUTED]")
-                        const match = out.match(/Volume: ([0-9.]+)/)
-                        if (match) volume.volume = Math.round(parseFloat(match[1]) * 100)
-                      }
-                    }
-                  }
+                text: "Workspace"
+              }
+
+              Item { Layout.fillWidth: true }
+
+              Text {
+                color: theme.fg
+                font { family: theme.font; pixelSize: 14; bold: true }
+                text: Qt.formatDateTime(new Date(), "HH:mm dd/MM")
+                Timer { 
+                  interval: 1000
+                  running: true
+                  repeat: true
+                  onTriggered: parent.text = Qt.formatDateTime(new Date(), "HH:mm dd/MM")
                 }
               }
 
-              Text {
-                visible: battery.percentage > 0
-                text: battery.icon + " " + battery.percentage + "%" + (battery.charging ? " 󰂄" : "")
-                color: battery.percentage <= 15 ? theme.red : battery.percentage <= 30 ? theme.yellow : theme.fg
-                font { family: theme.font; pixelSize: 14 }
-                QtObject {
-                  id: battery
-                  property int percentage: 0
-                  property string icon: "󰂎"
-                  property bool charging: false
-                  Timer {
-                    interval: 10000; running: true; repeat: true
-                    onTriggered: {
-                      Process {
-                        command: ["cat", "/sys/class/power_supply/BAT*/capacity"]
-                        running: true
-                        onExited: battery.percentage = parseInt(stdout.trim()) || 0
-                      }
-                      Process {
-                        command: ["cat", "/sys/class/power_supply/BAT*/status"]
-                        running: true
-                        onExited: battery.charging = stdout.trim() === "Charging"
-                      }
-                    }
-                  }
-                  onPercentageChanged: {
-                    if (percentage <= 10) icon = "󰂎"
-                    else if (percentage <= 20) icon = "󰁺"
-                    else if (percentage <= 30) icon = "󰁻"
-                    else if (percentage <= 40) icon = "󰁼"
-                    else if (percentage <= 50) icon = "󰁽"
-                    else if (percentage <= 60) icon = "󰁾"
-                    else if (percentage <= 80) icon = "󰁿"
-                    else if (percentage <= 90) icon = "󰂀"
-                    else icon = "󰂂"
-                  }
-                }
-              }
+              Item { Layout.fillWidth: true }
 
               Row {
-                spacing: 10
+                spacing: 14
+                layoutDirection: Qt.RightToLeft
+
+                Rectangle {
+                  width: 28
+                  height: 28
+                  color: powerMouse.containsMouse ? theme.red : "transparent"
+                  radius: 8
+                  
+                  Text {
+                    anchors.centerIn: parent
+                    text: "⏻"
+                    color: powerMouse.containsMouse ? theme.bg : theme.fg
+                    font { family: theme.font; pixelSize: 15 }
+                  }
+                  
+                  MouseArea {
+                    id: powerMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: Process { command: ["wlogout"]; running: true }
+                  }
+                }
+
                 Text {
-                  text: " " + cpu.usage + "%"
-                  color: cpu.usage > 85 ? theme.red : theme.fg
-                  font { family: theme.font; pixelSize: 13 }
+                  text: makoDnd.isDnd ? "" : ""
+                  color: makoDnd.isDnd ? theme.red : theme.fg
+                  font { family: theme.font; pixelSize: 16; bold: makoDnd.isDnd }
+                  
+                  MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: Process { 
+                      command: ["sh", "-c", "makoctl mode | grep -q do-not-disturb && makoctl mode -r do-not-disturb || makoctl mode -a do-not-disturb"]
+                      running: true
+                    }
+                  }
+                  
                   QtObject {
-                    id: cpu
-                    property int usage: 0
+                    id: makoDnd
+                    property bool isDnd: false
                     Timer {
-                      interval: 2000; running: true; repeat: true
+                      interval: 1000
+                      running: true
+                      repeat: true
                       onTriggered: Process {
-                        command: ["top", "-bn1"]
+                        command: ["makoctl", "mode"]
+                        running: true
+                        onExited: makoDnd.isDnd = stdout.trim() === "do-not-disturb"
+                      }
+                    }
+                  }
+                }
+
+                Text {
+                  text: btInfo.connected ? "" : ""
+                  color: btInfo.connected ? theme.cyan : theme.fgMuted
+                  font { family: theme.font; pixelSize: 15 }
+                  
+                  MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: Process { command: ["blueman-manager"]; running: true }
+                  }
+                  
+                  QtObject {
+                    id: btInfo
+                    property bool connected: false
+                    Timer {
+                      interval: 5000
+                      running: true
+                      repeat: true
+                      onTriggered: Process {
+                        command: ["bluetoothctl", "info"]
+                        running: true
+                        onExited: btInfo.connected = stdout.includes("Connected: yes")
+                      }
+                    }
+                  }
+                }
+
+                Text {
+                  text: {
+                    var icon = volume.muted ? "󰖁" : volume.volume > 66 ? "󰕾" : volume.volume > 33 ? "󰖀" : "󰕿"
+                    var vol = volume.volume > 0 && !volume.muted ? " " + volume.volume + "%" : ""
+                    return icon + vol
+                  }
+                  color: volume.muted ? theme.fgMuted : theme.fg
+                  font { family: theme.font; pixelSize: 14 }
+                  
+                  MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: Process { command: ["pavucontrol"]; running: true }
+                  }
+                  
+                  QtObject {
+                    id: volume
+                    property int volume: 0
+                    property bool muted: false
+                    Timer {
+                      interval: 1000
+                      running: true
+                      repeat: true
+                      onTriggered: Process {
+                        command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
                         running: true
                         onExited: {
-                          const line = stdout.split("\n").find(l => l.includes("%Cpu"))
-                          if (line) cpu.usage = Math.round(100 - parseFloat(line.split(/\s+/)[7]))
+                          var out = stdout.trim()
+                          volume.muted = out.includes("[MUTED]")
+                          var match = out.match(/Volume: ([0-9.]+)/)
+                          if (match) volume.volume = Math.round(parseFloat(match[1]) * 100)
                         }
                       }
                     }
                   }
                 }
+
                 Text {
-                  text: " " + mem.percent + "%"
-                  color: theme.fg
-                  font { family: theme.font; pixelSize: 13 }
+                  visible: battery.percentage > 0
+                  text: battery.icon + " " + battery.percentage + "%" + (battery.charging ? " 󰂄" : "")
+                  color: battery.percentage <= 15 ? theme.red : battery.percentage <= 30 ? theme.yellow : theme.fg
+                  font { family: theme.font; pixelSize: 14 }
+                  
                   QtObject {
-                    id: mem
-                    property int percent: 0
+                    id: battery
+                    property int percentage: 0
+                    property string icon: "󰂎"
+                    property bool charging: false
+                    
                     Timer {
-                      interval: 2000; running: true; repeat: true
-                      onTriggered: Process {
-                        command: ["free"]
+                      interval: 10000
+                      running: true
+                      repeat: true
+                      onTriggered: {
+                        var p1 = Qt.createQmlObject('import Quickshell.Io; Process { command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 0"]; running: true }', battery)
+                        p1.exited.connect(function(code, status) {
+                          battery.percentage = parseInt(p1.stdout.trim()) || 0
+                        })
+                        var p2 = Qt.createQmlObject('import Quickshell.Io; Process { command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/status 2>/dev/null || echo Discharging"]; running: true }', battery)
+                        p2.exited.connect(function(code, status) {
+                          battery.charging = p2.stdout.trim() === "Charging"
+                        })
+                      }
+                    }
+                    
+                    onPercentageChanged: {
+                      if (percentage <= 10) icon = "󰂎"
+                      else if (percentage <= 20) icon = "󰁺"
+                      else if (percentage <= 30) icon = "󰁻"
+                      else if (percentage <= 40) icon = "󰁼"
+                      else if (percentage <= 50) icon = "󰁽"
+                      else if (percentage <= 60) icon = "󰁾"
+                      else if (percentage <= 80) icon = "󰁿"
+                      else if (percentage <= 90) icon = "󰂀"
+                      else icon = "󰂂"
+                    }
+                  }
+                }
+
+                Row {
+                  spacing: 10
+                  
+                  Text {
+                    text: " " + cpu.usage + "%"
+                    color: cpu.usage > 85 ? theme.red : theme.fg
+                    font { family: theme.font; pixelSize: 13 }
+                    
+                    QtObject {
+                      id: cpu
+                      property int usage: 0
+                      Timer {
+                        interval: 2000
                         running: true
-                        onExited: {
-                          const line = stdout.split("\n")[1]
-                          const fields = line.split(/\s+/)
-                          mem.percent = Math.round(fields[2] / fields[1] * 100)
+                        repeat: true
+                        onTriggered: Process {
+                          command: ["top", "-bn1"]
+                          running: true
+                          onExited: {
+                            var line = stdout.split("\n").find(function(l) { return l.includes("%Cpu") })
+                            if (line) cpu.usage = Math.round(100 - parseFloat(line.split(/\s+/)[7]))
+                          }
+                        }
+                      }
+                    }
+                  }
+                  
+                  Text {
+                    text: " " + mem.percent + "%"
+                    color: theme.fg
+                    font { family: theme.font; pixelSize: 13 }
+                    
+                    QtObject {
+                      id: mem
+                      property int percent: 0
+                      Timer {
+                        interval: 2000
+                        running: true
+                        repeat: true
+                        onTriggered: Process {
+                          command: ["free"]
+                          running: true
+                          onExited: {
+                            var line = stdout.split("\n")[1]
+                            var fields = line.split(/\s+/)
+                            mem.percent = Math.round(fields[2] / fields[1] * 100)
+                          }
                         }
                       }
                     }
@@ -423,7 +303,6 @@ in
           }
         }
       }
-    }
     }
   '';
 }
