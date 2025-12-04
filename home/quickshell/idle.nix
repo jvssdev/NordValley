@@ -13,12 +13,12 @@ in
     import Quickshell.Wayland
     import Quickshell.Io
 
-    component IdleService : QtObject {
-        property int monitorTimeout: 240
-        property int lockTimeout: 300
-        property int suspendTimeout: 600
-        property bool monitorsOff: false
-        property bool locked: false
+    component IdleService: QtObject {
+      property int monitorTimeout: 240
+      property int lockTimeout: 300
+      property int suspendTimeout: 600
+      property bool monitorsOff: false
+      property bool locked: false
 
       Component.onCompleted: {
         if (typeof(IdleMonitor) === "undefined") {
