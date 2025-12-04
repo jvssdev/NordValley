@@ -1,16 +1,6 @@
 {
-  config,
-  pkgs,
-  lib,
-  homeDir,
-  isRiver,
-  isMango,
-  isNiri,
-  ...
-}:
-{
   imports = [
-    ./config.nix
+    ./idle.nix
     ./bar.nix
   ];
 
