@@ -27,7 +27,6 @@ let
     "cpu"
     "memory"
     "custom/notification"
-    "tray"
     "battery"
     "pulseaudio"
     "bluetooth"

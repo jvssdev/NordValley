@@ -126,6 +126,7 @@ in
       "Mod+8".action.focus-workspace = 8;
       "Mod+9".action.focus-workspace = 9;
       "Mod+Q".action.close-window = { };
+      "Mod+O".action.toggle-overview = { };
       "Mod+Shift+T".action.toggle-window-floating = { };
       "Mod+Shift+F".action.fullscreen-window = { };
       "Mod+F".action.maximize-column = { };
