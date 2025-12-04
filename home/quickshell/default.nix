@@ -11,6 +11,7 @@
 {
   imports = [
     ./config.nix
+    ./bar.nix
   ];
 
   home.packages = with pkgs; [

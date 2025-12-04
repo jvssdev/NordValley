@@ -21,7 +21,8 @@ in
 
     spawn-at-startup = [
       { command = [ "blueman-applet" ]; }
-      { command = [ "waybar" ]; }
+      # { command = [ "waybar" ]; }
+      { command = [ "quickshell" ]; }
       { command = [ "wpaperd" ]; }
       {
         command = [
