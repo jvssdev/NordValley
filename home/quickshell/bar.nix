@@ -1,4 +1,3 @@
-# quickshell/bar.nix
 {
   config,
   pkgs,
