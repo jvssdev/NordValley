@@ -14,7 +14,7 @@ in
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Io
-    import "idle.qml"
+    import "."
 
     QtObject {
       id: theme

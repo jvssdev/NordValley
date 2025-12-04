@@ -8,12 +8,14 @@ let
   p = config.colorScheme.palette;
 in
 {
-  xdg.configFile."quickshell/idle.qml".text = ''
+  xdg.configFile."quickshell/IdleService.qml".text = ''
     import QtQuick
     import Quickshell.Wayland
     import Quickshell.Io
 
-    component IdleService: QtObject {
+    QtObject {
+      id: IdleService
+
       property int monitorTimeout: 240
       property int lockTimeout: 300
       property int suspendTimeout: 600
