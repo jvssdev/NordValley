@@ -160,16 +160,17 @@ in
 
                 Battery {
                   device: Upower.primaryDevice
-                  visible: available
-                  text: (if (percentage <= 10) "󰂎"
-                  else if (percentage <= 20) "󰁺"
-                  else if (percentage <= 30) "󰁻"
-                  else if (percentage <= 40) "󰁼"
-                  else if (percentage <= 50) "󰁽"
-                  else if (percentage <= 60) "󰁾"
-                  else if (percentage <= 80) "󰁿"
-                  else if (percentage <= 90) "󰂀"
-                  else "󰂂") + " " + percentage + "%" + (charging ? " 󰂄" : "")
+                  visible: present
+                  property string batIcon: percentage <= 10 ? "󰂎" :
+                                           percentage <= 20 ? "󰁺" :
+                                           percentage <= 30 ? "󰁻" :
+                                           percentage <= 40 ? "󰁼" :
+                                           percentage <= 50 ? "󰁽" :
+                                           percentage <= 60 ? "󰁾" :
+                                           percentage <= 80 ? "󰁿" :
+                                           percentage <= 90 ? "󰂀" :
+                                           "󰂂"
+                  text: batIcon + " " + percentage + "%" + (charging ? " 󰂄" : "")
                   color: percentage <= 15 ? "#${p.base08}" : percentage <= 30 ? "#${p.base0A}" : "#${p.base05}"
                   font { family: "JetBrainsMono Nerd Font"; pixelSize: 14 }
                 }
