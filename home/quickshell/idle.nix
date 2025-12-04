@@ -32,15 +32,8 @@ in
           return
         }
 
-        monitorOffTimer = Qt.createQmlObject(`
-          import QtQuick
-          import Quickshell.Wayland
-          IdleMonitor {
-            enabled: true
-            respectInhibitors: true
-            timeout: ${monitorTimeout}
-          }
-        `, root)
+        var monOffQml = 'import QtQuick; import Quickshell.Wayland; IdleMonitor { enabled: true; respectInhibitors: true; timeout: ' + root.monitorTimeout + ' }'
+        monitorOffTimer = Qt.createQmlObject(monOffQml, root)
         
         monitorOffTimer.isIdleChanged.connect(function() {
           if (monitorOffTimer.isIdle && !root.monitorsOff) {
@@ -52,15 +45,8 @@ in
           }
         })
 
-        lockTimer = Qt.createQmlObject(`
-          import QtQuick
-          import Quickshell.Wayland
-          IdleMonitor {
-            enabled: true
-            respectInhibitors: true
-            timeout: ${lockTimeout}
-          }
-        `, root)
+        var lockQml = 'import QtQuick; import Quickshell.Wayland; IdleMonitor { enabled: true; respectInhibitors: true; timeout: ' + root.lockTimeout + ' }'
+        lockTimer = Qt.createQmlObject(lockQml, root)
         
         lockTimer.isIdleChanged.connect(function() {
           if (lockTimer.isIdle && !root.locked) {
@@ -71,15 +57,8 @@ in
           }
         })
 
-        suspendTimer = Qt.createQmlObject(`
-          import QtQuick
-          import Quickshell.Wayland
-          IdleMonitor {
-            enabled: true
-            respectInhibitors: true
-            timeout: ${suspendTimeout}
-          }
-        `, root)
+        var suspQml = 'import QtQuick; import Quickshell.Wayland; IdleMonitor { enabled: true; respectInhibitors: true; timeout: ' + root.suspendTimeout + ' }'
+        suspendTimer = Qt.createQmlObject(suspQml, root)
         
         suspendTimer.isIdleChanged.connect(function() {
           if (suspendTimer.isIdle) {
