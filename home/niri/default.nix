@@ -98,7 +98,6 @@ in
 
       {
         matches = [ { } ];
-        geometry-corner-radius = 0;
         clip-to-geometry = true;
       }
     ];
