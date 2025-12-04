@@ -17,8 +17,6 @@ in
     import Quickshell.Services.UPower
     import Quickshell.Bluetooth
     import Quickshell.Mako
-    import Quickshell.Cpu
-    import Quickshell.Memory
     import Quickshell.River
     import Quickshell.Niri
     import Quickshell.Dwl
@@ -55,44 +53,9 @@ in
                   return null
                 }
 
-                Component {
-                  id: riverComp
-                  RiverTags {
-                    occupiedColor: "#${p.base02}"
-                    focusedColor: "#${p.base0D}"
-                    urgentColor: "#${p.base08}"
-                    vacantHidden: true
-                    textColorFocused: "#${p.base00}"
-                    textColorDefault: "#${p.base05}"
-                    font.pixelSize: 14
-                    Layout.alignment: Qt.AlignVCenter
-                  }
-                }
-
-                Component {
-                  id: niriComp
-                  NiriWorkspaces {
-                    activeColor: "#${p.base0D}"
-                    inactiveColor: "#${p.base02}"
-                    textColorActive: "#${p.base00}"
-                    textColorInactive: "#${p.base05}"
-                    font.pixelSize: 14
-                    Layout.alignment: Qt.AlignVCenter
-                  }
-                }
-
-                Component {
-                  id: dwlComp
-                  DwlTags {
-                    occupiedColor: "#${p.base02}"
-                    selectedColor: "#${p.base0D}"
-                    urgentColor: "#${p.base08}"
-                    textColorSelected: "#${p.base00}"
-                    textColorDefault: "#${p.base05}"
-                    font.pixelSize: 14
-                    Layout.alignment: Qt.AlignVCenter
-                  }
-                }
+                Component { id: riverComp; RiverTags { occupiedColor: "#${p.base02}"; focusedColor: "#${p.base0D}"; urgentColor: "#${p.base08}"; vacantHidden: true; textColorFocused: "#${p.base00}"; textColorDefault: "#${p.base05}"; font.pixelSize: 14; Layout.alignment: Qt.AlignVCenter } }
+                Component { id: niriComp; NiriWorkspaces { activeColor: "#${p.base0D}"; inactiveColor: "#${p.base02}"; textColorActive: "#${p.base00}"; textColorInactive: "#${p.base05}"; font.pixelSize: 14; Layout.alignment: Qt.AlignVCenter } }
+                Component { id: dwlComp; DwlTags { occupiedColor: "#${p.base02}"; selectedColor: "#${p.base0D}"; urgentColor: "#${p.base08}"; textColorSelected: "#${p.base00}"; textColorDefault: "#${p.base05}"; font.pixelSize: 14; Layout.alignment: Qt.AlignVCenter } }
               }
 
               Item { Layout.fillWidth: true }
@@ -119,7 +82,7 @@ in
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: Command { command: ["wlogout"] ; running: true }
+                    onClicked: Command { command: ["wlogout"]; running: true }
                   }
                   background: Rectangle { color: "#${p.base08}"; radius: 8; opacity: mouse.hovered ? 1 : 0 }
                 }
@@ -149,39 +112,20 @@ in
                   PipewireDefaultAudio { id: volume; type: AudioSink }
                 }
 
-                Loader {
-                  active: UPower.primaryDevice !== null
-                  sourceComponent: UpowerDevice {
-                    device: UPower.primaryDevice
-                    property string batIcon: percentage <= 10 ? "󰂎" :
-                                             percentage <= 20 ? "󰁺" :
-                                             percentage <= 30 ? "󰁻" :
-                                             percentage <= 40 ? "󰁼" :
-                                             percentage <= 50 ? "󰁽" :
-                                             percentage <=  <= 60 ? "󰁾" :
-                                             percentage <= 80 ? "󰁿" :
-                                             percentage <= 90 ? "󰂀" :
-                                             "󰂂"
-                    text: batIcon + " " + percentage + "%" + (state === 1 ? " 󰂄" : "")
-                    color: percentage <= 15 ? "#${p.base08}" : percentage <= 30 ? "#${p.base0A}" : "#${p.base05}"
-                    font { family: "JetBrainsMono Nerd Font"; pixelSize: 14 }
-                  }
-                }
-
-                Row {
-                  spacing: 8
-                  Text { 
-                    text: " " + Math.round(cpu.usage) + "%"
-                    color: cpu.usage > 85 ? "#${p.base08}" : "#${p.base05}"
-                    font { family: "JetBrainsMono Nerd Font"; pixelSize: 13 }
-                    Cpu { id: cpu }
-                  }
-                  Text { 
-                    text: " " + Math.round((mem.used / mem.total) * 100) + "%"
-                    color: "#${p.base05}"
-                    font { family: "JetBrainsMono Nerd Font"; pixelSize: 13 }
-                    Memory { id: mem }
-                  }
+                Text {
+                  visible: UPower.displayDevice.present
+                  property string batIcon: UPower.displayDevice.percentage <= 10 ? "󰂎" :
+                                           UPower.displayDevice.percentage <= 20 ? "󰁺" :
+                                           UPower.displayDevice.percentage <= 30 ? "󰁻" :
+                                           UPower.displayDevice.percentage <= 40 ? "󰁼" :
+                                           UPower.displayDevice.percentage <= 50 ? "󰁽" :
+                                           UPower.displayDevice.percentage <= 60 ? "󰁾" :
+                                           UPower.displayDevice.percentage <= 80 ? "󰁿" :
+                                           UPower.displayDevice.percentage <= 90 ? "󰂀" :
+                                           "󰂂"
+                  text: batIcon + " " + Math.round(UPower.displayDevice.percentage) + "%" + (UPower.displayDevice.state === 1 ? " 󰂄" : "")
+                  color: UPower.displayDevice.percentage <= 15 ? "#${p.base08}" : UPower.displayDevice.percentage <= 30 ? "#${p.base0A}" : "#${p.base05}"
+                  font { family: "JetBrainsMono Nerd Font"; pixelSize: 14 }
                 }
 
                 Text {
