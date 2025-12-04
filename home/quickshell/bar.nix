@@ -14,7 +14,7 @@ in
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Io
-    import "."
+    import "IdleService.qml"
 
     QtObject {
       id: theme
@@ -39,7 +39,9 @@ in
       readonly property int fontSize: 14
     }
 
-    IdleService {}
+    IdleService {
+      id: idleService
+    }
 
     Variants {
       model: Quickshell.screens
@@ -144,7 +146,7 @@ in
                       MouseArea {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: Command { command: ["niri", "msg", "action", "focus-workspace", modelData.name]; running: true }
+                        onClicked: Process { command: ["niri", "msg", "action", "focus-workspace", modelData.name]; running: true }
                       }
                     }
                   }
@@ -197,7 +199,7 @@ in
                   anchors.fill: parent
                   hoverEnabled: true
                   cursorShape: Qt.PointingHandCursor
-                  onClicked: Command { command: ["wlogout"]; running: true }
+                  onClicked: Process { command: ["wlogout"]; running: true }
                 }
                 background: Rectangle { color: theme.red; radius: 8; opacity: powerMouse.hovered ? 1 : 0 }
               }
@@ -209,7 +211,7 @@ in
                 MouseArea {
                   anchors.fill: parent
                   cursorShape: Qt.PointingHandCursor
-                  onClicked: Command { command: ["sh", "-c", "makoctl mode | grep -q do-not-disturb && makoctl mode -r do-not-disturb || makoctl mode -a do-not-disturb"]; running: true }
+                  onClicked: Process { command: ["sh", "-c", "makoctl mode | grep -q do-not-disturb && makoctl mode -r do-not-disturb || makoctl mode -a do-not-disturb"]; running: true }
                 }
                 QtObject {
                   id: makoDnd
@@ -232,7 +234,7 @@ in
                 MouseArea {
                   anchors.fill: parent
                   cursorShape: Qt.PointingHandCursor
-                  onClicked: Command { command: ["blueman-manager"]; running: true }
+                  onClicked: Process { command: ["blueman-manager"]; running: true }
                 }
                 QtObject {
                   id: btInfo
@@ -255,7 +257,7 @@ in
                 MouseArea {
                   anchors.fill: parent
                   cursorShape: Qt.PointingHandCursor
-                  onClicked: Command { command: ["pavucontrol"]; running: true }
+                  onClicked: Process { command: ["pavucontrol"]; running: true }
                 }
                 QtObject {
                   id: volume
