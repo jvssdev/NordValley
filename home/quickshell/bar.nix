@@ -14,21 +14,19 @@ in
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Services.Pipewire
-    import Quickshell.Services.Upower
-    import Quickshell.Services.Bluez
-    import Quickshell.Services.Mako
-    import Quickshell.Services.Network
+    import Quickshell.Services.UPower
+    import Quickshell.Bluetooth
+    import Quickshell.Mako
     import Quickshell.Cpu
     import Quickshell.Memory
     import Quickshell.River
     import Quickshell.Niri
     import Quickshell.Dwl
-    import Quickshell.Io
 
     ShellRoot {
       Variants {
         model: Quickshell.screens
-        PanelWindow {
+        delegate: PanelWindow {
           screen: modelData
           anchors { top: true; left: true; right: true }
           height: 34
@@ -121,28 +119,21 @@ in
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: Command { command: "wlogout"; running: true }
+                    onClicked: Command { command: ["wlogout"] ; running: true }
                   }
                   background: Rectangle { color: "#${p.base08}"; radius: 8; opacity: mouse.hovered ? 1 : 0 }
                 }
 
                 Text {
-                  text: network.wifi.connected ? "" : network.ethernet.connected ? "󰈀" : ""
-                  color: network.online ? "#${p.base0C}" : "#${p.base08}"
-                  font { family: "JetBrainsMono Nerd Font"; pixelSize: 16 }
-                  Network { id: network }
-                }
-
-                Text {
-                  text: bluetooth.connectedDevices.length > 0 ? "" : ""
+                  text: bluetooth.powered && bluetooth.connectedDevices.length > 0 ? "" : ""
                   color: bluetooth.connectedDevices.length > 0 ? "#${p.base0F}" : "#${p.base04}"
                   font { family: "JetBrainsMono Nerd Font"; pixelSize: 15 }
                   MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: Command { command: "blueman-manager"; running: true }
+                    onClicked: Command { command: ["blueman-manager"]; running: true }
                   }
-                  Bluez { id: bluetooth }
+                  Bluetooth { id: bluetooth }
                 }
 
                 Text {
@@ -153,26 +144,28 @@ in
                   MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: Command { command: "pavucontrol"; running: true }
+                    onClicked: Command { command: ["pavucontrol"]; running: true }
                   }
                   PipewireDefaultAudio { id: volume; type: AudioSink }
                 }
 
-                Battery {
-                  device: Upower.primaryDevice
-                  visible: present
-                  property string batIcon: percentage <= 10 ? "󰂎" :
-                                           percentage <= 20 ? "󰁺" :
-                                           percentage <= 30 ? "󰁻" :
-                                           percentage <= 40 ? "󰁼" :
-                                           percentage <= 50 ? "󰁽" :
-                                           percentage <= 60 ? "󰁾" :
-                                           percentage <= 80 ? "󰁿" :
-                                           percentage <= 90 ? "󰂀" :
-                                           "󰂂"
-                  text: batIcon + " " + percentage + "%" + (charging ? " 󰂄" : "")
-                  color: percentage <= 15 ? "#${p.base08}" : percentage <= 30 ? "#${p.base0A}" : "#${p.base05}"
-                  font { family: "JetBrainsMono Nerd Font"; pixelSize: 14 }
+                Loader {
+                  active: UPower.primaryDevice !== null
+                  sourceComponent: UpowerDevice {
+                    device: UPower.primaryDevice
+                    property string batIcon: percentage <= 10 ? "󰂎" :
+                                             percentage <= 20 ? "󰁺" :
+                                             percentage <= 30 ? "󰁻" :
+                                             percentage <= 40 ? "󰁼" :
+                                             percentage <= 50 ? "󰁽" :
+                                             percentage <=  <= 60 ? "󰁾" :
+                                             percentage <= 80 ? "󰁿" :
+                                             percentage <= 90 ? "󰂀" :
+                                             "󰂂"
+                    text: batIcon + " " + percentage + "%" + (state === 1 ? " 󰂄" : "")
+                    color: percentage <= 15 ? "#${p.base08}" : percentage <= 30 ? "#${p.base0A}" : "#${p.base05}"
+                    font { family: "JetBrainsMono Nerd Font"; pixelSize: 14 }
+                  }
                 }
 
                 Row {
