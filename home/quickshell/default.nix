@@ -27,7 +27,7 @@ let
     import QtQml 2.15
     import Quickshell
     import Quickshell.Wayland
-    import Quickshell.Io 1.0
+    import Quickshell.Io 1.0 
 
     import "bar.qml" as BarComponent
 
