@@ -18,13 +18,10 @@ Variants {
 
     PanelWindow {
         property var modelData
-        screen: modelData
 
-        anchors {
-            top: true
-            left: true
-            right: true
-        }
+        anchors.top: true
+        anchors.left: true
+        anchors.right: true
 
         height: 30
         color: Theme.bg
