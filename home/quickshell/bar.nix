@@ -35,7 +35,7 @@ in
 
     Variants {
       model: Quickshell.screens
-      delegate: PanelWindow {
+      PanelWindow {
         screen: modelData
         anchors { top: true; left: true; right: true }
         implicitHeight: 36
