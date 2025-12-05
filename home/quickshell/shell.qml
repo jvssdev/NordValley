@@ -1,9 +1,9 @@
 // ./shell.qml
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import Quickshell 1.0
-import Quickshell.Wayland 1.0
-import Quickshell.Io 1.0
+import QtQuick
+import QtQuick.Layouts
+import Quickshell
+import Quickshell.Wayland
+import Quickshell.Io
 import "quickshell" // Imports Theme singleton and Bar component
 
 ShellRoot {

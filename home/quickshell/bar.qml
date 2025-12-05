@@ -1,9 +1,9 @@
 // ./bar.qml
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import Quickshell 1.0
-import Quickshell.Wayland 1.0
-import Quickshell.Io 1.0
+import QtQuick
+import QtQuick.Layouts
+import Quickshell
+import Quickshell.Wayland
+import Quickshell.Io
 import "quickshell" // Imports Theme singleton
 
 Item {
@@ -19,7 +19,7 @@ Item {
     property QtObject disk
     property QtObject activeWindow
 
-    // FIX: Define a reusable component for one-off shell commands
+    // Define a reusable component for one-off shell commands
     Component {
         id: oneShotProcess
         Process {
@@ -98,7 +98,6 @@ Item {
                                         parent.model.focus()
                                     } else if (mouse.button === Qt.RightButton) {
                                         var wsId = parent.model.id
-                                        // FIX: Dynamic instantiation
                                         oneShotProcess.createObject(barRoot, {
                                             commandToRun: ["sh", "-c",
                                                       "if pgrep -x dwl > /dev/null; then dwl-cmd -s toggleview " + (wsId - 1) +
@@ -199,7 +198,6 @@ Item {
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
-                            // FIX: Dynamic instantiation
                             onClicked: oneShotProcess.createObject(barRoot, { commandToRun: ["pavucontrol"] })
                         }
                     }
@@ -213,7 +211,6 @@ Item {
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
-                            // FIX: Dynamic instantiation
                             onClicked: oneShotProcess.createObject(barRoot, { commandToRun: ["blueman-manager"] })
                         }
                     }
@@ -234,7 +231,6 @@ Item {
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
-                            // FIX: Dynamic instantiation
                             onClicked: oneShotProcess.createObject(barRoot, { 
                                 commandToRun: ["sh", "-c", "makoctl mode | grep -q do-not-disturb && makoctl mode -r do-not-disturb || makoctl mode -a do-not-disturb"]
                             })
@@ -249,7 +245,6 @@ Item {
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
-                            // FIX: Dynamic instantiation
                             onClicked: oneShotProcess.createObject(barRoot, { commandToRun: ["wlogout"] })
                         }
                     }
