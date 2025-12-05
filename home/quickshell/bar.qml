@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io
 import "quickshell" // Imports Theme singleton
+import Quickshell.Widgets // FIX: Added missing module for the Workspaces type
 
 Item {
     id: barRoot
