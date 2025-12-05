@@ -29,7 +29,7 @@ let
     import Quickshell.Wayland
     import Quickshell.Io
 
-    import "bar.qml" as BarComponent
+    import "Bar.qml" as BarComponent
 
     ShellRoot {
         id: root
@@ -512,6 +512,6 @@ let
   '';
 in
 {
-  xdg.configFile."quickshell/bar.qml".text = barComponentQml;
+  xdg.configFile."quickshell/Bar.qml".text = barComponentQml;
   xdg.configFile."quickshell/shell.qml".text = shellQml;
 }
