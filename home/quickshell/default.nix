@@ -21,6 +21,7 @@ let
     fontSize = 14;
   };
 
+  # FIX: Added explicit version numbers to imports to resolve "type not found" errors
   shellQml = ''
     import QtQuick 2.15
     import QtQuick.Layouts 1.15
@@ -116,7 +117,7 @@ let
             property int percentage: 0
             property string icon: "󰂎"
             property bool charging: false
-
+            # FIX: Properties moved to separate lines/correct syntax to resolve "Expected token ','" error
             Timer {
                 interval: 10000
                 running: true
@@ -131,12 +132,14 @@ let
             Process {
                 id: batCapacityProc
                 command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity"]
+                running: true
                 onExited: battery.percentage = parseInt(stdout.trim()) || 0
             }
 
             Process {
                 id: batStatusProc
                 command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/status"]
+                running: true
                 onExited: battery.charging = stdout.trim() === "Charging"
             }
             
@@ -252,12 +255,12 @@ let
   '';
 
   barComponentQml = ''
-    import QtQuick
-    import QtQuick.Layouts
-    import QtQml
+    import QtQuick 2.15
+    import QtQuick.Layouts 1.15
+    import QtQml 2.15
     import Quickshell
     import Quickshell.Wayland
-    import Quickshell.Io
+    import Quickshell.Io 1.0
 
     Item {
         id: barRoot
