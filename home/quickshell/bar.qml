@@ -6,7 +6,6 @@ import Quickshell.Wayland
 import Quickshell.Io
 import "quickshell"
 import Quickshell.Widgets
-import qs.Widgets
 
 Item {
     id: barRoot
