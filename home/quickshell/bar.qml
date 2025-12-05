@@ -17,8 +17,6 @@ Variants {
     model: Quickshell.screens
 
     PanelWindow {
-        property var modelData
-
         anchors.top: true
         anchors.left: true
         anchors.right: true
