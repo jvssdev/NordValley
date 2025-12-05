@@ -11,7 +11,7 @@ in
   xdg.configFile."quickshell/shell.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
-    import QtQml // FIX: Added to resolve "QtObject" and "Timer" errors
+    import QtQml // FIX: Added for QtObject and Timer resolution
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Io
@@ -35,19 +35,22 @@ in
         readonly property int fontSize: 14
       }
 
+      // ----------------------------------------------------------------------
+      // FIX: Refactored System Status Blocks (Process outside Timer)
+      // ----------------------------------------------------------------------
+
       QtObject {
         id: makoDnd
         property bool isDnd: false
 
-        // FIX: Process moved out of Timer and given an ID
-        Process {
+        Process { // Declared outside Timer
             id: makoProc
             command: ["makoctl", "mode"]
             onExited: makoDnd.isDnd = stdout.trim() === "do-not-disturb"
         }
 
         Timer {
-          interval: 1000; running: true; repeat: true
+          interval: 1000; running: true; repeat: true; triggeredOnStart: true
           onTriggered: makoProc.running = true // Trigger by ID
         }
       }
@@ -56,15 +59,14 @@ in
         id: btInfo
         property bool connected: false
 
-        // FIX: Process moved out of Timer and given an ID
-        Process {
+        Process { // Declared outside Timer
             id: btProc
             command: ["bluetoothctl", "info"]
             onExited: btInfo.connected = stdout.includes("Connected: yes")
         }
 
         Timer {
-          interval: 5000; running: true; repeat: true
+          interval: 5000; running: true; repeat: true; triggeredOnStart: true
           onTriggered: btProc.running = true // Trigger by ID
         }
       }
@@ -74,8 +76,7 @@ in
         property int level: 0
         property bool muted: false
 
-        // FIX: Process moved out of Timer and given an ID
-        Process {
+        Process { // Declared outside Timer
             id: volumeProc
             command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
             onExited: {
@@ -87,7 +88,7 @@ in
         }
 
         Timer {
-          interval: 1000; running: true; repeat: true
+          interval: 1000; running: true; repeat: true; triggeredOnStart: true
           onTriggered: volumeProc.running = true // Trigger by ID
         }
       }
@@ -98,23 +99,21 @@ in
         property string icon: "󰂎"
         property bool charging: false
 
-        // FIX: Processes moved out of Timer and given IDs
-        Process {
+        Process { // Declared outside Timer (using sh -c for wildcard)
             id: batCapacityProc
             command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity"]
             onExited: battery.percentage = parseInt(stdout.trim()) || 0
         }
 
-        Process {
+        Process { // Declared outside Timer (using sh -c for wildcard)
             id: batStatusProc
             command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/status"]
             onExited: battery.charging = stdout.trim() === "Charging"
         }
 
         Timer {
-          interval: 10000; running: true; repeat: true
+          interval: 10000; running: true; repeat: true; triggeredOnStart: true
           onTriggered: {
-            // Trigger by ID
             batCapacityProc.running = true
             batStatusProc.running = true
           }
@@ -137,7 +136,6 @@ in
         id: cpu
         property int usage: 0
 
-        // FIX: Process moved out of Timer and given an ID
         Process {
             id: cpuProc
             command: ["top", "-bn1"]
@@ -154,8 +152,8 @@ in
         }
 
         Timer {
-          interval: 2000; running: true; repeat: true
-          onTriggered: cpuProc.running = true // Trigger by ID
+          interval: 2000; running: true; repeat: true; triggeredOnStart: true
+          onTriggered: cpuProc.running = true
         }
       }
 
@@ -163,7 +161,6 @@ in
         id: mem
         property int percent: 0
 
-        // FIX: Process moved out of Timer and given an ID
         Process {
             id: memProc
             command: ["free"]
@@ -175,10 +172,14 @@ in
         }
 
         Timer {
-          interval: 2000; running: true; repeat: true
-          onTriggered: memProc.running = true // Trigger by ID
+          interval: 2000; running: true; repeat: true; triggeredOnStart: true
+          onTriggered: memProc.running = true
         }
       }
+
+      // ----------------------------------------------------------------------
+      // Panel UI (Rest of the Code)
+      // ----------------------------------------------------------------------
 
       Variants {
         model: Quickshell.screens
