@@ -11,6 +11,7 @@ in
   xdg.configFile."quickshell/shell.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
+    import QtQml
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Io
@@ -37,28 +38,32 @@ in
       QtObject {
         id: makoDnd
         property bool isDnd: false
+
         Process {
             id: makoProc
             command: ["makoctl", "mode"]
             onExited: makoDnd.isDnd = stdout.trim() === "do-not-disturb"
         }
+
         Timer {
           interval: 1000; running: true; repeat: true
-          // 2. Trigger the process explicitly
-          onTriggered: makoProc.running = true
+          onTriggered: makoProc.running = true // Trigger process by ID
         }
       }
 
       QtObject {
         id: btInfo
         property bool connected: false
+
+        Process {
+            id: btProc
+            command: ["bluetoothctl", "info"]
+            onExited: btInfo.connected = stdout.includes("Connected: yes")
+        }
+
         Timer {
           interval: 5000; running: true; repeat: true
-          onTriggered: Process {
-            command: ["bluetoothctl", "info"]
-            running: true
-            onExited: btInfo.connected = stdout.includes("Connected: yes")
-          }
+          onTriggered: btProc.running = true // Trigger process by ID
         }
       }
 
@@ -66,18 +71,21 @@ in
         id: volume
         property int level: 0
         property bool muted: false
-        Timer {
-          interval: 1000; running: true; repeat: true
-          onTriggered: Process {
+
+        Process {
+            id: volumeProc
             command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
-            running: true
             onExited: {
               const out = stdout.trim()
               volume.muted = out.includes("[MUTED]")
               const match = out.match(/Volume: ([0-9.]+)/)
               if (match) volume.level = Math.round(parseFloat(match[1]) * 100)
             }
-          }
+        }
+
+        Timer {
+          interval: 1000; running: true; repeat: true
+          onTriggered: volumeProc.running = true // Trigger process by ID
         }
       }
 
@@ -89,7 +97,6 @@ in
 
         Process {
             id: batCapacityProc
-            // "sh -c" is required for the * wildcard to expand correctly
             command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity"]
             onExited: battery.percentage = parseInt(stdout.trim()) || 0
         }
@@ -102,7 +109,6 @@ in
 
         Timer {
           interval: 10000; running: true; repeat: true
-          triggeredOnStart: true
           onTriggered: {
             batCapacityProc.running = true
             batStatusProc.running = true
@@ -125,11 +131,10 @@ in
       QtObject {
         id: cpu
         property int usage: 0
-        Timer {
-          interval: 2000; running: true; repeat: true
-          onTriggered: Process {
+
+        Process {
+            id: cpuProc
             command: ["top", "-bn1"]
-            running: true
             onExited: {
               const lines = stdout.split("\n")
               for (let line of lines) {
@@ -140,24 +145,31 @@ in
                 }
               }
             }
-          }
+        }
+
+        Timer {
+          interval: 2000; running: true; repeat: true
+          onTriggered: cpuProc.running = true
         }
       }
 
       QtObject {
         id: mem
         property int percent: 0
-        Timer {
-          interval: 2000; running: true; repeat: true
-          onTriggered: Process {
+
+        Process {
+            id: memProc
             command: ["free"]
-            running: true
             onExited: {
               const line = stdout.split("\n")[1]
               const parts = line.split(/\s+/)
               percent = Math.round(parts[2] / parts[1] * 100)
             }
-          }
+        }
+
+        Timer {
+          interval: 2000; running: true; repeat: true
+          onTriggered: memProc.running = true // Trigger process by ID
         }
       }
 
