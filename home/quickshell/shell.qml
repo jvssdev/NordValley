@@ -1,8 +1,8 @@
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import Quickshell 1.0
-import Quickshell.Wayland 1.0
-import Quickshell.Io 1.0
+import QtQuick
+import QtQuick.Layouts
+import Quickshell
+import Quickshell.Wayland
+import Quickshell.Io
 ShellRoot {
     id: root
     QtObject { id: makoDnd; property bool isDnd: false }
