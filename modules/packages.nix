@@ -62,6 +62,7 @@ let
     slurp
     wl-clipboard
     cliphist
+    wlopm
 
     # Cloud/Sync tools
     rclone
