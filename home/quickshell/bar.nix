@@ -37,13 +37,15 @@ in
       QtObject {
         id: makoDnd
         property bool isDnd: false
+        Process {
+            id: makoProc
+            command: ["makoctl", "mode"]
+            onExited: makoDnd.isDnd = stdout.trim() === "do-not-disturb"
+        }
         Timer {
           interval: 1000; running: true; repeat: true
-          onTriggered: Process {
-            command: ["makoctl", "mode"]
-            running: true
-            onExited: makoDnd.isDnd = stdout.trim() === "do-not-disturb"
-          }
+          // 2. Trigger the process explicitly
+          onTriggered: makoProc.running = true
         }
       }
 
