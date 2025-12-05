@@ -120,10 +120,12 @@ in
                 }
 
                 Item {
+                  id: makoContainer
                   width: childrenRect.width
                   height: childrenRect.height
                   
                   Text {
+                    id: makoText
                     text: makoDnd.isDnd ? "" : ""
                     color: makoDnd.isDnd ? theme.red : theme.fg
                     font.family: theme.font
@@ -134,7 +136,7 @@ in
                       anchors.fill: parent
                       cursorShape: Qt.PointingHandCursor
                       onClicked: {
-                        var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent)
+                        var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', makoContainer)
                         proc.command = ["sh", "-c", "makoctl mode | grep -q do-not-disturb && makoctl mode -r do-not-disturb || makoctl mode -a do-not-disturb"]
                         proc.running = true
                       }
@@ -147,10 +149,10 @@ in
                         running: true
                         repeat: true
                         onTriggered: {
-                          var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent.parent)
+                          var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', makoContainer)
                           proc.command = ["makoctl", "mode"]
                           proc.exited.connect(function() {
-                            parent.parent.isDnd = proc.stdout.trim() === "do-not-disturb"
+                            makoText.makoDnd.isDnd = proc.stdout.trim() === "do-not-disturb"
                           })
                           proc.running = true
                         }
@@ -160,10 +162,12 @@ in
                 }
 
                 Item {
+                  id: btContainer
                   width: childrenRect.width
                   height: childrenRect.height
                   
                   Text {
+                    id: btText
                     text: btInfo.connected ? "" : ""
                     color: btInfo.connected ? theme.cyan : theme.fgMuted
                     font.family: theme.font
@@ -173,7 +177,7 @@ in
                       anchors.fill: parent
                       cursorShape: Qt.PointingHandCursor
                       onClicked: {
-                        var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent)
+                        var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', btContainer)
                         proc.command = ["blueman-manager"]
                         proc.running = true
                       }
@@ -186,10 +190,10 @@ in
                         running: true
                         repeat: true
                         onTriggered: {
-                          var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent.parent)
+                          var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', btContainer)
                           proc.command = ["bluetoothctl", "info"]
                           proc.exited.connect(function() {
-                            parent.parent.connected = proc.stdout.includes("Connected: yes")
+                            btText.btInfo.connected = proc.stdout.includes("Connected: yes")
                           })
                           proc.running = true
                         }
@@ -199,10 +203,12 @@ in
                 }
 
                 Item {
+                  id: volumeContainer
                   width: childrenRect.width
                   height: childrenRect.height
                   
                   Text {
+                    id: volumeText
                     text: {
                       var icon = volume.volume > 0 ? (volume.muted ? "󰖁" : volume.volume > 66 ? "󰕾" : volume.volume > 33 ? "󰖀" : "󰕿") : "󰖁"
                       var vol = volume.volume > 0 && !volume.muted ? " " + volume.volume + "%" : ""
@@ -216,7 +222,7 @@ in
                       anchors.fill: parent
                       cursorShape: Qt.PointingHandCursor
                       onClicked: {
-                        var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent)
+                        var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', volumeContainer)
                         proc.command = ["pavucontrol"]
                         proc.running = true
                       }
@@ -230,13 +236,13 @@ in
                         running: true
                         repeat: true
                         onTriggered: {
-                          var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent.parent)
+                          var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', volumeContainer)
                           proc.command = ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
                           proc.exited.connect(function() {
                             var out = proc.stdout.trim()
-                            parent.parent.muted = out.includes("[MUTED]")
+                            volumeText.volume.muted = out.includes("[MUTED]")
                             var match = out.match(/Volume: ([0-9.]+)/)
-                            if (match) parent.parent.volume = Math.round(parseFloat(match[1]) * 100)
+                            if (match) volumeText.volume.volume = Math.round(parseFloat(match[1]) * 100)
                           })
                           proc.running = true
                         }
@@ -246,10 +252,12 @@ in
                 }
 
                 Item {
+                  id: batteryContainer
                   width: childrenRect.width
                   height: childrenRect.height
                   
                   Text {
+                    id: batteryText
                     visible: battery.percentage > 0
                     text: battery.icon + " " + battery.percentage + "%" + (battery.charging ? " 󰂄" : "")
                     color: battery.percentage <= 15 ? theme.red : battery.percentage <= 30 ? theme.yellow : theme.fg
@@ -278,17 +286,17 @@ in
                         running: true
                         repeat: true
                         onTriggered: {
-                          var p1 = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent.parent)
+                          var p1 = Qt.createQmlObject('import Quickshell.Io; Process {}', batteryContainer)
                           p1.command = ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 0"]
                           p1.exited.connect(function() {
-                            parent.parent.percentage = parseInt(p1.stdout.trim()) || 0
+                            batteryText.battery.percentage = parseInt(p1.stdout.trim()) || 0
                           })
                           p1.running = true
                           
-                          var p2 = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent.parent)
+                          var p2 = Qt.createQmlObject('import Quickshell.Io; Process {}', batteryContainer)
                           p2.command = ["sh", "-c", "cat /sys/class/power_supply/BAT*/status 2>/dev/null || echo Discharging"]
                           p2.exited.connect(function() {
-                            parent.parent.charging = p2.stdout.trim() === "Charging"
+                            batteryText.battery.charging = p2.stdout.trim() === "Charging"
                           })
                           p2.running = true
                         }
@@ -301,10 +309,12 @@ in
                   spacing: 10
                   
                   Item {
+                    id: cpuContainer
                     width: childrenRect.width
                     height: childrenRect.height
                     
                     Text {
+                      id: cpuText
                       text: " " + cpu.usage + "%"
                       color: cpu.usage > 85 ? theme.red : theme.fg
                       font.family: theme.font
@@ -317,14 +327,14 @@ in
                           running: true
                           repeat: true
                           onTriggered: {
-                            var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent.parent)
+                            var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', cpuContainer)
                             proc.command = ["top", "-bn1"]
                             proc.exited.connect(function() {
                               var lines = proc.stdout.split("\n")
                               for (var i = 0; i < lines.length; i++) {
                                 if (lines[i].includes("%Cpu")) {
                                   var fields = lines[i].split(/\s+/)
-                                  parent.parent.usage = Math.round(100 - parseFloat(fields[7]))
+                                  cpuText.cpu.usage = Math.round(100 - parseFloat(fields[7]))
                                   break
                                 }
                               }
@@ -337,10 +347,12 @@ in
                   }
                   
                   Item {
+                    id: memContainer
                     width: childrenRect.width
                     height: childrenRect.height
                     
                     Text {
+                      id: memText
                       text: " " + mem.percent + "%"
                       color: theme.fg
                       font.family: theme.font
@@ -353,12 +365,12 @@ in
                           running: true
                           repeat: true
                           onTriggered: {
-                            var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent.parent)
+                            var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', memContainer)
                             proc.command = ["free"]
                             proc.exited.connect(function() {
                               var line = proc.stdout.split("\n")[1]
                               var fields = line.split(/\s+/)
-                              parent.parent.percent = Math.round(parseInt(fields[2]) / parseInt(fields[1]) * 100)
+                              memText.mem.percent = Math.round(parseInt(fields[2]) / parseInt(fields[1]) * 100)
                             })
                             proc.running = true
                           }
