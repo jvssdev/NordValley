@@ -34,16 +34,49 @@ in
         readonly property int fontSize: 14
       }
 
-      Process {
-        id: batCapacityProc
-        command: ["cat", "/sys/class/power_supply/BAT*/capacity"]
-        onExited: battery.percentage = parseInt(stdout.trim()) || 0
+      QtObject {
+        id: makoDnd
+        property bool isDnd: false
+        Timer {
+          interval: 1000; running: true; repeat: true
+          onTriggered: Process {
+            command: ["makoctl", "mode"]
+            running: true
+            onExited: makoDnd.isDnd = stdout.trim() === "do-not-disturb"
+          }
+        }
       }
 
-      Process {
-        id: batStatusProc
-        command: ["cat", "/sys/class/power_supply/BAT*/status"]
-        onExited: battery.charging = stdout.trim() === "Charging"
+      QtObject {
+        id: btInfo
+        property bool connected: false
+        Timer {
+          interval: 5000; running: true; repeat: true
+          onTriggered: Process {
+            command: ["bluetoothctl", "info"]
+            running: true
+            onExited: btInfo.connected = stdout.includes("Connected: yes")
+          }
+        }
+      }
+
+      QtObject {
+        id: volume
+        property int level: 0
+        property bool muted: false
+        Timer {
+          interval: 1000; running: true; repeat: true
+          onTriggered: Process {
+            command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
+            running: true
+            onExited: {
+              const out = stdout.trim()
+              volume.muted = out.includes("[MUTED]")
+              const match = out.match(/Volume: ([0-9.]+)/)
+              if (match) volume.level = Math.round(parseFloat(match[1]) * 100)
+            }
+          }
+        }
       }
 
       QtObject {
@@ -51,6 +84,21 @@ in
         property int percentage: 0
         property string icon: "󰂎"
         property bool charging: false
+        Timer {
+          interval: 10000; running: true; repeat: true
+          onTriggered: {
+            Process {
+              command: ["cat", "/sys/class/power_supply/BAT*/capacity"]
+              running: true
+              onExited: battery.percentage = parseInt(stdout.trim()) || 0
+            }
+            Process {
+              command: ["cat", "/sys/class/power_supply/BAT*/status"]
+              running: true
+              onExited: battery.charging = stdout.trim() === "Charging"
+            }
+          }
+        }
         onPercentageChanged: {
           if (percentage <= 10) icon = "󰂎"
           else if (percentage <= 20) icon = "󰁺"
@@ -64,13 +112,42 @@ in
         }
       }
 
-      Timer {
-        interval: 10000
-        running: true
-        repeat: true
-        onTriggered: {
-          batCapacityProc.running = true
-          batStatusProc.running = true
+      QtObject {
+        id: cpu
+        property int usage: 0
+        Timer {
+          interval: 2000; running: true; repeat: true
+          onTriggered: Process {
+            command: ["top", "-bn1"]
+            running: true
+            onExited: {
+              const lines = stdout.split("\n")
+              for (let line of lines) {
+                if (line.includes("%Cpu")) {
+                  const parts = line.split(/\s+/)
+                  usage = Math.round(100 - parseFloat(parts[7]))
+                  break
+                }
+              }
+            }
+          }
+        }
+      }
+
+      QtObject {
+        id: mem
+        property int percent: 0
+        Timer {
+          interval: 2000; running: true; repeat: true
+          onTriggered: Process {
+            command: ["free"]
+            running: true
+            onExited: {
+              const line = stdout.split("\n")[1]
+              const parts = line.split(/\s+/)
+              percent = Math.round(parts[2] / parts[1] * 100)
+            }
+          }
         }
       }
 
@@ -139,18 +216,6 @@ in
                     cursorShape: Qt.PointingHandCursor
                     onClicked: Process { command: ["sh", "-c", "makoctl mode | grep -q do-not-disturb && makoctl mode -r do-not-disturb || makoctl mode -a do-not-disturb"]; running: true }
                   }
-                  QtObject {
-                    id: makoDnd
-                    property bool isDnd: false
-                    Timer {
-                      interval: 1000; running: true; repeat: true
-                      onTriggered: Process {
-                        command: ["makoctl", "mode"]
-                        running: true
-                        onExited: makoDnd.isDnd = stdout.trim() === "do-not-disturb"
-                      }
-                    }
-                  }
                 }
 
                 Text {
@@ -162,46 +227,16 @@ in
                     cursorShape: Qt.PointingHandCursor
                     onClicked: Process { command: ["blueman-manager"]; running: true }
                   }
-                  QtObject {
-                    id: btInfo
-                    property bool connected: false
-                    Timer {
-                      interval: 5000; running: true; repeat: true
-                      onTriggered: Process {
-                        command: ["bluetoothctl", "info"]
-                        running: true
-                        onExited: btInfo.connected = stdout.includes("Connected: yes")
-                      }
-                    }
-                  }
                 }
 
                 Text {
-                  text: volume.muted ? "󰖁" : volume.volume > 66 ? "󰕾" : volume.volume > 33 ? "󰖀" : "󰕿" + (volume.volume > 0 && !volume.muted ? " " + volume.volume + "%" : "")
+                  text: volume.muted ? "󰖁" : volume.level > 66 ? "󰕾" : volume.level > 33 ? "󰖀" : "󰕿" + (volume.level > 0 && !volume.muted ? " " + volume.level + "%" : "")
                   color: volume.muted ? theme.fgMuted : theme.fg
                   font { family: theme.font; pixelSize: 14 }
                   MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: Process { command: ["pavucontrol"]; running: true }
-                  }
-                  QtObject {
-                    id: volume
-                    property int volume: 0
-                    property bool muted: false
-                    Timer {
-                      interval: 1000; running: true; repeat: true
-                      onTriggered: Process {
-                        command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
-                        running: true
-                        onExited: {
-                          const out = stdout.trim()
-                          muted = out.includes("[MUTED]")
-                          const match = out.match(/Volume: ([0-9.]+)/)
-                          if (match) volume = Math.round(parseFloat(match[1]) * 100)
-                        }
-                      }
-                    }
                   }
                 }
 
@@ -218,48 +253,11 @@ in
                     text: " " + cpu.usage + "%"
                     color: cpu.usage > 85 ? theme.red : theme.fg
                     font { family: theme.font; pixelSize: 13 }
-                    QtObject {
-                      id: cpu
-                      property int usage: 0
-                      Timer {
-                        interval: 2000; running: true; repeat: true
-                        onTriggered: Process {
-                          command: ["top", "-bn1"]
-                          running: true
-                          onExited: {
-                            const lines = stdout.split("\n")
-                            for (let line of lines) {
-                              if (line.includes("%Cpu")) {
-                                const parts = line.split(/\s+/)
-                                usage = Math.round(100 - parseFloat(parts[7]))
-                                break
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
                   }
                   Text {
                     text: " " + mem.percent + "%"
                     color: theme.fg
                     font { family: theme.font; pixelSize: 13 }
-                    QtObject {
-                      id: mem
-                      property int percent: 0
-                      Timer {
-                        interval: 2000; running: true; repeat: true
-                        onTriggered: Process {
-                          command: ["free"]
-                          running: true
-                          onExited: {
-                            const line = stdout.split("\n")[1]
-                            const parts = line.split(/\s+/)
-                            percent = Math.round(parts[2] / parts[1] * 100)
-                          }
-                        }
-                      }
-                    }
                   }
                 }
               }
