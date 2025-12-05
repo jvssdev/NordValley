@@ -149,6 +149,7 @@ ShellRoot {
             var percentStr = parts[4] || "0%"
             disk.percent = parseInt(percentStr.replace("%", "")) || 0
         }
+        
     }
     Timer {
         interval: 10000

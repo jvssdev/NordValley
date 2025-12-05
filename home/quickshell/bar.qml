@@ -51,7 +51,7 @@ Item {
                         }
                     }
                     Item { width: Theme.padding / 2 }
-                    Quickshell.Wayland.Workspaces {
+                    Quickshell.Wayland.Workspaces { // This line caused the error, relying on correct namespace loading
                         Layout.preferredHeight: parent.height
                         model: Quickshell.Wayland.Workspaces.all
                         spacing: Theme.spacing
