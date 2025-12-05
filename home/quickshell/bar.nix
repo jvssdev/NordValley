@@ -177,7 +177,7 @@ in
                 }
 
                 Text {
-                  text: volume.muted ? "󰖁" : volume.volume > 66 ? "󰕾" : volume.volume > 33 ? "󰖀" : "󰕿" + (volume.volume > 0 && !volume.muted ? " " + volume.volume + "%"%" : "")
+                  text: volume.muted ? "󰖁" : volume.volume > 66 ? "󰕾" : volume.volume > 33 ? "󰖀" : "󰕿" + (volume.volume > 0 && !volume.muted ? " " + volume.volume + "%" : "")
                   color: volume.muted ? theme.fgMuted : theme.fg
                   font { family: theme.font; pixelSize: 14 }
                   MouseArea {
