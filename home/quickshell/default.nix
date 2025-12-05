@@ -232,7 +232,7 @@ let
             id: activeWindow
             property string title: "No Window Focused"
 
-            Wayland.ActiveWindow {
+            ActiveWindow {
                 onTitleChanged: activeWindow.title = title || "No Window Focused"
             }
         }
@@ -252,7 +252,6 @@ let
   '';
 
   barComponentQml = ''
-    // UPDATED: Removed version numbers for Qt modules as requested
     import QtQuick
     import QtQuick.Layouts
     import QtQml
@@ -316,8 +315,9 @@ let
 
                         Item { width: 8 }
 
-                        Wayland.Workspaces {
+                        Workspaces {
                             Layout.preferredHeight: parent.height
+                            // NOTE: Keeping Quickshell.Wayland here as it accesses a module property
                             model: Quickshell.Wayland.Workspaces.all
                             spacing: 8
                             delegate: Rectangle {
