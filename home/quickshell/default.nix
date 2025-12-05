@@ -29,7 +29,7 @@ let
     import Quickshell.Wayland
     import Quickshell.Io
 
-    import "Bar.qml" as BarComponent
+    import "quickshell" as BarComponent
 
     ShellRoot {
         id: root
@@ -39,8 +39,8 @@ let
           readonly property color colBg: "${theme.colBg}"
           readonly property color colFg: "${theme.colFg}"
           readonly property color colMuted: "${theme.colMuted}"
-          readonly property color colCyan: "${theme.colCyan}" 
-          readonly property color colPurple: "${theme.colPurple}" 
+          readonly property color colCyan: "${theme.colCyan}"
+          readonly property color colPurple: "${theme.colPurple}"
           readonly property color colRed: "${theme.colRed}"
           readonly property color colYellow: "${theme.colYellow}"
           readonly property color colBlue: "${theme.colBlue}"
@@ -512,6 +512,6 @@ let
   '';
 in
 {
-  xdg.configFile."quickshell/Bar.qml".text = barComponentQml;
+  xdg.configFile."quickshell/Bar/Bar.qml".text = barComponentQml;
   xdg.configFile."quickshell/shell.qml".text = shellQml;
 }
