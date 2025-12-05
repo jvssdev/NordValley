@@ -29,8 +29,6 @@ let
     import Quickshell.Wayland
     import Quickshell.Io
 
-    import "quickshell" as BarComponent
-
     ShellRoot {
         id: root
 
@@ -130,13 +128,13 @@ let
             
             Process {
                 id: batCapacityProc
-                command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity"]
+                command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 0"]
                 onExited: battery.percentage = parseInt(stdout.trim()) || 0
             }
 
             Process {
                 id: batStatusProc
-                command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/status"]
+                command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/status 2>/dev/null || echo Discharging"]
                 onExited: battery.charging = stdout.trim() === "Charging"
             }
             
@@ -159,10 +157,10 @@ let
                 id: cpuProc
                 command: ["top", "-bn1"]
                 onExited: {
-                    const lines = stdout.split("\\n")
+                    const lines = stdout.split("\n")
                     for (let line of lines) {
                         if (line.includes("%Cpu")) {
-                            const parts = line.split(/\\s+/)
+                            const parts = line.split(/\s+/)
                             usage = Math.round(100 - parseFloat(parts[7]))
                             break
                         }
@@ -185,10 +183,10 @@ let
 
             Process {
                 id: memProc
-                command: ["sh", "-c", "free | grep Mem"]
+                command: ["free"]
                 onExited: {
-                    const line = stdout.split("\\n")[1] || ""
-                    const parts = line.split(/\\s+/)
+                    const line = stdout.split("\n")[1] || ""
+                    const parts = line.split(/\s+/)
                     const total = parseInt(parts[1]) || 1
                     const used = parseInt(parts[2]) || 0
                     percent = Math.round(used / total * 100)
@@ -212,8 +210,8 @@ let
                 id: diskProc
                 command: ["sh", "-c", "df / | tail -1"]
                 onExited: {
-                    const line = stdout.split("\\n")[0] || ""
-                    const parts = line.split(/\\s+/)
+                    const line = stdout.split("\n")[0] || ""
+                    const parts = line.split(/\s+/)
                     var percentStr = parts[4] || "0%"
                     disk.percent = parseInt(percentStr.replace("%", "")) || 0
                 }
@@ -228,51 +226,6 @@ let
             }
         }
 
-        QtObject {
-            id: activeWindow
-            property string title: Quickshell.Wayland.activeClient.title || "No Window Focused"
-
-            Connections {
-                target: Quickshell.Wayland.activeClient
-                onTitleChanged: activeWindow.title = title || "No Window Focused"
-            }
-        }
-        
-        BarComponent.Bar {
-           theme: theme
-           makoDnd: makoDnd
-           btInfo: btInfo
-           volume: volume
-           battery: battery
-           cpu: cpu
-           mem: mem
-           disk: disk
-           activeWindow: activeWindow
-        }
-    }
-  '';
-
-  barComponentQml = ''
-    import QtQuick
-    import QtQuick.Layouts
-    import QtQml
-    import Quickshell
-    import Quickshell.Wayland
-    import Quickshell.Io
-
-    Item {
-        id: barRoot
-        
-        property QtObject theme
-        property QtObject makoDnd
-        property QtObject btInfo
-        property QtObject volume
-        property QtObject battery
-        property QtObject cpu
-        property QtObject mem
-        property QtObject disk
-        property QtObject activeWindow
-
         Variants {
             model: Quickshell.screens
 
@@ -282,7 +235,7 @@ let
 
                 anchors { top: true; left: true; right: true }
 
-                implicitHeight: 30
+                height: 30
                 color: theme.colBg
 
                 margins {
@@ -302,94 +255,15 @@ let
 
                         Item { width: 8 }
 
-                        Rectangle {
-                            Layout.preferredWidth: 24
-                            Layout.preferredHeight: 24
-                            color: "transparent"
-
-                            Image {
-                                anchors.fill: parent
-                                source: "file:///home/tony/.config/quickshell/icons/tonybtw.png"
-                                fillMode: Image.PreserveAspectFit
-                            }
-                        }
-
-                        Item { width: 8 }
-
-                        Workspaces {
-                            Layout.preferredHeight: parent.height
-                            model: Quickshell.Wayland.Workspaces.all
-                            spacing: 8
-                            delegate: Rectangle {
-                                color: parent.model.focused ? theme.colPurple : "transparent"
-                                Layout.preferredWidth: 24
-                                Layout.preferredHeight: parent.height
-                                radius: 3
-
-                                property bool isFocused: parent.model.focused
-                                property bool isUrgent: parent.model.urgent
-                                property bool hasWindows: parent.model.windows.length > 0
-
-                                Text {
-                                    text: parent.model.name || parent.model.id
-                                    color: parent.isFocused ? theme.colFg : (parent.isUrgent ? theme.colRed : (parent.hasWindows ? theme.colFg : theme.colMuted))
-                                    font.pixelSize: theme.fontSize
-                                    font.family: theme.fontFamily
-                                    font.bold: parent.isFocused
-                                    anchors.centerIn: parent
-                                }
-
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: (mouse) => {
-                                        if (mouse.button === Qt.LeftButton) {
-                                            parent.model.focus()
-                                        } else if (mouse.button === Qt.RightButton) {
-                                            var wsId = parent.model.id
-
-                                            Process {
-                                                command: ["sh", "-c",
-                                                          "if pgrep -x dwl > /dev/null; then dwl-cmd -s toggleview " + (wsId - 1) +
-                                                          "elif pgrep -x river > /dev/null; then riverctl toggle-tag " + wsId +
-                                                          "elif pgrep -x niri > /dev/null; then niri msg overview; fi"]
-                                                running: true
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        Rectangle {
-                            Layout.preferredWidth: 1
-                            Layout.preferredHeight: 16
-                            Layout.alignment: Qt.AlignVCenter
-                            Layout.leftMargin: 8
-                            Layout.rightMargin: 8
-                            color: theme.colMuted
-                        }
-
                         Text {
-                            text: activeWindow.title
+                            text: "~"
                             color: theme.colPurple
-                            font.pixelSize: theme.fontSize
+                            font.pixelSize: theme.fontSize + 4
                             font.family: theme.fontFamily
                             font.bold: true
-                            Layout.fillWidth: true
-                            Layout.leftMargin: 8
-                            Layout.rightMargin: 8
-                            elide: Text.ElideRight
-                            maximumLineCount: 1
                         }
 
-                        Rectangle {
-                            Layout.preferredWidth: 1
-                            Layout.preferredHeight: 16
-                            Layout.alignment: Qt.AlignVCenter
-                            Layout.leftMargin: 8
-                            Layout.rightMargin: 8
-                            color: theme.colMuted
-                        }
+                        Item { width: 16 }
 
                         Text {
                             id: clockText
@@ -398,7 +272,7 @@ let
                             font.pixelSize: theme.fontSize
                             font.family: theme.fontFamily
                             font.bold: true
-                            Layout.rightMargin: 8
+                            Layout.fillWidth: true
 
                             Timer {
                                 interval: 1000
@@ -406,15 +280,6 @@ let
                                 repeat: true
                                 onTriggered: clockText.text = Qt.formatDateTime(new Date(), "HH:mm dd/MM")
                             }
-                        }
-
-                        Rectangle {
-                            Layout.preferredWidth: 1
-                            Layout.preferredHeight: 16
-                            Layout.alignment: Qt.AlignVCenter
-                            Layout.leftMargin: 0
-                            Layout.rightMargin: 8
-                            color: theme.colMuted
                         }
 
                         Text {
@@ -473,16 +338,20 @@ let
                         }
 
                         Text {
+                            visible: battery.percentage > 0
                             text: battery.icon + " " + battery.percentage + "%" + (battery.charging ? " 󰂄" : "")
                             color: battery.percentage <= 15 ? theme.colRed : battery.percentage <= 30 ? theme.colYellow : theme.colFg
-                            font { family: theme.fontFamily; pixelSize: theme.fontSize }
+                            font.family: theme.fontFamily
+                            font.pixelSize: theme.fontSize
                             Layout.rightMargin: 8
                         }
 
                         Text {
                             text: makoDnd.isDnd ? "" : ""
                             color: makoDnd.isDnd ? theme.colRed : theme.colFg
-                            font { family: theme.fontFamily; pixelSize: theme.fontSize; bold: makoDnd.isDnd }
+                            font.family: theme.fontFamily
+                            font.pixelSize: theme.fontSize
+                            font.bold: makoDnd.isDnd
                             Layout.rightMargin: 8
                             MouseArea {
                                 anchors.fill: parent
@@ -494,7 +363,8 @@ let
                         Text {
                             text: "⏻"
                             color: theme.colFg
-                            font { family: theme.fontFamily; pixelSize: 16 }
+                            font.family: theme.fontFamily
+                            font.pixelSize: 16
                             Layout.rightMargin: 8
                             MouseArea {
                                 anchors.fill: parent
@@ -512,6 +382,5 @@ let
   '';
 in
 {
-  xdg.configFile."quickshell/Bar/Bar.qml".text = barComponentQml;
   xdg.configFile."quickshell/shell.qml".text = shellQml;
 }
