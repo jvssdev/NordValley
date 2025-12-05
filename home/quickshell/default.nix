@@ -22,12 +22,12 @@ let
   };
 
   shellQml = ''
-    import QtQuick 2.15
-    import QtQuick.Layouts 1.15
-    import QtQml 2.15
+    import QtQuick
+    import QtQuick.Layouts
+    import QtQml
     import Quickshell
     import Quickshell.Wayland
-    import Quickshell.Io 1.0 
+    import Quickshell.Io
 
     import "bar.qml" as BarComponent
 
@@ -252,12 +252,13 @@ let
   '';
 
   barComponentQml = ''
-    import QtQuick 2.15
-    import QtQuick.Layouts 1.15
-    import QtQml 2.15
+    // UPDATED: Removed version numbers for Qt modules as requested
+    import QtQuick
+    import QtQuick.Layouts
+    import QtQml
     import Quickshell
     import Quickshell.Wayland
-    import Quickshell.Io 1.0
+    import Quickshell.Io
 
     Item {
         id: barRoot
