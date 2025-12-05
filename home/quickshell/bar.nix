@@ -34,6 +34,46 @@ in
         readonly property int fontSize: 14
       }
 
+      Process {
+        id: batCapacityProc
+        command: ["cat", "/sys/class/power_supply/BAT*/capacity"]
+        onExited: battery.percentage = parseInt(stdout.trim()) || 0
+      }
+
+      Process {
+        id: batStatusProc
+        command: ["cat", "/sys/class/power_supply/BAT*/status"]
+        onExited: battery.charging = stdout.trim() === "Charging"
+      }
+
+      QtObject {
+        id: battery
+        property int percentage: 0
+        property string icon: "󰂎"
+        property bool charging: false
+        onPercentageChanged: {
+          if (percentage <= 10) icon = "󰂎"
+          else if (percentage <= 20) icon = "󰁺"
+          else if (percentage <= 30) icon = "󰁻"
+          else if (percentage <= 40) icon = "󰁼"
+          else if (percentage <= 50) icon = "󰁽"
+          else if (percentage <= 60) icon = "󰁾"
+          else if (percentage <= 80) icon = "󰁿"
+          else if (percentage <= 90) icon = "󰂀"
+          else icon = "󰂂"
+        }
+      }
+
+      Timer {
+        interval: 10000
+        running: true
+        repeat: true
+        onTriggered: {
+          batCapacityProc.running = true
+          batStatusProc.running = true
+        }
+      }
+
       Variants {
         model: Quickshell.screens
         PanelWindow {
@@ -170,38 +210,6 @@ in
                   text: battery.icon + " " + battery.percentage + "%" + (battery.charging ? " 󰂄" : "")
                   color: battery.percentage <= 15 ? theme.red : battery.percentage <= 30 ? theme.yellow : theme.fg
                   font { family: theme.font; pixelSize: 14 }
-                  QtObject {
-                    id: battery
-                    property int percentage: 0
-                    property string icon: "󰂎"
-                    property bool charging: false
-                    Timer {
-                      interval: 10000; running: true; repeat: true
-                      onTriggered: {
-                        Process {
-                          command: ["cat", "/sys/class/power_supply/BAT*/capacity"]
-                          running: true
-                          onExited: battery.percentage = parseInt(stdout.trim()) || 0
-                        }
-                        Process {
-                          command: ["cat", "/sys/class/power_supply/BAT*/status"]
-                          running: true
-                          onExited: battery.charging = stdout.trim() === "Charging"
-                        }
-                      }
-                    }
-                    onPercentageChanged: {
-                      if (percentage <= 10) icon = "󰂎"
-                      else if (percentage <= 20) icon = "󰁺"
-                      else if (percentage <= 30) icon = "󰁻"
-                      else if (percentage <= 40) icon = "󰁼"
-                      else if (percentage <= 50) icon = "󰁽"
-                      else if (percentage <= 60) icon = "󰁾"
-                      else if (percentage <= 80) icon = "󰁿"
-                      else if (percentage <= 90) icon = "󰂀"
-                      else icon = "󰂂"
-                    }
-                  }
                 }
 
                 Row {
