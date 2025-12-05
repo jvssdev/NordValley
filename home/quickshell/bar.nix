@@ -33,7 +33,7 @@ in
       readonly property int fontSize: 14
     }
 
-    Variants {
+    Repeater {
       model: Quickshell.screens
       PanelWindow {
         screen: modelData
