@@ -232,7 +232,7 @@ let
             id: activeWindow
             property string title: "No Window Focused"
 
-            ActiveWindow {
+            ActiveClient {
                 onTitleChanged: activeWindow.title = title || "No Window Focused"
             }
         }
@@ -317,7 +317,6 @@ let
 
                         Workspaces {
                             Layout.preferredHeight: parent.height
-                            // NOTE: Keeping Quickshell.Wayland here as it accesses a module property
                             model: Quickshell.Wayland.Workspaces.all
                             spacing: 8
                             delegate: Rectangle {
