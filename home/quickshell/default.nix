@@ -22,12 +22,12 @@ let
   };
 
   shellQml = ''
-    import QtQuick
-    import QtQuick.Layouts
-    import QtQml
+    import QtQuick 2.15
+    import QtQuick.Layouts 1.15
+    import QtQml 2.15
     import Quickshell
     import Quickshell.Wayland
-    import Quickshell.Io
+    import Quickshell.Io 1.0
 
     import "bar.qml" as BarComponent
 
@@ -59,7 +59,10 @@ let
             }
 
             Timer {
-                interval: 1000; running: true; repeat: true; triggeredOnStart: true
+                interval: 1000
+                running: true
+                repeat: true
+                triggeredOnStart: true
                 onTriggered: makoProc.running = true
             }
         }
@@ -75,7 +78,10 @@ let
             }
 
             Timer {
-                interval: 5000; running: true; repeat: true; triggeredOnStart: true
+                interval: 5000
+                running: true
+                repeat: true
+                triggeredOnStart: true
                 onTriggered: btProc.running = true
             }
         }
@@ -97,7 +103,10 @@ let
             }
 
             Timer {
-                interval: 1000; running: true; repeat: true; triggeredOnStart: true
+                interval: 1000
+                running: true
+                repeat: true
+                triggeredOnStart: true
                 onTriggered: volumeProc.running = true
             }
         }
@@ -108,6 +117,17 @@ let
             property string icon: "󰂎"
             property bool charging: false
 
+            Timer {
+                interval: 10000
+                running: true
+                repeat: true
+                triggeredOnStart: true
+                onTriggered: {
+                    batCapacityProc.running = true
+                    batStatusProc.running = true
+                }
+            }
+            
             Process {
                 id: batCapacityProc
                 command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity"]
@@ -118,14 +138,6 @@ let
                 id: batStatusProc
                 command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/status"]
                 onExited: battery.charging = stdout.trim() === "Charging"
-            }
-
-            Timer {
-                interval: 10000; running: true; repeat: true; triggeredOnStart: true
-                onTriggered: {
-                    batCapacityProc.running = true
-                    batStatusProc.running = true
-                }
             }
             
             onPercentageChanged: {
@@ -159,7 +171,10 @@ let
             }
 
             Timer {
-                interval: 2000; running: true; repeat: true; triggeredOnStart: true
+                interval: 2000
+                running: true
+                repeat: true
+                triggeredOnStart: true
                 onTriggered: cpuProc.running = true
             }
         }
@@ -181,7 +196,10 @@ let
             }
 
             Timer {
-                interval: 2000; running: true; repeat: true; triggeredOnStart: true
+                interval: 2000
+                running: true
+                repeat: true
+                triggeredOnStart: true
                 onTriggered: memProc.running = true
             }
         }
@@ -202,7 +220,10 @@ let
             }
 
             Timer {
-                interval: 10000; running: true; repeat: true; triggeredOnStart: true
+                interval: 10000
+                running: true
+                repeat: true
+                triggeredOnStart: true
                 onTriggered: diskProc.running = true
             }
         }
