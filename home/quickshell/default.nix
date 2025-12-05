@@ -232,7 +232,7 @@ let
             id: activeWindow
             property string title: "No Window Focused"
 
-            Client {
+            Toplevel { 
                 onTitleChanged: activeWindow.title = title || "No Window Focused"
             }
         }
