@@ -215,7 +215,7 @@ let
                     const line = stdout.split("\\n")[0] || ""
                     const parts = line.split(/\\s+/)
                     var percentStr = parts[4] || "0%"
-                    disk.percent = parseInt(percentStr.replace(\\'%\\', \'\')) || 0
+                    disk.percent = parseInt(percentStr.replace("%", "")) || 0
                 }
             }
 
