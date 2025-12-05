@@ -230,9 +230,10 @@ let
 
         QtObject {
             id: activeWindow
-            property string title: "No Window Focused"
+            property string title: Quickshell.Wayland.activeClient.title || "No Window Focused"
 
-            Toplevel { 
+            Connections {
+                target: Quickshell.Wayland.activeClient
                 onTitleChanged: activeWindow.title = title || "No Window Focused"
             }
         }
