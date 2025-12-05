@@ -126,7 +126,7 @@ in
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: Command { command: ["wlogout"]; running: true }
+                    onClicked: Process { command: ["wlogout"]; running: true }
                   }
                 }
 
@@ -137,7 +137,7 @@ in
                   MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: Command { command: ["sh", "-c", "makoctl mode | grep -q do-not-disturb && makoctl mode -r do-not-disturb || makoctl mode -a do-not-disturb"]; running: true }
+                    onClicked: Process { command: ["sh", "-c", "makoctl mode | grep -q do-not-disturb && makoctl mode -r do-not-disturb || makoctl mode -a do-not-disturb"]; running: true }
                   }
                   QtObject {
                     id: makoDnd
@@ -160,7 +160,7 @@ in
                   MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: Command { command: ["blueman-manager"]; running: true }
+                    onClicked: Process { command: ["blueman-manager"]; running: true }
                   }
                   QtObject {
                     id: btInfo
@@ -177,13 +177,13 @@ in
                 }
 
                 Text {
-                  text: volume.muted ? "󰖁" : volume.volume > 66 ? "󰕾" : volume.volume > 33 ? "󰖀" : "󰕿" + (volume.volume > 0 && !volume.muted ? " " + volume.volume + "%" : "")
+                  text: volume.muted ? "󰖁" : volume.volume > 66 ? "󰕾" : volume.volume > 33 ? "󰖀" : "󰕿" + (volume.volume > 0 && !volume.muted ? " " + volume.volume + "%"%" : "")
                   color: volume.muted ? theme.fgMuted : theme.fg
                   font { family: theme.font; pixelSize: 14 }
                   MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: Command { command: ["pavucontrol"]; running: true }
+                    onClicked: Process { command: ["pavucontrol"]; running: true }
                   }
                   QtObject {
                     id: volume
