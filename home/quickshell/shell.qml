@@ -4,12 +4,10 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io
-import "quickshell" // Imports Theme singleton and Bar component
+import "quickshell"
 
 ShellRoot {
     id: root
-
-    // --- STATE OBJECTS ---
 
     QtObject { id: makoDnd; property bool isDnd: false }
     QtObject { id: btInfo; property bool connected: false }
@@ -49,9 +47,6 @@ ShellRoot {
         }
     }
 
-    // --- PROCESS & TIMER LOGIC ---
-    
-    // Mako DND
     Process {
         id: makoProc
         command: ["makoctl", "mode"]
@@ -65,7 +60,6 @@ ShellRoot {
         onTriggered: makoProc.running = true
     }
 
-    // Bluetooth
     Process {
         id: btProc
         command: ["bluetoothctl", "info"]
@@ -79,7 +73,6 @@ ShellRoot {
         onTriggered: btProc.running = true
     }
 
-    // Volume
     Process {
         id: volumeProc
         command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
@@ -98,7 +91,6 @@ ShellRoot {
         onTriggered: volumeProc.running = true
     }
 
-    // Battery
     Timer {
         interval: 10000
         running: true
@@ -120,7 +112,6 @@ ShellRoot {
         onExited: battery.charging = stdout.trim() === "Charging"
     }
 
-    // CPU
     Process {
         id: cpuProc
         command: ["top", "-bn1"]
@@ -143,7 +134,6 @@ ShellRoot {
         onTriggered: cpuProc.running = true
     }
 
-    // Memory
     Process {
         id: memProc
         command: ["sh", "-c", "free | grep Mem"]
@@ -163,7 +153,6 @@ ShellRoot {
         onTriggered: memProc.running = true
     }
 
-    // Disk
     Process {
         id: diskProc
         command: ["sh", "-c", "df / | tail -1"]
@@ -182,8 +171,6 @@ ShellRoot {
         onTriggered: diskProc.running = true
     }
     
-    // --- COMPONENT INSTANTIATION ---
-
     Bar {
         makoDnd: makoDnd
         btInfo: btInfo

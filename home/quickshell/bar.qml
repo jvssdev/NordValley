@@ -4,13 +4,13 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io
-import "quickshell" // Imports Theme singleton
-import Quickshell.Widgets // FIX: Added missing module for the Workspaces type
+import "quickshell"
+import Quickshell.Widgets
+import qs.Widgets
 
 Item {
     id: barRoot
     
-    // Properties to receive state from shell.qml
     property QtObject makoDnd
     property QtObject btInfo
     property QtObject volume
@@ -20,14 +20,12 @@ Item {
     property QtObject disk
     property QtObject activeWindow
 
-    // Define a reusable component for one-off shell commands
     Component {
         id: oneShotProcess
         Process {
             property var commandToRun: []
             command: commandToRun
             running: true
-            // Automatically clean up the process object after it exits
             onExited: destroy() 
         }
     }
