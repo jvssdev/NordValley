@@ -11,7 +11,7 @@ in
   xdg.configFile."quickshell/shell.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
-    import QtQml
+    import QtQml // FIX: Added to resolve "QtObject" and "Timer" errors
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Io
@@ -39,6 +39,7 @@ in
         id: makoDnd
         property bool isDnd: false
 
+        // FIX: Process moved out of Timer and given an ID
         Process {
             id: makoProc
             command: ["makoctl", "mode"]
@@ -47,7 +48,7 @@ in
 
         Timer {
           interval: 1000; running: true; repeat: true
-          onTriggered: makoProc.running = true // Trigger process by ID
+          onTriggered: makoProc.running = true // Trigger by ID
         }
       }
 
@@ -55,6 +56,7 @@ in
         id: btInfo
         property bool connected: false
 
+        // FIX: Process moved out of Timer and given an ID
         Process {
             id: btProc
             command: ["bluetoothctl", "info"]
@@ -63,7 +65,7 @@ in
 
         Timer {
           interval: 5000; running: true; repeat: true
-          onTriggered: btProc.running = true // Trigger process by ID
+          onTriggered: btProc.running = true // Trigger by ID
         }
       }
 
@@ -72,6 +74,7 @@ in
         property int level: 0
         property bool muted: false
 
+        // FIX: Process moved out of Timer and given an ID
         Process {
             id: volumeProc
             command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
@@ -85,7 +88,7 @@ in
 
         Timer {
           interval: 1000; running: true; repeat: true
-          onTriggered: volumeProc.running = true // Trigger process by ID
+          onTriggered: volumeProc.running = true // Trigger by ID
         }
       }
 
@@ -95,6 +98,7 @@ in
         property string icon: "󰂎"
         property bool charging: false
 
+        // FIX: Processes moved out of Timer and given IDs
         Process {
             id: batCapacityProc
             command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity"]
@@ -110,6 +114,7 @@ in
         Timer {
           interval: 10000; running: true; repeat: true
           onTriggered: {
+            // Trigger by ID
             batCapacityProc.running = true
             batStatusProc.running = true
           }
@@ -132,6 +137,7 @@ in
         id: cpu
         property int usage: 0
 
+        // FIX: Process moved out of Timer and given an ID
         Process {
             id: cpuProc
             command: ["top", "-bn1"]
@@ -149,7 +155,7 @@ in
 
         Timer {
           interval: 2000; running: true; repeat: true
-          onTriggered: cpuProc.running = true
+          onTriggered: cpuProc.running = true // Trigger by ID
         }
       }
 
@@ -157,6 +163,7 @@ in
         id: mem
         property int percent: 0
 
+        // FIX: Process moved out of Timer and given an ID
         Process {
             id: memProc
             command: ["free"]
@@ -169,7 +176,7 @@ in
 
         Timer {
           interval: 2000; running: true; repeat: true
-          onTriggered: memProc.running = true // Trigger process by ID
+          onTriggered: memProc.running = true // Trigger by ID
         }
       }
 
