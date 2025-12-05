@@ -119,159 +119,179 @@ in
                   }
                 }
 
-                Text {
-                  text: makoDnd.isDnd ? "" : ""
-                  color: makoDnd.isDnd ? theme.red : theme.fg
-                  font.family: theme.font
-                  font.pixelSize: 16
-                  font.bold: makoDnd.isDnd
+                Item {
+                  width: childrenRect.width
+                  height: childrenRect.height
                   
-                  MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                      var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent)
-                      proc.command = ["sh", "-c", "makoctl mode | grep -q do-not-disturb && makoctl mode -r do-not-disturb || makoctl mode -a do-not-disturb"]
-                      proc.running = true
-                    }
-                  }
-                  
-                  property var makoDnd: QtObject {
-                    property bool isDnd: false
-                    property var timer: Timer {
-                      interval: 1000
-                      running: true
-                      repeat: true
-                      onTriggered: {
-                        var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent)
-                        proc.command = ["makoctl", "mode"]
-                        proc.exited.connect(function() {
-                          parent.parent.isDnd = proc.stdout.trim() === "do-not-disturb"
-                        })
-                        proc.running = true
-                      }
-                    }
-                  }
-                }
-
-                Text {
-                  text: btInfo.connected ? "" : ""
-                  color: btInfo.connected ? theme.cyan : theme.fgMuted
-                  font.family: theme.font
-                  font.pixelSize: 15
-                  
-                  MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                      var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent)
-                      proc.command = ["blueman-manager"]
-                      proc.running = true
-                    }
-                  }
-                  
-                  property var btInfo: QtObject {
-                    property bool connected: false
-                    property var timer: Timer {
-                      interval: 5000
-                      running: true
-                      repeat: true
-                      onTriggered: {
-                        var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent)
-                        proc.command = ["bluetoothctl", "info"]
-                        proc.exited.connect(function() {
-                          parent.parent.connected = proc.stdout.includes("Connected: yes")
-                        })
-                        proc.running = true
-                      }
-                    }
-                  }
-                }
-
-                Text {
-                  text: {
-                    var icon = volume.volume > 0 ? (volume.muted ? "󰖁" : volume.volume > 66 ? "󰕾" : volume.volume > 33 ? "󰖀" : "󰕿") : "󰖁"
-                    var vol = volume.volume > 0 && !volume.muted ? " " + volume.volume + "%" : ""
-                    return icon + vol
-                  }
-                  color: volume.muted ? theme.fgMuted : theme.fg
-                  font.family: theme.font
-                  font.pixelSize: 14
-                  
-                  MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                      var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent)
-                      proc.command = ["pavucontrol"]
-                      proc.running = true
-                    }
-                  }
-                  
-                  property var volume: QtObject {
-                    property int volume: 0
-                    property bool muted: false
-                    property var timer: Timer {
-                      interval: 1000
-                      running: true
-                      repeat: true
-                      onTriggered: {
-                        var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent)
-                        proc.command = ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
-                        proc.exited.connect(function() {
-                          var out = proc.stdout.trim()
-                          parent.parent.muted = out.includes("[MUTED]")
-                          var match = out.match(/Volume: ([0-9.]+)/)
-                          if (match) parent.parent.volume = Math.round(parseFloat(match[1]) * 100)
-                        })
-                        proc.running = true
-                      }
-                    }
-                  }
-                }
-
-                Text {
-                  visible: battery.percentage > 0
-                  text: battery.icon + " " + battery.percentage + "%" + (battery.charging ? " 󰂄" : "")
-                  color: battery.percentage <= 15 ? theme.red : battery.percentage <= 30 ? theme.yellow : theme.fg
-                  font.family: theme.font
-                  font.pixelSize: 14
-                  
-                  property var battery: QtObject {
-                    property int percentage: 0
-                    property string icon: "󰂎"
-                    property bool charging: false
+                  Text {
+                    text: makoDnd.isDnd ? "" : ""
+                    color: makoDnd.isDnd ? theme.red : theme.fg
+                    font.family: theme.font
+                    font.pixelSize: 16
+                    font.bold: makoDnd.isDnd
                     
-                    onPercentageChanged: {
-                      if (percentage <= 10) icon = "󰂎"
-                      else if (percentage <= 20) icon = "󰁺"
-                      else if (percentage <= 30) icon = "󰁻"
-                      else if (percentage <= 40) icon = "󰁼"
-                      else if (percentage <= 50) icon = "󰁽"
-                      else if (percentage <= 60) icon = "󰁾"
-                      else if (percentage <= 80) icon = "󰁿"
-                      else if (percentage <= 90) icon = "󰂀"
-                      else icon = "󰂂"
+                    MouseArea {
+                      anchors.fill: parent
+                      cursorShape: Qt.PointingHandCursor
+                      onClicked: {
+                        var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent)
+                        proc.command = ["sh", "-c", "makoctl mode | grep -q do-not-disturb && makoctl mode -r do-not-disturb || makoctl mode -a do-not-disturb"]
+                        proc.running = true
+                      }
                     }
                     
-                    property var timer: Timer {
-                      interval: 10000
-                      running: true
-                      repeat: true
-                      onTriggered: {
-                        var p1 = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent)
-                        p1.command = ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 0"]
-                        p1.exited.connect(function() {
-                          parent.parent.percentage = parseInt(p1.stdout.trim()) || 0
-                        })
-                        p1.running = true
-                        
-                        var p2 = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent)
-                        p2.command = ["sh", "-c", "cat /sys/class/power_supply/BAT*/status 2>/dev/null || echo Discharging"]
-                        p2.exited.connect(function() {
-                          parent.parent.charging = p2.stdout.trim() === "Charging"
-                        })
-                        p2.running = true
+                    property var makoDnd: QtObject {
+                      property bool isDnd: false
+                      property var timer: Timer {
+                        interval: 1000
+                        running: true
+                        repeat: true
+                        onTriggered: {
+                          var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent.parent)
+                          proc.command = ["makoctl", "mode"]
+                          proc.exited.connect(function() {
+                            parent.parent.isDnd = proc.stdout.trim() === "do-not-disturb"
+                          })
+                          proc.running = true
+                        }
+                      }
+                    }
+                  }
+                }
+
+                Item {
+                  width: childrenRect.width
+                  height: childrenRect.height
+                  
+                  Text {
+                    text: btInfo.connected ? "" : ""
+                    color: btInfo.connected ? theme.cyan : theme.fgMuted
+                    font.family: theme.font
+                    font.pixelSize: 15
+                    
+                    MouseArea {
+                      anchors.fill: parent
+                      cursorShape: Qt.PointingHandCursor
+                      onClicked: {
+                        var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent)
+                        proc.command = ["blueman-manager"]
+                        proc.running = true
+                      }
+                    }
+                    
+                    property var btInfo: QtObject {
+                      property bool connected: false
+                      property var timer: Timer {
+                        interval: 5000
+                        running: true
+                        repeat: true
+                        onTriggered: {
+                          var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent.parent)
+                          proc.command = ["bluetoothctl", "info"]
+                          proc.exited.connect(function() {
+                            parent.parent.connected = proc.stdout.includes("Connected: yes")
+                          })
+                          proc.running = true
+                        }
+                      }
+                    }
+                  }
+                }
+
+                Item {
+                  width: childrenRect.width
+                  height: childrenRect.height
+                  
+                  Text {
+                    text: {
+                      var icon = volume.volume > 0 ? (volume.muted ? "󰖁" : volume.volume > 66 ? "󰕾" : volume.volume > 33 ? "󰖀" : "󰕿") : "󰖁"
+                      var vol = volume.volume > 0 && !volume.muted ? " " + volume.volume + "%" : ""
+                      return icon + vol
+                    }
+                    color: volume.muted ? theme.fgMuted : theme.fg
+                    font.family: theme.font
+                    font.pixelSize: 14
+                    
+                    MouseArea {
+                      anchors.fill: parent
+                      cursorShape: Qt.PointingHandCursor
+                      onClicked: {
+                        var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent)
+                        proc.command = ["pavucontrol"]
+                        proc.running = true
+                      }
+                    }
+                    
+                    property var volume: QtObject {
+                      property int volume: 0
+                      property bool muted: false
+                      property var timer: Timer {
+                        interval: 1000
+                        running: true
+                        repeat: true
+                        onTriggered: {
+                          var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent.parent)
+                          proc.command = ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
+                          proc.exited.connect(function() {
+                            var out = proc.stdout.trim()
+                            parent.parent.muted = out.includes("[MUTED]")
+                            var match = out.match(/Volume: ([0-9.]+)/)
+                            if (match) parent.parent.volume = Math.round(parseFloat(match[1]) * 100)
+                          })
+                          proc.running = true
+                        }
+                      }
+                    }
+                  }
+                }
+
+                Item {
+                  width: childrenRect.width
+                  height: childrenRect.height
+                  
+                  Text {
+                    visible: battery.percentage > 0
+                    text: battery.icon + " " + battery.percentage + "%" + (battery.charging ? " 󰂄" : "")
+                    color: battery.percentage <= 15 ? theme.red : battery.percentage <= 30 ? theme.yellow : theme.fg
+                    font.family: theme.font
+                    font.pixelSize: 14
+                    
+                    property var battery: QtObject {
+                      property int percentage: 0
+                      property string icon: "󰂎"
+                      property bool charging: false
+                      
+                      onPercentageChanged: {
+                        if (percentage <= 10) icon = "󰂎"
+                        else if (percentage <= 20) icon = "󰁺"
+                        else if (percentage <= 30) icon = "󰁻"
+                        else if (percentage <= 40) icon = "󰁼"
+                        else if (percentage <= 50) icon = "󰁽"
+                        else if (percentage <= 60) icon = "󰁾"
+                        else if (percentage <= 80) icon = "󰁿"
+                        else if (percentage <= 90) icon = "󰂀"
+                        else icon = "󰂂"
+                      }
+                      
+                      property var timer: Timer {
+                        interval: 10000
+                        running: true
+                        repeat: true
+                        onTriggered: {
+                          var p1 = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent.parent)
+                          p1.command = ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 0"]
+                          p1.exited.connect(function() {
+                            parent.parent.percentage = parseInt(p1.stdout.trim()) || 0
+                          })
+                          p1.running = true
+                          
+                          var p2 = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent.parent)
+                          p2.command = ["sh", "-c", "cat /sys/class/power_supply/BAT*/status 2>/dev/null || echo Discharging"]
+                          p2.exited.connect(function() {
+                            parent.parent.charging = p2.stdout.trim() === "Charging"
+                          })
+                          p2.running = true
+                        }
                       }
                     }
                   }
@@ -280,58 +300,68 @@ in
                 Row {
                   spacing: 10
                   
-                  Text {
-                    text: " " + cpu.usage + "%"
-                    color: cpu.usage > 85 ? theme.red : theme.fg
-                    font.family: theme.font
-                    font.pixelSize: 13
+                  Item {
+                    width: childrenRect.width
+                    height: childrenRect.height
                     
-                    property var cpu: QtObject {
-                      property int usage: 0
-                      property var timer: Timer {
-                        interval: 2000
-                        running: true
-                        repeat: true
-                        onTriggered: {
-                          var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent)
-                          proc.command = ["top", "-bn1"]
-                          proc.exited.connect(function() {
-                            var lines = proc.stdout.split("\n")
-                            for (var i = 0; i < lines.length; i++) {
-                              if (lines[i].includes("%Cpu")) {
-                                var fields = lines[i].split(/\s+/)
-                                parent.parent.usage = Math.round(100 - parseFloat(fields[7]))
-                                break
+                    Text {
+                      text: " " + cpu.usage + "%"
+                      color: cpu.usage > 85 ? theme.red : theme.fg
+                      font.family: theme.font
+                      font.pixelSize: 13
+                      
+                      property var cpu: QtObject {
+                        property int usage: 0
+                        property var timer: Timer {
+                          interval: 2000
+                          running: true
+                          repeat: true
+                          onTriggered: {
+                            var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent.parent)
+                            proc.command = ["top", "-bn1"]
+                            proc.exited.connect(function() {
+                              var lines = proc.stdout.split("\n")
+                              for (var i = 0; i < lines.length; i++) {
+                                if (lines[i].includes("%Cpu")) {
+                                  var fields = lines[i].split(/\s+/)
+                                  parent.parent.usage = Math.round(100 - parseFloat(fields[7]))
+                                  break
+                                }
                               }
-                            }
-                          })
-                          proc.running = true
+                            })
+                            proc.running = true
+                          }
                         }
                       }
                     }
                   }
                   
-                  Text {
-                    text: " " + mem.percent + "%"
-                    color: theme.fg
-                    font.family: theme.font
-                    font.pixelSize: 13
+                  Item {
+                    width: childrenRect.width
+                    height: childrenRect.height
                     
-                    property var mem: QtObject {
-                      property int percent: 0
-                      property var timer: Timer {
-                        interval: 2000
-                        running: true
-                        repeat: true
-                        onTriggered: {
-                          var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent)
-                          proc.command = ["free"]
-                          proc.exited.connect(function() {
-                            var line = proc.stdout.split("\n")[1]
-                            var fields = line.split(/\s+/)
-                            parent.parent.percent = Math.round(parseInt(fields[2]) / parseInt(fields[1]) * 100)
-                          })
-                          proc.running = true
+                    Text {
+                      text: " " + mem.percent + "%"
+                      color: theme.fg
+                      font.family: theme.font
+                      font.pixelSize: 13
+                      
+                      property var mem: QtObject {
+                        property int percent: 0
+                        property var timer: Timer {
+                          interval: 2000
+                          running: true
+                          repeat: true
+                          onTriggered: {
+                            var proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent.parent.parent.parent)
+                            proc.command = ["free"]
+                            proc.exited.connect(function() {
+                              var line = proc.stdout.split("\n")[1]
+                              var fields = line.split(/\s+/)
+                              parent.parent.percent = Math.round(parseInt(fields[2]) / parseInt(fields[1]) * 100)
+                            })
+                            proc.running = true
+                          }
                         }
                       }
                     }
