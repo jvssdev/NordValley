@@ -11,7 +11,7 @@ in
   xdg.configFile."quickshell/shell.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
-    import QtQml // FIX: Added for QtObject and Timer resolution
+    import QtQml 
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Io
@@ -36,14 +36,15 @@ in
       }
 
       // ----------------------------------------------------------------------
-      // FIX: Refactored System Status Blocks (Process outside Timer)
+      // System Status Blocks (Declarative Structure Applied)
       // ----------------------------------------------------------------------
 
       QtObject {
         id: makoDnd
         property bool isDnd: false
 
-        Process { // Declared outside Timer
+        // Process is defined declaratively outside the Timer
+        Process { 
             id: makoProc
             command: ["makoctl", "mode"]
             onExited: makoDnd.isDnd = stdout.trim() === "do-not-disturb"
@@ -51,7 +52,7 @@ in
 
         Timer {
           interval: 1000; running: true; repeat: true; triggeredOnStart: true
-          onTriggered: makoProc.running = true // Trigger by ID
+          onTriggered: makoProc.running = true // Trigger imperative call
         }
       }
 
@@ -59,7 +60,7 @@ in
         id: btInfo
         property bool connected: false
 
-        Process { // Declared outside Timer
+        Process { 
             id: btProc
             command: ["bluetoothctl", "info"]
             onExited: btInfo.connected = stdout.includes("Connected: yes")
@@ -67,7 +68,7 @@ in
 
         Timer {
           interval: 5000; running: true; repeat: true; triggeredOnStart: true
-          onTriggered: btProc.running = true // Trigger by ID
+          onTriggered: btProc.running = true 
         }
       }
 
@@ -76,7 +77,7 @@ in
         property int level: 0
         property bool muted: false
 
-        Process { // Declared outside Timer
+        Process { 
             id: volumeProc
             command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
             onExited: {
@@ -89,7 +90,7 @@ in
 
         Timer {
           interval: 1000; running: true; repeat: true; triggeredOnStart: true
-          onTriggered: volumeProc.running = true // Trigger by ID
+          onTriggered: volumeProc.running = true 
         }
       }
 
@@ -99,13 +100,13 @@ in
         property string icon: "󰂎"
         property bool charging: false
 
-        Process { // Declared outside Timer (using sh -c for wildcard)
+        Process { 
             id: batCapacityProc
             command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity"]
             onExited: battery.percentage = parseInt(stdout.trim()) || 0
         }
 
-        Process { // Declared outside Timer (using sh -c for wildcard)
+        Process { 
             id: batStatusProc
             command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/status"]
             onExited: battery.charging = stdout.trim() === "Charging"
@@ -178,7 +179,7 @@ in
       }
 
       // ----------------------------------------------------------------------
-      // Panel UI (Rest of the Code)
+      // Panel UI
       // ----------------------------------------------------------------------
 
       Variants {
