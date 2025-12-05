@@ -84,21 +84,29 @@ in
         property int percentage: 0
         property string icon: "󰂎"
         property bool charging: false
+
+        Process {
+            id: batCapacityProc
+            // "sh -c" is required for the * wildcard to expand correctly
+            command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity"]
+            onExited: battery.percentage = parseInt(stdout.trim()) || 0
+        }
+
+        Process {
+            id: batStatusProc
+            command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/status"]
+            onExited: battery.charging = stdout.trim() === "Charging"
+        }
+
         Timer {
           interval: 10000; running: true; repeat: true
+          triggeredOnStart: true
           onTriggered: {
-            Process {
-              command: ["cat", "/sys/class/power_supply/BAT*/capacity"]
-              running: true
-              onExited: battery.percentage = parseInt(stdout.trim()) || 0
-            }
-            Process {
-              command: ["cat", "/sys/class/power_supply/BAT*/status"]
-              running: true
-              onExited: battery.charging = stdout.trim() === "Charging"
-            }
+            batCapacityProc.running = true
+            batStatusProc.running = true
           }
         }
+
         onPercentageChanged: {
           if (percentage <= 10) icon = "󰂎"
           else if (percentage <= 20) icon = "󰁺"
