@@ -29,7 +29,7 @@ let
     import Quickshell.Wayland
     import Quickshell.Io
 
-    import "Bar.qml" as BarComponent
+    import "quickshell/Bar.qml" as BarComponent
 
     ShellRoot {
         id: root
