@@ -238,7 +238,7 @@ let
             }
         }
         
-        BarComponent.Bar {
+        BarComponent.Item {
            theme: theme
            makoDnd: makoDnd
            btInfo: btInfo
