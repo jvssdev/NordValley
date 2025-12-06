@@ -110,7 +110,7 @@ let
   
   newShellQml = lib.strings.replaceStrings
   [ "ShellRoot {" ]
-  [ "ShellRoot {\n    " + (builtins.replaceStrings ["\n"] ["\n    "] shellLogic) ]
+  [ ("ShellRoot {\n    " + builtins.replaceStrings ["\n"] ["\n    "] shellLogic) ]
   shellContent;
 
 in
