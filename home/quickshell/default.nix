@@ -43,6 +43,50 @@ let
             })
         }
 
+        QtObject {
+            id: niriWorkspaces
+            property var workspaces: []
+            property int activeWorkspace: 1
+
+            Process {
+                id: niriWsProc
+                command: ["niri", "msg", "-j", "workspaces"]
+                onExited: {
+                    if (!stdout) return
+                    try {
+                        const data = JSON.parse(stdout)
+                        let list = []
+                        for (let ws of data) {
+                            list.push({
+                                id: ws.id,
+                                idx: ws.idx,
+                                name: ws.name || String(ws.idx + 1),
+                                output: ws.output,
+                                is_active: ws.is_active || false,
+                                is_focused: ws.is_focused || false
+                            })
+                        }
+                        niriWorkspaces.workspaces = list
+                        
+                        const active = list.find(w => w.is_active)
+                        if (active) {
+                            niriWorkspaces.activeWorkspace = active.idx + 1
+                        }
+                    } catch(e) {
+                        console.error("Failed to parse Niri workspaces:", e)
+                    }
+                }
+            }
+
+            Timer {
+                interval: 500
+                running: true
+                repeat: true
+                triggeredOnStart: true
+                onTriggered: niriWsProc.running = true
+            }
+        }
+
         QtObject { id: makoDnd; property bool isDnd: false }
         QtObject { id: btInfo; property bool connected: false }
         QtObject {
@@ -230,6 +274,7 @@ let
         
         Bar {
             theme: theme
+            niriWorkspaces: niriWorkspaces
             makoDnd: makoDnd
             btInfo: btInfo
             volume: volume
