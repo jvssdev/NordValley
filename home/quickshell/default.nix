@@ -108,7 +108,10 @@ let
   shellLogic = themeObjectQml + "\n" + idleServiceQml;
   newShellQml = lib.strings.replaceStrings [ "ShellRoot {" ] [ "ShellRoot {\n" + lib.strings.indent 4 shellLogic ] shellContent;
   
-  newShellQmlFile = pkgs.writeText "shell.qml" newShellQml;
+  newShellQml = lib.strings.replaceStrings
+  [ "ShellRoot {" ]
+  [ "ShellRoot {\n    " + (builtins.replaceStrings ["\n"] ["\n    "] shellLogic) ]
+  shellContent;
 
 in
 {
