@@ -13,10 +13,74 @@ let
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Io
-    import "."
 
     ShellRoot {
         id: root
+
+        QtObject {
+            id: wmDetector
+
+            readonly property int typeUnknown: 0
+            readonly property int typeRiver: 1
+            readonly property int typeNiri: 2
+            readonly property int typeMangoWC: 3
+            readonly property int typeDWL: 4
+
+            property int detectedWm: typeUnknown
+            property string wmName: "Unknown"
+            property bool isDetecting: true
+
+            signal wmDetected(int wmType, string name)
+
+            Component.onCompleted: detectWm()
+
+            function detectWm() {
+                isDetecting = true
+                wmDetectionProc.running = true
+            }
+
+            Process {
+                id: wmDetectionProc
+                command: ["sh", "-c", "echo $XDG_CURRENT_DESKTOP; pgrep -x river && echo river; pgrep -x niri && echo niri; pgrep -x mangowc && echo mangowc; pgrep -x dwl && echo dwl"]
+                
+                onExited: {
+                    if (!stdout) {
+                        console.log("WM Detection: Failed to detect")
+                        wmDetector.isDetecting = false
+                        return
+                    }
+
+                    const output = stdout.toLowerCase().trim()
+                    
+                    if (output.includes("river")) {
+                        wmDetector.detectedWm = wmDetector.typeRiver
+                        wmDetector.wmName = "River"
+                    } else if (output.includes("niri")) {
+                        wmDetector.detectedWm = wmDetector.typeNiri
+                        wmDetector.wmName = "Niri"
+                    } else if (output.includes("mangowc")) {
+                        wmDetector.detectedWm = wmDetector.typeMangoWC
+                        wmDetector.wmName = "MangoWC"
+                    } else if (output.includes("dwl")) {
+                        wmDetector.detectedWm = wmDetector.typeDWL
+                        wmDetector.wmName = "DWL"
+                    } else {
+                        wmDetector.detectedWm = wmDetector.typeUnknown
+                        wmDetector.wmName = "Unknown"
+                    }
+
+                    console.log("WM Detection: Detected", wmDetector.wmName)
+                    wmDetector.isDetecting = false
+                    wmDetector.wmDetected(wmDetector.detectedWm, wmDetector.wmName)
+                }
+            }
+
+            function isRiver() { return detectedWm === typeRiver }
+            function isNiri() { return detectedWm === typeNiri }
+            function isMangoWC() { return detectedWm === typeMangoWC }
+            function isDWL() { return detectedWm === typeDWL }
+            function isSupported() { return detectedWm !== typeUnknown }
+        }
 
         QtObject {
             id: theme
@@ -43,8 +107,6 @@ let
                 weight: Font.Medium
             })
         }
-
-        WmDetector { id: wmDetector }
 
         QtObject { id: makoDnd; property bool isDnd: false }
         QtObject { id: btInfo; property bool connected: false }
@@ -581,7 +643,6 @@ let
 in
 {
   xdg.configFile."quickshell/shell.qml".text = shellQml;
-  xdg.configFile."quickshell/WmDetector.qml".source = ./WmDetector.qml;
   xdg.configFile."quickshell/WorkspacesRiver.qml".source = ./WorkspacesRiver.qml;
   xdg.configFile."quickshell/WorkspacesNiri.qml".source = ./WorkspacesNiri.qml;
   xdg.configFile."quickshell/WorkspacesDWL.qml".source = ./WorkspacesDWL.qml;
