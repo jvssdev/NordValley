@@ -8,6 +8,7 @@ Variants {
     id: bar
 
     required property QtObject theme
+    required property QtObject wmDetector
     required property QtObject makoDnd
     required property QtObject btInfo
     required property QtObject volume
@@ -52,6 +53,12 @@ Variants {
                 }
 
                 Item { width: bar.theme.spacing }
+
+                WorkspaceWidget {
+                    theme: bar.theme
+                    wmDetector: bar.wmDetector
+                    Layout.leftMargin: bar.theme.spacing
+                }
 
                 Rectangle {
                     Layout.preferredWidth: bar.theme.borderWidth

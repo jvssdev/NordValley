@@ -43,6 +43,8 @@ let
             })
         }
 
+        WmDetector { id: wmDetector }
+
         QtObject { id: makoDnd; property bool isDnd: false }
         QtObject { id: btInfo; property bool connected: false }
         QtObject {
@@ -230,6 +232,7 @@ let
         
         Bar {
             theme: theme
+            wmDetector: wmDetector
             makoDnd: makoDnd
             btInfo: btInfo
             volume: volume
@@ -245,7 +248,18 @@ in
 {
   xdg.configFile."quickshell/qmldir".text = ''
     Bar 1.0 bar.qml
+    WmDetector 1.0 WmDetector.qml
+    WorkspacesRiver 1.0 WorkspacesRiver.qml
+    WorkspacesNiri 1.0 WorkspacesNiri.qml
+    WorkspacesDWL 1.0 WorkspacesDWL.qml
+    WorkspaceWidget 1.0 WorkspaceWidget.qml
   '';
+
   xdg.configFile."quickshell/shell.qml".text = shellQml;
   xdg.configFile."quickshell/bar.qml".source = ./bar.qml;
+  xdg.configFile."quickshell/WmDetector.qml".source = ./WmDetector.qml;
+  xdg.configFile."quickshell/WorkspacesRiver.qml".source = ./WorkspacesRiver.qml;
+  xdg.configFile."quickshell/WorkspacesNiri.qml".source = ./WorkspacesNiri.qml;
+  xdg.configFile."quickshell/WorkspacesDWL.qml".source = ./WorkspacesDWL.qml;
+  xdg.configFile."quickshell/WorkspaceWidget.qml".source = ./WorkspaceWidget.qml;
 }
