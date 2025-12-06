@@ -104,23 +104,14 @@ let
   '';
 
   shellContent = builtins.readFile ./shell.qml;
-
   shellLogic = themeObjectQml + "\n\n" + idleServiceQml;
   indentedLogic = builtins.replaceStrings [ "\n" ] [ "\n    " ] ("    " + shellLogic);
 
-  withLogic =
+  newShellQml =
     lib.strings.replaceStrings [ "ShellRoot {" ] [ "ShellRoot {\n\n${indentedLogic}\n" ]
       shellContent;
 
-  withMultiMonitor =
-    lib.strings.replaceStrings
-      [ "    Bar {" ]
-      [ "    Variants {\n        model: Quickshell.screens\n        Bar {" ]
-      withLogic;
-
-  finalShellQml = withMultiMonitor + "    }\n";
-
-  newShellQmlFile = pkgs.writeText "shell.qml" finalShellQml;
+  newShellQmlFile = pkgs.writeText "shell.qml" newShellQml;
 in
 {
   xdg.configFile."quickshell/qmldir".text = ''
