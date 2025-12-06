@@ -104,11 +104,10 @@ let
   '';
 
   shellContent = builtins.readFile ./shell.qml;
-  shellLogic = themeObjectQml + "\n\n" + idleServiceQml;
-  indentedLogic = builtins.replaceStrings [ "\n" ] [ "\n    " ] ("    " + shellLogic);
+  shellLogic = themeObjectQml + "\n" + idleServiceQml;
 
   newShellQml =
-    lib.strings.replaceStrings [ "ShellRoot {" ] [ "ShellRoot {\n\n${indentedLogic}\n" ]
+    lib.strings.replaceStrings [ "ShellRoot {" ] [ ("ShellRoot {\n" + lib.strings.indent 4 shellLogic) ]
       shellContent;
 
   newShellQmlFile = pkgs.writeText "shell.qml" newShellQml;
