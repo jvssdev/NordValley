@@ -13,6 +13,7 @@ let
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Io
+    import "."
 
     ShellRoot {
         id: root
@@ -246,15 +247,6 @@ let
   '';
 in
 {
-  xdg.configFile."quickshell/qmldir".text = ''
-    Bar 1.0 bar.qml
-    WmDetector 1.0 WmDetector.qml
-    WorkspacesRiver 1.0 WorkspacesRiver.qml
-    WorkspacesNiri 1.0 WorkspacesNiri.qml
-    WorkspacesDWL 1.0 WorkspacesDWL.qml
-    WorkspaceWidget 1.0 WorkspaceWidget.qml
-  '';
-
   xdg.configFile."quickshell/shell.qml".text = shellQml;
   xdg.configFile."quickshell/bar.qml".source = ./bar.qml;
   xdg.configFile."quickshell/WmDetector.qml".source = ./WmDetector.qml;

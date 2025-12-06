@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import "." as Local
 
 RowLayout {
     id: root
@@ -27,16 +28,22 @@ RowLayout {
             const component = Qt.createComponent("WorkspacesRiver.qml")
             if (component.status === Component.Ready) {
                 workspaceManager = component.createObject(root)
+            } else {
+                console.error("WorkspacesRiver load error:", component.errorString())
             }
         } else if (wmDetector.isNiri()) {
             const component = Qt.createComponent("WorkspacesNiri.qml")
             if (component.status === Component.Ready) {
                 workspaceManager = component.createObject(root)
+            } else {
+                console.error("WorkspacesNiri load error:", component.errorString())
             }
         } else if (wmDetector.isMangoWC() || wmDetector.isDWL()) {
             const component = Qt.createComponent("WorkspacesDWL.qml")
             if (component.status === Component.Ready) {
                 workspaceManager = component.createObject(root)
+            } else {
+                console.error("WorkspacesDWL load error:", component.errorString())
             }
         }
     }

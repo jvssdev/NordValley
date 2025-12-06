@@ -4,15 +4,13 @@ import Quickshell.Io
 QtObject {
     id: root
 
-    enum WmType {
-        Unknown,
-        River,
-        Niri,
-        MangoWC,
-        DWL
-    }
+    readonly property int typeUnknown: 0
+    readonly property int typeRiver: 1
+    readonly property int typeNiri: 2
+    readonly property int typeMangoWC: 3
+    readonly property int typeDWL: 4
 
-    property int detectedWm: WmDetector.WmType.Unknown
+    property int detectedWm: typeUnknown
     property string wmName: "Unknown"
     property bool isDetecting: true
 
@@ -39,19 +37,19 @@ QtObject {
             const output = stdout.toLowerCase().trim()
             
             if (output.includes("river")) {
-                root.detectedWm = WmDetector.WmType.River
+                root.detectedWm = root.typeRiver
                 root.wmName = "River"
             } else if (output.includes("niri")) {
-                root.detectedWm = WmDetector.WmType.Niri
+                root.detectedWm = root.typeNiri
                 root.wmName = "Niri"
             } else if (output.includes("mangowc")) {
-                root.detectedWm = WmDetector.WmType.MangoWC
+                root.detectedWm = root.typeMangoWC
                 root.wmName = "MangoWC"
             } else if (output.includes("dwl")) {
-                root.detectedWm = WmDetector.WmType.DWL
+                root.detectedWm = root.typeDWL
                 root.wmName = "DWL"
             } else {
-                root.detectedWm = WmDetector.WmType.Unknown
+                root.detectedWm = root.typeUnknown
                 root.wmName = "Unknown"
             }
 
@@ -61,9 +59,9 @@ QtObject {
         }
     }
 
-    function isRiver() { return detectedWm === WmDetector.WmType.River }
-    function isNiri() { return detectedWm === WmDetector.WmType.Niri }
-    function isMangoWC() { return detectedWm === WmDetector.WmType.MangoWC }
-    function isDWL() { return detectedWm === WmDetector.WmType.DWL }
-    function isSupported() { return detectedWm !== WmDetector.WmType.Unknown }
+    function isRiver() { return detectedWm === typeRiver }
+    function isNiri() { return detectedWm === typeNiri }
+    function isMangoWC() { return detectedWm === typeMangoWC }
+    function isDWL() { return detectedWm === typeDWL }
+    function isSupported() { return detectedWm !== typeUnknown }
 }

@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io
+import "." as Local
 
 Variants {
     id: bar
@@ -54,7 +55,7 @@ Variants {
 
                 Item { width: bar.theme.spacing }
 
-                WorkspaceWidget {
+                Local.WorkspaceWidget {
                     theme: bar.theme
                     wmDetector: bar.wmDetector
                     Layout.leftMargin: bar.theme.spacing
