@@ -46,32 +46,32 @@ let
                 onExited: {
                     if (!stdout) {
                         console.log("WM Detection: Failed to detect")
-                        wmDetector.isDetecting = false
+                        isDetecting = false
                         return
                     }
 
                     const output = stdout.toLowerCase().trim()
                     
                     if (output.includes("river")) {
-                        wmDetector.detectedWm = wmDetector.typeRiver
-                        wmDetector.wmName = "River"
+                        detectedWm = typeRiver
+                        wmName = "River"
                     } else if (output.includes("niri")) {
-                        wmDetector.detectedWm = wmDetector.typeNiri
-                        wmDetector.wmName = "Niri"
+                        detectedWm = typeNiri
+                        wmName = "Niri"
                     } else if (output.includes("mangowc")) {
-                        wmDetector.detectedWm = wmDetector.typeMangoWC
-                        wmDetector.wmName = "MangoWC"
+                        detectedWm = typeMangoWC
+                        wmName = "MangoWC"
                     } else if (output.includes("dwl")) {
-                        wmDetector.detectedWm = wmDetector.typeDWL
-                        wmDetector.wmName = "DWL"
+                        detectedWm = typeDWL
+                        wmName = "DWL"
                     } else {
-                        wmDetector.detectedWm = wmDetector.typeUnknown
-                        wmDetector.wmName = "Unknown"
+                        detectedWm = typeUnknown
+                        wmName = "Unknown"
                     }
 
-                    console.log("WM Detection: Detected", wmDetector.wmName)
-                    wmDetector.isDetecting = false
-                    wmDetector.wmDetected(wmDetector.detectedWm, wmDetector.wmName)
+                    console.log("WM Detection: Detected", wmName)
+                    isDetecting = false
+                    wmDetected(detectedWm, wmName)
                 }
             }
 
