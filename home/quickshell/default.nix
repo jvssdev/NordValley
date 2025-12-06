@@ -13,6 +13,7 @@ let
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Io
+    import "." as Local
 
     ShellRoot {
         id: root
@@ -342,125 +343,153 @@ let
 
                         Item { width: theme.spacing }
 
-                        Loader {
-                            id: workspaceLoader
+                        RowLayout {
+                            id: workspaceWidget
+                            spacing: theme.spacing / 2
                             Layout.leftMargin: theme.spacing
-                            
-                            sourceComponent: Component {
-                                RowLayout {
-                                    property QtObject theme: parent.parent.theme
-                                    property QtObject wmDetector: parent.parent.wmDetector
-                                    property QtObject workspaceManager: null
 
-                                    spacing: theme.spacing / 2
+                            property QtObject workspaceManager: null
 
-                                    Component.onCompleted: {
-                                        wmDetector.wmDetected.connect(setupWorkspaceManager)
-                                        if (wmDetector.isSupported() && !wmDetector.isDetecting) {
-                                            setupWorkspaceManager()
-                                        }
+                            Connections {
+                                target: wmDetector
+                                function onWmDetected() {
+                                    workspaceWidget.setupWorkspaces()
+                                }
+                            }
+
+                            Component.onCompleted: {
+                                if (wmDetector.isSupported() && !wmDetector.isDetecting) {
+                                    setupWorkspaces()
+                                }
+                            }
+
+                            function setupWorkspaces() {
+                                if (wmDetector.isRiver()) {
+                                    if (!riverWorkspaces.active) riverWorkspaces.active = true
+                                } else if (wmDetector.isNiri()) {
+                                    if (!niriWorkspaces.active) niriWorkspaces.active = true
+                                } else if (wmDetector.isMangoWC() || wmDetector.isDWL()) {
+                                    if (!dwlWorkspaces.active) dwlWorkspaces.active = true
+                                }
+                            }
+
+                            Loader {
+                                id: riverWorkspaces
+                                active: false
+                                sourceComponent: Component {
+                                    Local.WorkspacesRiver {
+                                        id: riverWs
+                                        Component.onCompleted: workspaceWidget.workspaceManager = riverWs
                                     }
+                                }
+                            }
 
-                                    function setupWorkspaceManager() {
-                                        var componentName = ""
-                                        if (wmDetector.isRiver()) componentName = "WorkspacesRiver.qml"
-                                        else if (wmDetector.isNiri()) componentName = "WorkspacesNiri.qml"
-                                        else if (wmDetector.isMangoWC() || wmDetector.isDWL()) componentName = "WorkspacesDWL.qml"
-                                        
-                                        if (componentName) {
-                                            var component = Qt.createComponent(componentName)
-                                            if (component.status === Component.Ready) {
-                                                workspaceManager = component.createObject(this)
-                                            }
-                                        }
+                            Loader {
+                                id: niriWorkspaces
+                                active: false
+                                sourceComponent: Component {
+                                    Local.WorkspacesNiri {
+                                        id: niriWs
+                                        Component.onCompleted: workspaceWidget.workspaceManager = niriWs
                                     }
+                                }
+                            }
 
-                                    Repeater {
-                                        model: getWorkspaceModel()
-
-                                        Rectangle {
-                                            Layout.preferredWidth: 28
-                                            Layout.preferredHeight: 20
-                                            radius: 6
-                                            
-                                            color: isActive() ? theme.blue : (isOccupied() ? theme.bgLighter : "transparent")
-                                            border.color: theme.fgSubtle
-                                            border.width: isActive() ? 0 : 1
-
-                                            function isActive() {
-                                                if (!parent.workspaceManager) return false
-                                                
-                                                if (parent.wmDetector.isNiri()) {
-                                                    return parent.workspaceManager.activeWorkspace === modelData.id
-                                                } else {
-                                                    return parent.workspaceManager.activeTag === modelData
-                                                }
-                                            }
-
-                                            function isOccupied() {
-                                                if (!parent.workspaceManager) return false
-                                                
-                                                if (parent.wmDetector.isNiri()) {
-                                                    return !modelData.isEmpty
-                                                } else {
-                                                    return parent.workspaceManager.occupiedTags.indexOf(modelData) !== -1
-                                                }
-                                            }
-
-                                            Text {
-                                                anchors.centerIn: parent
-                                                text: getWorkspaceLabel()
-                                                color: parent.isActive() ? theme.bg : theme.fg
-                                                font {
-                                                    family: theme.font.family
-                                                    pixelSize: 11
-                                                    bold: parent.isActive()
-                                                }
-
-                                                function getWorkspaceLabel() {
-                                                    if (parent.parent.wmDetector.isNiri()) {
-                                                        return modelData.name || modelData.id
-                                                    } else {
-                                                        return modelData
-                                                    }
-                                                }
-                                            }
-
-                                            MouseArea {
-                                                anchors.fill: parent
-                                                cursorShape: Qt.PointingHandCursor
-                                                onClicked: {
-                                                    if (!parent.parent.workspaceManager) return
-                                                    
-                                                    if (parent.parent.wmDetector.isNiri()) {
-                                                        parent.parent.workspaceManager.switchToWorkspace(modelData.id)
-                                                    } else {
-                                                        parent.parent.workspaceManager.switchToTag(modelData)
-                                                    }
-                                                }
-                                            }
-                                        }
+                            Loader {
+                                id: dwlWorkspaces
+                                active: false
+                                sourceComponent: Component {
+                                    Local.WorkspacesDWL {
+                                        id: dwlWs
+                                        Component.onCompleted: workspaceWidget.workspaceManager = dwlWs
                                     }
+                                }
+                            }
 
-                                    function getWorkspaceModel() {
-                                        if (!workspaceManager) return []
+                            Repeater {
+                                model: getWorkspaceModel()
+
+                                Rectangle {
+                                    Layout.preferredWidth: 28
+                                    Layout.preferredHeight: 20
+                                    radius: 6
+                                    
+                                    color: isActive() ? theme.blue : (isOccupied() ? theme.bgLighter : "transparent")
+                                    border.color: theme.fgSubtle
+                                    border.width: isActive() ? 0 : 1
+
+                                    function isActive() {
+                                        if (!workspaceWidget.workspaceManager) return false
                                         
                                         if (wmDetector.isNiri()) {
-                                            return workspaceManager.workspaces || []
+                                            return workspaceWidget.workspaceManager.activeWorkspace === modelData.id
                                         } else {
-                                            return [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                                            return workspaceWidget.workspaceManager.activeTag === modelData
+                                        }
+                                    }
+
+                                    function isOccupied() {
+                                        if (!workspaceWidget.workspaceManager) return false
+                                        
+                                        if (wmDetector.isNiri()) {
+                                            return !modelData.isEmpty
+                                        } else {
+                                            return workspaceWidget.workspaceManager.occupiedTags.indexOf(modelData) !== -1
                                         }
                                     }
 
                                     Text {
-                                        visible: !wmDetector.isSupported()
-                                        text: "WM not supported"
-                                        color: theme.fgMuted
+                                        anchors.centerIn: parent
+                                        text: getWorkspaceLabel()
+                                        color: parent.isActive() ? theme.bg : theme.fg
                                         font {
                                             family: theme.font.family
-                                            pixelSize: theme.font.pixelSize - 2
+                                            pixelSize: 11
+                                            bold: parent.isActive()
+                                        }
+
+                                        function getWorkspaceLabel() {
+                                            if (wmDetector.isNiri()) {
+                                                return modelData.name || modelData.id
+                                            } else {
+                                                return modelData
+                                            }
                                         }
                                     }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        onClicked: {
+                                            if (!workspaceWidget.workspaceManager) return
+                                            
+                                            if (wmDetector.isNiri()) {
+                                                workspaceWidget.workspaceManager.switchToWorkspace(modelData.id)
+                                            } else {
+                                                workspaceWidget.workspaceManager.switchToTag(modelData)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            function getWorkspaceModel() {
+                                if (!workspaceManager) return []
+                                
+                                if (wmDetector.isNiri()) {
+                                    return workspaceManager.workspaces || []
+                                } else {
+                                    return [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                                }
+                            }
+
+                            Text {
+                                visible: !wmDetector.isSupported()
+                                text: "WM not supported"
+                                color: theme.fgMuted
+                                font {
+                                    family: theme.font.family
+                                    pixelSize: theme.font.pixelSize - 2
                                 }
                             }
                         }
