@@ -231,27 +231,358 @@ let
             onTriggered: diskProc.running = true
         }
         
-        Bar {
-            theme: theme
-            wmDetector: wmDetector
-            makoDnd: makoDnd
-            btInfo: btInfo
-            volume: volume
-            battery: battery
-            cpu: cpu
-            mem: mem
-            disk: disk
-            activeWindow: activeWindow
+        Variants {
+            id: barVariants
+            model: Quickshell.screens
+
+            PanelWindow {
+                property var theme: root.theme
+                property var wmDetector: root.wmDetector
+                property var makoDnd: root.makoDnd
+                property var btInfo: root.btInfo
+                property var volume: root.volume
+                property var battery: root.battery
+                property var cpu: root.cpu
+                property var mem: root.mem
+                property var disk: root.disk
+                property var activeWindow: root.activeWindow
+
+                anchors.top: true
+                anchors.left: true
+                anchors.right: true
+                height: 30
+                color: theme.bg
+
+                Process { id: pavuProcess; command: ["pavucontrol"] }
+                Process { id: bluemanProcess; command: ["blueman-manager"] }
+                Process { id: makoDndProcess; command: ["sh", "-c", "makoctl mode | grep -q do-not-disturb && makoctl mode -r do-not-disturb || makoctl mode -a do-not-disturb"] }
+                Process { id: wlogoutProcess; command: ["wlogout"] }
+
+                Rectangle {
+                    anchors.fill: parent
+                    color: theme.bg
+
+                    RowLayout {
+                        anchors.fill: parent
+                        spacing: theme.spacing / 2
+
+                        Item { width: theme.padding / 2 }
+
+                        Text {
+                            text: "~"
+                            color: theme.magenta
+                            font {
+                                family: theme.font.family
+                                pixelSize: 18
+                                bold: true
+                            }
+                        }
+
+                        Item { width: theme.spacing }
+
+                        Loader {
+                            id: workspaceLoader
+                            Layout.leftMargin: theme.spacing
+                            
+                            sourceComponent: Component {
+                                RowLayout {
+                                    property QtObject theme: parent.parent.theme
+                                    property QtObject wmDetector: parent.parent.wmDetector
+                                    property QtObject workspaceManager: null
+
+                                    spacing: theme.spacing / 2
+
+                                    Component.onCompleted: {
+                                        wmDetector.wmDetected.connect(setupWorkspaceManager)
+                                        if (wmDetector.isSupported() && !wmDetector.isDetecting) {
+                                            setupWorkspaceManager()
+                                        }
+                                    }
+
+                                    function setupWorkspaceManager() {
+                                        var componentName = ""
+                                        if (wmDetector.isRiver()) componentName = "WorkspacesRiver.qml"
+                                        else if (wmDetector.isNiri()) componentName = "WorkspacesNiri.qml"
+                                        else if (wmDetector.isMangoWC() || wmDetector.isDWL()) componentName = "WorkspacesDWL.qml"
+                                        
+                                        if (componentName) {
+                                            var component = Qt.createComponent(componentName)
+                                            if (component.status === Component.Ready) {
+                                                workspaceManager = component.createObject(this)
+                                            }
+                                        }
+                                    }
+
+                                    Repeater {
+                                        model: getWorkspaceModel()
+
+                                        Rectangle {
+                                            Layout.preferredWidth: 28
+                                            Layout.preferredHeight: 20
+                                            radius: 6
+                                            
+                                            color: isActive() ? theme.blue : (isOccupied() ? theme.bgLighter : "transparent")
+                                            border.color: theme.fgSubtle
+                                            border.width: isActive() ? 0 : 1
+
+                                            function isActive() {
+                                                if (!parent.workspaceManager) return false
+                                                
+                                                if (parent.wmDetector.isNiri()) {
+                                                    return parent.workspaceManager.activeWorkspace === modelData.id
+                                                } else {
+                                                    return parent.workspaceManager.activeTag === modelData
+                                                }
+                                            }
+
+                                            function isOccupied() {
+                                                if (!parent.workspaceManager) return false
+                                                
+                                                if (parent.wmDetector.isNiri()) {
+                                                    return !modelData.isEmpty
+                                                } else {
+                                                    return parent.workspaceManager.occupiedTags.indexOf(modelData) !== -1
+                                                }
+                                            }
+
+                                            Text {
+                                                anchors.centerIn: parent
+                                                text: getWorkspaceLabel()
+                                                color: parent.isActive() ? theme.bg : theme.fg
+                                                font {
+                                                    family: theme.font.family
+                                                    pixelSize: 11
+                                                    bold: parent.isActive()
+                                                }
+
+                                                function getWorkspaceLabel() {
+                                                    if (parent.parent.wmDetector.isNiri()) {
+                                                        return modelData.name || modelData.id
+                                                    } else {
+                                                        return modelData
+                                                    }
+                                                }
+                                            }
+
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                cursorShape: Qt.PointingHandCursor
+                                                onClicked: {
+                                                    if (!parent.parent.workspaceManager) return
+                                                    
+                                                    if (parent.parent.wmDetector.isNiri()) {
+                                                        parent.parent.workspaceManager.switchToWorkspace(modelData.id)
+                                                    } else {
+                                                        parent.parent.workspaceManager.switchToTag(modelData)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    function getWorkspaceModel() {
+                                        if (!workspaceManager) return []
+                                        
+                                        if (wmDetector.isNiri()) {
+                                            return workspaceManager.workspaces || []
+                                        } else {
+                                            return [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                                        }
+                                    }
+
+                                    Text {
+                                        visible: !wmDetector.isSupported()
+                                        text: "WM not supported"
+                                        color: theme.fgMuted
+                                        font {
+                                            family: theme.font.family
+                                            pixelSize: theme.font.pixelSize - 2
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        Rectangle {
+                            Layout.preferredWidth: theme.borderWidth
+                            Layout.preferredHeight: 16
+                            Layout.alignment: Qt.AlignVCenter
+                            Layout.leftMargin: theme.spacing
+                            Layout.rightMargin: theme.spacing
+                            color: theme.fgSubtle
+                        }
+
+                        Text {
+                            text: activeWindow.title
+                            color: theme.magenta
+                            font {
+                                family: theme.font.family
+                                pixelSize: theme.font.pixelSize
+                                bold: true
+                            }
+                            Layout.fillWidth: true
+                            Layout.leftMargin: theme.spacing
+                            Layout.rightMargin: theme.spacing
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                        }
+
+                        Rectangle {
+                            Layout.preferredWidth: theme.borderWidth
+                            Layout.preferredHeight: 16
+                            Layout.alignment: Qt.AlignVCenter
+                            Layout.leftMargin: theme.spacing
+                            Layout.rightMargin: theme.spacing
+                            color: theme.fgSubtle
+                        }
+
+                        Text {
+                            id: clockText
+                            text: Qt.formatDateTime(new Date(), "HH:mm dd/MM")
+                            color: theme.cyan
+                            font {
+                                family: theme.font.family
+                                pixelSize: theme.font.pixelSize
+                                bold: true
+                            }
+                            Layout.rightMargin: theme.spacing / 2
+
+                            Timer {
+                                interval: 1000
+                                running: true
+                                repeat: true
+                                onTriggered: clockText.text = Qt.formatDateTime(new Date(), "HH:mm dd/MM")
+                            }
+                        }
+
+                        Rectangle {
+                            Layout.preferredWidth: theme.borderWidth
+                            Layout.preferredHeight: 16
+                            Layout.alignment: Qt.AlignVCenter
+                            Layout.leftMargin: 0
+                            Layout.rightMargin: theme.spacing / 2
+                            color: theme.fgSubtle
+                        }
+
+                        Text {
+                            text: " " + cpu.usage + "%"
+                            color: cpu.usage > 85 ? theme.red : theme.yellow
+                            font {
+                                family: theme.font.family
+                                pixelSize: theme.font.pixelSize
+                                bold: true
+                            }
+                            Layout.rightMargin: theme.spacing / 2
+                        }
+
+                        Text {
+                            text: " " + mem.percent + "%"
+                            color: mem.percent > 85 ? theme.red : theme.cyan
+                            font {
+                                family: theme.font.family
+                                pixelSize: theme.font.pixelSize
+                                bold: true
+                            }
+                            Layout.rightMargin: theme.spacing / 2
+                        }
+
+                        Text {
+                            text: " " + disk.percent + "%"
+                            color: disk.percent > 85 ? theme.red : theme.blue
+                            font {
+                                family: theme.font.family
+                                pixelSize: theme.font.pixelSize
+                                bold: true
+                            }
+                            Layout.rightMargin: theme.spacing / 2
+                        }
+
+                        Text {
+                            text: volume.muted ? " Muted" : " " + volume.level + "%"
+                            color: volume.muted ? theme.fgSubtle : theme.fg
+                            font {
+                                family: theme.font.family
+                                pixelSize: theme.font.pixelSize
+                                bold: true
+                            }
+                            Layout.rightMargin: theme.spacing / 2
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: pavuProcess.running = true
+                            }
+                        }
+
+                        Text {
+                            text: btInfo.connected ? "" : ""
+                            color: btInfo.connected ? theme.cyan : theme.fgSubtle
+                            font {
+                                family: theme.font.family
+                                pixelSize: theme.font.pixelSize
+                                bold: true
+                            }
+                            Layout.rightMargin: theme.spacing / 2
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: bluemanProcess.running = true
+                            }
+                        }
+
+                        Text {
+                            visible: battery.percentage > 0
+                            text: battery.icon + " " + battery.percentage + "%" + (battery.charging ? " 󰂄" : "")
+                            color: battery.percentage <= 15 ? theme.red : battery.percentage <= 30 ? theme.yellow : theme.fg
+                            font {
+                                family: theme.font.family
+                                pixelSize: theme.font.pixelSize
+                            }
+                            Layout.rightMargin: theme.spacing / 2
+                        }
+
+                        Text {
+                            text: makoDnd.isDnd ? "" : ""
+                            color: makoDnd.isDnd ? theme.red : theme.fg
+                            font {
+                                family: theme.font.family
+                                pixelSize: theme.font.pixelSize
+                                bold: makoDnd.isDnd
+                            }
+                            Layout.rightMargin: theme.spacing / 2
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: makoDndProcess.running = true
+                            }
+                        }
+
+                        Text {
+                            text: "⏻"
+                            color: theme.fg
+                            font {
+                                family: theme.font.family
+                                pixelSize: 16
+                            }
+                            Layout.rightMargin: theme.spacing / 2
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: wlogoutProcess.running = true
+                            }
+                        }
+
+                        Item { width: theme.padding / 2 }
+                    }
+                }
+            }
         }
     }
   '';
 in
 {
   xdg.configFile."quickshell/shell.qml".text = shellQml;
-  xdg.configFile."quickshell/bar.qml".source = ./bar.qml;
   xdg.configFile."quickshell/WmDetector.qml".source = ./WmDetector.qml;
   xdg.configFile."quickshell/WorkspacesRiver.qml".source = ./WorkspacesRiver.qml;
   xdg.configFile."quickshell/WorkspacesNiri.qml".source = ./WorkspacesNiri.qml;
   xdg.configFile."quickshell/WorkspacesDWL.qml".source = ./WorkspacesDWL.qml;
-  xdg.configFile."quickshell/WorkspaceWidget.qml".source = ./WorkspaceWidget.qml;
 }
