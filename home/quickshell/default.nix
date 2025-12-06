@@ -6,13 +6,13 @@
 }:
 let
   p = config.colorScheme.palette;
+
   shellQml = ''
     import QtQuick
     import QtQuick.Layouts
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Io
-    import Quickshell.Services.Niri
 
     ShellRoot {
         id: root
@@ -43,27 +43,6 @@ let
             })
         }
 
-        QtObject {
-            id: wmInfo
-            property string name: ""
-        }
-
-        Process {
-            id: wmDetectProc
-            command: ["sh", "-c", "echo $XDG_CURRENT_DESKTOP"]
-            running: true
-            onExited: {
-                if (stdout) {
-                    var detected = stdout.trim().toLowerCase()
-                    if (detected.includes("niri")) wmInfo.name = "Niri"
-                    else if (detected.includes("river")) wmInfo.name = "River"
-                    else if (detected.includes("dwl")) wmInfo.name = "DWL"
-                    else if (detected.includes("mangowc")) wmInfo.name = "Mango"
-                    else wmInfo.name = "Generic"
-                }
-            }
-        }
-
         QtObject { id: makoDnd; property bool isDnd: false }
         QtObject { id: btInfo; property bool connected: false }
         QtObject {
@@ -71,11 +50,13 @@ let
             property int level: 0
             property bool muted: false
         }
+        
         QtObject {
             id: battery
             property int percentage: 0
             property string icon: "󰂎"
             property bool charging: false
+            
             onPercentageChanged: {
                 if (percentage === 0) icon = "󰁹"
                 else if (percentage <= 10) icon = "󰂎"
@@ -86,9 +67,11 @@ let
                 else icon = "󰂂"
             }
         }
+
         QtObject { id: cpu; property int usage: 0 }
         QtObject { id: mem; property int percent: 0 }
         QtObject { id: disk; property int percent: 0 }
+        
         QtObject {
             id: activeWindow
             property string title: "No Window Focused"
@@ -108,6 +91,7 @@ let
                 if (stdout) makoDnd.isDnd = stdout.trim() === "do-not-disturb"
             }
         }
+
         Timer {
             interval: 1000
             running: true
@@ -123,6 +107,7 @@ let
                 if (stdout) btInfo.connected = stdout.includes("Connected: yes")
             }
         }
+
         Timer {
             interval: 5000
             running: true
@@ -142,6 +127,7 @@ let
                 if (match) volume.level = Math.round(parseFloat(match[1]) * 100)
             }
         }
+
         Timer {
             interval: 1000
             running: true
@@ -160,6 +146,7 @@ let
                 batStatusProc.running = true
             }
         }
+
         Process {
             id: batCapacityProc
             command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 0"]
@@ -167,6 +154,7 @@ let
                 if (stdout) battery.percentage = parseInt(stdout.trim()) || 0
             }
         }
+
         Process {
             id: batStatusProc
             command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/status 2>/dev/null || echo Discharging"]
@@ -190,6 +178,7 @@ let
                 }
             }
         }
+
         Timer {
             interval: 2000
             running: true
@@ -210,6 +199,7 @@ let
                 mem.percent = Math.round(used / total * 100)
             }
         }
+
         Timer {
             interval: 2000
             running: true
@@ -229,6 +219,7 @@ let
                 disk.percent = parseInt(percentStr.replace("%", "")) || 0
             }
         }
+
         Timer {
             interval: 10000
             running: true
@@ -236,10 +227,9 @@ let
             triggeredOnStart: true
             onTriggered: diskProc.running = true
         }
-
+        
         Bar {
             theme: theme
-            wmInfo: wmInfo
             makoDnd: makoDnd
             btInfo: btInfo
             volume: volume
