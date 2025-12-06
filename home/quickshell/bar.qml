@@ -3,12 +3,11 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io
-import Quickshell.Services.Niri
 
 Variants {
     id: bar
+
     required property QtObject theme
-    required property QtObject wmInfo
     required property QtObject makoDnd
     required property QtObject btInfo
     required property QtObject volume
@@ -31,72 +30,6 @@ Variants {
         Process { id: bluemanProcess; command: ["blueman-manager"] }
         Process { id: makoDndProcess; command: ["sh", "-c", "makoctl mode | grep -q do-not-disturb && makoctl mode -r do-not-disturb || makoctl mode -a do-not-disturb"] }
         Process { id: wlogoutProcess; command: ["wlogout"] }
-        Process { id: riverTagProc; command: ["sh", "-c", "riverctl list-tags"] }
-
-        Component {
-            id: niriWorkspaces
-            RowLayout {
-                spacing: 4
-                Repeater {
-                    model: Niri.workspaces
-                    Rectangle {
-                        Layout.preferredWidth: 20
-                        Layout.preferredHeight: 20
-                        radius: 4
-                        color: modelData.is_active ? bar.theme.blue : (modelData.active_window_id !== null ? bar.theme.bgLighter : bar.theme.bgAlt)
-                        border.width: modelData.is_active ? 0 : 1
-                        border.color: bar.theme.fgSubtle
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: modelData.activate()
-                        }
-                        Text {
-                            anchors.centerIn: parent
-                            text: modelData.idx
-                            color: modelData.is_active ? bar.theme.bg : bar.theme.fg
-                            font.pixelSize: 10
-                            font.bold: true
-                        }
-                    }
-                }
-            }
-        }
-
-        Component {
-            id: genericTags
-            RowLayout {
-                spacing: 4
-                Repeater {
-                    model: 9
-                    Rectangle {
-                        Layout.preferredWidth: 20
-                        Layout.preferredHeight: 20
-                        radius: 4
-                        color: bar.theme.bgAlt
-                        border.width: 1
-                        border.color: bar.theme.fgSubtle
-                        Text {
-                            anchors.centerIn: parent
-                            text: index + 1
-                            color: bar.theme.fgSubtle
-                            font.pixelSize: 10
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                if (bar.wmInfo.name === "River") {
-                                     var cmd = "riverctl set-focused-tags " + (1 << index)
-                                     var proc = Qt.createQmlObject('import Quickshell.Io; Process { }', parent)
-                                     proc.command = ["sh", "-c", cmd]
-                                     proc.running = true
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
         Rectangle {
             anchors.fill: parent
@@ -116,12 +49,6 @@ Variants {
                         pixelSize: 18
                         bold: true
                     }
-                }
-
-                Item { width: bar.theme.spacing }
-
-                Loader {
-                    sourceComponent: bar.wmInfo.name === "Niri" ? niriWorkspaces : genericTags
                 }
 
                 Item { width: bar.theme.spacing }
@@ -169,6 +96,7 @@ Variants {
                         bold: true
                     }
                     Layout.rightMargin: bar.theme.spacing / 2
+
                     Timer {
                         interval: 1000
                         running: true
