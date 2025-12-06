@@ -4,7 +4,6 @@
   lib,
   ...
 }:
-
 let
   p = config.colorScheme.palette;
 
@@ -29,8 +28,8 @@ let
       readonly property int padding: 14
       readonly property int spacing: 10
       readonly property var font: ({
-        family: "FiraCode Nerd Font Mono",
-        pixelSize: 14,
+        family: "FiraCode Nerd Font Mono"
+        pixelSize: 14
         weight: Font.Medium
       })
     }
@@ -49,7 +48,7 @@ let
           console.warn("IdleMonitor not available - power management disabled")
           return
         }
-        const idleQml = \`
+        const idleQml = `
           import QtQuick
           import Quickshell.Wayland
           IdleMonitor {
@@ -57,7 +56,7 @@ let
             respectInhibitors: true
             timeout: 0
           }
-        \`
+        `
         var monOff = Qt.createQmlObject(idleQml, idleService)
         monOff.timeout = Qt.binding(() => idleService.monitorTimeout)
         monOff.isIdleChanged.connect(function() {
@@ -74,13 +73,13 @@ let
         lockMon.isIdleChanged.connect(function() {
           if (lockMon.isIdle && !idleService.locked) {
             idleService.locked = true
-            const lockCmd = \`
+            const lockCmd = `
               import Quickshell.Io
               Command {
                 command: "gtklock"
                 args: ["-d"]
               }
-            \`
+            `
             Qt.createQmlObject(lockCmd, idleService)
           } else if (!lockMon.isIdle) {
             idleService.locked = false
@@ -90,13 +89,13 @@ let
         suspMon.timeout = Qt.binding(() => idleService.suspendTimeout)
         suspMon.isIdleChanged.connect(function() {
           if (suspMon.isIdle) {
-            const suspCmd = \`
+            const suspCmd = `
               import Quickshell.Io
               Command {
                 command: "systemctl"
                 args: ["suspend"]
               }
-            \`
+            `
             Qt.createQmlObject(suspCmd, idleService)
           }
         })
@@ -105,20 +104,19 @@ let
   '';
 
   shellContent = builtins.readFile ./shell.qml;
-  shellLogic = themeObjectQml + "\n" + idleServiceQml;
-  newShellQml = lib.strings.replaceStrings [ "ShellRoot {" ] [ "ShellRoot {\n" + lib.strings.indent 4 shellLogic ] shellContent;
-  
-  newShellQml = lib.strings.replaceStrings
-  [ "ShellRoot {" ]
-  [ ("ShellRoot {\n    " + builtins.replaceStrings ["\n"] ["\n    "] shellLogic) ]
-  shellContent;
+  shellLogic = themeObjectQml + "\n\n" + idleServiceQml;
+  indentedLogic = "    " + builtins.replaceStrings [ "\n" ] [ "\n    " ] shellLogic;
 
+  newShellQml =
+    lib.strings.replaceStrings [ "ShellRoot {" ] [ "ShellRoot {\n${indentedLogic}\n" ]
+      shellContent;
+
+  newShellQmlFile = pkgs.writeText "shell.qml" newShellQml;
 in
 {
   xdg.configFile."quickshell/qmldir".text = ''
-    Bar                     1.0 bar.qml
+    Bar 1.0 bar.qml
   '';
-
   xdg.configFile."quickshell/shell.qml".source = newShellQmlFile;
   xdg.configFile."quickshell/bar.qml".source = ./bar.qml;
 }
