@@ -28,8 +28,8 @@ let
       readonly property int padding: 14
       readonly property int spacing: 10
       readonly property var font: ({
-        family: "FiraCode Nerd Font Mono"
-        pixelSize: 14
+        family: "FiraCode Nerd Font Mono",
+        pixelSize: 14,
         weight: Font.Medium
       })
     }
@@ -104,11 +104,13 @@ let
   '';
 
   shellContent = builtins.readFile ./shell.qml;
+
   shellLogic = themeObjectQml + "\n\n" + idleServiceQml;
-  indentedLogic = "    " + builtins.replaceStrings [ "\n" ] [ "\n    " ] shellLogic;
+
+  indentedLogic = builtins.replaceStrings [ "\n" ] [ "\n    " ] ("    " + shellLogic);
 
   newShellQml =
-    lib.strings.replaceStrings [ "ShellRoot {" ] [ "ShellRoot {\n${indentedLogic}\n" ]
+    lib.strings.replaceStrings [ "ShellRoot {" ] [ "ShellRoot {\n\n${indentedLogic}\n" ]
       shellContent;
 
   newShellQmlFile = pkgs.writeText "shell.qml" newShellQml;
