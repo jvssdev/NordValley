@@ -87,7 +87,9 @@ let
         Process {
             id: makoProc
             command: ["makoctl", "mode"]
-            onExited: makoDnd.isDnd = stdout.trim() === "do-not-disturb"
+            onExited: {
+                if (stdout) makoDnd.isDnd = stdout.trim() === "do-not-disturb"
+            }
         }
 
         Timer {
@@ -101,7 +103,9 @@ let
         Process {
             id: btProc
             command: ["bluetoothctl", "info"]
-            onExited: btInfo.connected = stdout.includes("Connected: yes")
+            onExited: {
+                if (stdout) btInfo.connected = stdout.includes("Connected: yes")
+            }
         }
 
         Timer {
@@ -116,6 +120,7 @@ let
             id: volumeProc
             command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
             onExited: {
+                if (!stdout) return
                 const out = stdout.trim()
                 volume.muted = out.includes("[MUTED]")
                 const match = out.match(/Volume: ([0-9.]+)/)
@@ -145,19 +150,24 @@ let
         Process {
             id: batCapacityProc
             command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 0"]
-            onExited: battery.percentage = parseInt(stdout.trim()) || 0
+            onExited: {
+                if (stdout) battery.percentage = parseInt(stdout.trim()) || 0
+            }
         }
 
         Process {
             id: batStatusProc
             command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/status 2>/dev/null || echo Discharging"]
-            onExited: battery.charging = stdout.trim() === "Charging"
+            onExited: {
+                if (stdout) battery.charging = stdout.trim() === "Charging"
+            }
         }
 
         Process {
             id: cpuProc
             command: ["top", "-bn1"]
             onExited: {
+                if (!stdout) return
                 const lines = stdout.split("\n")
                 for (let line of lines) {
                     if (line.includes("%Cpu")) {
@@ -181,6 +191,7 @@ let
             id: memProc
             command: ["free"]
             onExited: {
+                if (!stdout) return
                 const line = stdout.split("\n")[1] || ""
                 const parts = line.split(/\s+/)
                 const total = parseInt(parts[1]) || 1
@@ -201,6 +212,7 @@ let
             id: diskProc
             command: ["sh", "-c", "df / | tail -1"]
             onExited: {
+                if (!stdout) return
                 const line = stdout.split("\n")[0] || ""
                 const parts = line.split(/\s+/)
                 var percentStr = parts[4] || "0%"
