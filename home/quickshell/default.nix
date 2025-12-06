@@ -119,12 +119,23 @@ let
         QtObject {
             id: activeWindow
             property string title: "No Window Focused"
-        }
 
-        Connections {
-            target: Quickshell.Wayland
-            function onActiveClientChanged() {
-                activeWindow.title = Quickshell.Wayland.activeClient?.title || "No Window Focused"
+            Timer {
+                interval: 500
+                running: true
+                repeat: true
+                onTriggered: {
+                    try {
+                        const client = Quickshell.Wayland.activeClient
+                        if (client && client.title) {
+                            activeWindow.title = client.title
+                        } else {
+                            activeWindow.title = "No Window Focused"
+                        }
+                    } catch (e) {
+                        activeWindow.title = "No Window Focused"
+                    }
+                }
             }
         }
 
