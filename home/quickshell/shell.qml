@@ -1,4 +1,3 @@
-//quickshell/shel.qml
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -169,5 +168,6 @@ ShellRoot {
         mem: mem
         disk: disk
         activeWindow: activeWindow
+        theme: theme
     }
 }
