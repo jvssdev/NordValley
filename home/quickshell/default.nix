@@ -120,7 +120,7 @@ let
             id: makoProc
             command: ["makoctl", "mode"]
             onExited: {
-                if (stdout) makoDnd.isDnd = stdout.trim() === "do-not-disturb"
+                if (stdout) makoDnd.isDnd.isDnd = stdout.trim() === "do-not-disturb"
             }
         }
         Timer {
@@ -298,184 +298,144 @@ let
                                 if (wmDetector.isSupported() && !wmDetector.isDetecting) setupWorkspaces()
                             }
                             function setupWorkspaces() {
-                                if (wmDetector.isRiver()) riverWorkspaces.active = true
-                                else if (wmDetector.isNiri()) niriWorkspaces.active = true
-                                else if (wmDetector.isMangoWC() || wmDetector.isDWL()) dwlWorkspaces.active = true
+                                if (wmDetector.isRiver()) {
+                                    workspaceManager = riverWs
+                                    riverWs.updateTags()
+                                } else if (wmDetector.isNiri()) {
+                                    workspaceManager = niriWs
+                                    niriWs.updateWorkspaces()
+                                } else if (wmDetector.isMangoWC() || wmDetector.isDWL()) {
+                                    workspaceManager = dwlWs
+                                    dwlWs.updateTags()
+                                }
                             }
-                            Loader {
-                                id: riverWorkspaces
-                                active: false
-                                sourceComponent: Component {
-                                    QtObject {
-                                        id: riverWs
-                                        property int activeTagMask: 0
-                                        property int occupiedTagMask: 0
-                                        property int maxTags: 9
-                                        Component.onCompleted: {
-                                            workspaceWidget.workspaceManager = riverWs
-                                            updateTags()
-                                        }
-                                        function updateTags() {
-                                            activeProc.running = true
-                                            occupiedProc.running = true
-                                        }
-                                        Process {
-                                            id: activeProc
-                                            command: ["riverctl", "get-focused-tags"]
-                                            onExited: {
-                                                riverWs.activeTagMask = parseInt(stdout?.trim() || "0", 10)
+                            QtObject {
+                                id: riverWs
+                                property int activeTagMask: 0
+                                property int occupiedTagMask: 0
+                                property int maxTags: 9
+                                function updateTags() {
+                                    activeProc.running = true
+                                    occupiedProc.running = true
+                                }
+                                Process {
+                                    id: activeProc
+                                    command: ["riverctl", "get-focused-tags"]
+                                    onExited: riverWs.activeTagMask = parseInt(stdout?.trim() || "0", 10)
+                                }
+                                Process {
+                                    id: occupiedProc
+                                    command: ["riverctl", "list-views"]
+                                    onExited: {
+                                        let mask = 0
+                                        if (stdout) {
+                                            const lines = stdout.split("\n")
+                                            for (let line of lines) {
+                                                const match = line.match(/tags:\s*(\d+)/)
+                                                if (match) mask |= parseInt(match[1])
                                             }
                                         }
-                                        Process {
-                                            id: occupiedProc
-                                            command: ["riverctl", "list-views"]
-                                            onExited: {
-                                                let mask = 0
-                                                if (stdout) {
-                                                    const lines = stdout.split("\n")
-                                                    for (let line of lines) {
-                                                        const match = line.match(/tags:\s*(\d+)/)
-                                                        if (match) mask |= parseInt(match[1])
-                                                    }
+                                        riverWs.occupiedTagMask = mask
+                                    }
+                                }
+                                Process {
+                                    id: switchTagProc
+                                    onExited: updateTags()
+                                }
+                                Timer {
+                                    interval: 1000
+                                    running: wmDetector.isRiver()
+                                    repeat: true
+                                    onTriggered: updateTags()
+                                }
+                            }
+                            QtObject {
+                                id: niriWs
+                                property int activeWorkspace: 1
+                                property var workspaces: []
+                                function updateWorkspaces() {
+                                    workspaceQueryProc.running = true
+                                }
+                                Process {
+                                    id: workspaceQueryProc
+                                    command: ["niri", "msg", "--json", "workspaces"]
+                                    onExited: {
+                                        if (!stdout) return
+                                        try {
+                                            const data = JSON.parse(stdout)
+                                            let wsList = []
+                                            let activeIdx = 1
+                                            if (Array.isArray(data)) {
+                                                for (let i = 0; i < data.length; i++) {
+                                                    const ws = data[i]
+                                                    wsList.push({
+                                                        id: ws.id || (i + 1),
+                                                        name: ws.name || "",
+                                                        isActive: ws.is_active || false,
+                                                        isEmpty: !ws.has_windows
+                                                    })
+                                                    if (ws.is_active) activeIdx = ws.id || (i + 1)
                                                 }
-                                                riverWs.occupiedTagMask = mask
                                             }
-                                        }
-                                        function switchToTag(tagIndex) {
-                                            if (tagIndex < 1 || tagIndex > maxTags) return
-                                            switchTagProc.command = ["riverctl", "set-focused-tags", (1 << (tagIndex - 1)).toString()]
-                                            switchTagProc.running = true
-                                        }
-                                        Process {
-                                            id: switchTagProc
-                                            onExited: updateTags()
-                                        }
-                                        Timer {
-                                            interval: 1000
-                                            running: true
-                                            repeat: true
-                                            onTriggered: updateTags()
+                                            workspaces = wsList
+                                            activeWorkspace = activeIdx
+                                        } catch (e) {
+                                            console.error("Niri parse error:", e)
                                         }
                                     }
                                 }
-                            }
-                            Loader {
-                                id: niriWorkspaces
-                                active: false
-                                sourceComponent: Component {
-                                    QtObject {
-                                        id: niriWs
-                                        property int activeWorkspace: 1
-                                        property var workspaces: []
-                                        Component.onCompleted: {
-                                            workspaceWidget.workspaceManager = niriWs
-                                            updateWorkspaces()
-                                        }
-                                        function updateWorkspaces() {
-                                            workspaceQueryProc.running = true
-                                        }
-                                        function switchToWorkspace(index) {
-                                            if (index < 1) return
-                                            switchWorkspaceProc.command = ["niri", "msg", "action", "focus-workspace", index.toString()]
-                                            switchWorkspaceProc.running = true
-                                        }
-                                        Process {
-                                            id: workspaceQueryProc
-                                            command: ["niri", "msg", "--json", "workspaces"]
-                                            onExited: {
-                                                if (!stdout) return
-                                                try {
-                                                    const data = JSON.parse(stdout)
-                                                    let wsList = []
-                                                    let activeIdx = 1
-                                                    if (Array.isArray(data)) {
-                                                        for (let i = 0; i < data.length; i++) {
-                                                            const ws = data[i]
-                                                            wsList.push({
-                                                                id: ws.id || (i + 1),
-                                                                name: ws.name || "",
-                                                                isActive: ws.is_active || false,
-                                                                isEmpty: !ws.has_windows
-                                                            })
-                                                            if (ws.is_active) activeIdx = ws.id || (i + 1)
-                                                        }
-                                                    }
-                                                    workspaces = wsList
-                                                    activeWorkspace = activeIdx
-                                                } catch (e) {
-                                                    console.error("Niri parse error:", e)
-                                                }
-                                            }
-                                        }
-                                        Process {
-                                            id: switchWorkspaceProc
-                                            command: []
-                                            onExited: Qt.callLater(updateWorkspaces)
-                                        }
-                                        Timer {
-                                            interval: 500
-                                            running: true
-                                            repeat: true
-                                            onTriggered: updateWorkspaces()
-                                        }
-                                    }
+                                Process {
+                                    id: switchWorkspaceProc
+                                    command: []
+                                    onExited: Qt.callLater(updateWorkspaces)
+                                }
+                                Timer {
+                                    interval: 500
+                                    running: wmDetector.isNiri()
+                                    repeat: true
+                                    onTriggered: updateWorkspaces()
                                 }
                             }
-                            Loader {
-                                id: dwlWorkspaces
-                                active: false
-                                sourceComponent: Component {
-                                    QtObject {
-                                        id: dwlWs
-                                        property int activeTag: 1
-                                        property var occupiedTags: []
-                                        property int maxTags: 9
-                                        Component.onCompleted: {
-                                            workspaceWidget.workspaceManager = dwlWs
-                                            updateTags()
-                                        }
-                                        function updateTags() {
-                                            tagQueryProc.running = true
-                                        }
-                                        function switchToTag(tagIndex) {
-                                            if (tagIndex < 1 || tagIndex > maxTags) return
-                                            switchTagProc.command = ["dwlmsg", "tag", "view", tagIndex.toString()]
-                                            switchTagProc.running = true
-                                        }
-                                        Process {
-                                            id: tagQueryProc
-                                            command: ["sh", "-c", "dwlmsg tag status 2>/dev/null || mangowcctl tag status 2>/dev/null || echo 'error'"]
-                                            onExited: {
-                                                if (!stdout || stdout.includes("error")) return
-                                                const lines = stdout.split("\n")
-                                                let occupied = []
-                                                let active = 1
-                                                for (let line of lines) {
-                                                    const parts = line.trim().split(/\s+/)
-                                                    if (parts.length >= 3) {
-                                                        const tagNum = parseInt(parts[0])
-                                                        const isOccupied = parts[1] === "1" || parts[1] === "occupied"
-                                                        const isActive = parts[2] === "1" || parts[2] === "active"
-                                                        if (isOccupied) occupied.push(tagNum)
-                                                        if (isActive) active = tagNum
-                                                    }
-                                                }
-                                                occupiedTags = occupied
-                                                activeTag = active
+                            QtObject {
+                                id: dwlWs
+                                property int activeTag: 1
+                                property var occupiedTags: []
+                                property int maxTags: 9
+                                function updateTags() {
+                                    tagQueryProc.running = true
+                                }
+                                Process {
+                                    id: tagQueryProc
+                                    command: ["sh", "-c", "dwlmsg tag status 2>/dev/null || mangowcctl tag status 2>/dev/null || echo 'error'"]
+                                    onExited: {
+                                        if (!stdout || stdout.includes("error")) return
+                                        const lines = stdout.split("\n")
+                                        let occupied = []
+                                        let active = 1
+                                        for (let line of lines) {
+                                            const parts = line.trim().split(/\s+/)
+                                            if (parts.length >= 3) {
+                                                const tagNum = parseInt(parts[0])
+                                                const isOccupied = parts[1] === "1" || parts[1] === "occupied"
+                                                const isActive = parts[2] === "1" || parts[2] === "active"
+                                                if (isOccupied) occupied.push(tagNum)
+                                                if (isActive) active = tagNum
                                             }
                                         }
-                                        Process {
-                                            id: switchTagProc
-                                            command: []
-                                            onExited: Qt.callLater(updateTags)
-                                        }
-                                        Timer {
-                                            interval: 1000
-                                            running: true
-                                            repeat: true
-                                            onTriggered: updateTags()
-                                        }
+                                        occupiedTags = occupied
+                                        activeTag = active
                                     }
+                                }
+                                Process {
+                                    id: switchTagProc
+                                    command: []
+                                    onExited: Qt.callLater(updateTags)
+                                }
+                                Timer {
+                                    interval: 1000
+                                    running: wmDetector.isDWL() || wmDetector.isMangoWC()
+                                    repeat: true
+                                    onTriggered: updateTags()
                                 }
                             }
                             Repeater {
@@ -490,14 +450,14 @@ let
                                     function isActive() {
                                         if (!workspaceWidget.workspaceManager) return false
                                         if (wmDetector.isNiri()) return workspaceWidget.workspaceManager.activeWorkspace === modelData.id
-                                        const mask = workspaceWidget.workspaceManager.activeTagMask || 0
-                                        return (mask & (1 << (modelData - 1))) !== 0
+                                        if (wmDetector.isRiver()) return (workspaceWidget.workspaceManager.activeTagMask & (1 << (modelData - 1))) !== 0
+                                        return workspaceWidget.workspaceManager.activeTag === modelData
                                     }
                                     function isOccupied() {
                                         if (!workspaceWidget.workspaceManager) return false
                                         if (wmDetector.isNiri()) return !modelData.isEmpty
-                                        const mask = workspaceWidget.workspaceManager.occupiedTagMask || 0
-                                        return (mask & (1 << (modelData - 1))) !== 0
+                                        if (wmDetector.isRiver()) return (workspaceWidget.workspaceManager.occupiedTagMask & (1 << (modelData - 1))) !== 0
+                                        return workspaceWidget.workspaceManager.occupiedTags.indexOf(modelData) !== -1
                                     }
                                     Text {
                                         anchors.centerIn: parent
@@ -522,7 +482,8 @@ let
                             }
                             function getWorkspaceModel() {
                                 if (!workspaceManager) return []
-                                return wmDetector.isNiri() ? workspaceManager.workspaces || [] : [1,2,3,4,5,6,7,8,9]
+                                if (wmDetector.isNiri()) return workspaceManager.workspaces || []
+                                return [1,2,3,4,5,6,7,8,9]
                             }
                             Text {
                                 visible: !wmDetector.isSupported()
@@ -530,6 +491,7 @@ let
                                 color: theme.fgMuted
                                 font { family: theme.font.family; pixelSize: theme.font.pixelSize - 2 }
                             }
+                        }
                         }
                         Rectangle {
                             Layout.preferredWidth: theme.borderWidth
