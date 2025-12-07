@@ -43,7 +43,7 @@ in
 
       ${pkgs.mako}/bin/mako &
 
-      ${pkgs.quickshell}/bin/quickshell &
+      # ${pkgs.quickshell}/bin/quickshell &
       ${pkgs.waybar}/bin/waybar &
       ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
       ${pkgs.blueman}/bin/blueman-applet &
@@ -219,17 +219,10 @@ in
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
+      xdg-desktop-portal
       xdg-desktop-portal-wlr
       xdg-desktop-portal-gtk
     ];
-    config = {
-      mango = {
-        default = [ "gtk" ];
-        "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
-        "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
-        "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
-        "org.freedesktop.impl.portal.Inhibit" = [ ];
-      };
-    };
+    config.common.default = "*";
   };
 }
