@@ -75,7 +75,7 @@ let
             readonly property int borderWidth: 2
             readonly property int padding: 14
             readonly property int spacing: 10
-            readonly property var font: ({
+            readonly property var font: Qt.font({
                 family: "JetBrainsMono Nerd Font",
                 pixelSize: 14,
                 weight: Font.Medium
@@ -117,7 +117,8 @@ let
             }
         }
         Process {
-            id: ["makoctl", "mode"]
+            id: makoProc
+            command: ["makoctl", "mode"]
             onExited: {
                 if (stdout) makoDnd.isDnd = stdout.trim() === "do-not-disturb"
             }
