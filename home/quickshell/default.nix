@@ -41,27 +41,16 @@ let
             id: wmDetectionProc
             onExited: {
                 if (!stdout) {
-                    console.log("WM Detection: Failed to detect")
+                    console.log("WM Detection: Failed")
                     wmDetector.isDetecting = false
                     return
                 }
                 const output = stdout.toLowerCase().trim()
-                if (output.includes("river")) {
-                    wmDetector.detectedWm = wmDetector.typeRiver
-                    wmDetector.wmName = "River"
-                } else if (output.includes("niri")) {
-                    wmDetector.detectedWm = wmDetector.typeNiri
-                    wmDetector.wmName = "Niri"
-                } else if (output.includes("mangowc")) {
-                    wmDetector.detectedWm = wmDetector.typeMangoWC
-                    wmDetector.wmName = "MangoWC"
-                } else if (output.includes("dwl")) {
-                    wmDetector.detectedWm = wmDetector.typeDWL
-                    wmDetector.wmName = "DWL"
-                } else {
-                    wmDetector.detectedWm = wmDetector.typeUnknown
-                    wmDetector.wmName = "Unknown"
-                }
+                if (output.includes("river")) wmDetector.detectedWm = wmDetector.typeRiver, wmDetector.wmName = "River"
+                else if (output.includes("niri")) wmDetector.detectedWm = wmDetector.typeNiri, wmDetector.wmName = "Niri"
+                else if (output.includes("mangowc")) wmDetector.detectedWm = wmDetector.typeMangoWC, wmDetector.wmName = "MangoWC"
+                else if (output.includes("dwl")) wmDetector.detectedWm = wmDetector.typeDWL, wmDetector.wmName = "DWL"
+                else wmDetector.detectedWm = wmDetector.typeUnknown, wmDetector.wmName = "Unknown"
                 console.log("WM Detection: Detected", wmDetector.wmName)
                 wmDetector.isDetecting = false
                 wmDetector.wmDetected(wmDetector.detectedWm, wmDetector.wmName)
@@ -87,8 +76,8 @@ let
             readonly property int padding: 14
             readonly property int spacing: 10
             readonly property var font: ({
-                family: "JetBrainsMono Nerd Font",
-                pixelSize: 14,
+                family: "JetBrainsMono Nerd Font"
+                pixelSize: 14
                 weight: Font.Medium
             })
         }
@@ -245,7 +234,7 @@ let
                 if (!stdout) return
                 const line = stdout.split("\n")[0] || ""
                 const parts = line.split(/\s+/)
-                var percentStr = parts[4] || "0%"
+                const percentStr = parts[4] || "0%"
                 disk.percent = parseInt(percentStr.replace("%", "")) || 0
             }
         }
@@ -303,23 +292,15 @@ let
                             property QtObject workspaceManager: null
                             Connections {
                                 target: wmDetector
-                                function onWmDetected() {
-                                    workspaceWidget.setupWorkspaces()
-                                }
+                                function onWmDetected() { workspaceWidget.setupWorkspaces() }
                             }
                             Component.onCompleted: {
-                                if (wmDetector.isSupported() && !wmDetector.isDetecting) {
-                                    setupWorkspaces()
-                                }
+                                if (wmDetector.isSupported() && !wmDetector.isDetecting) setupWorkspaces()
                             }
                             function setupWorkspaces() {
-                                if (wmDetector.isRiver()) {
-                                    if (!riverWorkspaces.active) riverWorkspaces.active = true
-                                } else if (wmDetector.isNiri()) {
-                                    if (!niriWorkspaces.active) niriWorkspaces.active = true
-                                } else if (wmDetector.isMangoWC() || wmDetector.isDWL()) {
-                                    if (!dwlWorkspaces.active) dwlWorkspaces.active = true
-                                }
+                                if (wmDetector.isRiver()) riverWorkspaces.active = true
+                                else if (wmDetector.isNiri()) niriWorkspaces.active = true
+                                else if (wmDetector.isMangoWC() || wmDetector.isDWL()) dwlWorkspaces.active = true
                             }
                             Loader {
                                 id: riverWorkspaces
@@ -327,51 +308,53 @@ let
                                 sourceComponent: Component {
                                     QtObject {
                                         id: riverWs
-                                        property int activeTag: 0
-                                        property var occupiedTags: [1,2,3,4,5,6,7,8,9]
+                                        property int activeTagMask: 0
+                                        property int occupiedTagMask: 0
                                         property int maxTags: 9
-                                        signal tagChanged(int tag)
                                         Component.onCompleted: {
                                             workspaceWidget.workspaceManager = riverWs
                                             updateTags()
                                         }
                                         function updateTags() {
-                                            tagProc.running = true
+                                            activeProc.running = true
+                                            occupiedProc.running = true
                                         }
                                         Process {
-                                            id: tagProc
+                                            id: activeProc
                                             command: ["riverctl", "get-focused-tags"]
                                             onExited: {
-                                                if (!stdout) {
-                                                    activeTag = 0
-                                                    return
-                                                }
-                                                let tagBits = parseInt(stdout.trim(), 10) || 0
-                                                let firstActive = 0
-                                                for (let i = 0; i < maxTags; i++) {
-                                                    if (tagBits & (1 << i)) {
-                                                        if (firstActive === 0) firstActive = i + 1
-                                                    }
-                                                }
-                                                activeTag = firstActive
-                                                tagChanged(activeTag)
+                                                riverWs.activeTagMask = parseInt(stdout?.trim() || "0", 10)
                                             }
                                         }
                                         Process {
-                                            id: switchTagProc
-                                            command: []
-                                            onExited: updateTags()
+                                            id: occupiedProc
+                                            command: ["riverctl", "list-views"]
+                                            onExited: {
+                                                let mask = 0
+                                                if (stdout) {
+                                                    const lines = stdout.split("\n")
+                                                    for (let line of lines) {
+                                                        const match = line.match(/tags:\s*(\d+)/)
+                                                        if (match) mask |= parseInt(match[1])
+                                                    }
+                                                }
+                                                riverWs.occupiedTagMask = mask
+                                            }
                                         }
                                         function switchToTag(tagIndex) {
                                             if (tagIndex < 1 || tagIndex > maxTags) return
                                             switchTagProc.command = ["riverctl", "set-focused-tags", (1 << (tagIndex - 1)).toString()]
                                             switchTagProc.running = true
                                         }
+                                        Process {
+                                            id: switchTagProc
+                                            onExited: updateTags()
+                                        }
                                         Timer {
                                             interval: 1000
                                             running: true
                                             repeat: true
-                                            onTriggered: riverWs.updateTags()
+                                            onTriggered: updateTags()
                                         }
                                     }
                                 }
@@ -384,7 +367,6 @@ let
                                         id: niriWs
                                         property int activeWorkspace: 1
                                         property var workspaces: []
-                                        signal workspaceChanged(int workspace)
                                         Component.onCompleted: {
                                             workspaceWidget.workspaceManager = niriWs
                                             updateWorkspaces()
@@ -411,33 +393,30 @@ let
                                                             const ws = data[i]
                                                             wsList.push({
                                                                 id: ws.id || (i + 1),
-                                                                name: ws.name || String(i + 1),
-                                                                output: ws.output || "",
+                                                                name: ws.name || "",
                                                                 isActive: ws.is_active || false,
                                                                 isEmpty: !ws.has_windows
                                                             })
-                                                            if (ws.is_active) {
-                                                                activeIdx = ws.id || (i + 1)
-                                                            }
+                                                            if (ws.is_active) activeIdx = ws.id || (i + 1)
                                                         }
                                                     }
                                                     workspaces = wsList
                                                     activeWorkspace = activeIdx
                                                 } catch (e) {
-                                                    console.error("Niri workspaces parse error:", e)
+                                                    console.error("Niri parse error:", e)
                                                 }
                                             }
                                         }
                                         Process {
                                             id: switchWorkspaceProc
                                             command: []
-                                            onExited: { Qt.callLater(updateWorkspaces) }
+                                            onExited: Qt.callLater(updateWorkspaces)
                                         }
                                         Timer {
                                             interval: 500
                                             running: true
                                             repeat: true
-                                            onTriggered: niriWs.updateWorkspaces()
+                                            onTriggered: updateWorkspaces()
                                         }
                                     }
                                 }
@@ -451,7 +430,6 @@ let
                                         property int activeTag: 1
                                         property var occupiedTags: []
                                         property int maxTags: 9
-                                        signal tagChanged(int tag)
                                         Component.onCompleted: {
                                             workspaceWidget.workspaceManager = dwlWs
                                             updateTags()
@@ -466,65 +444,36 @@ let
                                         }
                                         Process {
                                             id: tagQueryProc
-                                            command: ["sh", "-c", "dwlmsg tag status 2>/dev/null || echo 'error'"]
-                                            onExited: {
-                                                if (!stdout || stdout.includes("error")) {
-                                                    mangoWCQueryProc.running = true
-                                                    return
-                                                }
-                                                parseDWLOutput(stdout)
-                                            }
-                                        }
-                                        Process {
-                                            id: mangoWCQueryProc
-                                            command: ["sh", "-c", "mangowcctl tag status 2>/dev/null || echo 'error'"]
+                                            command: ["sh", "-c", "dwlmsg tag status 2>/dev/null || mangowcctl tag status 2>/dev/null || echo 'error'"]
                                             onExited: {
                                                 if (!stdout || stdout.includes("error")) return
-                                                parseMangoWCOutput(stdout)
-                                            }
-                                        }
-                                        function parseDWLOutput(output) {
-                                            const lines = output.split("\n")
-                                            let occupied = []
-                                            let active = 1
-                                            for (let line of lines) {
-                                                const parts = line.trim().split(/\s+/)
-                                                if (parts.length >= 3) {
-                                                    const tagNum = parseInt(parts[0])
-                                                    const isOccupied = parts[1] === "1" || parts[1] === "occupied"
-                                                    const isActive = parts[2] === "1" || parts[2] === "active"
-                                                    if (isOccupied) occupied.push(tagNum)
-                                                    if (isActive) active = tagNum
+                                                const lines = stdout.split("\n")
+                                                let occupied = []
+                                                let active = 1
+                                                for (let line of lines) {
+                                                    const parts = line.trim().split(/\s+/)
+                                                    if (parts.length >= 3) {
+                                                        const tagNum = parseInt(parts[0])
+                                                        const isOccupied = parts[1] === "1" || parts[1] === "occupied"
+                                                        const isActive = parts[2] === "1" || parts[2] === "active"
+                                                        if (isOccupied) occupied.push(tagNum)
+                                                        if (isActive) active = tagNum
+                                                    }
                                                 }
+                                                occupiedTags = occupied
+                                                activeTag = active
                                             }
-                                            occupiedTags = occupied
-                                            activeTag = active
-                                        }
-                                        function parseMangoWCOutput(output) {
-                                            const lines = output.split("\n")
-                                            let occupied = []
-                                            let active = 1
-                                            for (let line of lines) {
-                                                if (line.includes("tag")) {
-                                                    const match = line.match(/tag(\d+).*active/)
-                                                    if (match) active = parseInt(match[1])
-                                                    const occupiedMatch = line.match(/tag(\d+)/)
-                                                    if (occupiedMatch) occupied.push(parseInt(occupiedMatch[1]))
-                                                }
-                                            }
-                                            occupiedTags = occupied
-                                            activeTag = active
                                         }
                                         Process {
                                             id: switchTagProc
                                             command: []
-                                            onExited: { Qt.callLater(updateTags) }
+                                            onExited: Qt.callLater(updateTags)
                                         }
                                         Timer {
                                             interval: 1000
                                             running: true
                                             repeat: true
-                                            onTriggered: dwlWs.updateTags()
+                                            onTriggered: updateTags()
                                         }
                                     }
                                 }
@@ -540,34 +489,24 @@ let
                                     border.width: isActive() ? 0 : 1
                                     function isActive() {
                                         if (!workspaceWidget.workspaceManager) return false
-                                        if (wmDetector.isNiri()) {
-                                            return workspaceWidget.workspaceManager.activeWorkspace === modelData.id
-                                        } else {
-                                            return workspaceWidget.workspaceManager.activeTag === modelData
+                                        if (wmDetector.isNiri()) return workspaceWidget.workspaceManager.activeWorkspace === modelData.id
+                                        const mask = workspaceWidget.workspaceManager.activeTagMask || 0
+                                        return (mask & (1 << (modelData - 1))) !== 0
                                     }
                                     function isOccupied() {
                                         if (!workspaceWidget.workspaceManager) return false
-                                        if (wmDetector.isNiri()) {
-                                            return !modelData.isEmpty
-                                        } else {
-                                            return workspaceWidget.workspaceManager.occupiedTags.indexOf(modelData) !== -1
-                                        }
+                                        if (wmDetector.isNiri()) return !modelData.isEmpty
+                                        const mask = workspaceWidget.workspaceManager.occupiedTagMask || 0
+                                        return (mask & (1 << (modelData - 1))) !== 0
                                     }
                                     Text {
                                         anchors.centerIn: parent
-                                        text: getWorkspaceLabel()
+                                        text: wmDetector.isNiri() ? (modelData.name || modelData.id) : modelData
                                         color: parent.isActive() ? theme.bg : theme.fg
                                         font {
                                             family: theme.font.family
                                             pixelSize: 11
                                             bold: parent.isActive()
-                                        }
-                                        function getWorkspaceLabel() {
-                                            if (wmDetector.isNiri()) {
-                                                return modelData.name || modelData.id
-                                            } else {
-                                                return modelData
-                                            }
                                         }
                                     }
                                     MouseArea {
@@ -575,31 +514,21 @@ let
                                         cursorShape: Qt.PointingHandCursor
                                         onClicked: {
                                             if (!workspaceWidget.workspaceManager) return
-                                            if (wmDetector.isNiri()) {
-                                                workspaceWidget.workspaceManager.switchToWorkspace(modelData.id)
-                                            } else {
-                                                workspaceWidget.workspaceManager.switchToTag(modelData)
-                                            }
+                                            if (wmDetector.isNiri()) workspaceWidget.workspaceManager.switchToWorkspace(modelData.id)
+                                            else workspaceWidget.workspaceManager.switchToTag(modelData)
                                         }
                                     }
                                 }
                             }
                             function getWorkspaceModel() {
                                 if (!workspaceManager) return []
-                                if (wmDetector.isNiri()) {
-                                    return workspaceManager.workspaces || []
-                                } else {
-                                    return [1, 2, 3, 4, 5, 6, 7, 8, 9]
-                                }
+                                return wmDetector.isNiri() ? workspaceManager.workspaces || [] : [1,2,3,4,5,6,7,8,9]
                             }
                             Text {
                                 visible: !wmDetector.isSupported()
                                 text: "WM not supported"
                                 color: theme.fgMuted
-                                font {
-                                    family: theme.font.family
-                                    pixelSize: theme.font.pixelSize - 2
-                                }
+                                font { family: theme.font.family; pixelSize: theme.font.pixelSize - 2 }
                             }
                         }
                         Rectangle {
@@ -613,16 +542,11 @@ let
                         Text {
                             text: activeWindow.title
                             color: theme.magenta
-                            font {
-                                family: theme.font.family
-                                pixelSize: theme.font.pixelSize
-                                bold: true
-                            }
+                            font { family: theme.font.family; pixelSize: theme.font.pixelSize; bold: true }
                             Layout.fillWidth: true
                             Layout.leftMargin: theme.spacing
                             Layout.rightMargin: theme.spacing
                             elide: Text.ElideRight
-                            maximumLineCount: 1
                         }
                         Rectangle {
                             Layout.preferredWidth: theme.borderWidth
@@ -636,11 +560,7 @@ let
                             id: clockText
                             text: Qt.formatDateTime(new Date(), "HH:mm dd/MM")
                             color: theme.cyan
-                            font {
-                                family: theme.font.family
-                                pixelSize: theme.font.pixelSize
-                                bold: true
-                            }
+                            font { family: theme.font.family; pixelSize: theme.font.pixelSize; bold: true }
                             Layout.rightMargin: theme.spacing / 2
                             Timer {
                                 interval: 1000
@@ -653,108 +573,61 @@ let
                             Layout.preferredWidth: theme.borderWidth
                             Layout.preferredHeight: 16
                             Layout.alignment: Qt.AlignVCenter
-                            Layout.leftMargin: 0
                             Layout.rightMargin: theme.spacing / 2
                             color: theme.fgSubtle
                         }
                         Text {
                             text: " " + cpu.usage + "%"
                             color: cpu.usage > 85 ? theme.red : theme.yellow
-                            font {
-                                family: theme.font.family
-                                pixelSize: theme.font.pixelSize
-                                bold: true
-                            }
+                            font { family: theme.font.family; pixelSize: theme.font.pixelSize; bold: true }
                             Layout.rightMargin: theme.spacing / 2
                         }
                         Text {
                             text: " " + mem.percent + "%"
                             color: mem.percent > 85 ? theme.red : theme.cyan
-                            font {
-                                family: theme.font.family
-                                pixelSize: theme.font.pixelSize
-                                bold: true
-                            }
+                            font { family: theme.font.family; pixelSize: theme.font.pixelSize; bold: true }
                             Layout.rightMargin: theme.spacing / 2
                         }
                         Text {
                             text: " " + disk.percent + "%"
                             color: disk.percent > 85 ? theme.red : theme.blue
-                            font {
-                                family: theme.font.family
-                                pixelSize: theme.font.pixelSize
-                                bold: true
-                            }
+                            font { family: theme.font.family; pixelSize: theme.font.pixelSize; bold: true }
                             Layout.rightMargin: theme.spacing / 2
                         }
                         Text {
                             text: volume.muted ? " Muted" : " " + volume.level + "%"
                             color: volume.muted ? theme.fgSubtle : theme.fg
-                            font {
-                                family: theme.font.family
-                                pixelSize: theme.font.pixelSize
-                                bold: true
-                            }
+                            font { family: theme.font.family; pixelSize: theme.font.pixelSize; bold: true }
                             Layout.rightMargin: theme.spacing / 2
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: pavuProcess.running = true
-                            }
+                            MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: pavuProcess.running = true }
                         }
                         Text {
                             text: btInfo.connected ? "" : ""
                             color: btInfo.connected ? theme.cyan : theme.fgSubtle
-                            font {
-                                family: theme.font.family
-                                pixelSize: theme.font.pixelSize
-                                bold: true
-                            }
+                            font { family: theme.font.family; pixelSize: theme.font.pixelSize; bold: true }
                             Layout.rightMargin: theme.spacing / 2
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: bluemanProcess.running = true
-                            }
+                            MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: bluemanProcess.running = true }
                         }
                         Text {
                             visible: battery.percentage > 0
                             text: battery.icon + " " + battery.percentage + "%" + (battery.charging ? " 󰂄" : "")
                             color: battery.percentage <= 15 ? theme.red : battery.percentage <= 30 ? theme.yellow : theme.fg
-                            font {
-                                family: theme.font.family
-                                pixelSize: theme.font.pixelSize
-                            }
+                            font { family: theme.font.family; pixelSize: theme.font.pixelSize }
                             Layout.rightMargin: theme.spacing / 2
                         }
                         Text {
                             text: makoDnd.isDnd ? "" : ""
                             color: makoDnd.isDnd ? theme.red : theme.fg
-                            font {
-                                family: theme.font.family
-                                pixelSize: theme.font.pixelSize
-                                bold: makoDnd.isDnd
-                            }
+                            font { family: theme.font.family; pixelSize: theme.font.pixelSize; bold: makoDnd.isDnd }
                             Layout.rightMargin: theme.spacing / 2
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: makoDndProcess.running = true
-                            }
+                            MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: makoDndProcess.running = true }
                         }
                         Text {
                             text: "⏻"
                             color: theme.fg
-                            font {
-                                family: theme.font.family
-                                pixelSize: 16
-                            }
+                            font { family: theme.font.family; pixelSize: 16 }
                             Layout.rightMargin: theme.spacing / 2
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: wlogoutProcess.running = true
-                            }
+                            MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: wlogoutProcess.running = true }
                         }
                         Item { width: theme.padding / 2 }
                     }
