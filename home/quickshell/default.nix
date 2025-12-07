@@ -841,7 +841,7 @@ let
                         }
 
                         Text {
-                            text: volume.muted ? " Muted" : " " + volume.level + "%"
+                            text: volume.muted " Muted" : " " + volume.level + "%"
                             color: volume.muted ? theme.fgSubtle : theme.fg
                             font {
                                 family: theme.font.family
@@ -923,15 +923,5 @@ let
   '';
 in
 {
-  xdg.configFile."quickshell/qmldir".text = ''
-    module quickshell
-    WorkspacesRiver 1.0 WorkspacesRiver.qml
-    WorkspacesNiri 1.0 WorkspacesNiri.qml
-    WorkspacesDWL 1.0 WorkspacesDWL.qml
-  '';
-
   xdg.configFile."quickshell/shell.qml".text = shellQml;
-  xdg.configFile."quickshell/WorkspacesRiver.qml".source = ./WorkspacesRiver.qml;
-  xdg.configFile."quickshell/WorkspacesNiri.qml".source = ./WorkspacesNiri.qml;
-  xdg.configFile."quickshell/WorkspacesDWL.qml".source = ./WorkspacesDWL.qml;
 }
