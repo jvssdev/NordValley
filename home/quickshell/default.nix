@@ -320,13 +320,15 @@ let
                                 }
                                 function switchToTag(tagIndex) {
                                     if (tagIndex < 1 || tagIndex > maxTags) return
-                                    riverSwitchTagProc.command = ["riverctl", "set-focused-tags", String(1 << (tagIndex - 1))]
-                                    riverSwitchTagProc.running = true
+                                    riverSwitchProc.command = ["riverctl", "set-focused-tags", String(1 << (tagIndex - 1))]
+                                    riverSwitchProc.running = true
                                 }
                                 Process {
                                     id: activeProc
                                     command: ["riverctl", "get-focused-tags"]
-                                    onExited: riverWs.activeTagMask = parseInt(stdout?.trim() || "0", 10)
+                                    onExited: {
+                                        activeTagMask = parseInt(stdout.trim() || "0", 10)
+                                    }
                                 }
                                 Process {
                                     id: occupiedProc
@@ -337,16 +339,18 @@ let
                                             const lines = stdout.split("\n")
                                             for (let line of lines) {
                                                 const match = line.match(/tags:\s*(\d+)/)
-                                                if (match) mask |= parseInt(match[1])
+                                                if (match) mask |= parseInt(match[1], 10)
                                             }
                                         }
-                                        riverWs.occupiedTagMask = mask
+                                        occupiedTagMask = mask
                                     }
                                 }
                                 Process {
-                                    id: riverSwitchTagProc
+                                    id: riverSwitchProc
                                     command: []
-                                    onExited: updateTags()
+                                    onExited: {
+                                        updateTags()
+                                    }
                                 }
                                 Timer {
                                     interval: 1000
@@ -360,7 +364,7 @@ let
                                 property int activeWorkspace: 1
                                 property var workspaces: []
                                 function updateWorkspaces() {
-                                    workspaceQueryProc.running = true
+                                    niriQueryProc.running = true
                                 }
                                 function switchToWorkspace(index) {
                                     if (index < 1) return
@@ -368,7 +372,7 @@ let
                                     niriSwitchProc.running = true
                                 }
                                 Process {
-                                    id: workspaceQueryProc
+                                    id: niriQueryProc
                                     command: ["niri", "msg", "--json", "workspaces"]
                                     onExited: {
                                         if (!stdout) return
@@ -398,7 +402,9 @@ let
                                 Process {
                                     id: niriSwitchProc
                                     command: []
-                                    onExited: Qt.callLater(updateWorkspaces)
+                                    onExited: {
+                                        updateWorkspaces()
+                                    }
                                 }
                                 Timer {
                                     interval: 500
@@ -413,15 +419,15 @@ let
                                 property var occupiedTags: []
                                 property int maxTags: 9
                                 function updateTags() {
-                                    tagQueryProc.running = true
+                                    dwlQueryProc.running = true
                                 }
                                 function switchToTag(tagIndex) {
                                     if (tagIndex < 1 || tagIndex > maxTags) return
-                                    dwlSwitchTagProc.command = ["dwlmsg", "tag", "view", String(tagIndex)]
-                                    dwlSwitchTagProc.running = true
+                                    dwlSwitchProc.command = ["dwlmsg", "tag", "view", String(tagIndex)]
+                                    dwlSwitchProc.running = true
                                 }
                                 Process {
-                                    id: tagQueryProc
+                                    id: dwlQueryProc
                                     command: ["sh", "-c", "dwlmsg tag status 2>/dev/null || mangowcctl tag status 2>/dev/null || echo 'error'"]
                                     onExited: {
                                         if (!stdout || stdout.includes("error")) return
@@ -443,9 +449,11 @@ let
                                     }
                                 }
                                 Process {
-                                    id: dwlSwitchTagProc
+                                    id: dwlSwitchProc
                                     command: []
-                                    onExited: Qt.callLater(updateTags)
+                                    onExited: {
+                                        updateTags()
+                                    }
                                 }
                                 Timer {
                                     interval: 1000
@@ -466,14 +474,14 @@ let
                                     function isActive() {
                                         if (!workspaceWidget.workspaceManager) return false
                                         if (wmDetector.isNiri()) return workspaceWidget.workspaceManager.activeWorkspace === modelData.id
-                                        if (wmDetector.isRiver()) return (workspaceWidget.workspaceManager.activeTagMask & (1 << (modelData - 1))) !== 0
-                                        return workspaceWidget.workspaceManager.activeTag === modelData
+                                        if (wmDetector.isRiver()) return (workspaceManager.activeTagMask & (1 << (modelData - 1))) !== 0
+                                        return workspaceManager.activeTag === modelData
                                     }
                                     function isOccupied() {
                                         if (!workspaceWidget.workspaceManager) return false
                                         if (wmDetector.isNiri()) return !modelData.isEmpty
-                                        if (wmDetector.isRiver()) return (workspaceWidget.workspaceManager.occupiedTagMask & (1 << (modelData - 1))) !== 0
-                                        return workspaceWidget.workspaceManager.occupiedTags.indexOf(modelData) !== -1
+                                        if (wmDetector.isRiver()) return (workspaceManager.occupiedTagMask & (1 << (modelData - 1))) !== 0
+                                        return workspaceManager.occupiedTags.indexOf(modelData) !== -1
                                     }
                                     Text {
                                         anchors.centerIn: parent
@@ -490,8 +498,8 @@ let
                                         cursorShape: Qt.PointingHandCursor
                                         onClicked: {
                                             if (!workspaceWidget.workspaceManager) return
-                                            if (wmDetector.isNiri()) workspaceWidget.workspaceManager.switchToWorkspace(modelData.id)
-                                            else workspaceWidget.workspaceManager.switchToTag(modelData)
+                                            if (wmDetector.isNiri()) workspaceManager.switchToWorkspace(modelData.id)
+                                            else workspaceManager.switchToTag(modelData)
                                         }
                                     }
                                 }
