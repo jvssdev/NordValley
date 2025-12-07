@@ -81,7 +81,6 @@ in
     ../home/river
   ]
   ++ lib.optionals isMango [
-    mango.hmModules.mango
     ../home/mango/default.nix
   ]
   ++ lib.optionals isNiri [
