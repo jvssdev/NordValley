@@ -40,46 +40,46 @@ let
                 wmDetectionProc.running = true
             }
 
-            Process {
-                id: wmDetectionProc
-                
-                onExited: {
-                    if (!stdout) {
-                        console.log("WM Detection: Failed to detect")
-                        isDetecting = false
-                        return
-                    }
-
-                    const output = stdout.toLowerCase().trim()
-                    
-                    if (output.includes("river")) {
-                        detectedWm = typeRiver
-                        wmName = "River"
-                    } else if (output.includes("niri")) {
-                        detectedWm = typeNiri
-                        wmName = "Niri"
-                    } else if (output.includes("mangowc")) {
-                        detectedWm = typeMangoWC
-                        wmName = "MangoWC"
-                    } else if (output.includes("dwl")) {
-                        detectedWm = typeDWL
-                        wmName = "DWL"
-                    } else {
-                        detectedWm = typeUnknown
-                        wmName = "Unknown"
-                    }
-
-                    console.log("WM Detection: Detected", wmName)
-                    isDetecting = false
-                    wmDetected(detectedWm, wmName)
-                }
-            }
-
             function isRiver() { return detectedWm === typeRiver }
             function isNiri() { return detectedWm === typeNiri }
             function isMangoWC() { return detectedWm === typeMangoWC }
             function isDWL() { return detectedWm === typeDWL }
             function isSupported() { return detectedWm !== typeUnknown }
+        }
+
+        Process {
+            id: wmDetectionProc
+            
+            onExited: {
+                if (!stdout) {
+                    console.log("WM Detection: Failed to detect")
+                    wmDetector.isDetecting = false
+                    return
+                }
+
+                const output = stdout.toLowerCase().trim()
+                
+                if (output.includes("river")) {
+                    wmDetector.detectedWm = wmDetector.typeRiver
+                    wmDetector.wmName = "River"
+                } else if (output.includes("niri")) {
+                    wmDetector.detectedWm = wmDetector.typeNiri
+                    wmDetector.wmName = "Niri"
+                } else if (output.includes("mangowc")) {
+                    wmDetector.detectedWm = wmDetector.typeMangoWC
+                    wmDetector.wmName = "MangoWC"
+                } else if (output.includes("dwl")) {
+                    wmDetector.detectedWm = wmDetector.typeDWL
+                    wmDetector.wmName = "DWL"
+                } else {
+                    wmDetector.detectedWm = wmDetector.typeUnknown
+                    wmDetector.wmName = "Unknown"
+                }
+
+                console.log("WM Detection: Detected", wmDetector.wmName)
+                wmDetector.isDetecting = false
+                wmDetector.wmDetected(wmDetector.detectedWm, wmDetector.wmName)
+            }
         }
 
         QtObject {
