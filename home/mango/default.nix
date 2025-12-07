@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  mango,
   ...
 }:
 let
@@ -11,6 +12,7 @@ in
 {
   wayland.windowManager.mango = {
     enable = true;
+    package = mango.packages.${pkgs.system}.default;
 
     systemd = {
       enable = true;
@@ -29,13 +31,12 @@ in
         "systemctl --user reset-failed"
         "systemctl --user start mango-session.target"
       ];
+      xdgAutostart = false;
     };
 
     autostart_sh = ''
-      set -x
-
-      ${pkgs.gsettings-desktop-schemas}/bin/gsettings set org.gnome.desktop.interface cursor-theme "Bibata-Modern-Ice" || true
-      ${pkgs.gsettings-desktop-schemas}/bin/gsettings set org.gnome.desktop.interface cursor-size 24 || true
+      ${pkgs.gsettings-desktop-schemas}/bin/gsettings set org.gnome.desktop.interface cursor-theme "Bibata-Modern-Ice"
+      ${pkgs.gsettings-desktop-schemas}/bin/gsettings set org.gnome.desktop.interface cursor-size 24
 
       ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 &
 
@@ -43,14 +44,13 @@ in
 
       ${pkgs.mako}/bin/mako &
 
-      # ${pkgs.quickshell}/bin/quickshell &
       ${pkgs.waybar}/bin/waybar &
       ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
       ${pkgs.blueman}/bin/blueman-applet &
 
-      wl-paste --type text   --watch cliphist store & 
-      wl-paste --type image  --watch cliphist store & 
-      wl-clip-persist --clipboard both &
+      ${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store &
+      ${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store &
+      ${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard both &
     '';
 
     settings = ''
@@ -219,10 +219,17 @@ in
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
-      xdg-desktop-portal
       xdg-desktop-portal-wlr
       xdg-desktop-portal-gtk
     ];
-    config.common.default = "*";
+    config = {
+      common.default = "*";
+      mango = {
+        default = [ "gtk" ];
+        "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
+        "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
+        "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
+      };
+    };
   };
 }
