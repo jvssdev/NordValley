@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  mango,
   ...
 }:
 let
@@ -12,7 +11,6 @@ in
 {
   wayland.windowManager.mango = {
     enable = true;
-    package = mango.packages.${pkgs.system}.default;
 
     systemd = {
       enable = true;
@@ -28,22 +26,29 @@ in
         "MOZ_ENABLE_WAYLAND"
       ];
       extraCommands = [
+        "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "systemctl --user reset-failed"
         "systemctl --user start mango-session.target"
       ];
-      xdgAutostart = false;
     };
 
     autostart_sh = ''
-      ${pkgs.gsettings-desktop-schemas}/bin/gsettings set org.gnome.desktop.interface cursor-theme "Bibata-Modern-Ice"
-      ${pkgs.gsettings-desktop-schemas}/bin/gsettings set org.gnome.desktop.interface cursor-size 24
+      export XCURSOR_THEME=Bibata-Modern-Ice
+      export XCURSOR_SIZE=24
+
+      ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd \
+        WAYLAND_DISPLAY \
+        XDG_CURRENT_DESKTOP=wlroots \
+        XDG_SESSION_TYPE=wayland \
+        XCURSOR_THEME=Bibata-Modern-Ice \
+        XCURSOR_SIZE=24
 
       ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 &
 
+      sleep 1
+
       ${pkgs.wpaperd}/bin/wpaperd &
-
       ${pkgs.mako}/bin/mako &
-
       ${pkgs.waybar}/bin/waybar &
       ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
       ${pkgs.blueman}/bin/blueman-applet &
@@ -206,6 +211,7 @@ in
       env=QT_QPA_PLATFORM,wayland
       env=QT_WAYLAND_DISABLE_WINDOWDECORATION,1
       env=XDG_SESSION_TYPE,wayland
+      env=XDG_CURRENT_DESKTOP,wlroots
       env=GDK_BACKEND,wayland
       env=CLUTTER_BACKEND,wayland
       env=MOZ_ENABLE_WAYLAND,1
