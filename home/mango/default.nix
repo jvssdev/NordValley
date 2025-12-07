@@ -10,6 +10,8 @@ let
 in
 {
   wayland.windowManager.mango = {
+    enable = true;
+
     systemd = {
       enable = true;
       variables = [
