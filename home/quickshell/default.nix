@@ -519,7 +519,7 @@ let
                                                             const ws = data[i]
                                                             wsList.push({
                                                                 id: ws.id || (i + 1),
-                                                                name: ws.name || `${i + 1}`,
+                                                                name: ws.name || String(i + 1),
                                                                 output: ws.output || "",
                                                                 isActive: ws.is_active || false,
                                                                 isEmpty: !ws.has_windows
