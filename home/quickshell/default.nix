@@ -120,7 +120,7 @@ let
             id: makoProc
             command: ["makoctl", "mode"]
             onExited: {
-                if (stdout) makoDnd.isDnd.isDnd = stdout.trim() === "do-not-disturb"
+                if (stdout) makoDnd.isDnd = stdout.trim() === "do-not-disturb"
             }
         }
         Timer {
@@ -224,7 +224,6 @@ let
             interval: 2000
             running: true
             repeat: true
-            triggeredOnStart: true
             onTriggered: memProc.running = true
         }
         Process {
@@ -242,7 +241,6 @@ let
             interval: 10000
             running: true
             repeat: true
-            triggeredOnStart: true
             onTriggered: diskProc.running = true
         }
         Variants {
@@ -318,6 +316,11 @@ let
                                     activeProc.running = true
                                     occupiedProc.running = true
                                 }
+                                function switchToTag(tagIndex) {
+                                    if (tagIndex < 1 || tagIndex > maxTags) return
+                                    switchTagProc.command = ["riverctl", "set-focused-tags", (1 << (tagIndex - 1)).toString()]
+                                    switchTagProc.running = true
+                                }
                                 Process {
                                     id: activeProc
                                     command: ["riverctl", "get-focused-tags"]
@@ -340,6 +343,7 @@ let
                                 }
                                 Process {
                                     id: switchTagProc
+                                    command: []
                                     onExited: updateTags()
                                 }
                                 Timer {
@@ -355,6 +359,11 @@ let
                                 property var workspaces: []
                                 function updateWorkspaces() {
                                     workspaceQueryProc.running = true
+                                }
+                                function switchToWorkspace(index) {
+                                    if (index < 1) return
+                                    switchWorkspaceProc.command = ["niri", "msg", "action", "focus-workspace", index.toString()]
+                                    switchWorkspaceProc.running = true
                                 }
                                 Process {
                                     id: workspaceQueryProc
@@ -403,6 +412,11 @@ let
                                 property int maxTags: 9
                                 function updateTags() {
                                     tagQueryProc.running = true
+                                }
+                                function switchToTag(tagIndex) {
+                                    if (tagIndex < 1 || tagIndex > maxTags) return
+                                    switchTagProc.command = ["dwlmsg", "tag", "view", tagIndex.toString()]
+                                    switchTagProc.running = true
                                 }
                                 Process {
                                     id: tagQueryProc
@@ -491,8 +505,7 @@ let
                                 color: theme.fgMuted
                                 font { family: theme.font.family; pixelSize: theme.font.pixelSize - 2 }
                             }
-                        }
-                        }
+                        }  // ← only one closing brace here
                         Rectangle {
                             Layout.preferredWidth: theme.borderWidth
                             Layout.preferredHeight: 16
