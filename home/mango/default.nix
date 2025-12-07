@@ -43,7 +43,7 @@ in
 
       ${pkgs.mako}/bin/mako &
 
-      # ${pkgs.quickshell}/bin/quickshell &
+      ${pkgs.quickshell}/bin/quickshell &
       ${pkgs.waybar}/bin/waybar &
       ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
       ${pkgs.blueman}/bin/blueman-applet &
@@ -218,7 +218,6 @@ in
 
   xdg.portal = {
     enable = true;
-    wlr.enable = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-wlr
       xdg-desktop-portal-gtk
