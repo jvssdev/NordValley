@@ -41,13 +41,14 @@ let
   };
   mangoConfig = {
     modules-left = [
-      "dwl/tags"
+      "ext/workspaces"
     ];
-    "dwl/tags" = {
-      # "num-tags" = 9;
-      # "hide-vacant" = true;
-      # expand = false;
-      # "disable-click" = true;
+    "ext/workspaces" = {
+      "disable-scroll" = true;
+      "ignore-hidden" = true;
+      "all-outputs" = false;
+      "on-click" = "activate";
+      "format" = "{name}";
     };
   };
   niriConfig = {
@@ -83,7 +84,6 @@ in
         color: #${colors.base05};
         border-bottom: 2px solid #${colors.base02};
       }
-
       #tags button {
         padding: 0 8px;
         margin: 0 4px;
@@ -91,7 +91,6 @@ in
         color: #${colors.base05};
         font-weight: normal;
       }
-
       #tags button:not(.occupied):not(.focused):not(.urgent) {
         font-size: 0;
         min-width: 0;
@@ -103,33 +102,27 @@ in
         outline: none;
         transition: none;
       }
-
       #tags button.occupied {
         background-color: #${colors.base02};
         color: #${colors.base05};
       }
-
       #tags button.focused {
         background-color: #${colors.base0D};
         color: #${colors.base00};
         font-weight: bold;
       }
-
       #tags button.urgent {
         background-color: #${colors.base08};
         color: #${colors.base00};
       }
-
       #tags button:hover {
         background-color: #${colors.base03};
       }
-
       #tags button.occupied,
       #tags button.focused,
       #tags button.urgent {
         transition: all 0.2s ease-in-out;
       }
-
       #dwl-tags button,
       #dwl-tags > * {
         padding: 0 8px;
@@ -138,7 +131,6 @@ in
         color: #${colors.base05};
         font-weight: normal;
       }
-
       #dwl-tags button:not(.occupied):not(.focused):not(.urgent),
       #dwl-tags > *:not(.occupied):not(.focused):not(.urgent) {
         font-size: 0;
@@ -151,31 +143,26 @@ in
         outline: none;
         transition: none;
       }
-
       #dwl-tags button.occupied,
       #dwl-tags > *.occupied {
         background-color: #${colors.base02};
         color: #${colors.base05};
       }
-
       #dwl-tags button.focused,
       #dwl-tags > *.focused {
         background-color: #${colors.base0D};
         color: #${colors.base00};
         font-weight: bold;
       }
-
       #dwl-tags button.urgent,
       #dwl-tags > *.urgent {
         background-color: #${colors.base08};
         color: #${colors.base00};
       }
-
       #dwl-tags button:hover,
       #dwl-tags > *:hover {
         background-color: #${colors.base03};
       }
-
       #dwl-tags button.occupied,
       #dwl-tags button.focused,
       #dwl-tags button.urgent,
@@ -184,7 +171,45 @@ in
       #dwl-tags > *.urgent {
         transition: all 0.2s ease-in-out;
       }
-
+      #workspaces button {
+        padding: 0 8px;
+        margin: 0 4px;
+        border-radius: 0px;
+        color: #${colors.base05};
+        font-weight: normal;
+      }
+      #workspaces button:not(.occupied):not(.focused):not(.urgent) {
+        font-size: 0;
+        min-width: 0;
+        padding: 0;
+        margin: -50px;
+        color: transparent;
+        background-color: transparent;
+        box-shadow: none;
+        outline: none;
+        transition: none;
+      }
+      #workspaces button.occupied {
+        background-color: #${colors.base02};
+        color: #${colors.base05};
+      }
+      #workspaces button.focused {
+        background-color: #${colors.base0D};
+        color: #${colors.base00};
+        font-weight: bold;
+      }
+      #workspaces button.urgent {
+        background-color: #${colors.base08};
+        color: #${colors.base00};
+      }
+      #workspaces button:hover {
+        background-color: #${colors.base03};
+      }
+      #workspaces button.occupied,
+      #workspaces button.focused,
+      #workspaces button.urgent {
+        transition: all 0.2s ease-in-out;
+      }
       #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
       #bluetooth, #network, #custom-quickshell-notification, #tray, #custom-power {
         padding: 0 10px;
@@ -287,6 +312,13 @@ in
         format = "⏻";
         tooltip = false;
         "on-click" = "wlogout";
+      };
+      "ext/workspaces" = {
+        "disable-scroll" = true;
+        "ignore-hidden" = true;
+        "all-outputs" = false;
+        "on-click" = "activate";
+        "format" = "{name}";
       };
     }
     // selectedConfig;
