@@ -224,6 +224,7 @@ let
             interval: 2000
             running: true
             repeat: true
+            triggeredOnStart: true
             onTriggered: memProc.running = true
         }
         Process {
@@ -241,6 +242,7 @@ let
             interval: 10000
             running: true
             repeat: true
+            triggeredOnStart: true
             onTriggered: diskProc.running = true
         }
         Variants {
@@ -318,8 +320,8 @@ let
                                 }
                                 function switchToTag(tagIndex) {
                                     if (tagIndex < 1 || tagIndex > maxTags) return
-                                    switchTagProc.command = ["riverctl", "set-focused-tags", (1 << (tagIndex - 1)).toString()]
-                                    switchTagProc.running = true
+                                    riverSwitchTagProc.command = ["riverctl", "set-focused-tags", String(1 << (tagIndex - 1))]
+                                    riverSwitchTagProc.running = true
                                 }
                                 Process {
                                     id: activeProc
@@ -342,7 +344,7 @@ let
                                     }
                                 }
                                 Process {
-                                    id: switchTagProc
+                                    id: riverSwitchTagProc
                                     command: []
                                     onExited: updateTags()
                                 }
@@ -362,8 +364,8 @@ let
                                 }
                                 function switchToWorkspace(index) {
                                     if (index < 1) return
-                                    switchWorkspaceProc.command = ["niri", "msg", "action", "focus-workspace", index.toString()]
-                                    switchWorkspaceProc.running = true
+                                    niriSwitchProc.command = ["niri", "msg", "action", "focus-workspace", String(index)]
+                                    niriSwitchProc.running = true
                                 }
                                 Process {
                                     id: workspaceQueryProc
@@ -394,7 +396,7 @@ let
                                     }
                                 }
                                 Process {
-                                    id: switchWorkspaceProc
+                                    id: niriSwitchProc
                                     command: []
                                     onExited: Qt.callLater(updateWorkspaces)
                                 }
@@ -415,8 +417,8 @@ let
                                 }
                                 function switchToTag(tagIndex) {
                                     if (tagIndex < 1 || tagIndex > maxTags) return
-                                    switchTagProc.command = ["dwlmsg", "tag", "view", tagIndex.toString()]
-                                    switchTagProc.running = true
+                                    dwlSwitchTagProc.command = ["dwlmsg", "tag", "view", String(tagIndex)]
+                                    dwlSwitchTagProc.running = true
                                 }
                                 Process {
                                     id: tagQueryProc
@@ -441,7 +443,7 @@ let
                                     }
                                 }
                                 Process {
-                                    id: switchTagProc
+                                    id: dwlSwitchTagProc
                                     command: []
                                     onExited: Qt.callLater(updateTags)
                                 }
@@ -505,7 +507,7 @@ let
                                 color: theme.fgMuted
                                 font { family: theme.font.family; pixelSize: theme.font.pixelSize - 2 }
                             }
-                        }  // ← only one closing brace here
+                        }
                         Rectangle {
                             Layout.preferredWidth: theme.borderWidth
                             Layout.preferredHeight: 16
