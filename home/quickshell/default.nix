@@ -76,8 +76,8 @@ let
             readonly property int padding: 14
             readonly property int spacing: 10
             readonly property var font: ({
-                family: "JetBrainsMono Nerd Font"
-                pixelSize: 14
+                family: "JetBrainsMono Nerd Font",
+                pixelSize: 14,
                 weight: Font.Medium
             })
         }
@@ -117,8 +117,7 @@ let
             }
         }
         Process {
-            id: makoProc
-            command: ["makoctl", "mode"]
+            id: ["makoctl", "mode"]
             onExited: {
                 if (stdout) makoDnd.isDnd = stdout.trim() === "do-not-disturb"
             }
