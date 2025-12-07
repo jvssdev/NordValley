@@ -101,8 +101,20 @@ let
             }
         }
         
-        Process { id: makoProc; command: ["makoctl", "mode"]; onExited: { if (stdout) makoDnd.isDnd = stdout.trim() === "do-not-disturb" } }
-        Process { id: btProc; command: ["bluetoothctl", "info"]; onExited: { if (stdout) btInfo.connected = stdout.includes("Connected: yes") } }
+        Process { 
+            id: makoProc
+            command: ["makoctl", "mode"]
+            onExited: { 
+                if (stdout) makoDnd.isDnd = stdout.trim() === "do-not-disturb" 
+            } 
+        }
+        Process { 
+            id: btProc
+            command: ["bluetoothctl", "info"]
+            onExited: { 
+                if (stdout) btInfo.connected = stdout.includes("Connected: yes") 
+            } 
+        }
         Process {
             id: volumeProc
             command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
@@ -114,8 +126,20 @@ let
                 if (match) volume.level = Math.round(parseFloat(match[1]) * 100)
             }
         }
-        Process { id: batCapacityProc; command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 0"]; onExited: { if (stdout) battery.percentage = parseInt(stdout.trim()) || 0 } }
-        Process { id: batStatusProc; command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/status 2>/dev/null || echo Discharging"]; onExited: { if (stdout) battery.charging = stdout.trim() === "Charging" } }
+        Process { 
+            id: batCapacityProc
+            command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 0"]
+            onExited: { 
+                if (stdout) battery.percentage = parseInt(stdout.trim()) || 0 
+            } 
+        }
+        Process { 
+            id: batStatusProc
+            command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/status 2>/dev/null || echo Discharging"]
+            onExited: { 
+                if (stdout) battery.charging = stdout.trim() === "Charging" 
+            } 
+        }
         Process {
             id: cpuProc
             command: ["top", "-bn1"]
@@ -155,10 +179,44 @@ let
             }
         }
         
-        Timer { interval: 1000; running: true; repeat: true; triggeredOnStart: true; onTriggered: { makoProc.running = true; volumeProc.running = true } }
-        Timer { interval: 2000; running: true; repeat: true; triggeredOnStart: true; onTriggered: { cpuProc.running = true; memProc.running = true } }
-        Timer { interval: 5000; running: true; repeat: true; triggeredOnStart: true; onTriggered: btProc.running = true }
-        Timer { interval: 10000; running: true; repeat: true; triggeredOnStart: true; onTriggered: { batCapacityProc.running = true; batStatusProc.running = true; diskProc.running = true } }
+        Timer { 
+            interval: 1000
+            running: true
+            repeat: true
+            triggeredOnStart: true
+            onTriggered: { 
+                makoProc.running = true
+                volumeProc.running = true 
+            } 
+        }
+        Timer { 
+            interval: 2000
+            running: true
+            repeat: true
+            triggeredOnStart: true
+            onTriggered: { 
+                cpuProc.running = true
+                memProc.running = true 
+            } 
+        }
+        Timer { 
+            interval: 5000
+            running: true
+            repeat: true
+            triggeredOnStart: true
+            onTriggered: btProc.running = true 
+        }
+        Timer { 
+            interval: 10000
+            running: true
+            repeat: true
+            triggeredOnStart: true
+            onTriggered: { 
+                batCapacityProc.running = true
+                batStatusProc.running = true
+                diskProc.running = true 
+            } 
+        }
         
         property int riverActiveTagMask: 0
         property int riverOccupiedTagMask: 0
@@ -170,7 +228,9 @@ let
         Process { 
             id: riverActiveProc
             command: ["riverctl", "get-focused-tags"]
-            onExited: { if (stdout) root.riverActiveTagMask = parseInt(stdout.trim() || "0", 10) }
+            onExited: { 
+                if (stdout) root.riverActiveTagMask = parseInt(stdout.trim() || "0", 10) 
+            }
         }
         Process {
             id: riverOccupiedProc
@@ -187,8 +247,22 @@ let
                 root.riverOccupiedTagMask = mask
             }
         }
-        Process { id: riverSwitchProc; onExited: { riverActiveProc.running = true; riverOccupiedProc.running = true } }
-        Timer { interval: 1000; running: root.isRiver(); repeat: true; onTriggered: { riverActiveProc.running = true; riverOccupiedProc.running = true } }
+        Process { 
+            id: riverSwitchProc
+            onExited: { 
+                riverActiveProc.running = true
+                riverOccupiedProc.running = true 
+            } 
+        }
+        Timer { 
+            interval: 1000
+            running: root.isRiver()
+            repeat: true
+            onTriggered: { 
+                riverActiveProc.running = true
+                riverOccupiedProc.running = true 
+            } 
+        }
         
         Process {
             id: niriQueryProc
@@ -218,8 +292,18 @@ let
                 }
             }
         }
-        Process { id: niriSwitchProc; onExited: { niriQueryProc.running = true } }
-        Timer { interval: 500; running: root.isNiri(); repeat: true; onTriggered: niriQueryProc.running = true }
+        Process { 
+            id: niriSwitchProc
+            onExited: { 
+                niriQueryProc.running = true 
+            } 
+        }
+        Timer { 
+            interval: 500
+            running: root.isNiri()
+            repeat: true
+            onTriggered: niriQueryProc.running = true 
+        }
         
         Process {
             id: dwlQueryProc
@@ -243,24 +327,47 @@ let
                 root.dwlActiveTag = active
             }
         }
-        Process { id: dwlSwitchProc; onExited: { dwlQueryProc.running = true } }
-        Timer { interval: 1000; running: root.isDWL() || root.isMangoWC(); repeat: true; onTriggered: dwlQueryProc.running = true }
+        Process { 
+            id: dwlSwitchProc
+            onExited: { 
+                dwlQueryProc.running = true 
+            } 
+        }
+        Timer { 
+            interval: 1000
+            running: root.isDWL() || root.isMangoWC()
+            repeat: true
+            onTriggered: dwlQueryProc.running = true 
+        }
         
         Variants {
             model: Quickshell.screens
             PanelWindow {
-                anchors.top: true; anchors.left: true; anchors.right: true
-                height: 30; color: theme.bg
+                anchors.top: true
+                anchors.left: true
+                anchors.right: true
+                height: 30
+                color: theme.bg
                 Process { id: pavuProcess; command: ["pavucontrol"] }
                 Process { id: bluemanProcess; command: ["blueman-manager"] }
                 Process { id: makoDndProcess; command: ["sh", "-c", "makoctl mode | grep -q do-not-disturb && makoctl mode -r do-not-disturb || makoctl mode -a do-not-disturb"] }
                 Process { id: wlogoutProcess; command: ["wlogout"] }
                 Rectangle {
-                    anchors.fill: parent; color: theme.bg
+                    anchors.fill: parent
+                    color: theme.bg
                     RowLayout {
-                        anchors.fill: parent; spacing: theme.spacing / 2
+                        anchors.fill: parent
+                        spacing: theme.spacing / 2
                         Item { width: theme.padding / 2 }
-                        Text { text: "~"; color: theme.magenta; font { family: theme.font.family; pixelSize: 18; bold: true } }
+                        Text { 
+                            text: "~"
+                            color: theme.magenta
+                            font { 
+                                family: theme.font.family
+                                pixelSize: 18
+                                bold: true 
+                            } 
+                        }
                         Item { width: theme.spacing }
                         
                         RowLayout {
