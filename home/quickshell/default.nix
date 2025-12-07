@@ -13,7 +13,6 @@ let
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Io
-    import "." as Local
 
     ShellRoot {
         id: root
@@ -377,7 +376,7 @@ let
                                 id: riverWorkspaces
                                 active: false
                                 sourceComponent: Component {
-                                    Local.WorkspacesRiver {
+                                    WorkspacesRiver {
                                         id: riverWs
                                         Component.onCompleted: workspaceWidget.workspaceManager = riverWs
                                     }
@@ -388,7 +387,7 @@ let
                                 id: niriWorkspaces
                                 active: false
                                 sourceComponent: Component {
-                                    Local.WorkspacesNiri {
+                                    WorkspacesNiri {
                                         id: niriWs
                                         Component.onCompleted: workspaceWidget.workspaceManager = niriWs
                                     }
@@ -399,7 +398,7 @@ let
                                 id: dwlWorkspaces
                                 active: false
                                 sourceComponent: Component {
-                                    Local.WorkspacesDWL {
+                                    WorkspacesDWL {
                                         id: dwlWs
                                         Component.onCompleted: workspaceWidget.workspaceManager = dwlWs
                                     }
@@ -671,6 +670,13 @@ let
   '';
 in
 {
+  xdg.configFile."quickshell/qmldir".text = ''
+    module quickshell
+    WorkspacesRiver 1.0 WorkspacesRiver.qml
+    WorkspacesNiri 1.0 WorkspacesNiri.qml
+    WorkspacesDWL 1.0 WorkspacesDWL.qml
+  '';
+
   xdg.configFile."quickshell/shell.qml".text = shellQml;
   xdg.configFile."quickshell/WorkspacesRiver.qml".source = ./WorkspacesRiver.qml;
   xdg.configFile."quickshell/WorkspacesNiri.qml".source = ./WorkspacesNiri.qml;
