@@ -10,8 +10,8 @@ let
     import QtQuick
     import QtQuick.Layouts
     import Quickshell
-    import Quickshell.Wayland 1
-    import Quickshell.Io 1
+    import Quickshell.Wayland
+    import Quickshell.Io
     ShellRoot {
         id: root
         QtObject {
