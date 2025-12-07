@@ -22,8 +22,6 @@ in
         "NIXOS_OZONE_WL"
         "XCURSOR_THEME"
         "XCURSOR_SIZE"
-        "QT_QPA_PLATFORM"
-        "MOZ_ENABLE_WAYLAND"
       ];
       extraCommands = [
         "systemctl --user reset-failed"
@@ -43,13 +41,12 @@ in
 
       ${pkgs.mako}/bin/mako &
 
-      ${pkgs.quickshell}/bin/quickshell &
       ${pkgs.waybar}/bin/waybar &
       ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
       ${pkgs.blueman}/bin/blueman-applet &
 
-      wl-paste --type text   --watch cliphist store & 
-      wl-paste --type image  --watch cliphist store & 
+      wl-paste --type text   --watch cliphist store & 
+      wl-paste --type image  --watch cliphist store & 
       wl-clip-persist --clipboard both &
     '';
 
@@ -214,22 +211,5 @@ in
       env=XCURSOR_THEME,Bibata-Modern-Ice
       env=NIXOS_OZONE_WL,1
     '';
-  };
-
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-wlr
-      xdg-desktop-portal-gtk
-    ];
-    config = {
-      mango = {
-        default = [ "gtk" ];
-        "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
-        "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
-        "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
-        "org.freedesktop.impl.portal.Inhibit" = [ ];
-      };
-    };
   };
 }

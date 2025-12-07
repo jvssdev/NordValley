@@ -81,6 +81,7 @@ in
     ../home/river
   ]
   ++ lib.optionals isMango [
+    mango.hmModules.mango
     ../home/mango/default.nix
   ]
   ++ lib.optionals isNiri [
@@ -120,7 +121,6 @@ in
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
-      # Web browser
       "x-scheme-handler/http" = [ "Helium.desktop" ];
       "x-scheme-handler/https" = [ "Helium.desktop" ];
       "x-scheme-handler/chrome" = [ "Helium.desktop" ];
@@ -131,27 +131,20 @@ in
       "application/xhtml+xml" = [ "Helium.desktop" ];
       "application/x-extension-xhtml" = [ "Helium.desktop" ];
       "application/x-extension-xht" = [ "Helium.desktop" ];
-      # File manager
       "inode/directory" = [ "thunar.desktop" ];
-      # Images
       "image/png" = [ "imv.desktop" ];
       "image/jpeg" = [ "imv.desktop" ];
       "image/gif" = [ "imv.desktop" ];
       "image/webp" = [ "imv.desktop" ];
       "image/svg+xml" = [ "imv.desktop" ];
-      # PDF
       "application/pdf" = [ "org.pwmt.zathura.desktop" ];
-      # Video
       "video/mp4" = [ "mpv.desktop" ];
       "video/x-matroska" = [ "mpv.desktop" ];
-      # Audio
       "audio/mpeg" = [ "mpv.desktop" ];
-      # Text files
       "text/plain" = [ "helix.desktop" ];
       "text/txt" = [ "helix.desktop" ];
     };
     associations.added = {
-      # Web browser
       "x-scheme-handler/http" = [ "Helium.desktop" ];
       "x-scheme-handler/https" = [ "Helium.desktop" ];
       "x-scheme-handler/chrome" = [ "Helium.desktop" ];
@@ -162,12 +155,9 @@ in
       "application/xhtml+xml" = [ "Helium.desktop" ];
       "application/x-extension-xhtml" = [ "Helium.desktop" ];
       "application/x-extension-xht" = [ "Helium.desktop" ];
-      # File manager
       "inode/directory" = [ "thunar.desktop" ];
-      # Images
       "image/png" = [ "imv.desktop" ];
       "image/jpeg" = [ "imv.desktop" ];
-      # PDF
       "application/pdf" = [ "org.pwmt.zathura.desktop" ];
     };
   };
