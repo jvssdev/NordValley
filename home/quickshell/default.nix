@@ -841,7 +841,7 @@ let
                         }
 
                         Text {
-                            text: volume.muted " Muted" : " " + volume.level + "%"
+                            text: volume.muted ? " Muted" : " " + volume.level + "%"
                             color: volume.muted ? theme.fgSubtle : theme.fg
                             font {
                                 family: theme.font.family
