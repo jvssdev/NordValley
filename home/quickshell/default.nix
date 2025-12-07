@@ -36,12 +36,12 @@ let
 
             function detectWm() {
                 isDetecting = true
+                wmDetectionProc.command = ["sh", "-c", "echo $XDG_CURRENT_DESKTOP; pgrep -x river && echo river; pgrep -x niri && echo niri; pgrep -x mangowc && echo mangowc; pgrep -x dwl && echo dwl"]
                 wmDetectionProc.running = true
             }
 
             Process {
                 id: wmDetectionProc
-                command: ["sh", "-c", "echo $XDG_CURRENT_DESKTOP; pgrep -x river && echo river; pgrep -x niri && echo niri; pgrep -x mangowc && echo mangowc; pgrep -x dwl && echo dwl"]
                 
                 onExited: {
                     if (!stdout) {
