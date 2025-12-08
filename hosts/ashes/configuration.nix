@@ -163,5 +163,11 @@
     _JAVA_AWT_WM_NONREPARENTING = "1";
     XDG_SESSION_TYPE = "wayland";
   };
+
+  environment.pathsToLink = [
+    "/share/applications"
+    "/share/xdg-desktop-portal"
+  ];
+
   system.stateVersion = "25.05";
 }
