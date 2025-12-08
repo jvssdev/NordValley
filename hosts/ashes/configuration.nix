@@ -163,5 +163,5 @@
     _JAVA_AWT_WM_NONREPARENTING = "1";
     XDG_SESSION_TYPE = "wayland";
   };
-  system.stateVersion = "25.11";
+  system.stateVersion = "25.05";
 }
