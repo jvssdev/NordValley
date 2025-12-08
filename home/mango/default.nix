@@ -13,7 +13,6 @@ in
     enable = true;
 
     autostart_sh = ''
-      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
       ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 &
       ${pkgs.wpaperd}/bin/wpaperd &
       ${pkgs.mako}/bin/mako &
@@ -23,11 +22,16 @@ in
       wl-paste --type text --watch cliphist store &
       wl-paste --type image --watch cliphist store &
       wl-clip-persist --clipboard both &
+      sleep 1
+      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
     '';
 
     settings = ''
       monitorrule=eDP-1,0.55,1,tile,0,1,0,0,1920,1080,60
       xkb_rules_layout=br
+
+      cursor_theme=Bibata-Modern-Ice
+      cursor_size=24
 
       gappih=6
       gappiv=6
@@ -173,6 +177,8 @@ in
       windowrule=appid:thunar,isfloating:1
       windowrule=appid:Thunar,isfloating:1
 
+      env=XCURSOR_THEME,Bibata-Modern-Ice
+      env=XCURSOR_SIZE,24
       env=QT_QPA_PLATFORMTHEME,qt5ct
       env=QT_AUTO_SCREEN_SCALE_FACTOR,1
       env=QT_QPA_PLATFORM,wayland
@@ -183,8 +189,6 @@ in
       env=CLUTTER_BACKEND,wayland
       env=MOZ_ENABLE_WAYLAND,1
       env=ELECTRON_OZONE_PLATFORM_HINT,auto
-      env=XCURSOR_SIZE,24
-      env=XCURSOR_THEME,Bibata-Modern-Ice
       env=NIXOS_OZONE_WL,1
     '';
   };
