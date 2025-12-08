@@ -24,7 +24,7 @@ in
   home.username = userName;
   home.homeDirectory = homeDir;
   xdg.enable = true;
-  home.stateVersion = "25.05";
+  home.stateVersion = "25.11";
   home.packages = import ./packages.nix {
     inherit pkgs specialArgs;
   };
