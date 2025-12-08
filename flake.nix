@@ -191,10 +191,12 @@
       nixosConfigurations.mangowc =
         mkSystem false true false
           [
-            mango.nixosModules.mango
-            { programs.mango.enable = true; }
+            # mango.nixosModules.mango
+            # { programs.mango.enable = true; }
           ]
-          [ mango.hmModules.mango ];
+          [
+            # mango.hmModules.mango
+          ];
 
       nixosConfigurations.niri =
         mkSystem false false true
