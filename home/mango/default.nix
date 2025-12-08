@@ -1,7 +1,7 @@
 {
   config,
-  pkgs,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -10,6 +10,32 @@ let
 in
 {
   home.packages = [ pkgs.mango ];
+
+  home.sessionVariables = {
+    MOZ_ENABLE_WAYLAND = "1";
+    QT_QPA_PLATFORM = "wayland";
+    GDK_BACKEND = "wayland";
+    ELECTRON_OZONE_PLATFORM_HINT = "auto";
+    XCURSOR_THEME = "Bibata-Modern-Ice";
+    XCURSOR_SIZE = "24";
+    NIXOS_OZONE_WL = "1";
+    XDG_CURRENT_DESKTOP = "wlroots";
+  };
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-wlr
+      xdg-desktop-portal-gtk
+    ];
+    config = {
+      common = {
+        default = [ "gtk" ];
+        "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
+        "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
+      };
+    };
+  };
 
   home.file.".config/mango/config.conf".text = ''
     xkb_rules_layout=br
@@ -164,6 +190,8 @@ in
     text = ''
       #!/bin/sh
       dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
+      gsettings set org.gnome.desktop.interface cursor-theme Bibata-Modern-Ice
+      gsettings set org.gnome.desktop.interface cursor-size 24
       ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 &
       ${pkgs.wpaperd}/bin/wpaperd &
       ${pkgs.mako}/bin/mako &
@@ -176,20 +204,8 @@ in
     '';
   };
 
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-wlr
-      xdg-desktop-portal-gtk
-    ];
-    config = {
-      common.default = "*";
-      mango = {
-        default = [ "gtk" ];
-        "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
-        "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
-        "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
-      };
-    };
-  };
+  gtk.gtk3.extraCss = ''
+    headerbar.default-decoration { padding: 0; margin: 0; min-height: 0; }
+    window decoration { box-shadow: none; border-radius: 0; }
+  '';
 }
