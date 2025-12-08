@@ -186,7 +186,7 @@ in
   '';
 
   home.file.".config/mango/autostart.sh" = {
-    executable = true;
+    # executable = true;
     text = ''
       #!/bin/sh
       dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
