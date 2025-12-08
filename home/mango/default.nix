@@ -7,28 +7,48 @@
 let
   palette = config.colorScheme.palette;
   hexToMango = hex: "0x${hex}ff";
+
+  mangoWrapper = pkgs.writeShellScriptBin "mango-wrapped" ''
+    export XCURSOR_THEME=Bibata-Modern-Ice
+    export XCURSOR_SIZE=24
+    export XDG_SESSION_TYPE=wayland
+    export XDG_CURRENT_DESKTOP=wlroots
+    export XDG_SESSION_DESKTOP=mango
+    export NIXOS_OZONE_WL=1
+    export MOZ_ENABLE_WAYLAND=1
+    export QT_QPA_PLATFORM=wayland
+    export GDK_BACKEND=wayland
+    export CLUTTER_BACKEND=wayland
+
+    exec ${pkgs.mango}/bin/mango "$@"
+  '';
 in
 {
   wayland.windowManager.mango = {
     enable = true;
+    package = mangoWrapper;
 
     autostart_sh = ''
-      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
+      ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd \
+        WAYLAND_DISPLAY \
+        XDG_CURRENT_DESKTOP \
+        XDG_SESSION_TYPE \
+        XCURSOR_THEME \
+        XCURSOR_SIZE
+
       ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 &
       ${pkgs.wpaperd}/bin/wpaperd &
       ${pkgs.mako}/bin/mako &
       ${pkgs.waybar}/bin/waybar &
       ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
       ${pkgs.blueman}/bin/blueman-applet &
-      wl-paste --type text --watch cliphist store &
-      wl-paste --type image --watch cliphist store &
-      wl-clip-persist --clipboard both &
+      ${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store &
+      ${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store &
+      ${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard both &
     '';
 
     settings = ''
       xkb_rules_layout=br
-
-      cursor_size=24
 
       gappih=6
       gappiv=6
@@ -173,19 +193,6 @@ in
       windowrule=appid:nm-connection-editor,isfloating:1
       windowrule=appid:thunar,isfloating:1
       windowrule=appid:Thunar,isfloating:1
-
-      env=XCURSOR_SIZE,24
-      env=QT_QPA_PLATFORMTHEME,qt5ct
-      env=QT_AUTO_SCREEN_SCALE_FACTOR,1
-      env=QT_QPA_PLATFORM,wayland
-      env=QT_WAYLAND_DISABLE_WINDOWDECORATION,1
-      env=XDG_SESSION_TYPE,wayland
-      env=XDG_CURRENT_DESKTOP,wlroots
-      env=GDK_BACKEND,wayland
-      env=CLUTTER_BACKEND,wayland
-      env=MOZ_ENABLE_WAYLAND,1
-      env=ELECTRON_OZONE_PLATFORM_HINT,auto
-      env=NIXOS_OZONE_WL,1
     '';
   };
 
