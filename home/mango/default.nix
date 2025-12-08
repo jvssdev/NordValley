@@ -12,50 +12,17 @@ in
   wayland.windowManager.mango = {
     enable = true;
 
-    systemd = {
-      enable = true;
-      variables = [
-        "DISPLAY"
-        "WAYLAND_DISPLAY"
-        "XDG_CURRENT_DESKTOP"
-        "XDG_SESSION_TYPE"
-        "NIXOS_OZONE_WL"
-        "XCURSOR_THEME"
-        "XCURSOR_SIZE"
-        "QT_QPA_PLATFORM"
-        "MOZ_ENABLE_WAYLAND"
-      ];
-      extraCommands = [
-        "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "systemctl --user reset-failed"
-        "systemctl --user start mango-session.target"
-      ];
-    };
-
     autostart_sh = ''
-      export XCURSOR_THEME=Bibata-Modern-Ice
-      export XCURSOR_SIZE=24
-
-      ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd \
-        WAYLAND_DISPLAY \
-        XDG_CURRENT_DESKTOP=wlroots \
-        XDG_SESSION_TYPE=wayland \
-        XCURSOR_THEME=Bibata-Modern-Ice \
-        XCURSOR_SIZE=24
-
+      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
       ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 &
-
-      sleep 1
-
       ${pkgs.wpaperd}/bin/wpaperd &
       ${pkgs.mako}/bin/mako &
       ${pkgs.waybar}/bin/waybar &
       ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
       ${pkgs.blueman}/bin/blueman-applet &
-
-      ${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store &
-      ${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store &
-      ${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard both &
+      wl-paste --type text --watch cliphist store &
+      wl-paste --type image --watch cliphist store &
+      wl-clip-persist --clipboard both &
     '';
 
     settings = ''
