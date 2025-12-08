@@ -166,6 +166,7 @@
 
     in
     {
+      # ========================= RIVER =========================
       nixosConfigurations.river =
         mkSystem true false false
           [
@@ -188,16 +189,16 @@
           ]
           [ ];
 
+      # ========================= MANGOWC =========================
       nixosConfigurations.mangowc =
         mkSystem false true false
           [
-            # mango.nixosModules.mango
-            # { programs.mango.enable = true; }
+            mango.nixosModules.mango
+            { programs.mango.enable = true; }
           ]
-          [
-            # mango.hmModules.mango
-          ];
+          [ mango.hmModules.mango ];
 
+      # ========================= NIRI =========================
       nixosConfigurations.niri =
         mkSystem false false true
           [
@@ -209,6 +210,7 @@
           ]
           [ ];
 
+      # ========================= UNIVERSAL HM =========================
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = {
@@ -231,6 +233,7 @@
         ];
       };
 
+      # ========================= ISO =========================
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
         modules = [
           {
