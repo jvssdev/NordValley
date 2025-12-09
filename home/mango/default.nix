@@ -26,6 +26,9 @@ in
     '';
 
     settings = ''
+      env=XCURSOR_THEME,Bibata-Modern-Ice
+      env=XCURSOR_SIZE,24
+      cursor_size=24      
       xkb_rules_layout=br
 
       cursor_size=24

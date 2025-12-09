@@ -174,27 +174,23 @@
             mango.nixosModules.mango
             {
               programs.mango.enable = true;
-            }
-            {
+
               services.displayManager.sessionPackages = [
-                (pkgs.writeTextFile rec {
+                (pkgs.writeTextFile {
                   name = "mango-session";
                   destination = "/share/wayland-sessions/mango.desktop";
                   text = ''
                     [Desktop Entry]
                     Name=Mango
-                    Comment=A dynamic tiling Wayland compositor
-                    Exec=mango
+                    Comment=Mango Wayland Compositor
+                    Exec=${pkgs.mango}/bin/mango --xwayland --autostart
                     Type=Application
                   '';
-                  passthru.providedSessions = [ "mango" ];
                 })
               ];
             }
           ]
-          [
-            mango.hmModules.mango
-          ];
+          [ mango.hmModules.mango ];
       # ========================= NIRI =========================
       nixosConfigurations.niri =
         mkSystem false false true
