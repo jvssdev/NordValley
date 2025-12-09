@@ -176,7 +176,7 @@
 
             {
               services.displayManager.sessionPackages = [
-                (pkgs.writeTextFile {
+                (pkgs.writeTextFile rec {
                   name = "mango-session";
                   destination = "/share/wayland-sessions/mango.desktop";
                   text = ''
@@ -186,6 +186,7 @@
                     Exec=mango
                     Type=Application
                   '';
+                  passthru.providedSessions = [ "mango" ];
                 })
               ];
             }
