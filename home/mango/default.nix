@@ -191,5 +191,12 @@ in
       xdg-desktop-portal-wlr
       xdg-desktop-portal-gtk
     ];
+    config = {
+      common.default = [ "*" ];
+      mango.default = [
+        "wlr"
+        "gtk"
+      ];
+    };
   };
 }
