@@ -172,9 +172,9 @@
         mkSystem false true false
           [
             mango.nixosModules.mango
-            {
-              programs.mango.enable = true;
+            { programs.mango.enable = true; }
 
+            {
               services.displayManager.sessionPackages = [
                 (pkgs.writeTextFile {
                   name = "mango-session";
@@ -183,7 +183,7 @@
                     [Desktop Entry]
                     Name=Mango
                     Comment=Mango Wayland Compositor
-                    Exec=${pkgs.mango}/bin/mango --xwayland --autostart
+                    Exec=mango
                     Type=Application
                   '';
                 })
