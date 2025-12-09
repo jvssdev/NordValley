@@ -194,9 +194,13 @@
         mkSystem false true false
           [
             mango.nixosModules.mango
-            { programs.mango.enable = true; }
+            {
+              programs.mango.enable = true;
+            }
           ]
-          [ mango.hmModules.mango ];
+          [
+            mango.hmModules.mango
+          ];
 
       # ========================= NIRI =========================
       nixosConfigurations.niri =
