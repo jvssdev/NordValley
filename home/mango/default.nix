@@ -12,8 +12,17 @@ in
   wayland.windowManager.mango = {
     enable = true;
 
+    systemd = {
+      enable = true;
+      variables = [ "--all" ];
+      extraCommands = [
+        "systemctl --user reset-failed"
+        "systemctl --user start mango-session.target"
+      ];
+      xdgAutostart = true;
+    };
+
     autostart_sh = ''
-      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
       ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 &
       ${pkgs.wpaperd}/bin/wpaperd &
       ${pkgs.mako}/bin/mako &
@@ -56,9 +65,14 @@ in
       cursor_hide_timeout=5000
       trackpad_natural_scrolling=0
 
-      animations=0
+      animations=1
       animation_type_open=zoom
       animation_type_close=zoom
+      animation_duration_open=400
+      animation_duration_close=400
+      animation_curve_open=0.46,1.0,0.29,1.1
+      animation_curve_close=0.08,0.92,0,1
+
       blur=0
       shadows=1
       shadow_only_floating=1
@@ -174,19 +188,94 @@ in
       windowrule=appid:thunar,isfloating:1
       windowrule=appid:Thunar,isfloating:1
 
+      env=XCURSOR_THEME,Bibata-Modern-Ice
       env=XCURSOR_SIZE,24
       env=QT_QPA_PLATFORMTHEME,qt5ct
       env=QT_AUTO_SCREEN_SCALE_FACTOR,1
       env=QT_QPA_PLATFORM,wayland
       env=QT_WAYLAND_DISABLE_WINDOWDECORATION,1
       env=XDG_SESSION_TYPE,wayland
-      env=XDG_CURRENT_DESKTOP,wlroots
+      env=XDG_CURRENT_DESKTOP,mango
       env=GDK_BACKEND,wayland
       env=CLUTTER_BACKEND,wayland
       env=MOZ_ENABLE_WAYLAND,1
       env=ELECTRON_OZONE_PLATFORM_HINT,auto
       env=NIXOS_OZONE_WL,1
     '';
+  };
+
+  systemd.user.services = {
+    mako-mango = {
+      Unit = {
+        Description = "Mako notification daemon";
+        PartOf = [ config.wayland.systemd.target ];
+        After = [ config.wayland.systemd.target ];
+        ConditionEnvironment = "XDG_CURRENT_DESKTOP=mango";
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = "${pkgs.mako}/bin/mako";
+        Restart = "on-failure";
+        RestartSec = "2s";
+      };
+      Install = {
+        WantedBy = [ config.wayland.systemd.target ];
+      };
+    };
+
+    waybar-mango = {
+      Unit = {
+        Description = "Waybar status bar";
+        PartOf = [ config.wayland.systemd.target ];
+        After = [ config.wayland.systemd.target ];
+        ConditionEnvironment = "XDG_CURRENT_DESKTOP=mango";
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = "${pkgs.waybar}/bin/waybar";
+        Restart = "on-failure";
+        RestartSec = "2s";
+      };
+      Install = {
+        WantedBy = [ config.wayland.systemd.target ];
+      };
+    };
+
+    wpaperd-mango = {
+      Unit = {
+        Description = "Wpaperd wallpaper daemon";
+        PartOf = [ config.wayland.systemd.target ];
+        After = [ config.wayland.systemd.target ];
+        ConditionEnvironment = "XDG_CURRENT_DESKTOP=mango";
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = "${pkgs.wpaperd}/bin/wpaperd";
+        Restart = "on-failure";
+        RestartSec = "2s";
+      };
+      Install = {
+        WantedBy = [ config.wayland.systemd.target ];
+      };
+    };
+
+    polkit-mate-mango = {
+      Unit = {
+        Description = "MATE Polkit authentication agent";
+        PartOf = [ config.wayland.systemd.target ];
+        After = [ config.wayland.systemd.target ];
+        ConditionEnvironment = "XDG_CURRENT_DESKTOP=mango";
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = "${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = "2s";
+      };
+      Install = {
+        WantedBy = [ config.wayland.systemd.target ];
+      };
+    };
   };
 
   xdg.portal = {
