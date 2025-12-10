@@ -12,22 +12,34 @@ in
 {
   wayland.windowManager.mango = {
     enable = true;
+    systemd.enable = false;
+    # autostart_sh = ''
+    #   dbus-update-activation-environment --systemd --all
 
-    autostart_sh = ''
-      dbus-update-activation-environment --systemd --all
-
-      ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 &
-      ${pkgs.wpaperd}/bin/wpaperd &
-      ${pkgs.mako}/bin/mako &
-      ${pkgs.waybar}/bin/waybar &
-      ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
-      ${pkgs.blueman}/bin/blueman-applet &
-      wl-paste --type text --watch cliphist store &
-      wl-paste --type image --watch cliphist store &
-      wl-clip-persist --clipboard both &
-    '';
+    #   ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 &
+    #   ${pkgs.wpaperd}/bin/wpaperd &
+    #   ${pkgs.mako}/bin/mako &
+    #   ${pkgs.waybar}/bin/waybar &
+    #   ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
+    #   ${pkgs.blueman}/bin/blueman-applet &
+    #   wl-paste --type text --watch cliphist store &
+    #   wl-paste --type image --watch cliphist store &
+    #   wl-clip-persist --clipboard both &
+    # '';
 
     settings = ''
+
+      exec-once=${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots XDG_SESSION_TYPE NIXOS_OZONE_WL XCURSOR_THEME XCURSOR_SIZE PATH
+      exec-once=systemctl --user reset-failed
+      exec-once=systemctl --user start mango-session.target
+      exec-once=${pkgs.wpaperd}/bin/wpaperd
+      exec-once=${pkgs.mako}/bin/mako
+      exec-once=${pkgs.waybar}/bin/waybar
+      exec-once=${pkgs.networkmanagerapplet}/bin/nm-applet --indicator
+      exec-once=${pkgs.blueman}/bin/blueman-applet
+      exec-once=wl-paste --type text --watch cliphist store &
+      exec-once=wl-paste --type image --watch cliphist store &
+      exec-once=wl-clip-persist --clipboard both &      
       env=XCURSOR_THEME,Bibata-Modern-Ice
       env=XCURSOR_SIZE,24
       env=XDG_CURRENT_DESKTOP,mango
@@ -183,6 +195,18 @@ in
       windowrule=appid:thunar,isfloating:1
       windowrule=appid:Thunar,isfloating:1
     '';
+  };
+
+  systemd.user.targets.mango-session = {
+    Unit = {
+      Description = "mango compositor session";
+      Documentation = [ "man:systemd.special(7)" ];
+      BindsTo = [ "graphical-session.target" ];
+      Wants = [
+        "graphical-session-pre.target"
+      ];
+      After = [ "graphical-session-pre.target" ];
+    };
   };
 
   xdg.portal = {

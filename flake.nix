@@ -1,50 +1,63 @@
 {
   description = "NordValley NixOS with River, MangoWC and Niri";
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     nix-colors.url = "github:misterio77/nix-colors";
+
     helix = {
       url = "github:helix-editor/helix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     zsh-hlx = {
       url = "github:multirious/zsh-helix-mode/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     helium-browser = {
       url = "github:ominit/helium-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     mango = {
       url = "github:DreamMaoMao/mango";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
     niri-flake = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
     silentSDDM = {
       url = "github:uiriansan/SilentSDDM";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
+
   outputs =
     inputs@{
       nixpkgs,
@@ -62,7 +75,9 @@
         fullName = "João Víctor Santos Silva";
         userEmail = "joao.victor.ss.dev@gmail.com";
       };
+
       system = "x86_64-linux";
+
       pkgs = import nixpkgs {
         localSystem = system;
         config.allowUnfree = true;
@@ -75,15 +90,18 @@
           })
         ];
       };
+
       defaults = {
         homeDir = "/home/${userInfo.userName}";
       };
+
       nixpkgsModule = {
         nixpkgs = {
           hostPlatform = system;
           inherit pkgs;
         };
       };
+
       commonModules = [
         nixpkgsModule
         ./hosts/ashes/configuration.nix
@@ -96,6 +114,7 @@
         ./modules/thunar.nix
         ./modules/sddm-theme.nix
       ];
+
       mkSystem =
         isRiver: isMango: isNiri: extraModules: extraSharedModules:
         nixpkgs.lib.nixosSystem {
@@ -108,6 +127,7 @@
               silentSDDM = inputs.silentSDDM;
               inherit isRiver isMango isNiri;
             };
+
           modules =
             commonModules
             ++ extraModules
@@ -143,6 +163,7 @@
               }
             ];
         };
+
     in
     {
       # ========================= RIVER =========================
@@ -167,31 +188,20 @@
             }
           ]
           [ ];
+
       # ========================= MANGOWC =========================
       nixosConfigurations.mangowc =
         mkSystem false true false
           [
             mango.nixosModules.mango
-            { programs.mango.enable = true; }
-
             {
-              services.displayManager.sessionPackages = [
-                (pkgs.writeTextFile rec {
-                  name = "mango-session";
-                  destination = "/share/wayland-sessions/mango.desktop";
-                  text = ''
-                    [Desktop Entry]
-                    Name=Mango
-                    Comment=Mango Wayland Compositor
-                    Exec=mango
-                    Type=Application
-                  '';
-                  passthru.providedSessions = [ "mango" ];
-                })
-              ];
+              programs.mango.enable = true;
             }
           ]
-          [ mango.hmModules.mango ];
+          [
+            mango.hmModules.mango
+          ];
+
       # ========================= NIRI =========================
       nixosConfigurations.niri =
         mkSystem false false true
@@ -203,6 +213,7 @@
             }
           ]
           [ ];
+
       # ========================= UNIVERSAL HM =========================
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
@@ -219,11 +230,13 @@
           isNiri = false;
         }
         // userInfo;
+
         modules = [
           ./modules/home.nix
           nix-colors.homeManagerModules.default
         ];
       };
+
       # ========================= ISO =========================
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
         modules = [
