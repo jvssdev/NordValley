@@ -28,7 +28,6 @@ in
     # '';
 
     settings = ''
-
       exec-once=${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots XDG_SESSION_TYPE NIXOS_OZONE_WL XCURSOR_THEME XCURSOR_SIZE PATH
       exec-once=systemctl --user reset-failed
       exec-once=systemctl --user start mango-session.target
@@ -39,12 +38,8 @@ in
       exec-once=${pkgs.blueman}/bin/blueman-applet
       exec-once=wl-paste --type text --watch cliphist store &
       exec-once=wl-paste --type image --watch cliphist store &
-      exec-once=wl-clip-persist --clipboard both &      
-      env=XCURSOR_THEME,Bibata-Modern-Ice
-      env=XCURSOR_SIZE,24
-      env=XDG_CURRENT_DESKTOP,mango
+      exec-once=wl-clip-persist --clipboard both &
 
-      env=QT_QPA_PLATFORMTHEME,qt5ct
       env=QT_AUTO_SCREEN_SCALE_FACTOR,1
       env=QT_QPA_PLATFORM,wayland
       env=QT_WAYLAND_DISABLE_WINDOWDECORATION,1
@@ -53,7 +48,6 @@ in
       env=CLUTTER_BACKEND,wayland
       env=MOZ_ENABLE_WAYLAND,1
       env=ELECTRON_OZONE_PLATFORM_HINT,auto
-      env=NIXOS_OZONE_WL,1
 
       # General settings
       xkb_rules_layout=br
