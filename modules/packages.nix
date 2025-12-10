@@ -92,6 +92,7 @@ let
 
     # Qt
     libsForQt5.qt5.qtgraphicaleffects
+    kdePackages.qt6ct
     qt6.qtwayland
     kdePackages.qtwayland
 

@@ -40,8 +40,10 @@ in
       exec-once=wl-paste --type image --watch cliphist store &
       exec-once=wl-clip-persist --clipboard both &
 
+      env=WLR_NO_HARDWARE_CURSORS,1
       env=QT_AUTO_SCREEN_SCALE_FACTOR,1
       env=QT_QPA_PLATFORM,wayland
+      env=QT_QPA_PLATFORMTHEME,${pkgs.qt6ct}/bin/qt6ct
       env=QT_WAYLAND_DISABLE_WINDOWDECORATION,1
       env=XDG_SESSION_TYPE,wayland
       env=GDK_BACKEND,wayland
