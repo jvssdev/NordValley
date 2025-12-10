@@ -72,7 +72,7 @@ in
 
   qt = {
     enable = true;
-    platformTheme.name = "${pkgs.qt6Packages.qt6ct}";
+    platformTheme.name = "qt6ct";
     style.name = "kvantum";
   };
 
