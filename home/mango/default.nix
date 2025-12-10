@@ -28,7 +28,7 @@ in
     # '';
 
     settings = ''
-      exec-once=${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots XDG_SESSION_TYPE NIXOS_OZONE_WL XCURSOR_THEME XCURSOR_SIZE PATH
+      exec-once=${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
       exec-once=systemctl --user reset-failed
       exec-once=systemctl --user start mango-session.target
       exec-once=${pkgs.wpaperd}/bin/wpaperd
@@ -210,12 +210,12 @@ in
       xdg-desktop-portal-wlr
       xdg-desktop-portal-gtk
     ];
-    config = {
-      common.default = [ "*" ];
-      mango.default = [
-        "wlr"
-        "gtk"
-      ];
-    };
+    # config = {
+    #   common.default = [ "*" ];
+    #   mango.default = [
+    #     "wlr"
+    #     "gtk"
+    #   ];
+    # };
   };
 }
