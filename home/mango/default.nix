@@ -50,6 +50,7 @@ in
       env=ELECTRON_OZONE_PLATFORM_HINT,auto
 
       # General settings
+      monitorrule=eDP-1,0.55,1,tile,0,1,0,0,1920,1080,60
       xkb_rules_layout=br
       cursor_size=24
       cursor_theme=Bibata-Modern-Ice
