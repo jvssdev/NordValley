@@ -52,6 +52,7 @@ in
       # General settings
       xkb_rules_layout=br
       cursor_size=24
+      cursor_theme=Bibata-Modern-Ice
       gappih=6
       gappiv=6
       gappoh=6
