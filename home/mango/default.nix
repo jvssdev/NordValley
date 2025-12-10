@@ -48,6 +48,8 @@ in
       env=CLUTTER_BACKEND,wayland
       env=MOZ_ENABLE_WAYLAND,1
       env=ELECTRON_OZONE_PLATFORM_HINT,auto
+      env=XCURSOR_THEME,Bibata-Modern-Ice
+      env=XCURSOR_SIZE,24
 
       # General settings
       monitorrule=eDP-1,0.55,1,tile,0,1,0,0,1920,1080,60
