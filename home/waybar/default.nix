@@ -176,22 +176,26 @@ in
         font-size: 12px;
         padding: 0 6px;
         margin: 0 3px;
-        background: #${colors.base0D}26;
-        color: #${colors.base0E}a6;
+        background: #${colors.base02};
+        color: #${colors.base0E};
         border: none;
+        opacity: 0.8;
       }
       #workspaces button.focused,
       #workspaces button.active {
         color: #${colors.base00};
         background: #${colors.base0D};
         padding: 0 12px;
+        opacity: 1;
       }
       #workspaces button.focused:hover,
       #workspaces button.active:hover {
-        background: #${colors.base0D}bf;
+        background: #${colors.base0D};
+        opacity: 0.85;
       }
       #workspaces button:hover {
-        background: #${colors.base05}1a;
+        background: #${colors.base03};
+        opacity: 0.9;
       }
       #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
       #bluetooth, #network, #custom-quickshell-notification, #tray, #custom-power {
