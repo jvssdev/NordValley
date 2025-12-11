@@ -176,8 +176,8 @@ in
         font-size: 12px;
         padding: 0 6px;
         margin: 0 3px;
-        background: rgba(${colors.base0D}, 0.15);
-        color: rgba(${colors.base0E}, 0.65);
+        background: #${colors.base0D}26;
+        color: #${colors.base0E}a6;
         border: none;
       }
       #workspaces button.focused,
@@ -188,10 +188,10 @@ in
       }
       #workspaces button.focused:hover,
       #workspaces button.active:hover {
-        background: rgba(${colors.base0D}, 0.75);
+        background: #${colors.base0D}bf;
       }
       #workspaces button:hover {
-        background: rgba(${colors.base05}, 0.1);
+        background: #${colors.base05}1a;
       }
       #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
       #bluetooth, #network, #custom-quickshell-notification, #tray, #custom-power {
