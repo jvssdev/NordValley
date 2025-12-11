@@ -221,6 +221,6 @@ in
   environment.sessionVariables = {
     XCURSOR_THEME = "Bibata-Modern-Ice";
     XCURSOR_SIZE = "24";
-    QT_QPA_PLATFORMTHEME = "${pkgs.qt6Packages.qt6ct}";
+    QT_QPA_PLATFORMTHEME = "qt6ct";
   };
 }
