@@ -231,14 +231,5 @@
           nix-colors.homeManagerModules.default
         ];
       };
-
-      nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
-        modules = [
-          {
-            nixpkgs.hostPlatform = "x86_64-linux";
-          }
-          ./hosts/iso/configuration.nix
-        ];
-      };
     };
 }
