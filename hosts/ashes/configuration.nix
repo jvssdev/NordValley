@@ -3,8 +3,6 @@
   lib,
   userName,
   fullName,
-  helix,
-  zen-browser,
   ...
 }:
 {
@@ -27,11 +25,10 @@
     gc = {
       automatic = true;
       dates = "weekly";
-      options = "--delete-older-than 30d";
+      options = "--delete-older-than 7d";
     };
   };
   programs.zsh.enable = true;
-  programs.starship.enable = true;
   users.users.${userName} = {
     isNormalUser = true;
     description = fullName;
@@ -58,14 +55,28 @@
     memoryPercent = 50;
   };
 
-  boot.loader = {
-    systemd-boot = {
-      enable = true;
-      configurationLimit = 30;
-      consoleMode = "auto";
+  boot = {
+    loader = {
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 30;
+        consoleMode = "auto";
+      };
+      efi.canTouchEfiVariables = true;
+      timeout = 15;
     };
-    efi.canTouchEfiVariables = true;
-    timeout = 15;
+
+    kernelParams = [
+      # "lsm=landlock,lockdown,yama,integrity,apparmor,bpf,tomoyo,selinux"
+      "quiet"
+      "splash"
+    ];
+
+    kernel.sysctl = {
+      "kernel.dmesg_restrict" = 1;
+      "kernel.kptr_restrict" = 2;
+      "net.ipv4.conf.all.rp_filter" = 1;
+    };
   };
 
   security.pam.services.gtklock = {
@@ -74,7 +85,6 @@
 
   powerManagement = {
     powertop.enable = true;
-    cpuFreqGovernor = lib.mkDefault "powersave";
   };
   fonts = {
     enableDefaultPackages = true;
@@ -99,10 +109,6 @@
     bibata-cursors
   ];
   services = {
-    displayManager.autoLogin = {
-      enable = false;
-      user = userName;
-    };
     dbus = {
       enable = true;
       packages = [ pkgs.dconf ];
@@ -113,10 +119,6 @@
     gvfs.enable = true;
     openssh.enable = true;
     flatpak.enable = false;
-    printing = {
-      enable = false;
-      drivers = [ pkgs.hplipWithPlugin ];
-    };
     power-profiles-daemon.enable = false;
     auto-cpufreq = {
       enable = true;
