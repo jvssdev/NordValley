@@ -79,7 +79,7 @@
       system = "x86_64-linux";
 
       pkgs = import nixpkgs {
-        localSystem = system;
+        inherit system;
         config.allowUnfree = true;
         overlays = [
           nur.overlays.default
@@ -95,15 +95,13 @@
         homeDir = "/home/${userInfo.userName}";
       };
 
-      nixpkgsModule = {
-        nixpkgs = {
-          hostPlatform = system;
-          inherit pkgs;
-        };
-      };
-
       commonModules = [
-        nixpkgsModule
+        {
+          nixpkgs = {
+            hostPlatform = system;
+            inherit pkgs;
+          };
+        }
         ./hosts/ashes/configuration.nix
         ./hosts/ashes/hardware-configuration.nix
         ./modules/path.nix
@@ -237,10 +235,7 @@
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
         modules = [
           {
-            nixpkgs = {
-              hostPlatform = "x86_64-linux";
-              pkgs = nixpkgs.legacyPackages.x86_64-linux;
-            };
+            nixpkgs.hostPlatform = "x86_64-linux";
           }
           ./hosts/iso/configuration.nix
         ];
