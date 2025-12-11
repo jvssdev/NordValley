@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }:
 
@@ -139,7 +138,7 @@ in
       bind=SUPER,s,setlayout,scroller
       bind=SUPER,y,switch_layout
       bind=SUPER,g,togglegaps
-      bind=SUPER,Tab,toggleoverview
+      bind=SUPER,o,toggleoverview
       bind=SUPER,1,comboview,1
       bind=SUPER,2,comboview,2
       bind=SUPER,3,comboview,3

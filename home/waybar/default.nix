@@ -172,43 +172,26 @@ in
         transition: all 0.2s ease-in-out;
       }
       #workspaces button {
-        padding: 0 8px;
-        margin: 0 4px;
-        border-radius: 0px;
-        color: #${colors.base05};
-        font-weight: normal;
-      }
-      #workspaces button:not(.occupied):not(.focused):not(.urgent) {
-        font-size: 0;
-        min-width: 0;
-        padding: 0;
-        margin: -50px;
-        color: transparent;
-        background-color: transparent;
-        box-shadow: none;
-        outline: none;
-        transition: none;
-      }
-      #workspaces button.occupied {
-        background-color: #${colors.base02};
-        color: #${colors.base05};
-      }
-      #workspaces button.focused {
-        background-color: #${colors.base0D};
-        color: #${colors.base00};
         font-weight: bold;
+        font-size: 12px;
+        padding: 0 6px;
+        margin: 0 3px;
+        background: rgba(${colors.base0D}, 0.15);
+        color: rgba(${colors.base0E}, 0.65);
+        border: none;
       }
-      #workspaces button.urgent {
-        background-color: #${colors.base08};
+      #workspaces button.focused,
+      #workspaces button.active {
         color: #${colors.base00};
+        background: #${colors.base0D};
+        padding: 0 12px;
+      }
+      #workspaces button.focused:hover,
+      #workspaces button.active:hover {
+        background: rgba(${colors.base0D}, 0.75);
       }
       #workspaces button:hover {
-        background-color: #${colors.base03};
-      }
-      #workspaces button.occupied,
-      #workspaces button.focused,
-      #workspaces button.urgent {
-        transition: all 0.2s ease-in-out;
+        background: rgba(${colors.base05}, 0.1);
       }
       #window, #mpris, #clock, #cpu, #memory, #battery, #pulseaudio,
       #bluetooth, #network, #custom-quickshell-notification, #tray, #custom-power {
