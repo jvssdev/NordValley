@@ -208,6 +208,9 @@ in
       #bluetooth.connected { color: #${colors.base0F}; }
       #custom-quickshell-notification {
         color: #${colors.base05};
+      }
+      #custom/notification {
+        padding: 0 10px;
       }     
       #custom-notification.dnd-on {
         color: #${colors.base08};
@@ -280,6 +283,7 @@ in
         "format-disconnected" = "";
         "tooltip-format" = "ssid : {essid}\naddr : {ipaddr}/{cidr}\ngate : {gwaddr}\ndev : {ifname}";
         "format-linked" = "󰲝";
+        "on-click" = "nm-connection-editor";
       };
       tray = {
         "icon-size" = 21;
