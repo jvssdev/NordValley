@@ -209,7 +209,7 @@ in
       #custom-quickshell-notification {
         color: #${colors.base05};
       }
-      #custom/notification {
+      #custom-notification {
         padding: 0 10px;
       }     
       #custom-notification.dnd-on {
