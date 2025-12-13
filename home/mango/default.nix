@@ -35,6 +35,7 @@ in
       exec-once=systemctl --user start mango-session.target
 
       exec-once=${lib.getExe pkgs.xwayland-satellite} :11
+      exec-once=fcitx5 -d
       exec-once=${pkgs.wpaperd}/bin/wpaperd
       exec-once=${pkgs.mako}/bin/mako
       exec-once=${pkgs.waybar}/bin/waybar
@@ -229,5 +230,6 @@ in
     xdg-utils
     wf-recorder
     xwayland-satellite
+    fcitx5
   ];
 }
