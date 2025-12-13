@@ -8,10 +8,10 @@ in
       enable = true;
       settings = {
         main = {
-          font = lib.mkForce "JetBrainsMono Nerd Font:size=10";
+          font = lib.mkForce "JetBrainsMono Nerd Font:size=14";
           icon-theme = "Colloid-Dark";
           dpi-aware = "no";
-          lines = 25;
+          lines = 15;
           width = 70;
           prompt = ''"󰍉  "'';
         };

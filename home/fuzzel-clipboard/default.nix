@@ -4,7 +4,7 @@ let
   fuzzel-clipboard = pkgs.writeShellScriptBin "fuzzel-clipboard" ''
     #!/usr/bin/env bash
 
-    ${pkgs.cliphist}/bin/cliphist list | tac | ${pkgs.fuzzel}/bin/fuzzel --dmenu \
+    ${pkgs.cliphist}/bin/cliphist list | ${pkgs.fuzzel}/bin/fuzzel --dmenu \
       --prompt "󱉥  " \
       -l 25 -w 70 \
       --border-width=2 --border-radius=10 \
