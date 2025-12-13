@@ -29,6 +29,7 @@
     };
   };
   programs.zsh.enable = true;
+  programs.xwayland.enable = true;
   users.users.${userName} = {
     isNormalUser = true;
     description = fullName;

@@ -10,6 +10,8 @@
     git = {
       enable = true;
       lfs.enable = true;
+      settings.user.name = "João Víctor Santos Silva";
+      settings.user.email = "joao.victor.ss.dev@gmail.com";
     };
 
     direnv = {

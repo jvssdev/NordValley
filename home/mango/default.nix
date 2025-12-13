@@ -1,9 +1,9 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
-
 let
   palette = config.colorScheme.palette;
   hexToMango = hex: "0x${hex}ff";
@@ -13,23 +13,28 @@ in
     enable = true;
     systemd.enable = false;
     # autostart_sh = ''
-    #   dbus-update-activation-environment --systemd --all
-
-    #   ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 &
-    #   ${pkgs.wpaperd}/bin/wpaperd &
-    #   ${pkgs.mako}/bin/mako &
-    #   ${pkgs.waybar}/bin/waybar &
-    #   ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
-    #   ${pkgs.blueman}/bin/blueman-applet &
-    #   wl-paste --type text --watch cliphist store &
-    #   wl-paste --type image --watch cliphist store &
-    #   wl-clip-persist --clipboard both &
+    #   set +e
+    #   dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots >/dev/null 2>&1
+    #   dbus-update-activation-environment --systemd DBUS_SESSION_BUS_ADDRESS >/dev/null 2>&1
+    #   dbus-update-activation-environment --systemd DISPLAY >/dev/null 2>&1
+    #   ${pkgs.xwayland-satellite}/bin/xwayland-satellite :0 >/dev/null 2>&1 &
+    #   wlsunset -T 3501 -t 3500 >/dev/null 2>&1 &
+    #   waybar -c ~/.config/mango/waybar/config.jsonc -s ~/.config/mango/waybar/style.css >/dev/null 2>&1 &
+    #   echo "Xft.dpi: 140" | xrdb -merge >/dev/null 2>&1
+    #   fcitx5 --replace -d >/dev/null 2>&1 &
+    #   wl-clip-persist --clipboard regular --reconnect-tries 0 >/dev/null 2>&1 &
+    #   wl-paste --type text --watch cliphist store >/dev/null 2>&1 &
+    #   blueman-applet >/dev/null 2>&1 &
+    #   nm-applet >/dev/null 2>&1 &
+    #   /usr/lib/xfce-polkit/xfce-polkit >/dev/null 2>&1 &
     # '';
-
     settings = ''
       exec-once=${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
+      exec-once=${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY
       exec-once=systemctl --user reset-failed
       exec-once=systemctl --user start mango-session.target
+
+      exec-once=${lib.getExe pkgs.xwayland-satellite} :11
       exec-once=${pkgs.wpaperd}/bin/wpaperd
       exec-once=${pkgs.mako}/bin/mako
       exec-once=${pkgs.waybar}/bin/waybar
@@ -41,18 +46,23 @@ in
 
       env=WLR_NO_HARDWARE_CURSORS,1
       env=QT_AUTO_SCREEN_SCALE_FACTOR,1
-      env=QT_QPA_PLATFORM,wayland
-      env=QT_QPA_PLATFORMTHEME,qt6ct
+      env=QT_QPA_PLATFORM,wayland;xcb
       env=QT_WAYLAND_DISABLE_WINDOWDECORATION,1
       env=XDG_SESSION_TYPE,wayland
-      env=GDK_BACKEND,wayland
+      env=GDK_BACKEND,wayland,x11
       env=CLUTTER_BACKEND,wayland
       env=MOZ_ENABLE_WAYLAND,1
       env=ELECTRON_OZONE_PLATFORM_HINT,auto
       env=XCURSOR_THEME,Bibata-Modern-Ice
       env=XCURSOR_SIZE,24
+      env=DISPLAY,:11
+      env=GTK_IM_MODULE,fcitx
+      env=QT_IM_MODULE,fcitx
+      env=SDL_IM_MODULE,fcitx
+      env=XMODIFIERS,@im=fcitx
+      env=GLFW_IM_MODULE,ibus
+      env=QT_QPA_PLATFORMTHEME,qt5ct
 
-      # General settings
       monitorrule=eDP-1,0.55,1,tile,0,1,0,0,1920,1080,60
       xkb_rules_layout=br
       cursor_size=24
@@ -64,12 +74,10 @@ in
       borderpx=2
       border_radius=0
       no_border_when_single=0
-
       rootcolor=${hexToMango palette.base00}
       bordercolor=${hexToMango palette.base03}
       focuscolor=${hexToMango palette.base0D}
       urgentcolor=${hexToMango palette.base08}
-
       repeat_rate=50
       repeat_delay=300
       focus_follows_cursor=1
@@ -85,14 +93,12 @@ in
       shadows_size=12
       shadows_blur=15
       shadowscolor=${hexToMango palette.base00}
-
       scroller_structs=20
       scroller_default_proportion=0.6
       scroller_focus_center=0
       scroller_prefer_center=1
       scroller_default_proportion_single=1.0
 
-      # Layouts per tag
       tagrule=id:1,layout_name:tile
       tagrule=id:2,layout_name:tile
       tagrule=id:3,layout_name:tile
@@ -103,7 +109,6 @@ in
       tagrule=id:8,layout_name:tile
       tagrule=id:9,layout_name:tile
 
-      # Keybinds
       bind=SUPER,r,reload_config
       bind=SUPER,t,spawn,ghostty
       bind=SUPER,a,spawn,fuzzel
@@ -161,8 +166,6 @@ in
       bind=SUPER,comma,focusmon,prev
       bind=SUPER+SHIFT,period,tagmon,next
       bind=SUPER+SHIFT,comma,tagmon,prev
-
-      # Media keys
       bind=NONE,XF86AudioRaiseVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
       bind=NONE,XF86AudioLowerVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
       bind=NONE,XF86AudioMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
@@ -174,12 +177,10 @@ in
       bind=NONE,XF86AudioPlay,spawn,playerctl play-pause
       bind=NONE,XF86AudioPause,spawn,playerctl play-pause
 
-      # Mouse
       mousebind=SUPER,btn_left,moveresize,curmove
       mousebind=SUPER,btn_right,moveresize,curresize
       mousebind=SUPER,btn_middle,togglefloating
 
-      # Window rules
       windowrule=title:Authentication required,isfloating:1
       windowrule=title:Keybindings,isfloating:1
       windowrule=title:Rename*,isfloating:1
@@ -195,7 +196,6 @@ in
       windowrule=appid:Thunar,isfloating:1
     '';
   };
-
   systemd.user.targets.mango-session = {
     Unit = {
       Description = "mango compositor session";
@@ -207,13 +207,14 @@ in
       After = [ "graphical-session-pre.target" ];
     };
   };
-
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-wlr
       xdg-desktop-portal-gtk
+      xdg-desktop-portal
     ];
+    config.common.default = [ "gtk" ];
     config = {
       mango = {
         default = [ "gtk" ];
@@ -223,4 +224,10 @@ in
       };
     };
   };
+  home.packages = with pkgs; [
+    glib
+    xdg-utils
+    wf-recorder
+    xwayland-satellite
+  ];
 }
