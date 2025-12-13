@@ -12,7 +12,7 @@ in
           icon-theme = "Colloid-Dark";
           dpi-aware = "no";
           lines = 15;
-          width = 70;
+          width = 40;
           prompt = ''"󰍉  "'';
         };
         dmenu = {
