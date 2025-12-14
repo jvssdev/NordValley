@@ -71,7 +71,7 @@ let
     # GUI applications
     keepassxc
     anydesk
-    lmstudio
+    llama-cpp
     qbittorrent
     mpv
     imv
