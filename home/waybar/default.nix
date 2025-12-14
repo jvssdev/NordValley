@@ -12,9 +12,9 @@ let
     #!/usr/bin/env bash
     if [[ "$1" = "show" ]]; then
       if ${pkgs.dunst}/bin/dunstctl is-paused | grep -q "true"; then
-        echo '{"text":"","tooltip":"Do not disturb is on"}'
+        echo '{"text":"","tooltip":"Do not disturb is on"}'
       else
-        echo '{"text":"","tooltip":"Do not disturb is off"}'
+        echo '{"text":"","tooltip":"Do not disturb is off"}'
       fi
     elif [[ "$1" = "toggle" ]]; then
       if ${pkgs.dunst}/bin/dunstctl is-paused | grep -q "true"; then
