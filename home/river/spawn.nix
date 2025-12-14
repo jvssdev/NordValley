@@ -1,6 +1,4 @@
 {
-  config,
-  lib,
   pkgs,
   ...
 }:
@@ -14,7 +12,7 @@ let
     "${pkgs.waybar}/bin/waybar &"
     "${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &"
     "${pkgs.blueman}/bin/blueman-applet &"
-    "${pkgs.mako}/bin/mako &"
+    "${pkgs.dunst}/bin/dunst &"
 
     # Clipboard history
     "${pkgs.wl-clipboard}/bin/wl-paste --type text   --watch ${pkgs.cliphist}/bin/cliphist store &"

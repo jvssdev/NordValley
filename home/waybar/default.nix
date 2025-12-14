@@ -8,16 +8,20 @@
 }:
 let
   colors = config.colorScheme.palette;
-  makoDndScript = pkgs.writeShellScript "mako-dnd" ''
+  dunstDndScript = pkgs.writeShellScript "dunst-dnd" ''
     #!/usr/bin/env bash
     if [[ "$1" = "show" ]]; then
-      if [[ "$(makoctl mode)" = "do-not-disturb" ]]; then
-        echo '{"text":"","tooltip":"Do not disturb is on"}'
+      if ${pkgs.dunst}/bin/dunstctl is-paused | grep -q "true"; then
+        echo '{"text":"","tooltip":"Do not disturb is on"}'
       else
-        echo '{"text":"","tooltip":"Do not disturb is off"}'
+        echo '{"text":"","tooltip":"Do not disturb is off"}'
       fi
     elif [[ "$1" = "toggle" ]]; then
-      [[ "$(makoctl mode)" = "do-not-disturb" ]] && makoctl mode -r do-not-disturb || makoctl mode -s do-not-disturb
+      if ${pkgs.dunst}/bin/dunstctl is-paused | grep -q "true"; then
+        ${pkgs.dunst}/bin/dunstctl set-paused false
+      else
+        ${pkgs.dunst}/bin/dunstctl set-paused true
+      fi
     fi
   '';
   commonModulesCenter = [
@@ -296,11 +300,11 @@ in
       };
       "custom/notification" = {
         format = "{}";
-        exec = "${makoDndScript} show";
+        exec = "${dunstDndScript} show";
         return-type = "json";
         interval = 30;
         signal = 8;
-        on-click = "${makoDndScript} toggle && pkill -RTMIN+8 waybar";
+        on-click = "${dunstDndScript} toggle && pkill -RTMIN+8 waybar";
         tooltip = true;
         escape = true;
       };

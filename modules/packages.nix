@@ -98,7 +98,7 @@ let
     kdePackages.qtwayland
 
     # Wayland bar/menu
-    mako
+    dunst
     pavucontrol
 
     # Custom packages from inputs

@@ -20,8 +20,8 @@
     "Super V" = "spawn fuzzel-clipboard";
     "Super+Shift V" = "spawn fuzzel-clipboard-clear";
 
-    # Mako history
-    "Super N" = "spawn mako-fuzzel";
+    # Dunst history
+    "Super N" = "spawn dunst-fuzzel";
 
     # Window control
     "Super Q" = "close";

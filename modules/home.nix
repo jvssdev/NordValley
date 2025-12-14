@@ -38,7 +38,8 @@ in
 
   imports = [
     ./programs.nix
-    ../home/mako-fuzzel
+    ../home/dunst/default.nix
+    ../home/dunst-fuzzel
     ../home/fuzzel-clipboard
     ../home/btop/default.nix
     ../home/fastfetch/default.nix
@@ -46,7 +47,6 @@ in
     ../home/ghostty/default.nix
     ../home/gtklock/default.nix
     ../home/helix/default.nix
-    ../home/mako/default.nix
     ../home/mpd/default.nix
     ../home/mpv/default.nix
     ../home/quickshell/default.nix

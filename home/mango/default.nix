@@ -37,7 +37,7 @@ in
       exec-once=${lib.getExe pkgs.xwayland-satellite} :11
       exec-once=fcitx5 -d
       exec-once=${pkgs.wpaperd}/bin/wpaperd
-      exec-once=${pkgs.mako}/bin/mako
+      exec-once=${pkgs.dunst}/bin/dunst
       exec-once=${pkgs.waybar}/bin/waybar
       exec-once=${pkgs.networkmanagerapplet}/bin/nm-applet --indicator
       exec-once=${pkgs.blueman}/bin/blueman-applet
@@ -113,7 +113,7 @@ in
       bind=SUPER,r,reload_config
       bind=SUPER,t,spawn,ghostty
       bind=SUPER,a,spawn,fuzzel
-      bind=SUPER,n,spawn,mako-fuzzel
+      bind=SUPER,n,spawn,dunst-fuzzel
       bind=SUPER,b,spawn,helium
       bind=SUPER,e,spawn,thunar
       bind=SUPER,x,spawn,wlogout
