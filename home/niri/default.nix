@@ -22,7 +22,6 @@ in
     spawn-at-startup = [
       { command = [ "blueman-applet" ]; }
       { command = [ "waybar" ]; }
-      # { command = [ "quickshell" ]; }
       { command = [ "wpaperd" ]; }
       {
         command = [
@@ -57,7 +56,10 @@ in
       {
         command = [
           "wl-clip-persist"
-          "--clipboard both"
+          "--clipboard"
+          "regular"
+          "--reconnect-tries"
+          "0"
         ];
       }
     ];
@@ -109,11 +111,7 @@ in
       "Mod+B".action.spawn = "helium";
       "Mod+X".action.spawn = "wlogout";
       "Mod+E".action.spawn = "thunar";
-      "Mod+P".action.spawn = [
-        "bash"
-        "-c"
-        "grim -g \"$(slurp)\" - | wl-copy"
-      ];
+      "Mod+P".action.spawn = "screenshot";
       "Mod+V".action.spawn = "fuzzel-clipboard";
       "Mod+Shift+V".action.spawn = "fuzzel-clipboard-clear";
       "Mod+N".action.spawn = "dunst-fuzzel";

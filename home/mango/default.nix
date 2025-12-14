@@ -7,15 +7,6 @@
 let
   palette = config.colorScheme.palette;
   hexToMango = hex: "0x${hex}ff";
-
-  screenshot = pkgs.writeShellScriptBin "screenshot" ''
-    dir="$HOME/Pictures/Screenshots"
-    mkdir -p "$dir"
-    file="$dir/$(date +'%Y-%m-%d_%H-%M-%S').png"
-    ${lib.getExe pkgs.grim} -g "$(${lib.getExe pkgs.slurp})" "$file"
-    ${lib.getExe' pkgs.wl-clipboard "wl-copy"} < "$file"
-    ${lib.getExe' pkgs.libnotify "notify-send"} "Screenshot saved" "$file" -i "$file" -t 3000
-  '';
 in
 {
   wayland.windowManager.mango = {
@@ -35,6 +26,7 @@ in
       exec-once=${pkgs.networkmanagerapplet}/bin/nm-applet --indicator
       exec-once=${pkgs.blueman}/bin/blueman-applet
       exec-once=wl-paste --type text --watch cliphist store &
+      exec-once=wl-paste --type image --watch cliphist store &
       exec-once=wl-clip-persist --clipboard regular --reconnect-tries 0 &
 
       env=WLR_NO_HARDWARE_CURSORS,1
@@ -222,8 +214,5 @@ in
     wf-recorder
     xwayland-satellite
     fcitx5
-    screenshot
-    grim
-    slurp
   ];
 }

@@ -1,11 +1,4 @@
 {
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-
-{
   environment.variables = {
     EDITOR = "hx";
     XCURSOR_THEME = "Bibata-Modern-Ice";
@@ -17,7 +10,7 @@
     BROWSER = "helium";
     DEFAULT_BROWSER = "helium";
 
-    XDG_SCREENSHOTS_DIR = "$HOME/Pictures/screenshots";
+    XDG_SCREENSHOTS_DIR = "$HOME/Pictures/Screenshots";
     XDG_SESSION_TYPE = "wayland";
     SDL_VIDEODRIVER = "wayland";
     _JAVA_AWT_WM_NONREPARENTING = "1";
