@@ -57,7 +57,6 @@ in
       env=XCURSOR_THEME,Bibata-Modern-Ice
       env=XCURSOR_SIZE,24
       env=DISPLAY,:11
-      env=GTK_IM_MODULE,fcitx
       env=QT_IM_MODULE,fcitx
       env=SDL_IM_MODULE,fcitx
       env=XMODIFIERS,@im=fcitx
