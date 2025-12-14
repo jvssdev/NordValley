@@ -7,27 +7,20 @@
 let
   palette = config.colorScheme.palette;
   hexToMango = hex: "0x${hex}ff";
+
+  screenshot = pkgs.writeShellScriptBin "screenshot" ''
+    dir="$HOME/Pictures/Screenshots"
+    mkdir -p "$dir"
+    file="$dir/$(date +'%Y-%m-%d_%H-%M-%S').png"
+    ${lib.getExe pkgs.grim} -g "$(${lib.getExe pkgs.slurp})" "$file"
+    ${lib.getExe' pkgs.wl-clipboard "wl-copy"} < "$file"
+    ${lib.getExe' pkgs.libnotify "notify-send"} "Screenshot saved" "$file" -i "$file" -t 3000
+  '';
 in
 {
   wayland.windowManager.mango = {
     enable = true;
     systemd.enable = false;
-    # autostart_sh = ''
-    #   set +e
-    #   dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots >/dev/null 2>&1
-    #   dbus-update-activation-environment --systemd DBUS_SESSION_BUS_ADDRESS >/dev/null 2>&1
-    #   dbus-update-activation-environment --systemd DISPLAY >/dev/null 2>&1
-    #   ${pkgs.xwayland-satellite}/bin/xwayland-satellite :0 >/dev/null 2>&1 &
-    #   wlsunset -T 3501 -t 3500 >/dev/null 2>&1 &
-    #   waybar -c ~/.config/mango/waybar/config.jsonc -s ~/.config/mango/waybar/style.css >/dev/null 2>&1 &
-    #   echo "Xft.dpi: 140" | xrdb -merge >/dev/null 2>&1
-    #   fcitx5 --replace -d >/dev/null 2>&1 &
-    #   wl-clip-persist --clipboard regular --reconnect-tries 0 >/dev/null 2>&1 &
-    #   wl-paste --type text --watch cliphist store >/dev/null 2>&1 &
-    #   blueman-applet >/dev/null 2>&1 &
-    #   nm-applet >/dev/null 2>&1 &
-    #   /usr/lib/xfce-polkit/xfce-polkit >/dev/null 2>&1 &
-    # '';
     settings = ''
       exec-once=${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
       exec-once=${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY
@@ -42,8 +35,7 @@ in
       exec-once=${pkgs.networkmanagerapplet}/bin/nm-applet --indicator
       exec-once=${pkgs.blueman}/bin/blueman-applet
       exec-once=wl-paste --type text --watch cliphist store &
-      exec-once=wl-paste --type image --watch cliphist store &
-      exec-once=wl-clip-persist --clipboard both &
+      exec-once=wl-clip-persist --clipboard regular --reconnect-tries 0 &
 
       env=WLR_NO_HARDWARE_CURSORS,1
       env=QT_AUTO_SCREEN_SCALE_FACTOR,1
@@ -116,7 +108,7 @@ in
       bind=SUPER,b,spawn,helium
       bind=SUPER,e,spawn,thunar
       bind=SUPER,x,spawn,wlogout
-      bind=SUPER,p,spawn,grim -g "$(slurp)" - | wl-copy
+      bind=SUPER,p,spawn,screenshot
       bind=SUPER,v,spawn,fuzzel-clipboard
       bind=SUPER+SHIFT,v,spawn,fuzzel-clipboard-clear
       bind=SUPER,q,killclient
@@ -230,5 +222,8 @@ in
     wf-recorder
     xwayland-satellite
     fcitx5
+    screenshot
+    grim
+    slurp
   ];
 }
