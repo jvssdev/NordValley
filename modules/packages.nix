@@ -72,6 +72,7 @@ let
     keepassxc
     anydesk
     llama-cpp
+    # (llama-cpp.override { vulkanSupport = true; })
     qbittorrent
     mpv
     imv

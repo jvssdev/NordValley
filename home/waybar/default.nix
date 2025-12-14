@@ -233,7 +233,12 @@ in
       modules-left = selectedConfig.modules-left or [ ];
       modules-center = commonModulesCenter;
       modules-right = commonModulesRight;
-      clock.format = "{:%H:%M %d/%m}";
+      clock = {
+        tooltip-format = "<tt><small>{calendar}</small></tt>";
+        format = "{:%H:%M %d/%m}";
+        format-alt = "{:%Y-%m-%d}";
+        interval = 1;
+      };
       cpu.format = "{usage}% ";
       memory.format = "{}% ";
       battery = {

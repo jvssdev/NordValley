@@ -1,6 +1,7 @@
 {
   pkgs,
   userName,
+  config,
   ...
 }:
 
