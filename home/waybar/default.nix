@@ -46,6 +46,7 @@ let
   mangoConfig = {
     modules-left = [
       "ext/workspaces"
+      "dwl/window"
     ];
     "ext/workspaces" = {
       "disable-scroll" = true;
@@ -53,6 +54,9 @@ let
       "all-outputs" = false;
       "on-click" = "activate";
       "format" = "{name}";
+    };
+    "dwl/window" = {
+      "format" = "[{layout}] {title}";
     };
   };
   niriConfig = {
