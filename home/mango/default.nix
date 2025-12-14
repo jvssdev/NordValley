@@ -55,7 +55,7 @@ in
       gappiv=6
       gappoh=6
       gappov=6
-      borderpx=2
+      borderpx=3
       border_radius=0
       no_border_when_single=0
       rootcolor=${hexToMango palette.base00}
@@ -78,7 +78,7 @@ in
       shadows_blur=15
       shadowscolor=${hexToMango palette.base00}
       scroller_structs=20
-      scroller_default_proportion=0.6
+      scroller_default_proportion=1.0
       scroller_focus_center=0
       scroller_prefer_center=1
       scroller_default_proportion_single=1.0
@@ -111,10 +111,11 @@ in
       bind=SUPER,k,focusstack,prev
       bind=SUPER,h,focusdir,left
       bind=SUPER,l,focusdir,right
-      bind=SUPER+SHIFT,j,exchange_client,down
-      bind=SUPER+SHIFT,k,exchange_client,up
-      bind=SUPER+SHIFT,h,exchange_client,left
-      bind=SUPER+SHIFT,l,exchange_client,right
+      bind=SUPER,u,focuslast
+      bind=SUPER+SHIFT,Up,exchange_client,up
+      bind=SUPER+SHIFT,Down,exchange_client,down
+      bind=SUPER+SHIFT,Left,exchange_client,left
+      bind=SUPER+SHIFT,Right,exchange_client,right
       bind=SUPER,i,incnmaster,+1
       bind=SUPER,d,incnmaster,-1
       bind=SUPER,Return,zoom
@@ -122,8 +123,8 @@ in
       bind=SUPER+ALT,l,resizewin,+50,0
       bind=SUPER+ALT,k,resizewin,0,-50
       bind=SUPER+ALT,j,resizewin,0,+50
-      bind=SUPER,m,setlayout,tile
-      bind=SUPER,c,setlayout,spiral
+      bind=SUPER,c,setlayout,tile
+      bind=SUPER,m,setlayout,monocle
       bind=SUPER,s,setlayout,scroller
       bind=SUPER,y,switch_layout
       bind=SUPER,g,togglegaps
@@ -146,10 +147,6 @@ in
       bind=SUPER+SHIFT,7,tag,7
       bind=SUPER+SHIFT,8,tag,8
       bind=SUPER+SHIFT,9,tag,9
-      bind=SUPER,period,focusmon,next
-      bind=SUPER,comma,focusmon,prev
-      bind=SUPER+SHIFT,period,tagmon,next
-      bind=SUPER+SHIFT,comma,tagmon,prev
       bind=NONE,XF86AudioRaiseVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
       bind=NONE,XF86AudioLowerVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
       bind=NONE,XF86AudioMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
