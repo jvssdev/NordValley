@@ -103,6 +103,7 @@ in
       bind=SUPER,p,spawn,screenshot
       bind=SUPER,v,spawn,fuzzel-clipboard
       bind=SUPER+SHIFT,v,spawn,fuzzel-clipboard-clear
+
       bind=SUPER,q,killclient
       bind=SUPER,space,togglefloating
       bind=SUPER,f,togglefullscreen
@@ -129,6 +130,7 @@ in
       bind=SUPER,y,switch_layout
       bind=SUPER,g,togglegaps
       bind=SUPER,o,toggleoverview
+
       bind=SUPER,1,comboview,1
       bind=SUPER,2,comboview,2
       bind=SUPER,3,comboview,3
@@ -138,6 +140,7 @@ in
       bind=SUPER,7,comboview,7
       bind=SUPER,8,comboview,8
       bind=SUPER,9,comboview,9
+
       bind=SUPER+SHIFT,1,tag,1
       bind=SUPER+SHIFT,2,tag,2
       bind=SUPER+SHIFT,3,tag,3
@@ -147,6 +150,7 @@ in
       bind=SUPER+SHIFT,7,tag,7
       bind=SUPER+SHIFT,8,tag,8
       bind=SUPER+SHIFT,9,tag,9
+
       bind=NONE,XF86AudioRaiseVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
       bind=NONE,XF86AudioLowerVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
       bind=NONE,XF86AudioMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
@@ -160,7 +164,6 @@ in
 
       mousebind=SUPER,btn_left,moveresize,curmove
       mousebind=SUPER,btn_right,moveresize,curresize
-      mousebind=SUPER,btn_middle,togglefloating
 
       windowrule=title:Authentication required,isfloating:1
       windowrule=title:Keybindings,isfloating:1
@@ -199,6 +202,7 @@ in
     config = {
       mango = {
         default = [ "gtk" ];
+        "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
         "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
         "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
         "org.freedesktop.impl.portal.Inhibit" = [ ];
@@ -206,6 +210,7 @@ in
     };
   };
   home.packages = with pkgs; [
+    gnome-keyring
     glib
     xdg-utils
     wf-recorder

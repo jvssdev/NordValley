@@ -65,13 +65,13 @@ let
     wlopm
 
     # Cloud/Sync tools
-    rclone
-    rclone-ui
+    # rclone
+    # rclone-ui
 
     # GUI applications
     keepassxc
     anydesk
-    llama-cpp
+    # llama-cpp
     # (llama-cpp.override { vulkanSupport = true; })
     qbittorrent
     mpv
