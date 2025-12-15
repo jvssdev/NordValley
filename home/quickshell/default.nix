@@ -2,12 +2,47 @@
   config,
   pkgs,
   lib,
+  homeDir,
+  isRiver,
+  isMango,
   ...
 }:
+
 let
   p = config.colorScheme.palette;
+  ms = s: s * 1000;
+in
+{
+  home.packages = [
+    pkgs.jq
+    pkgs.procps
+    pkgs.coreutils
+    pkgs.wireplumber
+    pkgs.bluez
+    pkgs.dunst
+    pkgs.gtklock
+    pkgs.systemd
+    pkgs.wlogout
+    pkgs.pavucontrol
+    pkgs.blueman
+    pkgs.wlopm
+    pkgs.kdePackages.qt5compat
+    pkgs.kdePackages.qtbase
+    pkgs.kdePackages.qtdeclarative
+  ];
 
-  shellQml = ''
+  home.sessionVariables = {
+    QML_IMPORT_PATH = lib.concatStringsSep ":" [
+      "$HOME/.config/quickshell"
+      "${pkgs.quickshell}/share/qml"
+      (lib.makeSearchPath "lib/qt-6/qml" [
+        pkgs.kdePackages.qtdeclarative
+        pkgs.kdePackages.qtbase
+      ])
+    ];
+  };
+
+  xdg.configFile."quickshell/shell.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
     import Quickshell
@@ -36,27 +71,22 @@ let
             readonly property int borderWidth: 2
             readonly property int padding: 14
             readonly property int spacing: 10
-            readonly property var font: ({
-                family: "JetBrainsMono Nerd Font",
-                pixelSize: 14,
-                weight: Font.Medium
-            })
+            readonly property string fontFamily: "JetBrainsMono Nerd Font"
+            readonly property int fontPixelSize: 14
         }
 
-        QtObject { id: makoDnd; property bool isDnd: false }
+        QtObject { id: dunstDnd; property bool isDnd: false }
         QtObject { id: btInfo; property bool connected: false }
         QtObject {
             id: volume
             property int level: 0
             property bool muted: false
         }
-        
         QtObject {
             id: battery
             property int percentage: 0
             property string icon: "󰂎"
             property bool charging: false
-            
             onPercentageChanged: {
                 if (percentage === 0) icon = "󰁹"
                 else if (percentage <= 10) icon = "󰂎"
@@ -67,47 +97,35 @@ let
                 else icon = "󰂂"
             }
         }
-
         QtObject { id: cpu; property int usage: 0 }
         QtObject { id: mem; property int percent: 0 }
         QtObject { id: disk; property int percent: 0 }
-        
-        QtObject {
-            id: activeWindow
-            property string title: "No Window Focused"
-        }
-
-        Connections {
-            target: Quickshell.Wayland
-            function onActiveClientChanged() {
-                activeWindow.title = Quickshell.Wayland.activeClient?.title || "No Window Focused"
-            }
-        }
 
         Process {
-            id: makoProc
-            command: ["makoctl", "mode"]
-            onExited: {
-                if (stdout) makoDnd.isDnd = stdout.trim() === "do-not-disturb"
+            id: dunstProc
+            command: ["${pkgs.dunst}/bin/dunstctl", "is-paused"]
+            stdout: SplitParser {
+                onRead: data => {
+                    if (data) dunstDnd.isDnd = data.trim() === "true"
+                }
             }
         }
-
         Timer {
             interval: 1000
             running: true
             repeat: true
             triggeredOnStart: true
-            onTriggered: makoProc.running = true
+            onTriggered: dunstProc.running = true
         }
-
         Process {
             id: btProc
-            command: ["bluetoothctl", "info"]
-            onExited: {
-                if (stdout) btInfo.connected = stdout.includes("Connected: yes")
+            command: ["${pkgs.bluez}/bin/bluetoothctl", "info"]
+            stdout: SplitParser {
+                onRead: data => {
+                    if (data) btInfo.connected = data.includes("Connected: yes")
+                }
             }
         }
-
         Timer {
             interval: 5000
             running: true
@@ -115,19 +133,19 @@ let
             triggeredOnStart: true
             onTriggered: btProc.running = true
         }
-
         Process {
             id: volumeProc
-            command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
-            onExited: {
-                if (!stdout) return
-                const out = stdout.trim()
-                volume.muted = out.includes("[MUTED]")
-                const match = out.match(/Volume: ([0-9.]+)/)
-                if (match) volume.level = Math.round(parseFloat(match[1]) * 100)
+            command: ["${pkgs.wireplumber}/bin/wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
+            stdout: SplitParser {
+                onRead: data => {
+                    if (!data) return
+                    const out = data.trim()
+                    volume.muted = out.includes("[MUTED]")
+                    const match = out.match(/Volume: ([0-9.]+)/)
+                    if (match) volume.level = Math.round(parseFloat(match[1]) * 100)
+                }
             }
         }
-
         Timer {
             interval: 1000
             running: true
@@ -135,7 +153,6 @@ let
             triggeredOnStart: true
             onTriggered: volumeProc.running = true
         }
-
         Timer {
             interval: 10000
             running: true
@@ -146,39 +163,41 @@ let
                 batStatusProc.running = true
             }
         }
-
         Process {
             id: batCapacityProc
-            command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 0"]
-            onExited: {
-                if (stdout) battery.percentage = parseInt(stdout.trim()) || 0
+            command: ["${pkgs.bash}/bin/sh", "-c", "cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 0"]
+            stdout: SplitParser {
+                onRead: data => {
+                    if (data) battery.percentage = parseInt(data.trim()) || 0
+                }
             }
         }
-
         Process {
             id: batStatusProc
-            command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/status 2>/dev/null || echo Discharging"]
-            onExited: {
-                if (stdout) battery.charging = stdout.trim() === "Charging"
+            command: ["${pkgs.bash}/bin/sh", "-c", "cat /sys/class/power_supply/BAT*/status 2>/dev/null || echo Discharging"]
+            stdout: SplitParser {
+                onRead: data => {
+                    if (data) battery.charging = data.trim() === "Charging"
+                }
             }
         }
-
         Process {
             id: cpuProc
-            command: ["top", "-bn1"]
-            onExited: {
-                if (!stdout) return
-                const lines = stdout.split("\n")
-                for (let line of lines) {
-                    if (line.includes("%Cpu")) {
-                        const parts = line.split(/\s+/)
-                        cpu.usage = Math.round(100 - parseFloat(parts[7]))
-                        break
+            command: ["${pkgs.procps}/bin/top", "-bn1"]
+            stdout: SplitParser {
+                onRead: data => {
+                    if (!data) return
+                    const lines = data.split("\n")
+                    for (let line of lines) {
+                        if (line.includes("%Cpu")) {
+                            const parts = line.split(/\s+/)
+                            cpu.usage = Math.round(100 - parseFloat(parts[7]))
+                            break
+                        }
                     }
                 }
             }
         }
-
         Timer {
             interval: 2000
             running: true
@@ -186,20 +205,20 @@ let
             triggeredOnStart: true
             onTriggered: cpuProc.running = true
         }
-
         Process {
             id: memProc
-            command: ["free"]
-            onExited: {
-                if (!stdout) return
-                const line = stdout.split("\n")[1] || ""
-                const parts = line.split(/\s+/)
-                const total = parseInt(parts[1]) || 1
-                const used = parseInt(parts[2]) || 0
-                mem.percent = Math.round(used / total * 100)
+            command: ["${pkgs.procps}/bin/free"]
+            stdout: SplitParser {
+                onRead: data => {
+                    if (!data) return
+                    const line = data.split("\n")[1] || ""
+                    const parts = line.split(/\s+/)
+                    const total = parseInt(parts[1]) || 1
+                    const used = parseInt(parts[2]) || 0
+                    mem.percent = Math.round(used / total * 100)
+                }
             }
         }
-
         Timer {
             interval: 2000
             running: true
@@ -207,19 +226,19 @@ let
             triggeredOnStart: true
             onTriggered: memProc.running = true
         }
-
         Process {
             id: diskProc
-            command: ["sh", "-c", "df / | tail -1"]
-            onExited: {
-                if (!stdout) return
-                const line = stdout.split("\n")[0] || ""
-                const parts = line.split(/\s+/)
-                var percentStr = parts[4] || "0%"
-                disk.percent = parseInt(percentStr.replace("%", "")) || 0
+            command: ["${pkgs.bash}/bin/sh", "-c", "${pkgs.coreutils}/bin/df / | ${pkgs.coreutils}/bin/tail -1"]
+            stdout: SplitParser {
+                onRead: data => {
+                    if (!data) return
+                    const line = data.split("\n")[0] || ""
+                    const parts = line.split(/\s+/)
+                    const percentStr = parts[4] || "0%"
+                    disk.percent = parseInt(percentStr.replace("%", "")) || 0
+                }
             }
         }
-
         Timer {
             interval: 10000
             running: true
@@ -227,25 +246,227 @@ let
             triggeredOnStart: true
             onTriggered: diskProc.running = true
         }
-        
-        Bar {
-            theme: theme
-            makoDnd: makoDnd
-            btInfo: btInfo
-            volume: volume
-            battery: battery
-            cpu: cpu
-            mem: mem
-            disk: disk
-            activeWindow: activeWindow
+
+        Process { id: wlopmOffProc; command: ["${pkgs.wlopm}/bin/wlopm", "--off", "*"] }
+        Process { id: wlopmOnProc; command: ["${pkgs.wlopm}/bin/wlopm", "--on", "*"] }
+        Process { id: gtklockProc; command: ["${pkgs.gtklock}/bin/gtklock", "-d"] }
+        Process { id: suspendProc; command: ["${pkgs.systemd}/bin/systemctl", "suspend"] }
+
+        IdleMonitor {
+            id: monitorOffMonitor
+            enabled: true
+            respectInhibitors: true
+            timeout: ${toString (ms 240)}
+
+            onIsIdleChanged: {
+                if (isIdle) {
+                    wlopmOffProc.running = true
+                } else {
+                    wlopmOnProc.running = true
+                }
+            }
+        }
+
+        IdleMonitor {
+            id: lockMonitor
+            enabled: true
+            respectInhibitors: true
+            timeout: ${toString (ms 300)}
+
+            onIsIdleChanged: {
+                if (isIdle) {
+                    gtklockProc.running = true
+                }
+            }
+        }
+
+        IdleMonitor {
+            id: suspendMonitor
+            enabled: true
+            respectInhibitors: true
+            timeout: ${toString (ms 600)}
+
+            onIsIdleChanged: {
+                if (isIdle) {
+                    suspendProc.running = true
+                }
+            }
+        }
+
+        PanelWindow {
+            anchors {
+                top: true
+                left: true
+                right: true
+            }
+            implicitHeight: 30
+            color: "transparent"
+
+            Process { id: pavuProcess; command: ["${pkgs.pavucontrol}/bin/pavucontrol"] }
+            Process { id: bluemanProcess; command: ["${pkgs.blueman}/bin/blueman-manager"] }
+            Process { id: dunstDndProcess; command: ["${pkgs.dunst}/bin/dunstctl", "set-paused", "toggle"] }
+            Process { id: wlogoutProcess; command: ["${pkgs.wlogout}/bin/wlogout"] }
+
+            Rectangle {
+                anchors.fill: parent
+                color: theme.bg
+
+                RowLayout {
+                    anchors.fill: parent
+                    spacing: theme.spacing / 2
+
+                    Item { width: theme.padding / 2 }
+
+                    Text {
+                        text: "~"
+                        color: theme.magenta
+                        font {
+                            family: theme.fontFamily
+                            pixelSize: 18
+                            bold: true
+                        }
+                    }
+
+                    Item { Layout.fillWidth: true }
+
+                    Text {
+                        id: clockText
+                        text: Qt.formatDateTime(new Date(), "HH:mm dd/MM")
+                        color: theme.cyan
+                        font {
+                            family: theme.fontFamily
+                            pixelSize: theme.fontPixelSize
+                            bold: true
+                        }
+                        Layout.rightMargin: theme.spacing / 2
+                        Timer {
+                            interval: 1000
+                            running: true
+                            repeat: true
+                            onTriggered: clockText.text = Qt.formatDateTime(new Date(), "HH:mm dd/MM")
+                        }
+                    }
+
+                    Rectangle {
+                        Layout.preferredWidth: theme.borderWidth
+                        Layout.preferredHeight: 16
+                        Layout.alignment: Qt.AlignVCenter
+                        Layout.leftMargin: 0
+                        Layout.rightMargin: theme.spacing / 2
+                        color: theme.fgSubtle
+                    }
+
+                    Text {
+                        text: " " + cpu.usage + "%"
+                        color: cpu.usage > 85 ? theme.red : theme.yellow
+                        font {
+                            family: theme.fontFamily
+                            pixelSize: theme.fontPixelSize
+                            bold: true
+                        }
+                        Layout.rightMargin: theme.spacing / 2
+                    }
+
+                    Text {
+                        text: " " + mem.percent + "%"
+                        color: mem.percent > 85 ? theme.red : theme.cyan
+                        font {
+                            family: theme.fontFamily
+                            pixelSize: theme.fontPixelSize
+                            bold: true
+                        }
+                        Layout.rightMargin: theme.spacing / 2
+                    }
+
+                    Text {
+                        text: " " + disk.percent + "%"
+                        color: disk.percent > 85 ? theme.red : theme.blue
+                        font {
+                            family: theme.fontFamily
+                            pixelSize: theme.fontPixelSize
+                            bold: true
+                        }
+                        Layout.rightMargin: theme.spacing / 2
+                    }
+
+                    Text {
+                        text: volume.muted ? " Muted" : " " + volume.level + "%"
+                        color: volume.muted ? theme.fgSubtle : theme.fg
+                        font {
+                            family: theme.fontFamily
+                            pixelSize: theme.fontPixelSize
+                            bold: true
+                        }
+                        Layout.rightMargin: theme.spacing / 2
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: pavuProcess.running = true
+                        }
+                    }
+
+                    Text {
+                        text: btInfo.connected ? "" : ""
+                        color: btInfo.connected ? theme.cyan : theme.fgSubtle
+                        font {
+                            family: theme.fontFamily
+                            pixelSize: theme.fontPixelSize
+                            bold: true
+                        }
+                        Layout.rightMargin: theme.spacing / 2
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: bluemanProcess.running = true
+                        }
+                    }
+
+                    Text {
+                        visible: battery.percentage > 0
+                        text: battery.icon + " " + battery.percentage + "%" + (battery.charging ? " 󰂄" : "")
+                        color: battery.percentage <= 15 ? theme.red : battery.percentage <= 30 ? theme.yellow : theme.fg
+                        font {
+                            family: theme.fontFamily
+                            pixelSize: theme.fontPixelSize
+                        }
+                        Layout.rightMargin: theme.spacing / 2
+                    }
+
+                    Text {
+                        text: dunstDnd.isDnd ? "" : ""
+                        color: dunstDnd.isDnd ? theme.red : theme.fg
+                        font {
+                            family: theme.fontFamily
+                            pixelSize: theme.fontPixelSize
+                            bold: dunstDnd.isDnd
+                        }
+                        Layout.rightMargin: theme.spacing / 2
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: dunstDndProcess.running = true
+                        }
+                    }
+
+                    Text {
+                        text: "⏻"
+                        color: theme.fg
+                        font {
+                            family: theme.fontFamily
+                            pixelSize: 16
+                        }
+                        Layout.rightMargin: theme.spacing / 2
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: wlogoutProcess.running = true
+                        }
+                    }
+
+                    Item { width: theme.padding / 2 }
+                }
+            }
         }
     }
   '';
-in
-{
-  xdg.configFile."quickshell/qmldir".text = ''
-    Bar 1.0 bar.qml
-  '';
-  xdg.configFile."quickshell/shell.qml".text = shellQml;
-  xdg.configFile."quickshell/bar.qml".source = ./bar.qml;
 }
