@@ -61,6 +61,7 @@ in
     ../home/zen/default.nix
     ../home/zoxide/default.nix
     ../home/zsh/default.nix
+    ../home/jujutsu/default.nix
   ]
   ++ lib.optionals isRiver [
     ../home/river
