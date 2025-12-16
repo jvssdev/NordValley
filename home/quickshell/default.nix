@@ -5,6 +5,7 @@
   homeDir,
   isRiver,
   isMango,
+  isNiri,
   ...
 }:
 
@@ -29,7 +30,10 @@ in
     pkgs.kdePackages.qt5compat
     pkgs.kdePackages.qtbase
     pkgs.kdePackages.qtdeclarative
-  ];
+  ]
+  ++ lib.optionals isRiver [ pkgs.river ]
+  ++ lib.optionals isMango [ pkgs.dwl ]
+  ++ lib.optionals isNiri [ pkgs.niri ];
 
   home.sessionVariables = {
     QML_IMPORT_PATH = lib.concatStringsSep ":" [
@@ -41,6 +45,251 @@ in
       ])
     ];
   };
+
+  xdg.configFile."quickshell/WorkspaceModule.qml".text = ''
+    import QtQuick
+    import QtQuick.Layouts
+    import Quickshell
+    import Quickshell.Io
+
+    RowLayout {
+        id: workspaceModule
+        spacing: 4
+
+        ${
+          if isRiver then
+            ''
+              Repeater {
+                  model: 9
+
+                  Rectangle {
+                      Layout.preferredWidth: 24
+                      Layout.preferredHeight: 24
+                      color: "transparent"
+
+                      property int tagId: index + 1
+                      property bool isActive: false
+                      property bool isOccupied: false
+
+                      Process {
+                          id: riverTagProc
+                          command: ["${pkgs.bash}/bin/sh", "-c", "${pkgs.river}/bin/riverctl list-views"]
+                          stdout: SplitParser {
+                              onRead: data => {
+                                  if (!data) return
+                                  const lines = data.split("\n")
+                                  parent.parent.isOccupied = lines.some(line => line.includes("tag:" + parent.parent.tagId))
+                              }
+                          }
+                      }
+
+                      Process {
+                          id: riverFocusProc
+                          command: ["${pkgs.bash}/bin/sh", "-c", "${pkgs.river}/bin/riverctl list-views | grep focused"]
+                          stdout: SplitParser {
+                              onRead: data => {
+                                  if (!data) return
+                                  parent.parent.isActive = data.includes("tag:" + parent.parent.tagId)
+                              }
+                          }
+                      }
+
+                      Timer {
+                          interval: 500
+                          running: true
+                          repeat: true
+                          triggeredOnStart: true
+                          onTriggered: {
+                              riverTagProc.running = true
+                              riverFocusProc.running = true
+                          }
+                      }
+
+                      Rectangle {
+                          anchors.fill: parent
+                          color: parent.isActive ? "#${p.base0D}" : (parent.isOccupied ? "#${p.base02}" : "transparent")
+                          radius: 0
+
+                          Text {
+                              text: parent.parent.tagId
+                              color: parent.parent.isActive ? "#${p.base00}" : "#${p.base05}"
+                              font.pixelSize: 12
+                              font.family: "JetBrainsMono Nerd Font"
+                              font.bold: parent.parent.isActive
+                              anchors.centerIn: parent
+                          }
+                      }
+
+                      MouseArea {
+                          anchors.fill: parent
+                          cursorShape: Qt.PointingHandCursor
+                          onClicked: {
+                              Qt.callLater(() => {
+                                  const tagMask = Math.pow(2, parent.tagId - 1)
+                                  const proc = Qt.createQmlObject(
+                                      'import Quickshell.Io; Process { command: ["${pkgs.river}/bin/riverctl", "set-focused-tags", "' + tagMask + '"] }',
+                                      parent
+                                  )
+                                  proc.running = true
+                              })
+                          }
+                      }
+                  }
+              }
+            ''
+          else if isMango then
+            ''
+              Repeater {
+                  model: 9
+
+                  Rectangle {
+                      Layout.preferredWidth: 24
+                      Layout.preferredHeight: 24
+                      color: "transparent"
+
+                      property int tagId: index
+                      property bool isActive: false
+                      property bool isOccupied: false
+                      property bool isUrgent: false
+
+                      Process {
+                          id: dwlTagProc
+                          command: ["${pkgs.bash}/bin/sh", "-c", "cat ~/.local/state/dwl/tags 2>/dev/null || echo '[]'"]
+                          stdout: SplitParser {
+                              onRead: data => {
+                                  if (!data) return
+                                  try {
+                                      const tags = JSON.parse(data)
+                                      if (tags && tags[parent.parent.tagId]) {
+                                          parent.parent.isActive = tags[parent.parent.tagId].focused || false
+                                          parent.parent.isOccupied = tags[parent.parent.tagId].occupied || false
+                                          parent.parent.isUrgent = tags[parent.parent.tagId].urgent || false
+                                      }
+                                  } catch (e) {}
+                              }
+                          }
+                      }
+
+                      Timer {
+                          interval: 200
+                          running: true
+                          repeat: true
+                          triggeredOnStart: true
+                          onTriggered: dwlTagProc.running = true
+                      }
+
+                      Rectangle {
+                          anchors.fill: parent
+                          color: parent.isUrgent ? "#${p.base08}" : (parent.isActive ? "#${p.base0D}" : (parent.isOccupied ? "#${p.base02}" : "transparent"))
+                          radius: 0
+
+                          Text {
+                              text: parent.parent.tagId + 1
+                              color: (parent.parent.isActive || parent.parent.isUrgent) ? "#${p.base00}" : "#${p.base05}"
+                              font.pixelSize: 12
+                              font.family: "JetBrainsMono Nerd Font"
+                              font.bold: parent.parent.isActive
+                              anchors.centerIn: parent
+                          }
+                      }
+
+                      MouseArea {
+                          anchors.fill: parent
+                          cursorShape: Qt.PointingHandCursor
+                          onClicked: {
+                              Qt.callLater(() => {
+                                  const proc = Qt.createQmlObject(
+                                      'import Quickshell.Io; Process { command: ["${pkgs.bash}/bin/sh", "-c", "echo \'view ' + parent.tagId + '\' > ~/.local/state/dwl/command"] }',
+                                      parent
+                                  )
+                                  proc.running = true
+                              })
+                          }
+                      }
+                  }
+              }
+            ''
+          else if isNiri then
+            ''
+              Repeater {
+                  model: ListModel {
+                      id: niriWorkspaces
+                  }
+
+                  Rectangle {
+                      Layout.preferredWidth: contentText.width + 16
+                      Layout.preferredHeight: 24
+                      color: modelData.isActive ? "#${p.base0D}" : "#${p.base02}"
+                      radius: 0
+
+                      Text {
+                          id: contentText
+                          text: modelData.name || (modelData.index + 1)
+                          color: modelData.isActive ? "#${p.base00}" : "#${p.base05}"
+                          font.pixelSize: 12
+                          font.family: "JetBrainsMono Nerd Font"
+                          font.bold: modelData.isActive
+                          anchors.centerIn: parent
+                      }
+
+                      MouseArea {
+                          anchors.fill: parent
+                          cursorShape: Qt.PointingHandCursor
+                          onClicked: {
+                              Qt.callLater(() => {
+                                  const proc = Qt.createQmlObject(
+                                      'import Quickshell.Io; Process { command: ["${pkgs.niri}/bin/niri", "msg", "action", "focus-workspace", "' + modelData.index + '"] }',
+                                      parent
+                                  )
+                                  proc.running = true
+                              })
+                          }
+                      }
+                  }
+              }
+
+              Process {
+                  id: niriWorkspaceProc
+                  command: ["${pkgs.niri}/bin/niri", "msg", "-j", "workspaces"]
+                  stdout: SplitParser {
+                      onRead: data => {
+                          if (!data) return
+                          try {
+                              const workspaces = JSON.parse(data)
+                              niriWorkspaces.clear()
+                              workspaces.forEach((ws, idx) => {
+                                  niriWorkspaces.append({
+                                      index: idx,
+                                      name: ws.name || "",
+                                      isActive: ws.is_active || false
+                                  })
+                              })
+                          } catch (e) {}
+                      }
+                  }
+              }
+
+              Timer {
+                  interval: 300
+                  running: true
+                  repeat: true
+                  triggeredOnStart: true
+                  onTriggered: niriWorkspaceProc.running = true
+              }
+            ''
+          else
+            ''
+              Text {
+                  text: "~"
+                  color: "#${p.base0E}"
+                  font.pixelSize: 18
+                  font.family: "JetBrainsMono Nerd Font"
+                  font.bold: true
+              }
+            ''
+        }
+    }
+  '';
 
   xdg.configFile."quickshell/shell.qml".text = ''
     import QtQuick
@@ -331,15 +580,7 @@ in
 
                     Item { width: theme.padding / 2 }
 
-                    Text {
-                        text: "~"
-                        color: theme.magenta
-                        font {
-                            family: theme.fontFamily
-                            pixelSize: 18
-                            bold: true
-                        }
-                    }
+                    WorkspaceModule {}
 
                     Item { Layout.fillWidth: true }
 

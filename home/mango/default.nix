@@ -24,7 +24,7 @@ in
       exec-once=${pkgs.networkmanagerapplet}/bin/nm-applet --indicator
       exec-once=${pkgs.blueman}/bin/blueman-applet
       exec-once=${pkgs.waybar}/bin/waybar &
-      exec-once=${pkgs.wpaperd}/bin/wpaperd
+      exec-once=${pkgs.wpaperd}/bin/wpaperd -d
       exec-once=wl-paste --type text --watch cliphist store &
       exec-once=wl-paste --type image --watch cliphist store &
       exec-once=wl-clip-persist --clipboard regular --reconnect-tries 0 &
