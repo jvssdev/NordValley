@@ -101,6 +101,9 @@ in
         QtObject { id: mem; property int percent: 0 }
         QtObject { id: disk; property int percent: 0 }
 
+        property var lastCpuIdle: 0
+        property var lastCpuTotal: 0
+
         Process {
             id: dunstProc
             command: ["${pkgs.dunst}/bin/dunstctl", "is-paused"]
@@ -183,18 +186,31 @@ in
         }
         Process {
             id: cpuProc
-            command: ["${pkgs.procps}/bin/top", "-bn1"]
+            command: ["${pkgs.bash}/bin/sh", "-c", "head -1 /proc/stat"]
             stdout: SplitParser {
                 onRead: data => {
                     if (!data) return
-                    const lines = data.split("\n")
-                    for (let line of lines) {
-                        if (line.includes("%Cpu")) {
-                            const parts = line.split(/\s+/)
-                            cpu.usage = Math.round(100 - parseFloat(parts[7]))
-                            break
+                    var parts = data.trim().split(/\s+/)
+                    var user = parseInt(parts[1]) || 0
+                    var nice = parseInt(parts[2]) || 0
+                    var system = parseInt(parts[3]) || 0
+                    var idle = parseInt(parts[4]) || 0
+                    var iowait = parseInt(parts[5]) || 0
+                    var irq = parseInt(parts[6]) || 0
+                    var softirq = parseInt(parts[7]) || 0
+
+                    var total = user + nice + system + idle + iowait + irq + softirq
+                    var idleTime = idle + iowait
+
+                    if (lastCpuTotal > 0) {
+                        var totalDiff = total - lastCpuTotal
+                        var idleDiff = idleTime - lastCpuIdle
+                        if (totalDiff > 0) {
+                            cpu.usage = Math.round(100 * (totalDiff - idleDiff) / totalDiff)
                         }
                     }
+                    lastCpuTotal = total
+                    lastCpuIdle = idleTime
                 }
             }
         }
@@ -207,15 +223,14 @@ in
         }
         Process {
             id: memProc
-            command: ["${pkgs.procps}/bin/free"]
+            command: ["${pkgs.bash}/bin/sh", "-c", "${pkgs.procps}/bin/free | grep Mem"]
             stdout: SplitParser {
                 onRead: data => {
                     if (!data) return
-                    const line = data.split("\n")[1] || ""
-                    const parts = line.split(/\s+/)
-                    const total = parseInt(parts[1]) || 1
-                    const used = parseInt(parts[2]) || 0
-                    mem.percent = Math.round(used / total * 100)
+                    var parts = data.trim().split(/\s+/)
+                    var total = parseInt(parts[1]) || 1
+                    var used = parseInt(parts[2]) || 0
+                    mem.percent = Math.round(100 * used / total)
                 }
             }
         }
@@ -232,9 +247,8 @@ in
             stdout: SplitParser {
                 onRead: data => {
                     if (!data) return
-                    const line = data.split("\n")[0] || ""
-                    const parts = line.split(/\s+/)
-                    const percentStr = parts[4] || "0%"
+                    var parts = data.trim().split(/\s+/)
+                    var percentStr = parts[4] || "0%"
                     disk.percent = parseInt(percentStr.replace("%", "")) || 0
                 }
             }
