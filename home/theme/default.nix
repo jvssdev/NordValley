@@ -1,6 +1,7 @@
 {
   pkgs,
   specialArgs,
+  lib,
   ...
 }:
 let
@@ -17,16 +18,6 @@ in
     x11.enable = true;
   };
 
-  home.sessionVariables = {
-    XCURSOR_THEME = "Bibata-Modern-Ice";
-    XCURSOR_SIZE = "24";
-  };
-
-  home.file.".icons/default".source = "${pkgs.bibata-cursors}/share/icons/Bibata-Modern-Ice";
-
-  home.file.".local/share/icons/default".source =
-    "${pkgs.bibata-cursors}/share/icons/Bibata-Modern-Ice";
-
   fonts.fontconfig.enable = true;
   home.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
@@ -34,50 +25,74 @@ in
     nerd-fonts.hack
     nerd-fonts.meslo-lg
     montserrat
+    nordic
+    nordzy-icon-theme
   ];
 
   gtk = {
     enable = true;
+
     theme = {
-      package = (
-        pkgs.colloid-gtk-theme.override {
-          tweaks = [ "nord" ];
-          colorVariants = [ "dark" ];
-        }
-      );
-      name = "Colloid-Dark-Nord";
+      name = "Nordic-darker";
+      package = pkgs.nordic;
     };
+
     iconTheme = {
-      name = "Colloid-Dark";
-      package = pkgs.colloid-icon-theme;
+      name = "Nordzy-dark";
+      package = pkgs.nordzy-icon-theme;
     };
+
     cursorTheme = {
       name = "Bibata-Modern-Ice";
       package = pkgs.bibata-cursors;
       size = 24;
     };
+
     gtk3.extraConfig = {
       gtk-application-prefer-dark-theme = true;
-      gtk-cursor-theme-name = "Bibata-Modern-Ice";
-      gtk-cursor-theme-size = 24;
     };
+
     gtk4.extraConfig = {
       gtk-application-prefer-dark-theme = true;
-      gtk-cursor-theme-name = "Bibata-Modern-Ice";
-      gtk-cursor-theme-size = 24;
     };
   };
 
   qt = {
     enable = true;
-    platformTheme.name = "qt6ct";
-    style.name = "kvantum";
+
+    platformTheme = {
+      name = "kde";
+    };
+
+    style = {
+      name = "kvantum";
+    };
   };
 
-  xdg.dataFile."icons/default/index.theme".text = ''
-    [Icon Theme]
-    Name=Default
-    Comment=Default Cursor Theme
-    Inherits=Bibata-Modern-Ice
-  '';
+  xdg.configFile = {
+    kvantum = {
+      target = "Kvantum/kvantum.kvconfig";
+      text = lib.generators.toINI { } {
+        General.theme = "Nordic-darker";
+      };
+    };
+
+    qt5ct = {
+      target = "qt5ct/qt5ct.conf";
+      text = lib.generators.toINI { } {
+        Appearance = {
+          icon_theme = "Nordzy-dark";
+        };
+      };
+    };
+
+    qt6ct = {
+      target = "qt6ct/qt6ct.conf";
+      text = lib.generators.toINI { } {
+        Appearance = {
+          icon_theme = "Nordzy-dark";
+        };
+      };
+    };
+  };
 }
