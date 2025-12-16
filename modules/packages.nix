@@ -101,7 +101,6 @@ let
     dunst
     pavucontrol
 
-    # Custom packages from inputs
     # zen-browser.packages.${pkgs.system}.default
     helium-browser.packages.${pkgs.system}.default
     # helix.packages.${pkgs.system}.default

@@ -1,7 +1,5 @@
 {
-  config,
   pkgs,
-  lib,
   silentSDDM,
   nix-colors,
   ...

@@ -77,7 +77,7 @@ in
       shadows_size=12
       shadows_blur=15
       shadowscolor=${hexToMango palette.base00}
-      scroller_structs=20
+      scroller_structs=0
       scroller_default_proportion=1.0
       scroller_focus_center=0
       scroller_prefer_center=1

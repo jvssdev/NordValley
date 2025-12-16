@@ -1,9 +1,3 @@
-{
-  pkgs,
-  config,
-  lib,
-  ...
-}:
 let
   accentColor = "34";
 in

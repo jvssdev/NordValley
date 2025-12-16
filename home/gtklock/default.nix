@@ -1,12 +1,9 @@
 {
   config,
   pkgs,
-  lib,
-  specialArgs,
   ...
 }:
 let
-  inherit (specialArgs) homeDir;
   c = config.colorScheme.palette;
 
   gtklockConfig = pkgs.writeText "gtklock-config" ''
