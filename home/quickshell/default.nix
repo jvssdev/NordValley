@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  homeDir,
   isRiver,
   isMango,
   isNiri,
@@ -125,70 +124,89 @@ in
             ''
           else if isMango then
             ''
-              Repeater {
-                  model: ListModel {
-                      id: dwlTagsModel
-                      Component.onCompleted: {
-                          for (let i = 1; i <= 9; i++) {
-                              append({ tagId: i.toString(), isActive: false, isOccupied: false, isUrgent: false });
+              RowLayout {
+                  spacing: 12
+                  
+                  Row {
+                      spacing: 2
+                      Repeater {
+                          model: ListModel {
+                              id: dwlTagsModel
+                              Component.onCompleted: {
+                                  for (let i = 1; i <= 9; i++) {
+                                      append({ tagId: i.toString(), isActive: false, isOccupied: false, isUrgent: false });
+                                  }
+                              }
                           }
-                      }
-                  }
-                  Rectangle {
-                      visible: model.isActive || model.isOccupied || model.isUrgent
-                      width: visible ? 24 : 0
-                      height: 24
-                      color: "transparent"
-                      Rectangle {
-                          anchors.fill: parent
-                          anchors.margins: 2
-                          color: model.isUrgent ? "#${p.base08}" : (model.isActive ? "#${p.base0C}" : (model.isOccupied ? "#${p.base02}" : "transparent"))
-                          radius: 4
-                          Text {
-                              text: model.tagId
-                              color: (model.isActive || model.isUrgent) ? "#${p.base00}" : "#${p.base05}"
-                              font.pixelSize: 12
-                              font.family: "JetBrainsMono Nerd Font"
-                              font.bold: model.isActive
-                              anchors.centerIn: parent
-                          }
-                      }
-                      MouseArea {
-                          anchors.fill: parent
-                          onClicked: {
-                              const proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent);
-                              proc.command = ["mmsg", "-t", model.tagId];
-                              proc.running = true;
-                          }
-                      }
-                  }
-              }
-              Process {
-                  id: dwlTagProc
-                  command: ["mmsg", "-g", "-t"]
-                  stdout: SplitParser {
-                      onRead: data => {
-                          const lines = data.trim().split("\n");
-                          for (const line of lines) {
-                              const parts = line.trim().split(/\s+/);
-                              if (parts.length >= 6 && parts[1] === "tag") {
-                                  const id = parseInt(parts[2]);
-                                  if (id >= 1 && id <= 9) {
-                                      dwlTagsModel.setProperty(id - 1, "isActive", parts[3] === "1");
-                                      dwlTagsModel.setProperty(id - 1, "isOccupied", parts[4] === "1");
-                                      dwlTagsModel.setProperty(id - 1, "isUrgent", parts[5] === "1");
+                          Rectangle {
+                              visible: model.isActive || model.isOccupied || model.isUrgent
+                              width: visible ? 24 : 0
+                              height: 24
+                              color: "transparent"
+                              Rectangle {
+                                  anchors.fill: parent
+                                  anchors.margins: 2
+                                  color: model.isUrgent ? "#${p.base08}" : (model.isActive ? "#${p.base0C}" : (model.isOccupied ? "#${p.base02}" : "transparent"))
+                                  radius: 4
+                                  Text {
+                                      text: model.tagId
+                                      color: (model.isActive || model.isUrgent) ? "#${p.base00}" : "#${p.base05}"
+                                      font.pixelSize: 11
+                                      font.family: "JetBrainsMono Nerd Font"
+                                      font.bold: model.isActive
+                                      anchors.centerIn: parent
                                   }
                               }
                           }
                       }
                   }
+
+                  Text {
+                      id: dwlLayoutText
+                      text: ""
+                      color: "#${p.base0C}"
+                      font.pixelSize: 11
+                      font.family: "JetBrainsMono Nerd Font"
+                      font.bold: true
+                  }
               }
+
+              Process {
+                  id: dwlUpdateProc
+                  command: ["mmsg", "-g"]
+                  stdout: SplitParser {
+                      onRead: data => {
+                          const lines = data.trim().split("\n");
+                          for (let line of lines) {
+                              const parts = line.trim().split(/\s+/);
+                              if (line.includes(" tag ")) {
+                                  const idx = parts.indexOf("tag");
+                                  const id = parseInt(parts[idx + 1]);
+                                  if (id >= 1 && id <= 9) {
+                                      dwlTagsModel.setProperty(id - 1, "isActive", parts[idx + 2] === "1");
+                                      dwlTagsModel.setProperty(id - 1, "isOccupied", parts[idx + 3] === "1");
+                                      dwlTagsModel.setProperty(id - 1, "isUrgent", parts[idx + 4] === "1");
+                                  }
+                              } else if (line.includes(" layout ")) {
+                                  const idx = parts.indexOf("layout");
+                                  const symbol = parts[idx + 1] || "";
+                                  dwlLayoutText.text = symbol ? "[" + symbol.replace(/[\[\]]/g, "") + "]" : "";
+                              }
+                          }
+                      }
+                  }
+              }
+
               Timer {
-                  interval: 200
+                  interval: 150
                   running: true
                   repeat: true
                   triggeredOnStart: true
-                  onTriggered: dwlTagProc.running = true
+                  onTriggered: {
+                      if (!dwlUpdateProc.running) {
+                          dwlUpdateProc.running = true;
+                      }
+                  }
               }
             ''
           else if isNiri then
