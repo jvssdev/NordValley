@@ -9,7 +9,6 @@
 }:
 let
   p = config.colorScheme.palette;
-  ms = s: s * 1000;
 in
 {
   home.packages = [
@@ -28,6 +27,7 @@ in
     pkgs.kdePackages.qt5compat
     pkgs.kdePackages.qtbase
     pkgs.kdePackages.qtdeclarative
+    pkgs.dbus
   ]
   ++ lib.optionals isRiver [ pkgs.river ]
   ++ lib.optionals isNiri [ pkgs.niri ];
@@ -300,6 +300,18 @@ in
         Process { id: wlopmOnProc; command: ["${pkgs.wlopm}/bin/wlopm", "--on", "*"] }
         Process { id: gtklockProc; command: ["${pkgs.gtklock}/bin/gtklock", "-d"] }
         Process { id: suspendProc; command: ["${pkgs.systemd}/bin/systemctl", "suspend"] }
+        Process {
+            id: logindMonitor
+            command: ["dbus-monitor", "--system", "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForSleep'"]
+            running: true
+            stdout: SplitParser {
+                onRead: data => {
+                    if (data.includes("boolean true")) {
+                        gtklockProc.running = true
+                    }
+                }
+            }
+        }
         Variants {
             model: [
                 { timeout: 240, idleAction: "dpms off", returnAction: "dpms on" },
