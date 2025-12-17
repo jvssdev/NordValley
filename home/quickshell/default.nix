@@ -8,7 +8,6 @@
   isNiri,
   ...
 }:
-
 let
   p = config.colorScheme.palette;
   ms = s: s * 1000;
@@ -32,9 +31,7 @@ in
     pkgs.kdePackages.qtdeclarative
   ]
   ++ lib.optionals isRiver [ pkgs.river ]
-  ++ lib.optionals isMango [ pkgs.dwl ]
   ++ lib.optionals isNiri [ pkgs.niri ];
-
   home.sessionVariables = {
     QML_IMPORT_PATH = lib.concatStringsSep ":" [
       "$HOME/.config/quickshell"
@@ -45,32 +42,26 @@ in
       ])
     ];
   };
-
   xdg.configFile."quickshell/WorkspaceModule.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
     import Quickshell
     import Quickshell.Io
-
     RowLayout {
         id: workspaceModule
         spacing: 4
-
         ${
           if isRiver then
             ''
               Repeater {
                   model: 9
-
                   Rectangle {
                       Layout.preferredWidth: 24
                       Layout.preferredHeight: 24
                       color: "transparent"
-
                       property int tagId: index + 1
                       property bool isActive: false
                       property bool isOccupied: false
-
                       Process {
                           id: riverTagProc
                           command: ["${pkgs.bash}/bin/sh", "-c", "${pkgs.river}/bin/riverctl list-views"]
@@ -82,7 +73,6 @@ in
                               }
                           }
                       }
-
                       Process {
                           id: riverFocusProc
                           command: ["${pkgs.bash}/bin/sh", "-c", "${pkgs.river}/bin/riverctl list-views | grep focused"]
@@ -93,7 +83,6 @@ in
                               }
                           }
                       }
-
                       Timer {
                           interval: 500
                           running: true
@@ -104,12 +93,10 @@ in
                               riverFocusProc.running = true
                           }
                       }
-
                       Rectangle {
                           anchors.fill: parent
                           color: parent.isActive ? "#${p.base0D}" : (parent.isOccupied ? "#${p.base02}" : "transparent")
                           radius: 0
-
                           Text {
                               text: parent.parent.tagId
                               color: parent.parent.isActive ? "#${p.base00}" : "#${p.base05}"
@@ -119,7 +106,6 @@ in
                               anchors.centerIn: parent
                           }
                       }
-
                       MouseArea {
                           anchors.fill: parent
                           cursorShape: Qt.PointingHandCursor
@@ -140,73 +126,69 @@ in
           else if isMango then
             ''
               Repeater {
-                  model: 9
-
-                  Rectangle {
-                      Layout.preferredWidth: 24
-                      Layout.preferredHeight: 24
-                      color: "transparent"
-
-                      property int tagId: index
-                      property bool isActive: false
-                      property bool isOccupied: false
-                      property bool isUrgent: false
-
-                      Process {
-                          id: dwlTagProc
-                          command: ["${pkgs.bash}/bin/sh", "-c", "cat ~/.local/state/dwl/tags 2>/dev/null || echo '[]'"]
-                          stdout: SplitParser {
-                              onRead: data => {
-                                  if (!data) return
-                                  try {
-                                      const tags = JSON.parse(data)
-                                      if (tags && tags[parent.parent.tagId]) {
-                                          parent.parent.isActive = tags[parent.parent.tagId].focused || false
-                                          parent.parent.isOccupied = tags[parent.parent.tagId].occupied || false
-                                          parent.parent.isUrgent = tags[parent.parent.tagId].urgent || false
-                                      }
-                                  } catch (e) {}
-                              }
-                          }
-                      }
-
-                      Timer {
-                          interval: 200
-                          running: true
-                          repeat: true
-                          triggeredOnStart: true
-                          onTriggered: dwlTagProc.running = true
-                      }
-
-                      Rectangle {
-                          anchors.fill: parent
-                          color: parent.isUrgent ? "#${p.base08}" : (parent.isActive ? "#${p.base0D}" : (parent.isOccupied ? "#${p.base02}" : "transparent"))
-                          radius: 0
-
-                          Text {
-                              text: parent.parent.tagId + 1
-                              color: (parent.parent.isActive || parent.parent.isUrgent) ? "#${p.base00}" : "#${p.base05}"
-                              font.pixelSize: 12
-                              font.family: "JetBrainsMono Nerd Font"
-                              font.bold: parent.parent.isActive
-                              anchors.centerIn: parent
-                          }
-                      }
-
-                      MouseArea {
-                          anchors.fill: parent
-                          cursorShape: Qt.PointingHandCursor
-                          onClicked: {
-                              Qt.callLater(() => {
-                                  const proc = Qt.createQmlObject(
-                                      'import Quickshell.Io; Process { command: ["${pkgs.bash}/bin/sh", "-c", "echo \'view ' + parent.tagId + '\' > ~/.local/state/dwl/command"] }',
-                                      parent
-                                  )
-                                  proc.running = true
-                              })
+                  model: ListModel {
+                      id: dwlTagsModel
+                      Component.onCompleted: {
+                          for (let i = 1; i <= 9; i++) {
+                              append({ tagId: i.toString(), isActive: false, isOccupied: false, isUrgent: false });
                           }
                       }
                   }
+                  Rectangle {
+                      visible: model.isActive || model.isOccupied || model.isUrgent
+                      width: visible ? 24 : 0
+                      height: 24
+                      color: "transparent"
+                      Rectangle {
+                          anchors.fill: parent
+                          anchors.margins: 2
+                          color: model.isUrgent ? "#${p.base08}" : (model.isActive ? "#${p.base0C}" : (model.isOccupied ? "#${p.base02}" : "transparent"))
+                          radius: 4
+                          Text {
+                              text: model.tagId
+                              color: (model.isActive || model.isUrgent) ? "#${p.base00}" : "#${p.base05}"
+                              font.pixelSize: 12
+                              font.family: "JetBrainsMono Nerd Font"
+                              font.bold: model.isActive
+                              anchors.centerIn: parent
+                          }
+                      }
+                      MouseArea {
+                          anchors.fill: parent
+                          onClicked: {
+                              const proc = Qt.createQmlObject('import Quickshell.Io; Process {}', parent);
+                              proc.command = ["mmsg", "-t", model.tagId];
+                              proc.running = true;
+                          }
+                      }
+                  }
+              }
+              Process {
+                  id: dwlTagProc
+                  command: ["mmsg", "-g", "-t"]
+                  stdout: SplitParser {
+                      onRead: data => {
+                          const lines = data.trim().split("\n");
+                          for (const line of lines) {
+                              const parts = line.trim().split(/\s+/);
+                              if (parts.length >= 6 && parts[1] === "tag") {
+                                  const id = parseInt(parts[2]);
+                                  if (id >= 1 && id <= 9) {
+                                      dwlTagsModel.setProperty(id - 1, "isActive", parts[3] === "1");
+                                      dwlTagsModel.setProperty(id - 1, "isOccupied", parts[4] === "1");
+                                      dwlTagsModel.setProperty(id - 1, "isUrgent", parts[5] === "1");
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+              Timer {
+                  interval: 200
+                  running: true
+                  repeat: true
+                  triggeredOnStart: true
+                  onTriggered: dwlTagProc.running = true
               }
             ''
           else if isNiri then
@@ -215,13 +197,11 @@ in
                   model: ListModel {
                       id: niriWorkspaces
                   }
-
                   Rectangle {
                       Layout.preferredWidth: contentText.width + 16
                       Layout.preferredHeight: 24
                       color: modelData.isActive ? "#${p.base0D}" : "#${p.base02}"
                       radius: 0
-
                       Text {
                           id: contentText
                           text: modelData.name || (modelData.index + 1)
@@ -231,7 +211,6 @@ in
                           font.bold: modelData.isActive
                           anchors.centerIn: parent
                       }
-
                       MouseArea {
                           anchors.fill: parent
                           cursorShape: Qt.PointingHandCursor
@@ -247,7 +226,6 @@ in
                       }
                   }
               }
-
               Process {
                   id: niriWorkspaceProc
                   command: ["${pkgs.niri}/bin/niri", "msg", "-j", "workspaces"]
@@ -268,7 +246,6 @@ in
                       }
                   }
               }
-
               Timer {
                   interval: 300
                   running: true
@@ -290,17 +267,14 @@ in
         }
     }
   '';
-
   xdg.configFile."quickshell/shell.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Io
-
     ShellRoot {
         id: root
-
         QtObject {
             id: theme
             readonly property string bg: "#${p.base00}"
@@ -323,7 +297,6 @@ in
             readonly property string fontFamily: "JetBrainsMono Nerd Font"
             readonly property int fontPixelSize: 14
         }
-
         QtObject { id: dunstDnd; property bool isDnd: false }
         QtObject { id: btInfo; property bool connected: false }
         QtObject {
@@ -349,10 +322,8 @@ in
         QtObject { id: cpu; property int usage: 0 }
         QtObject { id: mem; property int percent: 0 }
         QtObject { id: disk; property int percent: 0 }
-
         property var lastCpuIdle: 0
         property var lastCpuTotal: 0
-
         Process {
             id: dunstProc
             command: ["${pkgs.dunst}/bin/dunstctl", "is-paused"]
@@ -447,10 +418,8 @@ in
                     var iowait = parseInt(parts[5]) || 0
                     var irq = parseInt(parts[6]) || 0
                     var softirq = parseInt(parts[7]) || 0
-
                     var total = user + nice + system + idle + iowait + irq + softirq
                     var idleTime = idle + iowait
-
                     if (lastCpuTotal > 0) {
                         var totalDiff = total - lastCpuTotal
                         var idleDiff = idleTime - lastCpuIdle
@@ -509,18 +478,15 @@ in
             triggeredOnStart: true
             onTriggered: diskProc.running = true
         }
-
         Process { id: wlopmOffProc; command: ["${pkgs.wlopm}/bin/wlopm", "--off", "*"] }
         Process { id: wlopmOnProc; command: ["${pkgs.wlopm}/bin/wlopm", "--on", "*"] }
         Process { id: gtklockProc; command: ["${pkgs.gtklock}/bin/gtklock", "-d"] }
         Process { id: suspendProc; command: ["${pkgs.systemd}/bin/systemctl", "suspend"] }
-
         IdleMonitor {
             id: monitorOffMonitor
             enabled: true
             respectInhibitors: true
             timeout: ${toString (ms 240)}
-
             onIsIdleChanged: {
                 if (isIdle) {
                     wlopmOffProc.running = true
@@ -529,33 +495,28 @@ in
                 }
             }
         }
-
         IdleMonitor {
             id: lockMonitor
             enabled: true
             respectInhibitors: true
             timeout: ${toString (ms 300)}
-
             onIsIdleChanged: {
                 if (isIdle) {
                     gtklockProc.running = true
                 }
             }
         }
-
         IdleMonitor {
             id: suspendMonitor
             enabled: true
             respectInhibitors: true
             timeout: ${toString (ms 600)}
-
             onIsIdleChanged: {
                 if (isIdle) {
                     suspendProc.running = true
                 }
             }
         }
-
         PanelWindow {
             anchors {
                 top: true
@@ -564,26 +525,19 @@ in
             }
             implicitHeight: 30
             color: "transparent"
-
             Process { id: pavuProcess; command: ["${pkgs.pavucontrol}/bin/pavucontrol"] }
             Process { id: bluemanProcess; command: ["${pkgs.blueman}/bin/blueman-manager"] }
             Process { id: dunstDndProcess; command: ["${pkgs.dunst}/bin/dunstctl", "set-paused", "toggle"] }
             Process { id: wlogoutProcess; command: ["${pkgs.wlogout}/bin/wlogout"] }
-
             Rectangle {
                 anchors.fill: parent
                 color: theme.bg
-
                 RowLayout {
                     anchors.fill: parent
                     spacing: theme.spacing / 2
-
                     Item { width: theme.padding / 2 }
-
                     WorkspaceModule {}
-
                     Item { Layout.fillWidth: true }
-
                     Text {
                         id: clockText
                         text: Qt.formatDateTime(new Date(), "HH:mm dd/MM")
@@ -601,7 +555,6 @@ in
                             onTriggered: clockText.text = Qt.formatDateTime(new Date(), "HH:mm dd/MM")
                         }
                     }
-
                     Rectangle {
                         Layout.preferredWidth: theme.borderWidth
                         Layout.preferredHeight: 16
@@ -610,7 +563,6 @@ in
                         Layout.rightMargin: theme.spacing / 2
                         color: theme.fgSubtle
                     }
-
                     Text {
                         text: " " + cpu.usage + "%"
                         color: cpu.usage > 85 ? theme.red : theme.yellow
@@ -621,7 +573,6 @@ in
                         }
                         Layout.rightMargin: theme.spacing / 2
                     }
-
                     Text {
                         text: " " + mem.percent + "%"
                         color: mem.percent > 85 ? theme.red : theme.cyan
@@ -632,7 +583,6 @@ in
                         }
                         Layout.rightMargin: theme.spacing / 2
                     }
-
                     Text {
                         text: " " + disk.percent + "%"
                         color: disk.percent > 85 ? theme.red : theme.blue
@@ -643,7 +593,6 @@ in
                         }
                         Layout.rightMargin: theme.spacing / 2
                     }
-
                     Text {
                         text: volume.muted ? " Muted" : " " + volume.level + "%"
                         color: volume.muted ? theme.fgSubtle : theme.fg
@@ -659,7 +608,6 @@ in
                             onClicked: pavuProcess.running = true
                         }
                     }
-
                     Text {
                         text: btInfo.connected ? "" : ""
                         color: btInfo.connected ? theme.cyan : theme.fgSubtle
@@ -675,7 +623,6 @@ in
                             onClicked: bluemanProcess.running = true
                         }
                     }
-
                     Text {
                         visible: battery.percentage > 0
                         text: battery.icon + " " + battery.percentage + "%" + (battery.charging ? " 󰂄" : "")
@@ -686,7 +633,6 @@ in
                         }
                         Layout.rightMargin: theme.spacing / 2
                     }
-
                     Text {
                         text: dunstDnd.isDnd ? "" : ""
                         color: dunstDnd.isDnd ? theme.red : theme.fg
@@ -702,7 +648,6 @@ in
                             onClicked: dunstDndProcess.running = true
                         }
                     }
-
                     Text {
                         text: "⏻"
                         color: theme.fg
@@ -717,7 +662,6 @@ in
                             onClicked: wlogoutProcess.running = true
                         }
                     }
-
                     Item { width: theme.padding / 2 }
                 }
             }
