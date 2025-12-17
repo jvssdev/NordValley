@@ -126,7 +126,7 @@ in
             ''
               RowLayout {
                   spacing: 12
-                  
+                 
                   Row {
                       spacing: 2
                       Repeater {
@@ -146,7 +146,7 @@ in
                               Rectangle {
                                   anchors.fill: parent
                                   anchors.margins: 2
-                                  color: model.isUrgent ? "#${p.base08}" : (model.isActive ? "#${p.base0C}" : (model.isOccupied ? "#${p.base02}" : "transparent"))
+                                  color: model.isUrgent ? "#${p.base0C}" : (model.isActive ? "#${p.base0C}" : (model.isOccupied ? "#${p.base02}" : "transparent"))
                                   radius: 4
                                   Text {
                                       text: model.tagId
@@ -160,7 +160,6 @@ in
                           }
                       }
                   }
-
                   Text {
                       id: dwlLayoutText
                       text: ""
@@ -170,7 +169,6 @@ in
                       font.bold: true
                   }
               }
-
               Process {
                   id: dwlUpdateProc
                   command: ["mmsg", "-g"]
@@ -196,7 +194,6 @@ in
                       }
                   }
               }
-
               Timer {
                   interval: 150
                   running: true
@@ -282,6 +279,40 @@ in
                   font.bold: true
               }
             ''
+        }
+    }
+  '';
+  xdg.configFile."quickshell/IdleMonitors.qml".text = ''
+    import QtQuick
+    import Quickshell
+    import Quickshell.Wayland
+    import Quickshell.Io
+    Scope {
+        id: root
+        function handleIdleAction(action, isIdle) {
+            if (!action) return;
+            if (action === "lock" && isIdle) gtklockProc.running = true;
+            if (action === "suspend" && isIdle) suspendProc.running = true;
+            if (action === "dpms off" && isIdle) wlopmOffProc.running = true;
+            if (action === "dpms on" && !isIdle) wlopmOnProc.running = true;
+        }
+        Process { id: wlopmOffProc; command: ["${pkgs.wlopm}/bin/wlopm", "--off", "*"] }
+        Process { id: wlopmOnProc; command: ["${pkgs.wlopm}/bin/wlopm", "--on", "*"] }
+        Process { id: gtklockProc; command: ["${pkgs.gtklock}/bin/gtklock", "-d"] }
+        Process { id: suspendProc; command: ["${pkgs.systemd}/bin/systemctl", "suspend"] }
+        Variants {
+            model: [
+                { timeout: 240, idleAction: "dpms off", returnAction: "dpms on" },
+                { timeout: 300, idleAction: "lock" },
+                { timeout: 600, idleAction: "suspend" }
+            ]
+            IdleMonitor {
+                required property var modelData
+                enabled: true
+                respectInhibitors: true
+                timeout: modelData.timeout
+                onIsIdleChanged: root.handleIdleAction(isIdle ? modelData.idleAction : modelData.returnAction, isIdle)
+            }
         }
     }
   '';
@@ -496,45 +527,7 @@ in
             triggeredOnStart: true
             onTriggered: diskProc.running = true
         }
-        Process { id: wlopmOffProc; command: ["${pkgs.wlopm}/bin/wlopm", "--off", "*"] }
-        Process { id: wlopmOnProc; command: ["${pkgs.wlopm}/bin/wlopm", "--on", "*"] }
-        Process { id: gtklockProc; command: ["${pkgs.gtklock}/bin/gtklock", "-d"] }
-        Process { id: suspendProc; command: ["${pkgs.systemd}/bin/systemctl", "suspend"] }
-        IdleMonitor {
-            id: monitorOffMonitor
-            enabled: true
-            respectInhibitors: true
-            timeout: ${toString (ms 240)}
-            onIsIdleChanged: {
-                if (isIdle) {
-                    wlopmOffProc.running = true
-                } else {
-                    wlopmOnProc.running = true
-                }
-            }
-        }
-        IdleMonitor {
-            id: lockMonitor
-            enabled: true
-            respectInhibitors: true
-            timeout: ${toString (ms 300)}
-            onIsIdleChanged: {
-                if (isIdle) {
-                    gtklockProc.running = true
-                }
-            }
-        }
-        IdleMonitor {
-            id: suspendMonitor
-            enabled: true
-            respectInhibitors: true
-            timeout: ${toString (ms 600)}
-            onIsIdleChanged: {
-                if (isIdle) {
-                    suspendProc.running = true
-                }
-            }
-        }
+        IdleMonitors {}
         PanelWindow {
             anchors {
                 top: true

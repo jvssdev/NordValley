@@ -23,7 +23,7 @@ in
       exec-once=${pkgs.dunst}/bin/dunst
       exec-once=${pkgs.networkmanagerapplet}/bin/nm-applet --indicator
       exec-once=${pkgs.blueman}/bin/blueman-applet
-      exec-once=${pkgs.waybar}/bin/waybar &
+      exec-once=${pkgs.quickshell}/bin/quickshell &
       exec-once=${pkgs.wpaperd}/bin/wpaperd -d
       exec-once=wl-paste --type text --watch cliphist store &
       exec-once=wl-paste --type image --watch cliphist store &
