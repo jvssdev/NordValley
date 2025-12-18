@@ -9,7 +9,6 @@
 }:
 let
   p = config.colorScheme.palette;
-  ms = s: s * 1000;
 in
 {
   home.packages = [
@@ -29,10 +28,10 @@ in
     pkgs.kdePackages.qtbase
     pkgs.kdePackages.qtdeclarative
     pkgs.dbus
+    pkgs.playerctl
   ]
   ++ lib.optionals isRiver [ pkgs.river ]
   ++ lib.optionals isNiri [ pkgs.niri ];
-
   home.sessionVariables = {
     QML_IMPORT_PATH = lib.concatStringsSep ":" [
       "$HOME/.config/quickshell"
@@ -43,7 +42,6 @@ in
       ])
     ];
   };
-
   xdg.configFile."quickshell/WorkspaceModule.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
@@ -284,7 +282,6 @@ in
         }
     }
   '';
-
   xdg.configFile."quickshell/IdleMonitors.qml".text = ''
     import QtQuick
     import Quickshell
@@ -295,27 +292,25 @@ in
         QtObject { id: audioPlaying; property bool isPlaying: false }
         Process {
             id: audioCheckProc
-            command: ["${pkgs.wireplumber}/bin/wpctl", "inspect", "@DEFAULT_AUDIO_SINK@"]
+            command: ["${pkgs.bash}/bin/sh", "-c", "${pkgs.playerctl}/bin/playerctl -a status 2>/dev/null | grep Playing > /dev/null && echo yes || echo no"]
             stdout: SplitParser {
                 onRead: data => {
                     if (data) {
-                        audioPlaying.isPlaying = data.includes('state = "running"')
+                        audioPlaying.isPlaying = data.trim() === "yes"
                     }
                 }
             }
         }
         Timer {
-            interval: 5000
+            interval: 2000
             running: true
             repeat: true
             triggeredOnStart: true
             onTriggered: audioCheckProc.running = true
         }
-
         IdleInhibitor {
-            enabled: idleInhibitorState.enabled
+            enabled: idleInhibitorState.enabled || audioPlaying.isPlaying
         }
-
         function handleIdleAction(action, isIdle) {
             if (!action) return;
             if (action === "lock" && isIdle) gtklockProc.running = true;
@@ -355,7 +350,6 @@ in
         }
     }
   '';
-
   xdg.configFile."quickshell/shell.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
@@ -386,12 +380,11 @@ in
             readonly property string fontFamily: "JetBrainsMono Nerd Font"
             readonly property int fontPixelSize: 14
         }
-        
+       
         QtObject {
             id: idleInhibitorState
             property bool enabled: false
         }
-
         QtObject { id: dunstDnd; property bool isDnd: false }
         QtObject { id: btInfo; property bool connected: false }
         QtObject {
@@ -595,7 +588,7 @@ in
                     Item { width: theme.padding / 2 }
                     WorkspaceModule {}
                     Item { Layout.fillWidth: true }
-                    
+                   
                     Text {
                         text: idleInhibitorState.enabled ? "󰛊" : "󰾆"
                         color: idleInhibitorState.enabled ? theme.orange : theme.fgSubtle
@@ -611,7 +604,6 @@ in
                             onClicked: idleInhibitorState.enabled = !idleInhibitorState.enabled
                         }
                     }
-
                     Text {
                         id: clockText
                         text: Qt.formatDateTime(new Date(), "HH:mm dd/MM")
