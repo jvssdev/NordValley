@@ -9,6 +9,7 @@
 }:
 let
   p = config.colorScheme.palette;
+  ms = s: s * 1000;
 in
 {
   home.packages = [
@@ -31,6 +32,7 @@ in
   ]
   ++ lib.optionals isRiver [ pkgs.river ]
   ++ lib.optionals isNiri [ pkgs.niri ];
+
   home.sessionVariables = {
     QML_IMPORT_PATH = lib.concatStringsSep ":" [
       "$HOME/.config/quickshell"
@@ -41,6 +43,7 @@ in
       ])
     ];
   };
+
   xdg.configFile."quickshell/WorkspaceModule.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
@@ -126,7 +129,6 @@ in
             ''
               RowLayout {
                   spacing: 12
-                 
                   Row {
                       spacing: 2
                       Repeater {
@@ -282,13 +284,38 @@ in
         }
     }
   '';
+
   xdg.configFile."quickshell/IdleMonitors.qml".text = ''
     import QtQuick
     import Quickshell
     import Quickshell.Wayland
     import Quickshell.Io
     Scope {
-        id: root
+        id: idleScope
+        QtObject { id: audioPlaying; property bool isPlaying: false }
+        Process {
+            id: audioCheckProc
+            command: ["${pkgs.wireplumber}/bin/wpctl", "inspect", "@DEFAULT_AUDIO_SINK@"]
+            stdout: SplitParser {
+                onRead: data => {
+                    if (data) {
+                        audioPlaying.isPlaying = data.includes('state = "running"')
+                    }
+                }
+            }
+        }
+        Timer {
+            interval: 5000
+            running: true
+            repeat: true
+            triggeredOnStart: true
+            onTriggered: audioCheckProc.running = true
+        }
+
+        IdleInhibitor {
+            enabled: idleInhibitorState.enabled
+        }
+
         function handleIdleAction(action, isIdle) {
             if (!action) return;
             if (action === "lock" && isIdle) gtklockProc.running = true;
@@ -320,14 +347,15 @@ in
             ]
             IdleMonitor {
                 required property var modelData
-                enabled: true
+                enabled: !audioPlaying.isPlaying && !idleInhibitorState.enabled
                 respectInhibitors: true
                 timeout: modelData.timeout
-                onIsIdleChanged: root.handleIdleAction(isIdle ? modelData.idleAction : modelData.returnAction, isIdle)
+                onIsIdleChanged: idleScope.handleIdleAction(isIdle ? modelData.idleAction : modelData.returnAction, isIdle)
             }
         }
     }
   '';
+
   xdg.configFile."quickshell/shell.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
@@ -358,6 +386,12 @@ in
             readonly property string fontFamily: "JetBrainsMono Nerd Font"
             readonly property int fontPixelSize: 14
         }
+        
+        QtObject {
+            id: idleInhibitorState
+            property bool enabled: false
+        }
+
         QtObject { id: dunstDnd; property bool isDnd: false }
         QtObject { id: btInfo; property bool connected: false }
         QtObject {
@@ -561,6 +595,23 @@ in
                     Item { width: theme.padding / 2 }
                     WorkspaceModule {}
                     Item { Layout.fillWidth: true }
+                    
+                    Text {
+                        text: idleInhibitorState.enabled ? "󰛊" : "󰾆"
+                        color: idleInhibitorState.enabled ? theme.orange : theme.fgSubtle
+                        font {
+                            family: theme.fontFamily
+                            pixelSize: theme.fontPixelSize
+                            bold: true
+                        }
+                        Layout.rightMargin: theme.spacing / 2
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: idleInhibitorState.enabled = !idleInhibitorState.enabled
+                        }
+                    }
+
                     Text {
                         id: clockText
                         text: Qt.formatDateTime(new Date(), "HH:mm dd/MM")
