@@ -20,7 +20,6 @@ in
     pkgs.dunst
     pkgs.gtklock
     pkgs.systemd
-    pkgs.wlogout
     pkgs.pavucontrol
     pkgs.blueman
     pkgs.wlopm
@@ -42,6 +41,148 @@ in
       ])
     ];
   };
+  xdg.configFile."quickshell/icons".source = ./icons;
+  xdg.configFile."quickshell/PowerButton.qml".text = ''
+    import QtQuick
+    import Quickshell.Io
+
+    QtObject {
+        required property string command
+        required property string text
+        required property string icon
+        property var keybind: null
+
+        id: button
+
+        readonly property var process: Process {
+            command: ["${pkgs.bash}/bin/bash", "-c", button.command]
+        }
+
+        function exec() {
+            process.startDetached();
+        }
+    }
+  '';
+  xdg.configFile."quickshell/PowerMenu.qml".text = ''
+    import QtQuick
+    import QtQuick.Layouts
+    import Quickshell
+    import Quickshell.Io
+    import Quickshell.Wayland
+
+    Variants {
+        id: root
+        property bool shown: false
+        property color backgroundColor: "#80${p.base00}"
+        property color buttonColor: "transparent"
+        property color buttonHoverColor: "#1a${p.base02}"
+        default property list<PowerButton> buttons
+
+        model: Quickshell.screens
+        PanelWindow {
+            id: w
+            visible: root.shown
+            property var modelData
+            screen: modelData
+
+            exclusionMode: ExclusionMode.Ignore
+            WlrLayershell.layer: WlrLayer.Overlay
+            WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+
+            color: "transparent"
+
+            contentItem {
+                focus: true
+                Keys.onPressed: event => {
+                    if (event.key == Qt.Key_Escape) {
+                        root.shown = false;
+                    } else {
+                        for (let i = 0; i < buttons.length; i++) {
+                            let button = buttons[i];
+                            if (event.key == button.keybind) {
+                                button.exec();
+                                root.shown = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            anchors {
+                top: true
+                left: true
+                bottom: true
+                right: true
+            }
+
+            Rectangle {
+                color: backgroundColor
+                anchors.fill: parent
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: root.shown = false
+
+                    GridLayout {
+                        anchors.centerIn: parent
+
+                        width: parent.width * 0.75
+                        height: parent.height * 0.75
+
+                        columns: 3
+                        columnSpacing: 5
+                        rowSpacing: 5
+
+                        Repeater {
+                            model: buttons
+                            delegate: Rectangle {
+                                required property PowerButton modelData;
+
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+
+                                color: ma.containsMouse ? root.buttonHoverColor : root.buttonColor
+
+                                MouseArea {
+                                    id: ma
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onClicked: {
+                                        modelData.exec();
+                                        root.shown = false;
+                                    }
+                                }
+
+                                Image {
+                                    id: icon
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    anchors.bottom: parent.verticalCenter
+                                    anchors.bottomMargin: -20 
+                                    source: ma.containsMouse ? "icons/" + modelData.icon + "-hover.png" : "icons/" + modelData.icon + ".png"
+                                    width: parent.width * 0.25
+                                    height: width
+                                    fillMode: Image.PreserveAspectFit
+                                }
+
+                                Text {
+                                    anchors {
+                                        top: icon.bottom
+                                        topMargin: 5
+                                        horizontalCenter: parent.horizontalCenter
+                                    }
+
+                                    text: modelData.text
+                                    font.pixelSize: 14
+                                    color: "#${p.base05}"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+  '';
   xdg.configFile."quickshell/WorkspaceModule.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
@@ -380,7 +521,7 @@ in
             readonly property string fontFamily: "JetBrainsMono Nerd Font"
             readonly property int fontPixelSize: 14
         }
-       
+      
         QtObject {
             id: idleInhibitorState
             property bool enabled: false
@@ -578,7 +719,6 @@ in
             Process { id: pavuProcess; command: ["${pkgs.pavucontrol}/bin/pavucontrol"] }
             Process { id: bluemanProcess; command: ["${pkgs.blueman}/bin/blueman-manager"] }
             Process { id: dunstDndProcess; command: ["${pkgs.dunst}/bin/dunstctl", "set-paused", "toggle"] }
-            Process { id: wlogoutProcess; command: ["${pkgs.wlogout}/bin/wlogout"] }
             Rectangle {
                 anchors.fill: parent
                 color: theme.bg
@@ -588,7 +728,7 @@ in
                     Item { width: theme.padding / 2 }
                     WorkspaceModule {}
                     Item { Layout.fillWidth: true }
-                   
+                  
                     Text {
                         text: idleInhibitorState.enabled ? "󰛊" : "󰾆"
                         color: idleInhibitorState.enabled ? theme.orange : theme.fgSubtle
@@ -725,11 +865,44 @@ in
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
-                            onClicked: wlogoutProcess.running = true
+                            onClicked: powerMenu.shown = true
                         }
                     }
                     Item { width: theme.padding / 2 }
                 }
+            }
+        }
+        PowerMenu {
+            id: powerMenu
+            PowerButton {
+                command: "${pkgs.gtklock}/bin/gtklock"
+                keybind: Qt.Key_L
+                text: "Lock"
+                icon: "lock"
+            }
+            PowerButton {
+                command: "loginctl kill-session $XDG_SESSION_ID"
+                keybind: Qt.Key_E
+                text: "Exit"
+                icon: "logout"
+            }
+            PowerButton {
+                command: "systemctl poweroff"
+                keybind: Qt.Key_S
+                text: "Shutdown"
+                icon: "shutdown"
+            }
+            PowerButton {
+                command: "systemctl suspend"
+                keybind: Qt.Key_U
+                text: "Suspend"
+                icon: "suspend"
+            }
+            PowerButton {
+                command: "systemctl reboot"
+                keybind: Qt.Key_R
+                text: "Reboot"
+                icon: "reboot"
             }
         }
     }
