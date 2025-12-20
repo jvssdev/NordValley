@@ -1,10 +1,10 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   programs.helix = {
     enable = true;
     settings = {
-      theme = "nord_transparent";
+      theme = "nord";
 
       editor = {
         line-number = "relative";
@@ -280,14 +280,14 @@
       };
     };
 
-    themes = {
-      nord_transparent = {
-        inherits = "nord";
-        "ui.background" = {
-          bg = "transparent";
-        };
-      };
-    };
+    # themes = {
+    # nord_transparent = {
+    #   inherits = "nord";
+    #   "ui.background" = {
+    #     bg = "transparent";
+    #   };
+    # };
+    # };
   };
 
   home.packages = with pkgs; [

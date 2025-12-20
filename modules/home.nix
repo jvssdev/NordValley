@@ -12,12 +12,6 @@ let
   inherit (specialArgs)
     homeDir
     userName
-    helix
-    zen-browser
-    helium-browser
-    quickshell
-    mango
-    niri-flake
     ;
 in
 {

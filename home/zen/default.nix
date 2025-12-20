@@ -1,12 +1,7 @@
 {
   pkgs,
-  lib,
-  specialArgs,
   ...
 }:
-let
-  zen-browser = specialArgs.zen-browser;
-in
 {
   programs.zen-browser = {
     enable = true;

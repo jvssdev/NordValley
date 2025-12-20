@@ -67,7 +67,7 @@ let
       };
       "LoginScreen.LoginArea.Username" = {
         font-size = 40;
-        color = "#${colors.base06}";
+        color = "#${colors.base00}";
         margin = 5;
       };
       "LoginScreen.LoginArea.WarningMessage" = {
@@ -146,7 +146,7 @@ let
         position = "center";
         align = "center";
         format = "hh:mm:ss";
-        color = "#${colors.base06}";
+        color = "#${colors.base00}";
         font-size = 92;
       };
       "LockScreen.Date" = {
