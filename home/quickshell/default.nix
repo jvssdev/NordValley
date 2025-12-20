@@ -2,9 +2,9 @@
   config,
   pkgs,
   lib,
-  isRiver,
-  isMango,
-  isNiri,
+  isRiver ? false,
+  isMango ? false,
+  isNiri ? false,
   ...
 }:
 let
@@ -28,9 +28,11 @@ in
     pkgs.kdePackages.qtdeclarative
     pkgs.dbus
     pkgs.playerctl
+    pkgs.networkmanagerapplet
   ]
   ++ lib.optionals isRiver [ pkgs.river ]
   ++ lib.optionals isNiri [ pkgs.niri ];
+
   home.sessionVariables = {
     QML_IMPORT_PATH = lib.concatStringsSep ":" [
       "$HOME/.config/quickshell"
@@ -41,7 +43,9 @@ in
       ])
     ];
   };
+
   xdg.configFile."quickshell/icons".source = ./icons;
+
   xdg.configFile."quickshell/PowerButton.qml".text = ''
     import QtQuick
     import Quickshell.Io
@@ -58,6 +62,7 @@ in
         }
     }
   '';
+
   xdg.configFile."quickshell/PowerMenu.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
@@ -174,6 +179,7 @@ in
         }
     }
   '';
+
   xdg.configFile."quickshell/WorkspaceModule.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
@@ -414,6 +420,7 @@ in
         }
     }
   '';
+
   xdg.configFile."quickshell/IdleMonitors.qml".text = ''
     import QtQuick
     import Quickshell
@@ -482,12 +489,14 @@ in
         }
     }
   '';
+
   xdg.configFile."quickshell/shell.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
     import Quickshell
-    import Quickshell.Wayland
     import Quickshell.Io
+    import Quickshell.Wayland
+    import Quickshell.Bluetooth
     ShellRoot {
         id: root
         IpcHandler {
@@ -508,6 +517,7 @@ in
             readonly property string green: "#${p.base0B}"
             readonly property string yellow: "#${p.base0A}"
             readonly property string blue: "#${p.base0D}"
+            readonly property string darkBlue: "#${p.base0F}"
             readonly property string magenta: "#${p.base0E}"
             readonly property string cyan: "#${p.base0C}"
             readonly property string orange: "#${p.base09}"
@@ -518,13 +528,11 @@ in
             readonly property string fontFamily: "JetBrainsMono Nerd Font"
             readonly property int fontPixelSize: 14
         }
-
         QtObject {
             id: idleInhibitorState
             property bool enabled: false
         }
         QtObject { id: dunstDnd; property bool isDnd: false }
-        QtObject { id: btInfo; property bool connected: false }
         QtObject {
             id: volume
             property int level: 0
@@ -548,6 +556,7 @@ in
         QtObject { id: cpu; property int usage: 0 }
         QtObject { id: mem; property int percent: 0 }
         QtObject { id: disk; property int percent: 0 }
+        QtObject { id: network; property string icon: "" }
         property var lastCpuIdle: 0
         property var lastCpuTotal: 0
         Process {
@@ -565,22 +574,6 @@ in
             repeat: true
             triggeredOnStart: true
             onTriggered: dunstProc.running = true
-        }
-        Process {
-            id: btProc
-            command: ["${pkgs.bluez}/bin/bluetoothctl", "info"]
-            stdout: SplitParser {
-                onRead: data => {
-                    if (data) btInfo.connected = data.includes("Connected: yes")
-                }
-            }
-        }
-        Timer {
-            interval: 5000
-            running: true
-            repeat: true
-            triggeredOnStart: true
-            onTriggered: btProc.running = true
         }
         Process {
             id: volumeProc
@@ -704,6 +697,22 @@ in
             triggeredOnStart: true
             onTriggered: diskProc.running = true
         }
+        Process {
+            id: networkProc
+            command: ["${pkgs.bash}/bin/sh", "-c", 'if nmcli device status | grep -q "wifi .*connected"; then echo ""; elif nmcli device status | grep -q "ethernet .*connected"; then echo "󰲝"; else echo ""; fi']
+            stdout: SplitParser {
+                onRead: data => {
+                    if (data) network.icon = data.trim()
+                }
+            }
+        }
+        Timer {
+            interval: 5000
+            running: true
+            repeat: true
+            triggeredOnStart: true
+            onTriggered: networkProc.running = true
+        }
         IdleMonitors {}
         PanelWindow {
             anchors {
@@ -716,6 +725,7 @@ in
             Process { id: pavuProcess; command: ["${pkgs.pavucontrol}/bin/pavucontrol"] }
             Process { id: bluemanProcess; command: ["${pkgs.blueman}/bin/blueman-manager"] }
             Process { id: dunstDndProcess; command: ["${pkgs.dunst}/bin/dunstctl", "set-paused", "toggle"] }
+            Process { id: networkManagerProcess; command: ["${pkgs.networkmanagerapplet}/bin/nm-connection-editor"] }
             Rectangle {
                 anchors.fill: parent
                 color: theme.bg
@@ -725,10 +735,10 @@ in
                     Item { width: theme.padding / 2 }
                     WorkspaceModule {}
                     Item { Layout.fillWidth: true }
-                
+               
                     Text {
                         text: idleInhibitorState.enabled ? "󰛊" : "󰾆"
-                        color: idleInhibitorState.enabled ? theme.orange : theme.fgSubtle
+                        color: idleInhibitorState.enabled ? theme.orange : theme.fgMuted
                         font {
                             family: theme.fontFamily
                             pixelSize: theme.fontPixelSize
@@ -796,9 +806,17 @@ in
                         }
                         Layout.rightMargin: theme.spacing / 2
                     }
+                    Rectangle {
+                        Layout.preferredWidth: theme.borderWidth
+                        Layout.preferredHeight: 16
+                        Layout.alignment: Qt.AlignVCenter
+                        Layout.leftMargin: 0
+                        Layout.rightMargin: theme.spacing / 2
+                        color: theme.fgSubtle
+                    }
                     Text {
-                        text: volume.muted ? " Muted" : " " + volume.level + "%"
-                        color: volume.muted ? theme.fgSubtle : theme.fg
+                        text: volume.muted ? " Muted " : "  " + volume.level + "%"
+                        color: volume.muted ? theme.fgSubtle : theme.darkBlue
                         font {
                             family: theme.fontFamily
                             pixelSize: theme.fontPixelSize
@@ -812,8 +830,19 @@ in
                         }
                     }
                     Text {
-                        text: btInfo.connected ? "" : ""
-                        color: btInfo.connected ? theme.cyan : theme.fgSubtle
+                        text: {
+                            if (!Bluetooth.defaultAdapter) return "󰂲";
+                            if (!Bluetooth.defaultAdapter.enabled) return "󰂲";
+                            
+                            let connectedCount = 0;
+                            for (let i = 0; i < Bluetooth.devices.count; i++) {
+                                let device = Bluetooth.devices.get(i);
+                                if (device.connected) connectedCount++;
+                            }
+                            if (connectedCount > 0) return " " + connectedCount;
+                            return "";
+                        }
+                        color: Bluetooth.defaultAdapter && Bluetooth.defaultAdapter.enabled ? theme.cyan : theme.fgMuted
                         font {
                             family: theme.fontFamily
                             pixelSize: theme.fontPixelSize
@@ -824,6 +853,21 @@ in
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
                             onClicked: bluemanProcess.running = true
+                        }
+                    }
+                    Text {
+                        text: network.icon
+                        color: network.icon === "" ? theme.red : theme.green
+                        font {
+                            family: theme.fontFamily
+                            pixelSize: theme.fontPixelSize
+                            bold: true
+                        }
+                        Layout.rightMargin: theme.spacing / 2
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: networkManagerProcess.running = true
                         }
                     }
                     Text {
