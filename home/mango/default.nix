@@ -50,11 +50,11 @@ in
       xkb_rules_layout=br
       cursor_size=24
       cursor_theme=Bibata-Modern-Ice
-      gappih=6
-      gappiv=6
-      gappoh=6
-      gappov=6
-      borderpx=3
+      gappih=4
+      gappiv=4
+      gappoh=4
+      gappov=4
+      borderpx=4
       border_radius=0
       no_border_when_single=0
       rootcolor=${hexToMango palette.base00}
@@ -71,16 +71,29 @@ in
       animation_type_open=zoom
       animation_type_close=zoom
       blur=0
-      shadows=1
+      blur_layer=1
+      blur_optimized=1
+      blur_params_num_passes = 2
+      blur_params_radius = 5
+      blur_params_noise = 0.02
+      blur_params_brightness = 0.9
+      blur_params_contrast = 0.9
+      blur_params_saturation = 1.2
+      shadows=1   
+      layer_shadows = 1
       shadow_only_floating=1
       shadows_size=12
       shadows_blur=15
+      shadows_position_x = 0
+      shadows_position_y = 0
       shadowscolor=${hexToMango palette.base00}
       scroller_structs=0
       scroller_default_proportion=1.0
       scroller_focus_center=0
       scroller_prefer_center=1
       scroller_default_proportion_single=1.0
+
+      default_mfact=0.5
 
       tagrule=id:1,layout_name:tile
       tagrule=id:2,layout_name:tile
@@ -175,8 +188,10 @@ in
       windowrule=appid:pavucontrol,isfloating:1
       windowrule=appid:blueman-manager,isfloating:1
       windowrule=appid:nm-connection-editor,isfloating:1
-      windowrule=appid:thunar,isfloating:1
-      windowrule=appid:Thunar,isfloating:1
+      windowrule=unfocused_opacity:0.75,focused_opacity:0.75,appid:thunar,isfloating:1
+      windowrule=unfocused_opacity:0.75,focused_opacity:0.75,appid:Thunar,isfloating:1
+      windowrule=unfocused_opacity:0.75,focused_opacity:0.75,appid:ghostty
+      windowrule=unfocused_opacity:0.75,focused_opacity:0.75,appid:fuzzel
     '';
   };
   systemd.user.targets.mango-session = {
