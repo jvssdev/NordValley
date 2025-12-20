@@ -8,7 +8,7 @@ let
     "${pkgs.systemd}/bin/systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
     "${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 &"
     "${pkgs.wpaperd}/bin/wpaperd &"
-    "${pkgs.waybar}/bin/waybar &"
+    "${pkgs.quickshell}/bin/quickshell &"
     "${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &"
     "${pkgs.blueman}/bin/blueman-applet &"
     "${pkgs.dunst}/bin/dunst &"

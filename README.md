@@ -136,7 +136,7 @@ sudo nixos-rebuild switch --flake ~/NordValley#river
 - `Super + T`: Open terminal
 - `Super + A`: Launcher (Fuzzel)
 - `Super + Q`: Close window
-- `Super + X`: Wlogout
+- `Super + X`: Power menu
 
 ### Ghostty (Terminal)
 

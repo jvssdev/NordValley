@@ -105,7 +105,6 @@ let
                     ${pkgs.dunst}/bin/dunstctl set-paused true
                     ${pkgs.libnotify}/bin/notify-send "Dunst" "Do Not Disturb enabled" -a "Dunst History"
                 fi
-                ${pkgs.procps}/bin/pkill -RTMIN+8 waybar
                 ;;
             
             "Dismiss all")

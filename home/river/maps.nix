@@ -4,7 +4,7 @@
     "Super A" = "spawn fuzzel";
     "Super B" = "spawn helium";
     "Super E" = "spawn thunar";
-    "Super X" = "spawn wlogout";
+    "Super X" = "spawn 'qs ipc call powerMenu toggle'";
     "Super P" = "spawn screenshot";
     "Super V" = "spawn fuzzel-clipboard";
     "Super+Shift V" = "spawn fuzzel-clipboard-clear";

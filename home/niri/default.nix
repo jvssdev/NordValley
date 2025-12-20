@@ -21,7 +21,7 @@ in
 
     spawn-at-startup = [
       { command = [ "blueman-applet" ]; }
-      { command = [ "waybar" ]; }
+      { command = [ "quickshell" ]; }
       { command = [ "wpaperd" ]; }
       {
         command = [
@@ -109,7 +109,13 @@ in
       "Mod+A".action.spawn = "fuzzel";
       "Mod+T".action.spawn = "ghostty";
       "Mod+B".action.spawn = "helium";
-      "Mod+X".action.spawn = "wlogout";
+      "Mod+X".action.spawn = [
+        "qs"
+        "ipc"
+        "call"
+        "powerMenu"
+        "toggle"
+      ];
       "Mod+E".action.spawn = "thunar";
       "Mod+P".action.spawn = "screenshot";
       "Mod+V".action.spawn = "fuzzel-clipboard";

@@ -1,6 +1,5 @@
 {
   pkgs,
-  config,
   specialArgs,
   lib,
   isRiver ? false,
@@ -47,7 +46,6 @@ in
     ../home/quickshell/default.nix
     ../home/starship/default.nix
     ../home/theme/default.nix
-    ../home/waybar/default.nix
     ../home/wpaperd/default.nix
     ../home/yazi/default.nix
     ../home/zathura/default.nix
@@ -66,19 +64,6 @@ in
   ]
   ++ lib.optionals isNiri [
     ../home/niri/default.nix
-  ]
-  ++ [
-    (import ../home/wlogout {
-      inherit
-        pkgs
-        config
-        specialArgs
-        lib
-        isRiver
-        isMango
-        isNiri
-        ;
-    })
   ];
 
   systemd.user.services.playerctld = {
