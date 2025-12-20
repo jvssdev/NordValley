@@ -75,7 +75,7 @@ in
         property int focusedIndex: -1
         property color backgroundColor: "#80${p.base00}"
         property color buttonColor: "transparent"
-        property color buttonHoverColor: "#1a${p.base02}"
+        property color buttonHoverColor: "#${p.base0D}"
         default property list<PowerButton> buttons
         model: Quickshell.screens
         onShownChanged: if (shown) focusedIndex = 0; else focusedIndex = -1;
@@ -94,19 +94,24 @@ in
                     if (event.key == Qt.Key_Escape) {
                         root.shown = false;
                         event.accepted = true;
-                    } else if (event.key == Qt.Key_H) {
-                        if (root.focusedIndex % 3 > 0) root.focusedIndex--;
+                    }
+                    else if (event.key == Qt.Key_Left || event.key == Qt.Key_H) {
+                        if (root.focusedIndex > 0) root.focusedIndex--;
                         event.accepted = true;
-                    } else if (event.key == Qt.Key_L) {
-                        if (root.focusedIndex % 3 < 2 && root.focusedIndex + 1 < buttons.length) root.focusedIndex++;
+                    }
+                    else if (event.key == Qt.Key_Right || event.key == Qt.Key_L) {
+                        if (root.focusedIndex + 1 < buttons.length) root.focusedIndex++;
                         event.accepted = true;
-                    } else if (event.key == Qt.Key_K) {
-                        if (root.focusedIndex - 3 >= 0) root.focusedIndex -= 3;
+                    }
+                    else if (event.key == Qt.Key_Up || event.key == Qt.Key_K) {
+                        if (root.focusedIndex > 0) root.focusedIndex--;
                         event.accepted = true;
-                    } else if (event.key == Qt.Key_J) {
-                        if (root.focusedIndex + 3 < buttons.length) root.focusedIndex += 3;
+                    }
+                    else if (event.key == Qt.Key_Down || event.key == Qt.Key_J) {
+                        if (root.focusedIndex + 1 < buttons.length) root.focusedIndex++;
                         event.accepted = true;
-                    } else if (event.key == Qt.Key_Return || event.key == Qt.Key_Space) {
+                    }
+                    else if (event.key == Qt.Key_Return || event.key == Qt.Key_Space) {
                         if (root.focusedIndex >= 0 && root.focusedIndex < buttons.length) {
                             buttons[root.focusedIndex].exec();
                             root.shown = false;
@@ -127,21 +132,20 @@ in
                 MouseArea {
                     anchors.fill: parent
                     onClicked: root.shown = false
-                    GridLayout {
+                    RowLayout {
                         anchors.centerIn: parent
-                        width: parent.width * 0.75
-                        height: parent.height * 0.75
-                        columns: 3
-                        columnSpacing: 5
-                        rowSpacing: 5
+                        spacing: 20
                         Repeater {
                             model: buttons
                             delegate: Rectangle {
                                 required property PowerButton modelData;
                                 required property int index;
-                                Layout.fillWidth: true
-                                Layout.fillHeight: true
+                                Layout.preferredWidth: 220
+                                Layout.preferredHeight: 220
                                 color: ma.containsMouse || (index == root.focusedIndex) ? root.buttonHoverColor : root.buttonColor
+                                radius: 12
+                                border.color: "#${p.base03}"
+                                border.width: 2
                                 MouseArea {
                                     id: ma
                                     anchors.fill: parent
@@ -151,25 +155,22 @@ in
                                         root.shown = false;
                                     }
                                 }
-                                Image {
-                                    id: icon
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    anchors.bottom: parent.verticalCenter
-                                    anchors.bottomMargin: -20
-                                    source: ma.containsMouse || (index == root.focusedIndex) ? "icons/" + modelData.icon + "-hover.png" : "icons/" + modelData.icon + ".png"
-                                    width: parent.width * 0.25
-                                    height: width
-                                    fillMode: Image.PreserveAspectFit
-                                }
-                                Text {
-                                    anchors {
-                                        top: icon.bottom
-                                        topMargin: 5
-                                        horizontalCenter: parent.horizontalCenter
+                                ColumnLayout {
+                                    anchors.centerIn: parent
+                                    spacing: 10
+                                    Image {
+                                        source: ma.containsMouse || (index == root.focusedIndex) ? "icons/" + modelData.icon + "-hover.png" : "icons/" + modelData.icon + ".png"
+                                        Layout.preferredWidth: 128
+                                        Layout.preferredHeight: 128
+                                        fillMode: Image.PreserveAspectFit
+                                        Layout.alignment: Qt.AlignHCenter
                                     }
-                                    text: modelData.text
-                                    font.pixelSize: 14
-                                    color: "#${p.base05}"
+                                    Text {
+                                        text: modelData.text
+                                        font.pixelSize: 16
+                                        color: "#${p.base05}"
+                                        Layout.alignment: Qt.AlignHCenter
+                                    }
                                 }
                             }
                         }
@@ -735,7 +736,6 @@ in
                     Item { width: theme.padding / 2 }
                     WorkspaceModule {}
                     Item { Layout.fillWidth: true }
-               
                     Text {
                         text: idleInhibitorState.enabled ? "󰛊" : "󰾆"
                         color: idleInhibitorState.enabled ? theme.orange : theme.fgMuted
@@ -815,7 +815,7 @@ in
                         color: theme.fgSubtle
                     }
                     Text {
-                        text: volume.muted ? " Muted " : "  " + volume.level + "%"
+                        text: volume.muted ? " Muted " : " " + volume.level + "%"
                         color: volume.muted ? theme.fgSubtle : theme.darkBlue
                         font {
                             family: theme.fontFamily
@@ -833,7 +833,6 @@ in
                         text: {
                             if (!Bluetooth.defaultAdapter) return "󰂲";
                             if (!Bluetooth.defaultAdapter.enabled) return "󰂲";
-                            
                             let connectedCount = 0;
                             for (let i = 0; i < Bluetooth.devices.count; i++) {
                                 let device = Bluetooth.devices.get(i);
