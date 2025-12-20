@@ -14,20 +14,19 @@ in
     systemd.enable = false;
     settings = ''
       exec-once=${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
-      exec-once=${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY
       exec-once=systemctl --user reset-failed
       exec-once=systemctl --user start mango-session.target
 
       exec-once=${lib.getExe pkgs.xwayland-satellite} :11
-      exec-once=fcitx5 -d
       exec-once=${pkgs.dunst}/bin/dunst
       exec-once=${pkgs.networkmanagerapplet}/bin/nm-applet --indicator
       exec-once=${pkgs.blueman}/bin/blueman-applet
-      exec-once=${pkgs.quickshell}/bin/quickshell &
-      exec-once=${pkgs.wpaperd}/bin/wpaperd -d
-      exec-once=wl-paste --type text --watch cliphist store &
-      exec-once=wl-paste --type image --watch cliphist store &
-      exec-once=wl-clip-persist --clipboard regular --reconnect-tries 0 &
+      exec-once=${pkgs.quickshell}/bin/quickshell
+      exec-once=wl-paste --type text --watch cliphist store
+      exec-once=wl-paste --type image --watch cliphist store
+      exec-once=wl-clip-persist --clipboard regular --reconnect-tries 0
+      exec-once=${pkgs.wpaperd}/bin/wpaperd
+      exec-once=fcitx5 -d
 
       env=WLR_NO_HARDWARE_CURSORS,1
       env=QT_AUTO_SCREEN_SCALE_FACTOR,1

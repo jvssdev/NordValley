@@ -49,7 +49,6 @@ in
         required property string command
         required property string text
         required property string icon
-        property var keybind: null
         id: button
         readonly property var process: Process {
             command: ["${pkgs.bash}/bin/bash", "-c", button.command]
@@ -68,11 +67,13 @@ in
     Variants {
         id: root
         property bool shown: false
+        property int focusedIndex: -1
         property color backgroundColor: "#80${p.base00}"
         property color buttonColor: "transparent"
         property color buttonHoverColor: "#1a${p.base02}"
         default property list<PowerButton> buttons
         model: Quickshell.screens
+        onShownChanged: if (shown) focusedIndex = 0; else focusedIndex = -1;
         PanelWindow {
             id: w
             visible: root.shown
@@ -87,14 +88,25 @@ in
                 Keys.onPressed: event => {
                     if (event.key == Qt.Key_Escape) {
                         root.shown = false;
-                    } else {
-                        for (let i = 0; i < buttons.length; i++) {
-                            let button = buttons[i];
-                            if (event.key == button.keybind) {
-                                button.exec();
-                                root.shown = false;
-                            }
+                        event.accepted = true;
+                    } else if (event.key == Qt.Key_H) {
+                        if (root.focusedIndex % 3 > 0) root.focusedIndex--;
+                        event.accepted = true;
+                    } else if (event.key == Qt.Key_L) {
+                        if (root.focusedIndex % 3 < 2 && root.focusedIndex + 1 < buttons.length) root.focusedIndex++;
+                        event.accepted = true;
+                    } else if (event.key == Qt.Key_K) {
+                        if (root.focusedIndex - 3 >= 0) root.focusedIndex -= 3;
+                        event.accepted = true;
+                    } else if (event.key == Qt.Key_J) {
+                        if (root.focusedIndex + 3 < buttons.length) root.focusedIndex += 3;
+                        event.accepted = true;
+                    } else if (event.key == Qt.Key_Return || event.key == Qt.Key_Space) {
+                        if (root.focusedIndex >= 0 && root.focusedIndex < buttons.length) {
+                            buttons[root.focusedIndex].exec();
+                            root.shown = false;
                         }
+                        event.accepted = true;
                     }
                 }
             }
@@ -121,9 +133,10 @@ in
                             model: buttons
                             delegate: Rectangle {
                                 required property PowerButton modelData;
+                                required property int index;
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
-                                color: ma.containsMouse ? root.buttonHoverColor : root.buttonColor
+                                color: ma.containsMouse || (index == root.focusedIndex) ? root.buttonHoverColor : root.buttonColor
                                 MouseArea {
                                     id: ma
                                     anchors.fill: parent
@@ -138,7 +151,7 @@ in
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     anchors.bottom: parent.verticalCenter
                                     anchors.bottomMargin: -20
-                                    source: ma.containsMouse ? "icons/" + modelData.icon + "-hover.png" : "icons/" + modelData.icon + ".png"
+                                    source: ma.containsMouse || (index == root.focusedIndex) ? "icons/" + modelData.icon + "-hover.png" : "icons/" + modelData.icon + ".png"
                                     width: parent.width * 0.25
                                     height: width
                                     fillMode: Image.PreserveAspectFit
@@ -505,7 +518,7 @@ in
             readonly property string fontFamily: "JetBrainsMono Nerd Font"
             readonly property int fontPixelSize: 14
         }
-     
+
         QtObject {
             id: idleInhibitorState
             property bool enabled: false
@@ -712,7 +725,7 @@ in
                     Item { width: theme.padding / 2 }
                     WorkspaceModule {}
                     Item { Layout.fillWidth: true }
-                 
+                
                     Text {
                         text: idleInhibitorState.enabled ? "󰛊" : "󰾆"
                         color: idleInhibitorState.enabled ? theme.orange : theme.fgSubtle
@@ -860,31 +873,26 @@ in
             id: powerMenu
             PowerButton {
                 command: "${pkgs.gtklock}/bin/gtklock"
-                keybind: Qt.Key_L
                 text: "Lock"
                 icon: "lock"
             }
             PowerButton {
                 command: "loginctl kill-session $XDG_SESSION_ID"
-                keybind: Qt.Key_E
                 text: "Exit"
                 icon: "logout"
             }
             PowerButton {
                 command: "systemctl poweroff"
-                keybind: Qt.Key_S
                 text: "Shutdown"
                 icon: "shutdown"
             }
             PowerButton {
                 command: "systemctl suspend"
-                keybind: Qt.Key_U
                 text: "Suspend"
                 icon: "suspend"
             }
             PowerButton {
                 command: "systemctl reboot"
-                keybind: Qt.Key_R
                 text: "Reboot"
                 icon: "reboot"
             }
