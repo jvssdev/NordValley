@@ -45,19 +45,15 @@ in
   xdg.configFile."quickshell/PowerButton.qml".text = ''
     import QtQuick
     import Quickshell.Io
-
     QtObject {
         required property string command
         required property string text
         required property string icon
         property var keybind: null
-
         id: button
-
         readonly property var process: Process {
             command: ["${pkgs.bash}/bin/bash", "-c", button.command]
         }
-
         function exec() {
             process.startDetached();
         }
@@ -69,7 +65,6 @@ in
     import Quickshell
     import Quickshell.Io
     import Quickshell.Wayland
-
     Variants {
         id: root
         property bool shown: false
@@ -77,20 +72,16 @@ in
         property color buttonColor: "transparent"
         property color buttonHoverColor: "#1a${p.base02}"
         default property list<PowerButton> buttons
-
         model: Quickshell.screens
         PanelWindow {
             id: w
             visible: root.shown
             property var modelData
             screen: modelData
-
             exclusionMode: ExclusionMode.Ignore
             WlrLayershell.layer: WlrLayer.Overlay
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
-
             color: "transparent"
-
             contentItem {
                 focus: true
                 Keys.onPressed: event => {
@@ -107,42 +98,32 @@ in
                     }
                 }
             }
-
             anchors {
                 top: true
                 left: true
                 bottom: true
                 right: true
             }
-
             Rectangle {
                 color: backgroundColor
                 anchors.fill: parent
-
                 MouseArea {
                     anchors.fill: parent
                     onClicked: root.shown = false
-
                     GridLayout {
                         anchors.centerIn: parent
-
                         width: parent.width * 0.75
                         height: parent.height * 0.75
-
                         columns: 3
                         columnSpacing: 5
                         rowSpacing: 5
-
                         Repeater {
                             model: buttons
                             delegate: Rectangle {
                                 required property PowerButton modelData;
-
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
-
                                 color: ma.containsMouse ? root.buttonHoverColor : root.buttonColor
-
                                 MouseArea {
                                     id: ma
                                     anchors.fill: parent
@@ -152,25 +133,22 @@ in
                                         root.shown = false;
                                     }
                                 }
-
                                 Image {
                                     id: icon
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     anchors.bottom: parent.verticalCenter
-                                    anchors.bottomMargin: -20 
+                                    anchors.bottomMargin: -20
                                     source: ma.containsMouse ? "icons/" + modelData.icon + "-hover.png" : "icons/" + modelData.icon + ".png"
                                     width: parent.width * 0.25
                                     height: width
                                     fillMode: Image.PreserveAspectFit
                                 }
-
                                 Text {
                                     anchors {
                                         top: icon.bottom
                                         topMargin: 5
                                         horizontalCenter: parent.horizontalCenter
                                     }
-
                                     text: modelData.text
                                     font.pixelSize: 14
                                     color: "#${p.base05}"
@@ -499,6 +477,12 @@ in
     import Quickshell.Io
     ShellRoot {
         id: root
+        IpcHandler {
+            target: "powerMenu"
+            function toggle(): void {
+                powerMenu.shown = !powerMenu.shown
+            }
+        }
         QtObject {
             id: theme
             readonly property string bg: "#${p.base00}"
@@ -521,7 +505,7 @@ in
             readonly property string fontFamily: "JetBrainsMono Nerd Font"
             readonly property int fontPixelSize: 14
         }
-      
+     
         QtObject {
             id: idleInhibitorState
             property bool enabled: false
@@ -728,7 +712,7 @@ in
                     Item { width: theme.padding / 2 }
                     WorkspaceModule {}
                     Item { Layout.fillWidth: true }
-                  
+                 
                     Text {
                         text: idleInhibitorState.enabled ? "󰛊" : "󰾆"
                         color: idleInhibitorState.enabled ? theme.orange : theme.fgSubtle

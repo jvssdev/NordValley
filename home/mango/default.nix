@@ -99,7 +99,7 @@ in
       bind=SUPER,n,spawn,dunst-fuzzel
       bind=SUPER,b,spawn,helium
       bind=SUPER,e,spawn,thunar
-      bind=SUPER,x,spawn,wlogout
+      bind=SUPER,x,spawn_shell,qs ipc call powerMenu toggle
       bind=SUPER,p,spawn,screenshot
       bind=SUPER,v,spawn,fuzzel-clipboard
       bind=SUPER+SHIFT,v,spawn,fuzzel-clipboard-clear
