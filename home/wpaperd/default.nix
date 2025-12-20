@@ -2,7 +2,7 @@
   services.wpaperd = {
     enable = true;
     settings = {
-      default = {
+      any = {
         path = "${../../Wallpapers}";
         sorting = "random";
         duration = "10m";
