@@ -14,7 +14,6 @@ in
   home.packages = [
     pkgs.jq
     pkgs.procps
-    pkgs.coreutils
     pkgs.wireplumber
     pkgs.bluez
     pkgs.dunst
@@ -556,7 +555,6 @@ in
         }
         QtObject { id: cpu; property int usage: 0 }
         QtObject { id: mem; property int percent: 0 }
-        QtObject { id: disk; property int percent: 0 }
         QtObject { id: network; property string icon: "" }
         property var lastCpuIdle: 0
         property var lastCpuTotal: 0
@@ -680,25 +678,6 @@ in
             onTriggered: memProc.running = true
         }
         Process {
-            id: diskProc
-            command: ["${pkgs.bash}/bin/sh", "-c", "${pkgs.coreutils}/bin/df / | ${pkgs.coreutils}/bin/tail -1"]
-            stdout: SplitParser {
-                onRead: data => {
-                    if (!data) return
-                    var parts = data.trim().split(/\s+/)
-                    var percentStr = parts[4] || "0%"
-                    disk.percent = parseInt(percentStr.replace("%", "")) || 0
-                }
-            }
-        }
-        Timer {
-            interval: 10000
-            running: true
-            repeat: true
-            triggeredOnStart: true
-            onTriggered: diskProc.running = true
-        }
-        Process {
             id: networkProc
             command: ["${pkgs.bash}/bin/sh", "-c", 'if nmcli device status | grep -q "wifi .*connected"; then echo ""; elif nmcli device status | grep -q "ethernet .*connected"; then echo "󰲝"; else echo ""; fi']
             stdout: SplitParser {
@@ -778,7 +757,7 @@ in
                     }
                     Text {
                         text: " " + cpu.usage + "%"
-                        color: cpu.usage > 85 ? theme.red : theme.yellow
+                        color: cpu.usage > 85 ? theme.red : theme.green
                         font {
                             family: theme.fontFamily
                             pixelSize: theme.fontPixelSize
@@ -789,16 +768,6 @@ in
                     Text {
                         text: " " + mem.percent + "%"
                         color: mem.percent > 85 ? theme.red : theme.cyan
-                        font {
-                            family: theme.fontFamily
-                            pixelSize: theme.fontPixelSize
-                            bold: true
-                        }
-                        Layout.rightMargin: theme.spacing / 2
-                    }
-                    Text {
-                        text: " " + disk.percent + "%"
-                        color: disk.percent > 85 ? theme.red : theme.blue
                         font {
                             family: theme.fontFamily
                             pixelSize: theme.fontPixelSize
@@ -856,7 +825,7 @@ in
                     }
                     Text {
                         text: network.icon
-                        color: network.icon === "" ? theme.red : theme.green
+                        color: network.icon === "" ? theme.red : theme.blue
                         font {
                             family: theme.fontFamily
                             pixelSize: theme.fontPixelSize
@@ -871,7 +840,7 @@ in
                     }
                     Text {
                         text: dunstDnd.isDnd ? "" : ""
-                        color: dunstDnd.isDnd ? theme.red : theme.fg
+                        color: dunstDnd.isDnd ? theme.red : theme.yellow
                         font {
                             family: theme.fontFamily
                             pixelSize: theme.fontPixelSize
@@ -887,13 +856,13 @@ in
                     Text {
                         visible: battery.percentage > 0
                         text: battery.icon + " " + battery.percentage + "%" + (battery.charging ? " 󰂄" : "")
-                        color: battery.percentage <= 15 ? theme.red : battery.percentage <= 30 ? theme.yellow : theme.fg
+                        color: battery.percentage <= 15 ? theme.red : battery.percentage <= 30 ? theme.yellow : theme.green
                         font {
                             family: theme.fontFamily
                             pixelSize: theme.fontPixelSize
                         }
                         Layout.rightMargin: theme.spacing / 2
-                    }                  
+                    }
                     Text {
                         text: "⏻"
                         color: theme.fg
