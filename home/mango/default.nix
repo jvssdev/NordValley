@@ -18,6 +18,7 @@ in
       exec-once=systemctl --user start mango-session.target
 
       exec-once=${lib.getExe pkgs.xwayland-satellite} :11
+      exec-once=sh -c "sleep 1; echo 'Xft.dpi: 140' | ${pkgs.xorg.xrdb}/bin/xrdb -merge"
       exec-once=${pkgs.dunst}/bin/dunst
       exec-once=${pkgs.networkmanagerapplet}/bin/nm-applet --indicator
       exec-once=${pkgs.blueman}/bin/blueman-applet
@@ -45,6 +46,8 @@ in
       env=XMODIFIERS,@im=fcitx
       env=GLFW_IM_MODULE,ibus
       env=QT_QPA_PLATFORMTHEME,qt5ct
+      env=QT_WAYLAND_FORCE_DPI,140
+      env=GDK_DPI_SCALE,1.45
 
       monitorrule=eDP-1,0.55,1,tile,0,1,0,0,1920,1080,60
       xkb_rules_layout=br
@@ -63,7 +66,6 @@ in
       urgentcolor=${hexToMango palette.base08}
       repeat_rate=50
       repeat_delay=300
-      focus_follows_cursor=1
       warpcursor=1
       new_is_master=0
       cursor_hide_timeout=5000
@@ -241,5 +243,6 @@ in
     wf-recorder
     xwayland-satellite
     fcitx5
+    xorg.xrdb
   ];
 }

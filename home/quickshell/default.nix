@@ -139,10 +139,10 @@ in
                             delegate: Rectangle {
                                 required property PowerButton modelData;
                                 required property int index;
-                                Layout.preferredWidth: 220
-                                Layout.preferredHeight: 220
+                                Layout.preferredWidth: 180
+                                Layout.preferredHeight: 180
                                 color: ma.containsMouse || (index == root.focusedIndex) ? root.buttonHoverColor : root.buttonColor
-                                radius: 12
+                                radius: theme.radius
                                 border.color: "#${p.base03}"
                                 border.width: 2
                                 MouseArea {
@@ -159,8 +159,8 @@ in
                                     spacing: 10
                                     Image {
                                         source: ma.containsMouse || (index == root.focusedIndex) ? "icons/" + modelData.icon + "-hover.png" : "icons/" + modelData.icon + ".png"
-                                        Layout.preferredWidth: 128
-                                        Layout.preferredHeight: 128
+                                        Layout.preferredWidth: 114
+                                        Layout.preferredHeight: 114
                                         fillMode: Image.PreserveAspectFit
                                         Layout.alignment: Qt.AlignHCenter
                                     }
@@ -278,14 +278,14 @@ in
                           }
                           Rectangle {
                               visible: model.isActive || model.isOccupied || model.isUrgent
-                              width: visible ? 24 : 0
-                              height: 24
+                              width: visible ? 20 : 0
+                              height: 20
                               color: "transparent"
                               Rectangle {
                                   anchors.fill: parent
                                   anchors.margins: 2
                                   color: model.isUrgent ? "#${p.base0C}" : (model.isActive ? "#${p.base0C}" : (model.isOccupied ? "#${p.base02}" : "transparent"))
-                                  radius: 4
+                                  radius: theme.radius
                                   Text {
                                       text: model.tagId
                                       color: (model.isActive || model.isUrgent) ? "#${p.base00}" : "#${p.base05}"
@@ -521,12 +521,12 @@ in
             readonly property string magenta: "#${p.base0E}"
             readonly property string cyan: "#${p.base0C}"
             readonly property string orange: "#${p.base09}"
-            readonly property int radius: 12
+            readonly property int radius: 10
             readonly property int borderWidth: 2
             readonly property int padding: 14
             readonly property int spacing: 10
             readonly property string fontFamily: "JetBrainsMono Nerd Font"
-            readonly property int fontPixelSize: 16
+            readonly property int fontPixelSize: 12
         }
         QtObject {
             id: idleInhibitorState
@@ -700,7 +700,7 @@ in
                 left: true
                 right: true
             }
-            implicitHeight: 30
+            implicitHeight: 20
             color: "transparent"
             Process { id: pavuProcess; command: ["${pkgs.pavucontrol}/bin/pavucontrol"] }
             Process { id: bluemanProcess; command: ["${pkgs.blueman}/bin/blueman-manager"] }
