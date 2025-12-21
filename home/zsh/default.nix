@@ -42,7 +42,7 @@ in
     plugins = [
       {
         name = "zsh-helix-mode";
-        src = zsh-hlx.packages.${pkgs.system}.default;
+        src = zsh-hlx.packages.${pkgs.stdenv.hostPlatform.system}.default;
         file = "share/zsh/zsh-helix-mode/zsh-helix-mode.plugin.zsh";
       }
       {

@@ -101,10 +101,10 @@ let
     dunst
     pavucontrol
 
-    # zen-browser.packages.${pkgs.system}.default
-    helium-browser.packages.${pkgs.system}.default
-    # helix.packages.${pkgs.system}.default
-    quickshell.packages.${pkgs.system}.default
+    # zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+    helium-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+    # helix.packages.${pkgs.stdenv.hostPlatform.system}.default
+    quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 in
 basePackages
