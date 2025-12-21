@@ -167,7 +167,7 @@ in
                                     }
                                     Text {
                                         text: modelData.text
-                                        font.pixelSize: 16
+                                        font.pixelSize: theme.fontPixelSize
                                         color: "#${p.base05}"
                                         Layout.alignment: Qt.AlignHCenter
                                     }
@@ -527,7 +527,7 @@ in
             readonly property int padding: 14
             readonly property int spacing: 10
             readonly property string fontFamily: "JetBrainsMono Nerd Font"
-            readonly property int fontPixelSize: 14
+            readonly property int fontPixelSize: 16
         }
         QtObject {
             id: idleInhibitorState
@@ -815,7 +815,7 @@ in
                         color: theme.fgSubtle
                     }
                     Text {
-                        text: volume.muted ? " Muted " : " " + volume.level + "%"
+                        text: volume.muted ? " Muted " : " " + " " + volume.level + "%"
                         color: volume.muted ? theme.fgSubtle : theme.darkBlue
                         font {
                             family: theme.fontFamily
@@ -870,16 +870,6 @@ in
                         }
                     }
                     Text {
-                        visible: battery.percentage > 0
-                        text: battery.icon + " " + battery.percentage + "%" + (battery.charging ? " 󰂄" : "")
-                        color: battery.percentage <= 15 ? theme.red : battery.percentage <= 30 ? theme.yellow : theme.fg
-                        font {
-                            family: theme.fontFamily
-                            pixelSize: theme.fontPixelSize
-                        }
-                        Layout.rightMargin: theme.spacing / 2
-                    }
-                    Text {
                         text: dunstDnd.isDnd ? "" : ""
                         color: dunstDnd.isDnd ? theme.red : theme.fg
                         font {
@@ -895,11 +885,21 @@ in
                         }
                     }
                     Text {
+                        visible: battery.percentage > 0
+                        text: battery.icon + " " + battery.percentage + "%" + (battery.charging ? " 󰂄" : "")
+                        color: battery.percentage <= 15 ? theme.red : battery.percentage <= 30 ? theme.yellow : theme.fg
+                        font {
+                            family: theme.fontFamily
+                            pixelSize: theme.fontPixelSize
+                        }
+                        Layout.rightMargin: theme.spacing / 2
+                    }                  
+                    Text {
                         text: "⏻"
                         color: theme.fg
                         font {
                             family: theme.fontFamily
-                            pixelSize: 16
+                            pixelSize: theme.fontPixelSize
                         }
                         Layout.rightMargin: theme.spacing / 2
                         MouseArea {
