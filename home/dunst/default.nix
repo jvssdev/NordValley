@@ -16,9 +16,9 @@ in
         follow = "mouse";
 
         width = 400;
-        height = 200;
+        height = "(0, 200)";
         origin = "top-right";
-        offset = "8x8";
+        offset = "(8, 8)";
 
         notification_limit = 0;
 
