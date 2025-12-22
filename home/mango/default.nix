@@ -72,7 +72,7 @@ in
       trackpad_natural_scrolling=0
       animation_duration_move=500
       animation_duration_open=400
-      animation_duration_tag=375
+      animation_duration_tag=0
       animation_duration_close=550
       animation_duration_focus=400
       animation_curve_open=0.46,1.0,0.29,1.1
