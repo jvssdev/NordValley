@@ -81,6 +81,7 @@ in
       animation_curve_move=0.215,0.61,0.355,1.0
       animation_curve_tag=0.215,0.21,0.355,1.0    
       animation_curve_close=0.215,0.61,0.355,1.0
+      tag_animation_direction=0
       zoom_initial_ratio=0.3
       zoom_end_ratio=0.7
       blur=0

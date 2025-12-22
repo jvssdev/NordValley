@@ -34,6 +34,16 @@
     settings = {
       mgr = {
         show_hidden = true;
+        ratio = [
+          1
+          3
+          4
+        ];
+      };
+      preview = {
+        tab_size = 2;
+        max_width = 1920;
+        max_height = 1080;
       };
       opener = {
         play = [
