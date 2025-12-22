@@ -312,28 +312,46 @@ in
                   command: ["mmsg", "-g"]
                   stdout: SplitParser {
                       onRead: data => {
-                          const lines = data.trim().split("\n");
-                          for (let line of lines) {
-                              const parts = line.trim().split(/\s+/);
-                              if (line.includes(" tag ")) {
-                                  const idx = parts.indexOf("tag");
-                                  const id = parseInt(parts[idx + 1]);
-                                  if (id >= 1 && id <= 9) {
-                                      dwlTagsModel.setProperty(id - 1, "isActive", parts[idx + 2] === "1");
-                                      dwlTagsModel.setProperty(id - 1, "isOccupied", parts[idx + 3] === "1");
-                                      dwlTagsModel.setProperty(id - 1, "isUrgent", parts[idx + 4] === "1");
-                                  }
-                              } else if (line.includes(" layout ")) {
-                                  const idx = parts.indexOf("layout");
-                                  const symbol = parts[idx + 1] || "";
-                                  dwlLayoutText.text = symbol ? "[" + symbol.replace(/[\[\]]/g, "") + "]" : "";
+                          if (!data) return;
+                          const parts = data.trim().split(/\s+/);
+                  
+                          const tagIndex = parts.indexOf("tag");
+                          if (tagIndex !== -1 && parts.length > tagIndex + 4) {
+                              const id = parseInt(parts[tagIndex + 1]);
+                              if (id >= 1 && id <= 9) {
+                                  const state = parts[tagIndex + 2];
+                                  const active = state === "1";
+                                  const urgent = state === "2";
+                                  const occupied = parseInt(parts[tagIndex + 3]) > 0;
+                          
+                                  dwlTagsModel.setProperty(id - 1, "isActive", active);
+                                  dwlTagsModel.setProperty(id - 1, "isOccupied", occupied);
+                                  dwlTagsModel.setProperty(id - 1, "isUrgent", urgent);
                               }
+                          }
+                  
+                          const layoutIndex = parts.indexOf("layout");
+                          if (layoutIndex !== -1 && parts.length > layoutIndex + 1) {
+                              const symbol = parts[layoutIndex + 1] || "";
+                              dwlLayoutText.text = symbol ? "[" + symbol.replace(/[\[\]]/g, "") + "]" : "";
+                          }
+                      }
+                  }
+              }
+              Process {
+                  id: dwlWatchProc
+                  command: ["mmsg", "-w"]
+                  running: true
+                  stdout: SplitParser {
+                      onRead: data => {
+                          if (data.trim()) {
+                              dwlUpdateProc.running = true;
                           }
                       }
                   }
               }
               Timer {
-                  interval: 150
+                  interval: 250
                   running: true
                   repeat: true
                   triggeredOnStart: true
@@ -343,6 +361,7 @@ in
                       }
                   }
               }
+              Component.onCompleted: dwlUpdateProc.running = true
             ''
           else if isNiri then
             ''
