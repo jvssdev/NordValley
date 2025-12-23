@@ -50,8 +50,7 @@ in
     ../home/zathura/default.nix
     ../home/zed/default.nix
     ../home/zen/default.nix
-    ../home/zoxide/default.nix
-    ../home/zsh/default.nix
+    ../home/shell/default.nix
     ../home/jujutsu/default.nix
     ../home/services/default.nix
   ]

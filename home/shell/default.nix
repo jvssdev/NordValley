@@ -9,6 +9,24 @@ let
   palette = config.colorScheme.palette;
 in
 {
+
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+    options = [ "--cmd cd" ];
+  };
+
+  programs.atuin = {
+    enable = true;
+    enableZshIntegration = false;
+    settings = {
+      enter_accept = false;
+      keymap_mode = "vim-insert";
+      keymap_cursor.vim_insert = "steady-bar";
+      keymap_cursor.vim_normal = "steady-block";
+    };
+  };
+
   programs.zsh = {
     enable = true;
     history = {
