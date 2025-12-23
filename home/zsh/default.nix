@@ -86,6 +86,7 @@ in
         )
 
         eval "$(${pkgs.fzf}/bin/fzf --zsh)"
+        eval "$(${pkgs.atuin}/bin/atuin init zsh)"
 
         export FZF_DEFAULT_OPTS="
           --color=bg+:#${palette.base02},bg:#${palette.base00},spinner:#${palette.base04},hl:#${palette.base0D}

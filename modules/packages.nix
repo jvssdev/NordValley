@@ -37,6 +37,7 @@ let
     ripgrep
     nixos-shell
     nix-your-shell
+    atuin
 
     bat
     starship
