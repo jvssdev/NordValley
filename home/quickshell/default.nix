@@ -1008,7 +1008,7 @@ in
         Image {
             anchors.fill: parent
             source: "wallpaper.png"
-            fillMode: Image.PreserveAspectCrop
+            fillMode: Image.PreserveAspectFit 
         }
 
         ColumnLayout {
