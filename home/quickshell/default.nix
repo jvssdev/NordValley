@@ -17,7 +17,6 @@ in
     pkgs.wireplumber
     pkgs.bluez
     pkgs.dunst
-    pkgs.gtklock
     pkgs.systemd
     pkgs.pavucontrol
     pkgs.blueman
@@ -471,14 +470,14 @@ in
         }
         function handleIdleAction(action, isIdle) {
             if (!action) return;
-            if (action === "lock" && isIdle) gtklockProc.running = true;
+            if (action === "lock" && isIdle) lockProc.running = true;
             if (action === "suspend" && isIdle) suspendProc.running = true;
             if (action === "dpms off" && isIdle) wlopmOffProc.running = true;
             if (action === "dpms on" && !isIdle) wlopmOnProc.running = true;
         }
         Process { id: wlopmOffProc; command: ["${pkgs.wlopm}/bin/wlopm", "--off", "*"] }
         Process { id: wlopmOnProc; command: ["${pkgs.wlopm}/bin/wlopm", "--on", "*"] }
-        Process { id: gtklockProc; command: ["${pkgs.gtklock}/bin/gtklock", "-d"] }
+        Process { id: lockProc; command: ["${pkgs.quickshell}/bin/quickshell", "ipc", "call", "lockScreen", "toggle"] }
         Process { id: suspendProc; command: ["${pkgs.systemd}/bin/systemctl", "suspend"] }
         Process {
             id: logindMonitor
@@ -487,7 +486,7 @@ in
             stdout: SplitParser {
                 onRead: data => {
                     if (data.includes("boolean true")) {
-                        gtklockProc.running = true
+                        lockProc.running = true
                     }
                 }
             }
@@ -523,6 +522,16 @@ in
             function toggle(): void {
                 powerMenu.shown = !powerMenu.shown
             }
+        }
+        IpcHandler {
+            target: "lockScreen"
+            function toggle(): void {
+                lockScreenProc.running = true
+            }
+        }
+        Process {
+            id: lockScreenProc
+            command: ["${pkgs.quickshell}/bin/quickshell", "-p", Quickshell.env("HOME") + "/.config/quickshell/lockscreen/shell.qml"]
         }
         QtObject {
             id: theme
@@ -826,8 +835,8 @@ in
                                 let device = Bluetooth.devices.get(i);
                                 if (device.connected) connectedCount++;
                             }
-                            if (connectedCount > 0) return " " + connectedCount;
-                            return "";
+                            if (connectedCount > 0) return "󰂯 " + connectedCount;
+                            return "󰂯";
                         }
                         color: Bluetooth.defaultAdapter && Bluetooth.defaultAdapter.enabled ? theme.cyan : theme.fgMuted
                         font {
@@ -844,7 +853,7 @@ in
                     }
                     Text {
                         text: network.icon
-                        color: network.icon === "" ? theme.red : theme.blue
+                        color: network.icon === "󰤬" ? theme.red : theme.blue
                         font {
                             family: theme.fontFamily
                             pixelSize: theme.fontPixelSize
@@ -858,7 +867,7 @@ in
                         }
                     }
                     Text {
-                        text: dunstDnd.isDnd ? "" : ""
+                        text: dunstDnd.isDnd ? "󰂛" : "󰂚"
                         color: dunstDnd.isDnd ? theme.red : theme.yellow
                         font {
                             family: theme.fontFamily
@@ -903,7 +912,7 @@ in
         PowerMenu {
             id: powerMenu
             PowerButton {
-                command: "${pkgs.gtklock}/bin/gtklock"
+                command: "${pkgs.quickshell}/bin/quickshell ipc call lockScreen toggle"
                 text: "Lock"
                 icon: "lock"
             }
@@ -926,6 +935,214 @@ in
                 command: "systemctl reboot"
                 text: "Reboot"
                 icon: "reboot"
+            }
+        }
+    }
+  '';
+
+  xdg.configFile."quickshell/lockscreen/wallpaper.png".source =
+    ../../Wallpapers/a6116535-4a72-453e-83c9-ea97b8597d8c.png;
+
+  xdg.configFile."quickshell/lockscreen/pam/password.conf".text = ''
+    auth required pam_unix.so
+  '';
+
+  xdg.configFile."quickshell/lockscreen/LockContext.qml".text = ''
+    import QtQuick
+    import Quickshell
+    import Quickshell.Services.Pam
+
+    Scope {
+        id: root
+        signal unlocked()
+        signal failed()
+
+        property string currentText: ""
+        property bool unlockInProgress: false
+        property bool showFailure: false
+
+        onCurrentTextChanged: showFailure = false;
+
+        function tryUnlock() {
+            if (currentText === "") ;
+            root.unlockInProgress = true;
+            pam.start();
+        }
+
+        PamContext {
+            id: pam
+
+            configDirectory: "pam"
+            config: "password.conf"
+
+            onPamMessage: {
+                if (this.responseRequired) {
+                    this.respond(root.currentText);
+                }
+            }
+
+            onCompleted: result => {
+                if (result == PamResult.Success) {
+                    root.unlocked();
+                } else {
+                    root.currentText = "";
+                    root.showFailure = true;
+                }
+                root.unlockInProgress = false;
+            }
+        }
+    }
+  '';
+
+  xdg.configFile."quickshell/lockscreen/LockSurface.qml".text = ''
+    import QtQuick
+    import QtQuick.Layouts
+    import QtQuick.Controls
+    import Quickshell.Wayland
+
+    Rectangle {
+        id: root
+        required property LockContext context
+
+        color: "#${p.base00}"
+        Image {
+            anchors.fill: parent
+            source: "wallpaper.png"
+            fillMode: Image.PreserveAspectCrop
+        }
+
+        ColumnLayout {
+            anchors.centerIn: parent
+            spacing: 20
+
+            Text {
+                id: clockLabel
+                property var currentDate: new Date()
+                text: Qt.formatTime(currentDate, "HH:mm")
+                color: "#${p.base06}"
+                font.pixelSize: 72
+                font.family: "JetBrainsMono Nerd Font"
+                font.bold: true
+                style: Text.Outline
+                styleColor: Qt.rgba(0, 0, 0, 0.8)
+                Layout.alignment: Qt.AlignHCenter
+
+                Timer {
+                    interval: 1000
+                    running: true
+                    repeat: true
+                    onTriggered: clockLabel.currentDate = new Date()
+                }
+            }
+
+            Text {
+                id: dateLabel
+                property var currentDate: new Date()
+                text: Qt.formatDate(currentDate, "dd/MM/yyyy")
+                color: "#${p.base04}"
+                font.pixelSize: 24
+                font.family: "JetBrainsMono Nerd Font"
+                Layout.alignment: Qt.AlignHCenter
+
+                Timer {
+                    interval: 60000
+                    running: true
+                    repeat: true
+                    onTriggered: dateLabel.currentDate = new Date()
+                }
+            }
+
+            Text {
+                text: "Enter Password"
+                color: "#${p.base05}"
+                font.pixelSize: 18
+                font.family: "JetBrainsMono Nerd Font"
+                Layout.alignment: Qt.AlignHCenter
+            }
+
+            RowLayout {
+                spacing: 10
+                Layout.alignment: Qt.AlignHCenter
+
+                TextField {
+                    id: passwordBox
+                    implicitWidth: 300
+                    padding: 15
+                    focus: true
+                    enabled: !root.context.unlockInProgress
+                    echoMode: TextInput.Password
+                    inputMethodHints: Qt.ImhSensitiveData
+                    color: "#${p.base05}"
+                    background: Rectangle {
+                        color: Qt.rgba(46/255, 52/255, 64/255, 0.85)
+                        border.color: "#${p.base0D}"
+                        border.width: 2
+                        radius: 10
+                    }
+                    onTextChanged: root.context.currentText = this.text;
+                    onAccepted: root.context.tryUnlock();
+
+                    Connections {
+                        target: root.context
+                        function onCurrentTextChanged() {
+                            passwordBox.text = root.context.currentText;
+                        }
+                    }
+                }
+
+                Button {
+                    text: "Unlock"
+                    padding: 12
+                    focusPolicy: Qt.NoFocus
+                    enabled: !root.context.unlockInProgress && root.context.currentText !== ""
+                    onClicked: root.context.tryUnlock();
+                    contentItem: Text {
+                        text: parent.text
+                        color: "#${p.base00}"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        font.pixelSize: 16
+                        font.bold: true
+                        font.family: "JetBrainsMono Nerd Font"
+                    }
+                    background: Rectangle {
+                        color: parent.down ? "#${p.base0B}" : (parent.hovered ? "#${p.base0C}" : "#${p.base0D}")
+                        radius: 8
+                    }
+                }
+            }
+
+            Text {
+                visible: root.context.showFailure
+                text: "Incorrect password"
+                color: "#${p.base08}"
+                font.pixelSize: 14
+                font.family: "JetBrainsMono Nerd Font"
+                Layout.alignment: Qt.AlignHCenter
+            }
+        }
+    }
+  '';
+
+  xdg.configFile."quickshell/lockscreen/shell.qml".text = ''
+    import Quickshell
+    import Quickshell.Wayland
+    ShellRoot {
+        LockContext {
+            id: lockContext
+            onUnlocked: {
+                lock.locked = false;
+                Qt.quit();
+            }
+        }
+        WlSessionLock {
+            id: lock
+            locked: true
+            WlSessionLockSurface {
+                LockSurface {
+                    anchors.fill: parent
+                    context: lockContext
+                }
             }
         }
     }
