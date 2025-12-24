@@ -1,14 +1,23 @@
 {
   pkgs,
+  config,
   ...
 }:
+let
+  nvimConfigDir = "${config.home.homeDirectory}/.config/nvf-custom";
+in
 {
+  home.file."${nvimConfigDir}".source = ./nvim;
+
   programs.nvf = {
     enable = true;
     defaultEditor = true;
     settings = {
       vim = {
         package = pkgs.neovim-unwrapped;
+        viAlias = true;
+        vimAlias = true;
+        lazy.enable = false;
         startPlugins = [
           pkgs.vimPlugins.lazy-nvim
           (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: [
@@ -86,12 +95,27 @@
           pkgs.black
           pkgs.rustfmt
         ];
-        globals = { };
+        globals = {
+          netrw_dirhistmax = 0;
+        };
+        options = {
+          number = false;
+          relativenumber = false;
+        };
         keymaps = [ ];
         pluginRC = { };
-
+        luaConfigPre = "";
+        luaConfigRC = {
+          userInit = ''
+            local custom_config = "${nvimConfigDir}/init.lua"
+            if vim.fn.filereadable(custom_config) == 1 then
+              dofile(custom_config)
+            end
+          '';
+        };
+        luaConfigPost = "";
         additionalRuntimePaths = [
-          ./nvim
+          nvimConfigDir
         ];
         extraLuaFiles = [ ];
         withRuby = false;
@@ -102,4 +126,6 @@
       };
     };
   };
+
+  home.sessionVariables.NVIM_APPNAME = "nvf";
 }

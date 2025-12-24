@@ -9,6 +9,8 @@ vim.o.relativenumber = true
 
 vim.o.showmode = false
 
+vim.o.swapfile = false
+
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -46,7 +48,6 @@ vim.o.cursorline = true
 vim.o.scrolloff = 10
 
 vim.o.confirm = true
-
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
@@ -126,7 +127,6 @@ require('lazy').setup({
       },
     },
   },
-
 
   {
     'folke/which-key.nvim',
@@ -568,7 +568,7 @@ require('lazy').setup({
       },
 
       snippets = { preset = 'luasnip' },
-      fuzzy = { implementation = "prefer_rust_with_warning" }
+      fuzzy = { implementation = 'prefer_rust_with_warning' },
       signature = { enabled = true },
     },
   },
