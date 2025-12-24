@@ -53,6 +53,7 @@ in
     ../home/shell/default.nix
     ../home/jujutsu/default.nix
     ../home/services/default.nix
+    ../home/nvf/default.nix
   ]
   ++ lib.optionals isRiver [
     ../home/river

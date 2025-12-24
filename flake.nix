@@ -17,6 +17,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nvf = {
+      url = "github:notashelf/nvf";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     zsh-hlx = {
       url = "github:multirious/zsh-helix-mode/main";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -148,6 +153,7 @@
                       zsh-hlx
                       mango
                       niri-flake
+                      nvf
                       ;
                     inherit (userInfo) userName userEmail fullName;
                     inherit (defaults) homeDir;
@@ -156,6 +162,7 @@
                   sharedModules = [
                     inputs.zen-browser.homeModules.default
                     nix-colors.homeManagerModules.default
+                    inputs.nvf.homeManagerModules.default
                   ]
                   ++ extraSharedModules;
                 };
@@ -220,6 +227,7 @@
           helium-browser = inputs.helium-browser;
           nix-colors = inputs.nix-colors;
           zsh-hlx = inputs.zsh-hlx;
+          nvf = inputs.nvf;
           isRiver = true;
           isMango = false;
           isNiri = false;

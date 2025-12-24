@@ -24,6 +24,8 @@ let
     tree-sitter
     nodejs_22
 
+    neovim-unwrapped
+
     bibata-cursors
 
     zig
