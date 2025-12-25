@@ -7,7 +7,7 @@
 }:
 {
   environment.variables = {
-    EDITOR = "hx";
+    EDITOR = "nvim";
     XCURSOR_THEME = "Bibata-Modern-Ice";
     XCURSOR_SIZE = "24";
   };

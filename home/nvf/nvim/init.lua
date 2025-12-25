@@ -222,6 +222,10 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
+      vim.keymap.set('n', '<leader>bd', '<Cmd>BufferClose<CR>', { desc = 'Delete' })
+      vim.keymap.set('n', 'H', '<Cmd>BufferPrevious<CR>', { desc = 'Move left' })
+      vim.keymap.set('n', 'L', '<Cmd>BufferNext<CR>', { desc = 'Move Right' })
+
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
@@ -399,6 +403,7 @@ require('lazy').setup({
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
       local servers = {
+        nil_ls = {},
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
@@ -479,6 +484,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        nix = { 'alejandra' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --

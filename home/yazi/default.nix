@@ -39,12 +39,7 @@
           3
           4
         ];
-      };
-      preview = {
-        tab_size = 2;
-        max_width = 1920;
-        max_height = 1080;
-      };
+      }; 
       opener = {
         play = [
           {
@@ -68,8 +63,8 @@
           }
         ];
         edit = [
-          {
-            run = "${config.programs.helix.package}/bin/hx \"$@\"";
+          { 
+            run = "nvim \"$@\"";
             block = true;
             for = "unix";
           }

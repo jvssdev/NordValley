@@ -105,8 +105,8 @@ in
       "video/mp4" = [ "mpv.desktop" ];
       "video/x-matroska" = [ "mpv.desktop" ];
       "audio/mpeg" = [ "mpv.desktop" ];
-      "text/plain" = [ "helix.desktop" ];
-      "text/txt" = [ "helix.desktop" ];
+      "text/plain" = [ "nvim.desktop" ];
+      "text/txt" = [ "nvim.desktop" ];
     };
     associations.added = {
       "x-scheme-handler/http" = [ "Helium.desktop" ];

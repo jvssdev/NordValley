@@ -17,7 +17,7 @@
         pager = "delta";
         paginate = "auto";
         "diff-formatter" = ":git";
-        editor = "hx";
+        editor = "nvim";
       };
       git = {
         "auto-local-bookmark" = true;
