@@ -9,6 +9,7 @@ in {
     enable = true;
     settings = {
       auto_save.session = true;
+      scrolling.smooth = true;
       content = {
         autoplay = false;
         javascript.clipboard = "access-paste";
@@ -16,6 +17,7 @@ in {
           enabled = true;
           method = "adblock";
           adblock.lists = [
+            "https://easylist-downloads.adblockplus.org/antiadblockfilters.txt"
             "https://easylist.to/easylist/easylist.txt"
             "https://easylist.to/easylist/easyprivacy.txt"
             "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt"
@@ -27,7 +29,14 @@ in {
             "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt"
             "https://secure.fanboy.co.nz/fanboy-annoyance.txt"
             "https://hosts.netlify.app/Pro/adblock.txt"
+            "https://raw.githubusercontent.com/pixeltris/TwitchAdSolutions/914f4ec6bd56b71e75b5da2d70646c825475c3bb/vaft/vaft-ublock-origin.js"
             "https://filters.adtidy.org/extension/ublock/filters/2.txt"
+            "https://raw.githubusercontent.com/brave/adblock-lists/master/coin-miners.txt"
+            "https://raw.githubusercontent.com/brave/adblock-lists/refs/heads/master/brave-lists/brave-checks.txt"
+            "https://raw.githubusercontent.com/brave/adblock-lists/refs/heads/master/brave-lists/brave-twitch.txt"
+            "https://raw.githubusercontent.com/brave/adblock-lists/refs/heads/master/brave-lists/yt-shorts.txt"
+            "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-unbreak.txt"
+            "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-lists/brave-social.txt"
           ];
         };
       };
@@ -236,8 +245,8 @@ in {
         "<Ctrl-l>" = "cmd-set-text --space :open ";
 
         "<Ctrl-w>" = "tab-close";
-        "J" = "back";
-        "K" = "forward";
+        "<Alt-Left>" = "back";
+        "<Alt-Right>" = "forward";
         "F12" = "devtools";
       };
 
@@ -298,18 +307,13 @@ in {
         name = "youtube_sponsorblock.js";
         text = builtins.readFile ./greasemonkey/youtube_sponsorblock.js;
       })
-      # (pkgs.writeTextFile {
-      #   name = "youtube.css.js";
-      #   text = builtins.readFile ./greasemonkey/youtube.css.js;
-      # })
-      # (pkgs.writeTextFile {
-      #   name = "github.css.js";
-      #   text = builtins.readFile ./greasemonkey/github.css.js;
-      # })
-
+      (pkgs.fetchurl {
+        url = "https://raw.githubusercontent.com/pixeltris/TwitchAdSolutions/master/vaft/vaft-ublock-origin.js";
+        sha256 = "sha256-YwkfRh+PEwcjkQGCMk17uAPSzMkdOFCmkGA/OxyiMl0=";
+      })
       (pkgs.writeTextFile {
-        name = "vaft.user.js";
-        text = builtins.readFile ./greasemonkey/vaft.user.js;
+        name = "ffz.js";
+        text = builtins.readFile ./greasemonkey/ffz.js;
       })
     ];
   };
