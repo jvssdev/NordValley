@@ -1,13 +1,9 @@
-{ config, ... }:
-
-let
+{config, ...}: let
   c = config.colorScheme.palette;
-in
-{
+in {
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
-    enableBashIntegration = true;
 
     settings = {
       add_newline = true;

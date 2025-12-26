@@ -22,11 +22,6 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    zsh-hlx = {
-      url = "github:multirious/zsh-helix-mode/main";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -154,7 +149,6 @@
                     helium-browser
                     quickshell
                     nix-colors
-                    zsh-hlx
                     mango
                     niri-flake
                     nvf
@@ -231,7 +225,6 @@
           zen-browser = inputs.zen-browser;
           helium-browser = inputs.helium-browser;
           nix-colors = inputs.nix-colors;
-          zsh-hlx = inputs.zsh-hlx;
           nvf = inputs.nvf;
           ghostty = inputs.ghostty;
           isRiver = true;
