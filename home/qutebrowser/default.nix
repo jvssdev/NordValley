@@ -10,6 +10,17 @@ in {
     settings = {
       auto_save.session = true;
       scrolling.smooth = true;
+      editor.command = [
+        "ghostty"
+        "-e"
+        "nvim"
+        "{file}"
+      ];
+      zoom.default = 75;
+      tabs = {
+        indicator.width = 0;
+        title.format = "{audio}{current_title}";
+      };
       content = {
         autoplay = false;
         javascript.clipboard = "access-paste";
@@ -22,21 +33,19 @@ in {
             "https://easylist.to/easylist/easyprivacy.txt"
             "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt"
             "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/annoyances.txt"
-            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badware.txt"
-            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt"
+            # "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badware.txt"
+            # "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt"
             "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/resource-abuse.txt"
-            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt"
-            "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt"
-            "https://secure.fanboy.co.nz/fanboy-annoyance.txt"
-            "https://hosts.netlify.app/Pro/adblock.txt"
-            "https://raw.githubusercontent.com/pixeltris/TwitchAdSolutions/914f4ec6bd56b71e75b5da2d70646c825475c3bb/vaft/vaft-ublock-origin.js"
-            "https://filters.adtidy.org/extension/ublock/filters/2.txt"
-            "https://raw.githubusercontent.com/brave/adblock-lists/master/coin-miners.txt"
-            "https://raw.githubusercontent.com/brave/adblock-lists/refs/heads/master/brave-lists/brave-checks.txt"
-            "https://raw.githubusercontent.com/brave/adblock-lists/refs/heads/master/brave-lists/brave-twitch.txt"
+            # "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt"
+            # "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt"
+            # "https://secure.fanboy.co.nz/fanboy-annoyance.txt"
+            # # "https://raw.githubusercontent.com/pixeltris/TwitchAdSolutions/914f4ec6bd56b71e75b5da2d70646c825475c3bb/vaft/vaft-ublock-origin.js"
+            # "https://filters.adtidy.org/extension/ublock/filters/2.txt"
+            # "https://raw.githubusercontent.com/brave/adblock-lists/refs/heads/master/brave-lists/brave-checks.txt"
+            # # "https://raw.githubusercontent.com/brave/adblock-lists/refs/heads/master/brave-lists/brave-twitch.txt"
             "https://raw.githubusercontent.com/brave/adblock-lists/refs/heads/master/brave-lists/yt-shorts.txt"
-            "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-unbreak.txt"
-            "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-lists/brave-social.txt"
+            # "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-unbreak.txt"
+            # "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-lists/brave-social.txt"
           ];
         };
       };
@@ -101,7 +110,7 @@ in {
 
         hints = {
           fg = "#${p.base00}";
-          bg = "#${p.base0A}";
+          bg = "#${p.base0C}";
           match.fg = "#${p.base05}";
         };
 
@@ -135,7 +144,7 @@ in {
           bg = "#${p.base00}";
           selected = {
             bg = "#${p.base02}";
-            fg = "#${p.base05}";
+            fg = "#${p.base0C}";
           };
         };
 
@@ -237,6 +246,8 @@ in {
       normal = {
         "L" = "tab-next";
         "H" = "tab-prev";
+
+        "<Ctrl+e>" = "edit-url";
 
         "<Ctrl+Shift+j>" = "tab-move +";
         "<Ctrl+Shift+k>" = "tab-move -";
