@@ -151,28 +151,6 @@
         "type": "github"
       }
     },
-    "helix": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "rust-overlay": "rust-overlay"
-      },
-      "locked": {
-        "lastModified": 1766775102,
-        "narHash": "sha256-IVdMBzQzF8FmSEEqGvMFoaX6e+1cv9F21UNIMKDj3YY=",
-        "owner": "helix-editor",
-        "repo": "helix",
-        "rev": "e1fd2e34a0299c99434354eca3f9b3e91330a523",
-        "type": "github"
-      },
-      "original": {
-        "owner": "helix-editor",
-        "ref": "master",
-        "repo": "helix",
-        "type": "github"
-      }
-    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -246,11 +224,11 @@
         "scenefx": "scenefx"
       },
       "locked": {
-        "lastModified": 1766808612,
-        "narHash": "sha256-W39Wp2UdR4CEEZ1YMka1g9bNRz/FNHfpO7zfwD36/Fc=",
+        "lastModified": 1766845764,
+        "narHash": "sha256-92pNnnWx1hCExs8kuyn9CiOoAfw7pYDoeyQeVNlcX5Y=",
         "owner": "DreamMaoMao",
         "repo": "mango",
-        "rev": "81319e99de0625e792419358771cfa87c0254dc8",
+        "rev": "c06a5c1337f0b4ad0b07a059db84d732e272676a",
         "type": "github"
       },
       "original": {
@@ -471,11 +449,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1766842916,
-        "narHash": "sha256-JeKR3n6J3PtJnzyGc3ljPNQOIRdlfW0P6/D2S041jRk=",
+        "lastModified": 1766870603,
+        "narHash": "sha256-PjGu0XblPuF+fvdU0lhwVezl9pbX2P6lpbh8XiqQhn4=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "89be5c44a8b561a7058bb0703b71e268d3feb10b",
+        "rev": "38bfd0d43264091d5ffe98dfca3a53ebf86ee0f9",
         "type": "github"
       },
       "original": {
@@ -532,7 +510,6 @@
     "root": {
       "inputs": {
         "ghostty": "ghostty",
-        "helix": "helix",
         "home-manager": "home-manager_2",
         "mango": "mango",
         "niri-flake": "niri-flake",
@@ -544,27 +521,6 @@
         "quickshell": "quickshell",
         "silentSDDM": "silentSDDM",
         "zen-browser": "zen-browser"
-      }
-    },
-    "rust-overlay": {
-      "inputs": {
-        "nixpkgs": [
-          "helix",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1759631821,
-        "narHash": "sha256-V8A1L0FaU/aSXZ1QNJScxC12uP4hANeRBgI4YdhHeRM=",
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "rev": "1d7cbdaad90f8a5255a89a6eddd8af24dc89cafe",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "type": "github"
       }
     },
     "scenefx": {

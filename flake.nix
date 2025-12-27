@@ -12,10 +12,10 @@
 
     nix-colors.url = "github:misterio77/nix-colors";
 
-    helix = {
-      url = "github:helix-editor/helix/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # helix = {
+    #   url = "github:helix-editor/helix/master";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
 
     nvf = {
       url = "github:notashelf/nvf";
@@ -144,7 +144,7 @@
                 extraSpecialArgs = {
                   inherit
                     (inputs)
-                    helix
+                    # helix
                     zen-browser
                     # helium-browser
                     quickshell
@@ -220,7 +220,7 @@
       extraSpecialArgs =
         {
           homeDir = defaults.homeDir;
-          helix = inputs.helix;
+          # helix = inputs.helix;
           quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;
           # helium-browser = inputs.helium-browser;

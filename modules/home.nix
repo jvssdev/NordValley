@@ -39,7 +39,7 @@ in {
       ../home/fastfetch/default.nix
       ../home/fuzzel/default.nix
       ../home/ghostty/default.nix
-      ../home/helix/default.nix
+      # ../home/helix/default.nix
       ../home/mpd/default.nix
       ../home/mpv/default.nix
       ../home/quickshell/default.nix
