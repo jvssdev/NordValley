@@ -604,34 +604,40 @@ require('lazy').setup({
     'echasnovski/mini.nvim',
     config = function()
       -- Better Around/Inside textobjects
-      --
-      -- Examples:
-      --  - va)  - [V]isually select [A]round [)]paren
-      --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
-      --  - ci'  - [C]hange [I]nside [']quote
+      -- Exemplos:
+      --   va)  - seleciona ao redor do parêntese
+      --   yinq - yank inside próxima quote
+      --   ci'  - change inside quote
       require('mini.ai').setup { n_lines = 500 }
 
-      -- Add/delete/replace surroundings (brackets, quotes, etc.)
-      --
-      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-      -- - sd'   - [S]urround [D]elete [']quotes
-      -- - sr)'  - [S]urround [R]eplace [)] [']
+      -- Add/delete/replace surroundings (parênteses, aspas, etc.)
+      -- Exemplos:
+      --   saiw) - surround add inner word com parêntese
+      --   sd'   - surround delete aspas
+      --   sr)'  - surround replace parêntese por aspas
       require('mini.surround').setup()
 
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
+      -- Statusline simples e bonita
       local statusline = require 'mini.statusline'
-      -- set use_icons to true if you have a Nerd Font
+      -- use_icons = true se você tem Nerd Font instalada
       statusline.setup { use_icons = vim.g.have_nerd_font }
 
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
+      -- Override da seção de localização (linha:coluna)
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function()
         return '%2l:%-2v'
       end
+
+      -- Commenting
+      require('mini.comment').setup {
+        mappings = {
+
+          comment = 'gc',
+          comment_line = '<C-c>',
+          comment_visual = 'gc',
+          textobject = 'gc',
+        },
+      }
     end,
   },
   {

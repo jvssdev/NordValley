@@ -63,6 +63,7 @@ in {
             # "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-unbreak.txt"
             # "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-lists/brave-social.txt"
             # "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-lists/filters-mirror.txt"
+            "https://ttvlolpro.com/filter.txt"
           ];
         };
       };
@@ -278,7 +279,7 @@ in {
         "F12" = "devtools";
 
         "M" = "hint links spawn mpv {hint-url}";
-        "N" = ''hint links spawn mpv --ytdl-format="bestvideo[height<=720]+bestaudio/best[height<=720]" {hint-url}'';
+        # "N" = ''hint links spawn mpv --ytdl-format="bestvideo[height<=720]+bestaudio/best[height<=720]" {hint-url}'';
       };
 
       command = {
@@ -338,10 +339,10 @@ in {
       #   name = "youtube_sponsorblock.js";
       #   text = builtins.readFile ./greasemonkey/youtube_sponsorblock.js;
       # })
-      (pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/pixeltris/TwitchAdSolutions/master/vaft/vaft-ublock-origin.js";
-        sha256 = "sha256-YwkfRh+PEwcjkQGCMk17uAPSzMkdOFCmkGA/OxyiMl0=";
-      })
+      # (pkgs.fetchurl {
+      #   url = "https://raw.githubusercontent.com/pixeltris/TwitchAdSolutions/master/vaft/vaft-ublock-origin.js";
+      #   sha256 = "sha256-YwkfRh+PEwcjkQGCMk17uAPSzMkdOFCmkGA/OxyiMl0=";
+      # })
       (pkgs.writeTextFile {
         name = "ffz.js";
         text = builtins.readFile ./greasemonkey/ffz.js;
