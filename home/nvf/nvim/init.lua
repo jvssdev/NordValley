@@ -554,7 +554,7 @@ require('lazy').setup({
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
         --
         ['<CR>'] = { 'select_and_accept', 'fallback' },
-        ['<Tab>'] = { 'fallback' },
+        ['<Tab>'] = { 'select_next', 'fallback' },
       },
 
       appearance = {
