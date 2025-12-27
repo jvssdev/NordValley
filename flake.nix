@@ -27,10 +27,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    helium-browser = {
-      url = "github:ominit/helium-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
+    # helium-browser = {
+    #   url = "github:ominit/helium-browser-flake";
+    #   inputs.nixpkgs.follows = "nixpkgs-unstable";
+    # };
 
     nur = {
       url = "github:nix-community/NUR";
@@ -146,7 +146,7 @@
                     (inputs)
                     helix
                     zen-browser
-                    helium-browser
+                    # helium-browser
                     quickshell
                     nix-colors
                     mango
@@ -223,7 +223,7 @@
           helix = inputs.helix;
           quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;
-          helium-browser = inputs.helium-browser;
+          # helium-browser = inputs.helium-browser;
           nix-colors = inputs.nix-colors;
           nvf = inputs.nvf;
           ghostty = inputs.ghostty;

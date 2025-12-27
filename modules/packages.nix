@@ -5,7 +5,7 @@
 }: let
   inherit
     (specialArgs)
-    helium-browser
+    # helium-browser
     quickshell
     ;
 in
@@ -101,9 +101,7 @@ in
       dunst
       pavucontrol
 
-      # zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
-      helium-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
-      # helix.packages.${pkgs.stdenv.hostPlatform.system}.default
+      # helium-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
       quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
   in

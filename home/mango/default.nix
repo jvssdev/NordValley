@@ -3,12 +3,10 @@
   pkgs,
   lib,
   ...
-}:
-let
+}: let
   palette = config.colorScheme.palette;
   hexToMango = hex: "0x${hex}ff";
-in
-{
+in {
   wayland.windowManager.mango = {
     enable = true;
     systemd.enable = false;
@@ -87,11 +85,11 @@ in
       animations=1
       layer_animations=1
       animation_type_open=zoom
-      animation_type_close=slide 
+      animation_type_close=slide
       layer_animation_type_open=zoom
-      layer_animation_type_close=slide 
+      layer_animation_type_close=slide
       zoom_initial_ratio=0.3
-      zoom_end_ratio=0.7   
+      zoom_end_ratio=0.7
       fadein_begin_opacity=0.5
       fadeout_begin_opacity=0.8
       blur=0
@@ -103,7 +101,7 @@ in
       blur_params_brightness = 1
       blur_params_contrast = 0.9
       blur_params_saturation = 1.5
-      shadows=1   
+      shadows=1
       layer_shadows = 1
       shadow_only_floating=1
       shadows_size=12
@@ -133,7 +131,7 @@ in
       bind=SUPER,t,spawn,ghostty
       bind=SUPER,a,spawn,fuzzel
       bind=SUPER,n,spawn,dunst-fuzzel
-      bind=SUPER,b,spawn,helium
+      bind=SUPER,b,spawn,qutebrowser
       bind=SUPER,e,spawn,thunar
       bind=SUPER,x,spawn_shell,qs ipc call powerMenu toggle
       bind=SUPER,p,spawn,screenshot
@@ -221,12 +219,12 @@ in
   systemd.user.targets.mango-session = {
     Unit = {
       Description = "mango compositor session";
-      Documentation = [ "man:systemd.special(7)" ];
-      BindsTo = [ "graphical-session.target" ];
+      Documentation = ["man:systemd.special(7)"];
+      BindsTo = ["graphical-session.target"];
       Wants = [
         "graphical-session-pre.target"
       ];
-      After = [ "graphical-session-pre.target" ];
+      After = ["graphical-session-pre.target"];
     };
   };
   xdg.portal = {
@@ -236,14 +234,14 @@ in
       xdg-desktop-portal-gtk
       xdg-desktop-portal
     ];
-    config.common.default = [ "gtk" ];
+    config.common.default = ["gtk"];
     config = {
       mango = {
-        default = [ "gtk" ];
-        "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
-        "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
-        "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
-        "org.freedesktop.impl.portal.Inhibit" = [ ];
+        default = ["gtk"];
+        "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+        "org.freedesktop.impl.portal.ScreenCast" = ["wlr"];
+        "org.freedesktop.impl.portal.Screenshot" = ["wlr"];
+        "org.freedesktop.impl.portal.Inhibit" = [];
       };
     };
   };

@@ -3,12 +3,9 @@
   pkgs,
   lib,
   ...
-}:
-
-let
+}: let
   palette = config.colorScheme.palette;
-in
-{
+in {
   programs.niri.settings = {
     prefer-no-csd = true;
 
@@ -20,9 +17,9 @@ in
     animations.enable = false;
 
     spawn-at-startup = [
-      { command = [ "blueman-applet" ]; }
-      { command = [ "quickshell" ]; }
-      { command = [ "wpaperd" ]; }
+      {command = ["blueman-applet"];}
+      {command = ["quickshell"];}
+      {command = ["wpaperd"];}
       {
         command = [
           "nm-applet"
@@ -32,7 +29,7 @@ in
       {
         sh = "sleep 1 && dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP";
       }
-      { command = [ "dunst" ]; }
+      {command = ["dunst"];}
       {
         command = [
           "wl-paste"
@@ -66,41 +63,41 @@ in
 
     window-rules = [
       {
-        matches = [ { app-id = "com.mitchellh.ghostty"; } ];
+        matches = [{app-id = "com.mitchellh.ghostty";}];
         opacity = 0.9;
       }
       {
         matches = [
-          { app-id = "(?i)pavucontrol"; }
-          { app-id = "(?i)org\\.pulseaudio\\.pavucontrol"; }
+          {app-id = "(?i)pavucontrol";}
+          {app-id = "(?i)org\\.pulseaudio\\.pavucontrol";}
         ];
         open-floating = true;
       }
       {
-        matches = [ { app-id = "(?i)nm-connection-editor"; } ];
+        matches = [{app-id = "(?i)nm-connection-editor";}];
         open-floating = true;
       }
       {
         matches = [
-          { app-id = "(?i)blueman-manager"; }
-          { app-id = "(?i)blueberry"; }
+          {app-id = "(?i)blueman-manager";}
+          {app-id = "(?i)blueberry";}
         ];
         open-floating = true;
       }
       {
         matches = [
-          { app-id = "(?i)mpv"; }
-          { app-id = "(?i)imv"; }
+          {app-id = "(?i)mpv";}
+          {app-id = "(?i)imv";}
         ];
         open-floating = true;
       }
       {
-        matches = [ { title = "(?i)Picture[-\\s]?in[-\\s]?Picture"; } ];
+        matches = [{title = "(?i)Picture[-\\s]?in[-\\s]?Picture";}];
         open-floating = true;
       }
 
       {
-        matches = [ { } ];
+        matches = [{}];
         clip-to-geometry = true;
       }
     ];
@@ -108,7 +105,7 @@ in
     binds = {
       "Mod+A".action.spawn = "fuzzel";
       "Mod+T".action.spawn = "ghostty";
-      "Mod+B".action.spawn = "helium";
+      "Mod+B".action.spawn = "qutebrowser";
       "Mod+X".action.spawn = [
         "qs"
         "ipc"
@@ -130,14 +127,14 @@ in
       "Mod+7".action.focus-workspace = 7;
       "Mod+8".action.focus-workspace = 8;
       "Mod+9".action.focus-workspace = 9;
-      "Mod+Q".action.close-window = { };
-      "Mod+O".action.toggle-overview = { };
-      "Mod+Shift+T".action.toggle-window-floating = { };
-      "Mod+Shift+F".action.fullscreen-window = { };
-      "Mod+F".action.maximize-column = { };
-      "Mod+W".action.toggle-column-tabbed-display = { };
-      "Mod+Left".action.focus-window-down = { };
-      "Mod+Right".action.focus-window-up = { };
+      "Mod+Q".action.close-window = {};
+      "Mod+O".action.toggle-overview = {};
+      "Mod+Shift+T".action.toggle-window-floating = {};
+      "Mod+Shift+F".action.fullscreen-window = {};
+      "Mod+F".action.maximize-column = {};
+      "Mod+W".action.toggle-column-tabbed-display = {};
+      "Mod+Left".action.focus-window-down = {};
+      "Mod+Right".action.focus-window-up = {};
       "Mod+Shift+1".action.move-column-to-workspace = 1;
       "Mod+Shift+2".action.move-column-to-workspace = 2;
       "Mod+Shift+3".action.move-column-to-workspace = 3;
@@ -147,17 +144,17 @@ in
       "Mod+Shift+7".action.move-column-to-workspace = 7;
       "Mod+Shift+8".action.move-column-to-workspace = 8;
       "Mod+Shift+9".action.move-column-to-workspace = 9;
-      "Mod+BracketLeft".action.consume-or-expel-window-left = { };
-      "Mod+BracketRight".action.consume-or-expel-window-right = { };
-      "Mod+Period".action.expel-window-from-column = { };
+      "Mod+BracketLeft".action.consume-or-expel-window-left = {};
+      "Mod+BracketRight".action.consume-or-expel-window-right = {};
+      "Mod+Period".action.expel-window-from-column = {};
       "Mod+Minus".action.set-column-width = "-10%";
       "Mod+Equal".action.set-column-width = "+10%";
       "Mod+Shift+Minus".action.set-window-height = "-10%";
       "Mod+Shift+Equal".action.set-window-height = "+10%";
-      "Mod+H".action.focus-column-left = { };
-      "Mod+L".action.focus-column-right = { };
-      "Mod+J".action.focus-workspace-up = { };
-      "Mod+K".action.focus-workspace-down = { };
+      "Mod+H".action.focus-column-left = {};
+      "Mod+L".action.focus-column-right = {};
+      "Mod+J".action.focus-workspace-up = {};
+      "Mod+K".action.focus-workspace-down = {};
     };
 
     hotkey-overlay.skip-at-startup = true;

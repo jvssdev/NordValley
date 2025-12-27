@@ -28,7 +28,7 @@ in {
       zoom.default = 75;
       tabs = {
         indicator.width = 0;
-        title.format = "{audio}{current_title}";
+        title.format = "{audio}{index}:{current_title}";
       };
       content = {
         autoplay = false;

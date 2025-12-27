@@ -1,12 +1,6 @@
-{
-  config,
-  ...
-}:
-
-let
+{config, ...}: let
   palette = config.colorScheme.palette;
-in
-{
+in {
   services.dunst = {
     enable = true;
 
@@ -58,7 +52,7 @@ in
         sticky_history = true;
         history_length = 100;
 
-        browser = "helium";
+        browser = "qutebrowser";
 
         always_run_script = true;
 

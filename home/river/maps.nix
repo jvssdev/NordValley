@@ -2,7 +2,7 @@
   wayland.windowManager.river.settings.map.normal = {
     "Super T" = "spawn ghostty";
     "Super A" = "spawn fuzzel";
-    "Super B" = "spawn helium";
+    "Super B" = "spawn qutebrowser";
     "Super E" = "spawn thunar";
     "Super X" = "spawn 'qs ipc call powerMenu toggle'";
     "Super P" = "spawn screenshot";
