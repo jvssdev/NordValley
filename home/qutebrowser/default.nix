@@ -7,7 +7,16 @@
 in {
   programs.qutebrowser = {
     enable = true;
+
+    extraConfig = ''
+      config.set('colors.webpage.darkmode.enabled', False, 'file://*')
+    '';
     settings = {
+      colors.webpage.darkmode = {
+        enabled = true;
+        algorithm = "lightness-cielab";
+        policy.images = "never";
+      };
       auto_save.session = true;
       scrolling.smooth = true;
       editor.command = [
@@ -26,26 +35,34 @@ in {
         javascript.clipboard = "access-paste";
         blocking = {
           enabled = true;
-          method = "adblock";
+          method = "both";
           adblock.lists = [
             "https://easylist-downloads.adblockplus.org/antiadblockfilters.txt"
             "https://easylist.to/easylist/easylist.txt"
             "https://easylist.to/easylist/easyprivacy.txt"
+            "https://easylist-downloads.adblockplus.org/easylistportuguese.txt"
+            #
             "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt"
             "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/annoyances.txt"
-            # "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badware.txt"
-            # "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/annoyances-others.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt"
             "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/resource-abuse.txt"
-            # "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt"
-            # "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt"
-            # "https://secure.fanboy.co.nz/fanboy-annoyance.txt"
-            # # "https://raw.githubusercontent.com/pixeltris/TwitchAdSolutions/914f4ec6bd56b71e75b5da2d70646c825475c3bb/vaft/vaft-ublock-origin.js"
-            # "https://filters.adtidy.org/extension/ublock/filters/2.txt"
-            # "https://raw.githubusercontent.com/brave/adblock-lists/refs/heads/master/brave-lists/brave-checks.txt"
-            # # "https://raw.githubusercontent.com/brave/adblock-lists/refs/heads/master/brave-lists/brave-twitch.txt"
-            "https://raw.githubusercontent.com/brave/adblock-lists/refs/heads/master/brave-lists/yt-shorts.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt"
+            #
+            # "https://github.com/uBlockOrigin/uAssets/raw/master/filters/legacy.txt"
+            # "https://github.com/uBlockOrigin/uAssets/raw/master/filters/filters-2020.txt"
+            # "https://github.com/uBlockOrigin/uAssets/raw/master/filters/filters-2021.txt"
+            # "https://github.com/uBlockOrigin/uAssets/raw/master/filters/filters-2022.txt"
+            # "https://github.com/uBlockOrigin/uAssets/raw/master/filters/filters-2023.txt"
+            # "https://github.com/uBlockOrigin/uAssets/raw/master/filters/filters-2024.txt"
+            # "https://github.com/uBlockOrigin/uAssets/raw/master/filters/filters-2025.txt"
+            #
+            # "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-lists/brave-checks.txt"
+            # "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-lists/brave-twitch.txt"
+            "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-lists/yt-shorts.txt"
             # "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-unbreak.txt"
             # "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-lists/brave-social.txt"
+            # "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-lists/filters-mirror.txt"
           ];
         };
       };
@@ -325,6 +342,15 @@ in {
       (pkgs.writeTextFile {
         name = "ffz.js";
         text = builtins.readFile ./greasemonkey/ffz.js;
+      })
+      (pkgs.fetchurl {
+        url = "https://update.greasyfork.org/scripts/459541/YouTube%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js";
+        sha256 = "sha256-l1jSu6wD8/77wf5TT9apxvy+6B+9ywVm6pmMkhM6Ex8=";
+      })
+
+      (pkgs.fetchurl {
+        url = "https://raw.githubusercontent.com/Vendicated/Vencord/refs/heads/main/src/plugins/youtubeAdblock.desktop/adguard.js";
+        sha256 = "sha256-Taik+nqVJY/0fHiALwB7U3NhspyYeE7lsR8cbz/eofE=";
       })
     ];
   };
