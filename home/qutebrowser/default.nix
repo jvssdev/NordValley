@@ -276,6 +276,9 @@ in {
         "<Alt-Left>" = "back";
         "<Alt-Right>" = "forward";
         "F12" = "devtools";
+
+        "M" = "hint links spawn mpv {hint-url}";
+        "N" = ''hint links spawn mpv --ytdl-format="bestvideo[height<=720]+bestaudio/best[height<=720]" {hint-url}'';
       };
 
       command = {
@@ -331,10 +334,10 @@ in {
         name = "startpage.css.js";
         text = builtins.readFile ./greasemonkey/startpage.css.js;
       })
-      (pkgs.writeTextFile {
-        name = "youtube_sponsorblock.js";
-        text = builtins.readFile ./greasemonkey/youtube_sponsorblock.js;
-      })
+      # (pkgs.writeTextFile {
+      #   name = "youtube_sponsorblock.js";
+      #   text = builtins.readFile ./greasemonkey/youtube_sponsorblock.js;
+      # })
       (pkgs.fetchurl {
         url = "https://raw.githubusercontent.com/pixeltris/TwitchAdSolutions/master/vaft/vaft-ublock-origin.js";
         sha256 = "sha256-YwkfRh+PEwcjkQGCMk17uAPSzMkdOFCmkGA/OxyiMl0=";
@@ -343,15 +346,15 @@ in {
         name = "ffz.js";
         text = builtins.readFile ./greasemonkey/ffz.js;
       })
-      (pkgs.fetchurl {
-        url = "https://update.greasyfork.org/scripts/459541/YouTube%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js";
-        sha256 = "sha256-l1jSu6wD8/77wf5TT9apxvy+6B+9ywVm6pmMkhM6Ex8=";
-      })
-
-      (pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/Vendicated/Vencord/refs/heads/main/src/plugins/youtubeAdblock.desktop/adguard.js";
-        sha256 = "sha256-Taik+nqVJY/0fHiALwB7U3NhspyYeE7lsR8cbz/eofE=";
-      })
+      # (pkgs.fetchurl {
+      #   url = "https://update.greasyfork.org/scripts/459541/YouTube%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js";
+      #   sha256 = "sha256-l1jSu6wD8/77wf5TT9apxvy+6B+9ywVm6pmMkhM6Ex8=";
+      # })
+      #
+      # (pkgs.fetchurl {
+      #   url = "https://raw.githubusercontent.com/Vendicated/Vencord/refs/heads/main/src/plugins/youtubeAdblock.desktop/adguard.js";
+      #   sha256 = "sha256-Taik+nqVJY/0fHiALwB7U3NhspyYeE7lsR8cbz/eofE=";
+      # })
     ];
   };
 }
