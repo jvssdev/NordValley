@@ -6,30 +6,29 @@
   isMango ? false,
   isNiri ? false,
   ...
-}:
-let
+}: let
   p = config.colorScheme.palette;
-in
-{
-  home.packages = [
-    pkgs.jq
-    pkgs.procps
-    pkgs.wireplumber
-    pkgs.bluez
-    pkgs.dunst
-    pkgs.systemd
-    pkgs.pavucontrol
-    pkgs.blueman
-    pkgs.wlopm
-    pkgs.kdePackages.qt5compat
-    pkgs.kdePackages.qtbase
-    pkgs.kdePackages.qtdeclarative
-    pkgs.dbus
-    pkgs.playerctl
-    pkgs.networkmanagerapplet
-  ]
-  ++ lib.optionals isRiver [ pkgs.river ]
-  ++ lib.optionals isNiri [ pkgs.niri ];
+in {
+  home.packages =
+    [
+      pkgs.jq
+      pkgs.procps
+      pkgs.wireplumber
+      pkgs.bluez
+      pkgs.dunst
+      pkgs.systemd
+      pkgs.pavucontrol
+      pkgs.blueman
+      pkgs.wlopm
+      pkgs.kdePackages.qt5compat
+      pkgs.kdePackages.qtbase
+      pkgs.kdePackages.qtdeclarative
+      pkgs.dbus
+      pkgs.playerctl
+      pkgs.networkmanagerapplet
+    ]
+    ++ lib.optionals isRiver [pkgs.river]
+    ++ lib.optionals isNiri [pkgs.niri];
 
   home.sessionVariables = {
     QML_IMPORT_PATH = lib.concatStringsSep ":" [
@@ -188,254 +187,253 @@ in
         id: workspaceModule
         spacing: 4
         ${
-          if isRiver then
-            ''
-              Repeater {
-                  model: 9
-                  Rectangle {
-                      Layout.preferredWidth: 24
-                      Layout.preferredHeight: 24
-                      color: "transparent"
-                      property int tagId: index + 1
-                      property bool isActive: false
-                      property bool isOccupied: false
-                      Process {
-                          id: riverTagProc
-                          command: ["${pkgs.bash}/bin/sh", "-c", "${pkgs.river}/bin/riverctl list-views"]
-                          stdout: SplitParser {
-                              onRead: data => {
-                                  if (!data) return
-                                  const lines = data.split("\n")
-                                  parent.parent.isOccupied = lines.some(line => line.includes("tag:" + parent.parent.tagId))
-                              }
-                          }
-                      }
-                      Process {
-                          id: riverFocusProc
-                          command: ["${pkgs.bash}/bin/sh", "-c", "${pkgs.river}/bin/riverctl list-views | grep focused"]
-                          stdout: SplitParser {
-                              onRead: data => {
-                                  if (!data) return
-                                  parent.parent.isActive = data.includes("tag:" + parent.parent.tagId)
-                              }
-                          }
-                      }
-                      Timer {
-                          interval: 500
-                          running: true
-                          repeat: true
-                          triggeredOnStart: true
-                          onTriggered: {
-                              riverTagProc.running = true
-                              riverFocusProc.running = true
-                          }
-                      }
-                      Rectangle {
-                          anchors.fill: parent
-                          color: parent.isActive ? "#${p.base0D}" : (parent.isOccupied ? "#${p.base02}" : "transparent")
-                          radius: 0
-                          Text {
-                              text: parent.parent.tagId
-                              color: parent.parent.isActive ? "#${p.base00}" : "#${p.base05}"
-                              font.pixelSize: 12
-                              font.family: "JetBrainsMono Nerd Font"
-                              font.bold: parent.parent.isActive
-                              anchors.centerIn: parent
-                          }
-                      }
-                      MouseArea {
-                          anchors.fill: parent
-                          cursorShape: Qt.PointingHandCursor
-                          onClicked: {
-                              Qt.callLater(() => {
-                                  const tagMask = Math.pow(2, parent.tagId - 1)
-                                  const proc = Qt.createQmlObject(
-                                      'import Quickshell.Io; Process { command: ["${pkgs.river}/bin/riverctl", "set-focused-tags", "' + tagMask + '"] }',
-                                      parent
-                                  )
-                                  proc.running = true
-                              })
-                          }
-                      }
-                  }
-              }
-            ''
-          else if isMango then
-            ''
-              RowLayout {
-                  spacing: 12
-                  Row {
-                      spacing: 2
-                      Repeater {
-                          model: ListModel {
-                              id: dwlTagsModel
-                              Component.onCompleted: {
-                                  for (let i = 1; i <= 9; i++) {
-                                      append({ tagId: i.toString(), isActive: false, isOccupied: false, isUrgent: false });
-                                  }
-                              }
-                          }
-                          Rectangle {
-                              visible: model.isActive || model.isOccupied || model.isUrgent
-                              width: visible ? 20 : 0
-                              height: 20
-                              color: "transparent"
-                              Rectangle {
-                                  anchors.fill: parent
-                                  anchors.margins: 2
-                                  color: model.isUrgent ? "#${p.base0C}" : (model.isActive ? "#${p.base0C}" : (model.isOccupied ? "#${p.base02}" : "transparent"))
-                                  radius: theme.radius
-                                  Text {
-                                      text: model.tagId
-                                      color: (model.isActive || model.isUrgent) ? "#${p.base00}" : "#${p.base05}"
-                                      font.pixelSize: 11
-                                      font.family: "JetBrainsMono Nerd Font"
-                                      font.bold: model.isActive
-                                      anchors.centerIn: parent
-                                  }
-                              }
-                          }
-                      }
-                  }
-                  Text {
-                      id: dwlLayoutText
-                      text: ""
-                      color: "#${p.base0C}"
-                      font.pixelSize: 11
-                      font.family: "JetBrainsMono Nerd Font"
-                      font.bold: true
-                  }
-              }
-              Process {
-                  id: dwlUpdateProc
-                  command: ["mmsg", "-g"]
-                  stdout: SplitParser {
-                      onRead: data => {
-                          if (!data) return;
-                          const parts = data.trim().split(/\s+/);
-                  
-                          const tagIndex = parts.indexOf("tag");
-                          if (tagIndex !== -1 && parts.length > tagIndex + 4) {
-                              const id = parseInt(parts[tagIndex + 1]);
-                              if (id >= 1 && id <= 9) {
-                                  const state = parts[tagIndex + 2];
-                                  const active = state === "1";
-                                  const urgent = state === "2";
-                                  const occupied = parseInt(parts[tagIndex + 3]) > 0;
-                          
-                                  dwlTagsModel.setProperty(id - 1, "isActive", active);
-                                  dwlTagsModel.setProperty(id - 1, "isOccupied", occupied);
-                                  dwlTagsModel.setProperty(id - 1, "isUrgent", urgent);
-                              }
-                          }
-                  
-                          const layoutIndex = parts.indexOf("layout");
-                          if (layoutIndex !== -1 && parts.length > layoutIndex + 1) {
-                              const symbol = parts[layoutIndex + 1] || "";
-                              dwlLayoutText.text = symbol ? "[" + symbol.replace(/[\[\]]/g, "") + "]" : "";
-                          }
-                      }
-                  }
-              }
-              Process {
-                  id: dwlWatchProc
-                  command: ["mmsg", "-w"]
-                  running: true
-                  stdout: SplitParser {
-                      onRead: data => {
-                          if (data.trim()) {
-                              dwlUpdateProc.running = true;
-                          }
-                      }
-                  }
-              }
-              Timer {
-                  interval: 250
-                  running: true
-                  repeat: true
-                  triggeredOnStart: true
-                  onTriggered: {
-                      if (!dwlUpdateProc.running) {
-                          dwlUpdateProc.running = true;
-                      }
-                  }
-              }
-              Component.onCompleted: dwlUpdateProc.running = true
-            ''
-          else if isNiri then
-            ''
-              Repeater {
-                  model: ListModel {
-                      id: niriWorkspaces
-                  }
-                  Rectangle {
-                      Layout.preferredWidth: contentText.width + 16
-                      Layout.preferredHeight: 24
-                      color: modelData.isActive ? "#${p.base0D}" : "#${p.base02}"
-                      radius: 0
-                      Text {
-                          id: contentText
-                          text: modelData.name || (modelData.index + 1)
-                          color: modelData.isActive ? "#${p.base00}" : "#${p.base05}"
-                          font.pixelSize: 12
-                          font.family: "JetBrainsMono Nerd Font"
-                          font.bold: modelData.isActive
-                          anchors.centerIn: parent
-                      }
-                      MouseArea {
-                          anchors.fill: parent
-                          cursorShape: Qt.PointingHandCursor
-                          onClicked: {
-                              Qt.callLater(() => {
-                                  const proc = Qt.createQmlObject(
-                                      'import Quickshell.Io; Process { command: ["${pkgs.niri}/bin/niri", "msg", "action", "focus-workspace", "' + modelData.index + '"] }',
-                                      parent
-                                  )
-                                  proc.running = true
-                              })
-                          }
-                      }
-                  }
-              }
-              Process {
-                  id: niriWorkspaceProc
-                  command: ["${pkgs.niri}/bin/niri", "msg", "-j", "workspaces"]
-                  stdout: SplitParser {
-                      onRead: data => {
-                          if (!data) return
-                          try {
-                              const workspaces = JSON.parse(data)
-                              niriWorkspaces.clear()
-                              workspaces.forEach((ws, idx) => {
-                                  niriWorkspaces.append({
-                                      index: idx,
-                                      name: ws.name || "",
-                                      isActive: ws.is_active || false
-                                  })
-                              })
-                          } catch (e) {}
-                      }
-                  }
-              }
-              Timer {
-                  interval: 300
-                  running: true
-                  repeat: true
-                  triggeredOnStart: true
-                  onTriggered: niriWorkspaceProc.running = true
-              }
-            ''
-          else
-            ''
-              Text {
-                  text: "~"
-                  color: "#${p.base0E}"
-                  font.pixelSize: 18
-                  font.family: "JetBrainsMono Nerd Font"
-                  font.bold: true
-              }
-            ''
+      if isRiver
+      then ''
+        Repeater {
+            model: 9
+            Rectangle {
+                Layout.preferredWidth: 24
+                Layout.preferredHeight: 24
+                color: "transparent"
+                property int tagId: index + 1
+                property bool isActive: false
+                property bool isOccupied: false
+                Process {
+                    id: riverTagProc
+                    command: ["${pkgs.bash}/bin/sh", "-c", "${pkgs.river}/bin/riverctl list-views"]
+                    stdout: SplitParser {
+                        onRead: data => {
+                            if (!data) return
+                            const lines = data.split("\n")
+                            parent.parent.isOccupied = lines.some(line => line.includes("tag:" + parent.parent.tagId))
+                        }
+                    }
+                }
+                Process {
+                    id: riverFocusProc
+                    command: ["${pkgs.bash}/bin/sh", "-c", "${pkgs.river}/bin/riverctl list-views | grep focused"]
+                    stdout: SplitParser {
+                        onRead: data => {
+                            if (!data) return
+                            parent.parent.isActive = data.includes("tag:" + parent.parent.tagId)
+                        }
+                    }
+                }
+                Timer {
+                    interval: 500
+                    running: true
+                    repeat: true
+                    triggeredOnStart: true
+                    onTriggered: {
+                        riverTagProc.running = true
+                        riverFocusProc.running = true
+                    }
+                }
+                Rectangle {
+                    anchors.fill: parent
+                    color: parent.isActive ? "#${p.base0D}" : (parent.isOccupied ? "#${p.base02}" : "transparent")
+                    radius: 0
+                    Text {
+                        text: parent.parent.tagId
+                        color: parent.parent.isActive ? "#${p.base00}" : "#${p.base05}"
+                        font.pixelSize: 12
+                        font.family: "JetBrainsMono Nerd Font"
+                        font.bold: parent.parent.isActive
+                        anchors.centerIn: parent
+                    }
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        Qt.callLater(() => {
+                            const tagMask = Math.pow(2, parent.tagId - 1)
+                            const proc = Qt.createQmlObject(
+                                'import Quickshell.Io; Process { command: ["${pkgs.river}/bin/riverctl", "set-focused-tags", "' + tagMask + '"] }',
+                                parent
+                            )
+                            proc.running = true
+                        })
+                    }
+                }
+            }
         }
+      ''
+      else if isMango
+      then ''
+        RowLayout {
+            spacing: 12
+            Row {
+                spacing: 2
+                Repeater {
+                    model: ListModel {
+                        id: dwlTagsModel
+                        Component.onCompleted: {
+                            for (let i = 1; i <= 9; i++) {
+                                append({ tagId: i.toString(), isActive: false, isOccupied: false, isUrgent: false });
+                            }
+                        }
+                    }
+                    Rectangle {
+                        visible: model.isActive || model.isOccupied || model.isUrgent
+                        width: visible ? 20 : 0
+                        height: 20
+                        color: "transparent"
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.margins: 2
+                            color: model.isUrgent ? "#${p.base0C}" : (model.isActive ? "#${p.base0C}" : (model.isOccupied ? "#${p.base02}" : "transparent"))
+                            radius: theme.radius
+                            Text {
+                                text: model.tagId
+                                color: (model.isActive || model.isUrgent) ? "#${p.base00}" : "#${p.base05}"
+                                font.pixelSize: 11
+                                font.family: "JetBrainsMono Nerd Font"
+                                font.bold: model.isActive
+                                anchors.centerIn: parent
+                            }
+                        }
+                    }
+                }
+            }
+            Text {
+                id: dwlLayoutText
+                text: ""
+                color: "#${p.base0C}"
+                font.pixelSize: 11
+                font.family: "JetBrainsMono Nerd Font"
+                font.bold: true
+            }
+        }
+        Process {
+            id: dwlUpdateProc
+            command: ["mmsg", "-g"]
+            stdout: SplitParser {
+                onRead: data => {
+                    if (!data) return;
+                    const parts = data.trim().split(/\s+/);
+
+                    const tagIndex = parts.indexOf("tag");
+                    if (tagIndex !== -1 && parts.length > tagIndex + 4) {
+                        const id = parseInt(parts[tagIndex + 1]);
+                        if (id >= 1 && id <= 9) {
+                            const state = parts[tagIndex + 2];
+                            const active = state === "1";
+                            const urgent = state === "2";
+                            const occupied = parseInt(parts[tagIndex + 3]) > 0;
+
+                            dwlTagsModel.setProperty(id - 1, "isActive", active);
+                            dwlTagsModel.setProperty(id - 1, "isOccupied", occupied);
+                            dwlTagsModel.setProperty(id - 1, "isUrgent", urgent);
+                        }
+                    }
+
+                    const layoutIndex = parts.indexOf("layout");
+                    if (layoutIndex !== -1 && parts.length > layoutIndex + 1) {
+                        const symbol = parts[layoutIndex + 1] || "";
+                        dwlLayoutText.text = symbol ? "[" + symbol.replace(/[\[\]]/g, "") + "]" : "";
+                    }
+                }
+            }
+        }
+        Process {
+            id: dwlWatchProc
+            command: ["mmsg", "-w"]
+            running: true
+            stdout: SplitParser {
+                onRead: data => {
+                    if (data.trim()) {
+                        dwlUpdateProc.running = true;
+                    }
+                }
+            }
+        }
+        Timer {
+            interval: 250
+            running: true
+            repeat: true
+            triggeredOnStart: true
+            onTriggered: {
+                if (!dwlUpdateProc.running) {
+                    dwlUpdateProc.running = true;
+                }
+            }
+        }
+        Component.onCompleted: dwlUpdateProc.running = true
+      ''
+      else if isNiri
+      then ''
+        Repeater {
+            model: ListModel {
+                id: niriWorkspaces
+            }
+            Rectangle {
+                Layout.preferredWidth: contentText.width + 16
+                Layout.preferredHeight: 24
+                color: modelData.isActive ? "#${p.base0D}" : "#${p.base02}"
+                radius: 0
+                Text {
+                    id: contentText
+                    text: modelData.name || (modelData.index + 1)
+                    color: modelData.isActive ? "#${p.base00}" : "#${p.base05}"
+                    font.pixelSize: 12
+                    font.family: "JetBrainsMono Nerd Font"
+                    font.bold: modelData.isActive
+                    anchors.centerIn: parent
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        Qt.callLater(() => {
+                            const proc = Qt.createQmlObject(
+                                'import Quickshell.Io; Process { command: ["${pkgs.niri}/bin/niri", "msg", "action", "focus-workspace", "' + modelData.index + '"] }',
+                                parent
+                            )
+                            proc.running = true
+                        })
+                    }
+                }
+            }
+        }
+        Process {
+            id: niriWorkspaceProc
+            command: ["${pkgs.niri}/bin/niri", "msg", "-j", "workspaces"]
+            stdout: SplitParser {
+                onRead: data => {
+                    if (!data) return
+                    try {
+                        const workspaces = JSON.parse(data)
+                        niriWorkspaces.clear()
+                        workspaces.forEach((ws, idx) => {
+                            niriWorkspaces.append({
+                                index: idx,
+                                name: ws.name || "",
+                                isActive: ws.is_active || false
+                            })
+                        })
+                    } catch (e) {}
+                }
+            }
+        }
+        Timer {
+            interval: 300
+            running: true
+            repeat: true
+            triggeredOnStart: true
+            onTriggered: niriWorkspaceProc.running = true
+        }
+      ''
+      else ''
+        Text {
+            text: "~"
+            color: "#${p.base0E}"
+            font.pixelSize: 18
+            font.family: "JetBrainsMono Nerd Font"
+            font.bold: true
+        }
+      ''
+    }
     }
   '';
 
@@ -515,6 +513,7 @@ in
     import Quickshell.Io
     import Quickshell.Wayland
     import Quickshell.Bluetooth
+    import Quickshell.Services.Pam
     ShellRoot {
         id: root
         IpcHandler {
@@ -526,12 +525,27 @@ in
         IpcHandler {
             target: "lockScreen"
             function toggle(): void {
-                lockScreenProc.running = true
+                sessionLocked = true
             }
         }
-        Process {
-            id: lockScreenProc
-            command: ["${pkgs.quickshell}/bin/quickshell", "-p", Quickshell.env("HOME") + "/.config/quickshell/lockscreen/shell.qml"]
+        property bool sessionLocked: false
+        LockContext {
+            id: lockContext
+            onUnlocked: {
+                sessionLocked = false
+            }
+            onFailed: {
+            }
+        }
+        WlSessionLock {
+            id: sessionLock
+            locked: sessionLocked
+            WlSessionLockSurface {
+                LockSurface {
+                    anchors.fill: parent
+                    context: lockContext
+                }
+            }
         }
         QtObject {
             id: theme
@@ -940,14 +954,14 @@ in
     }
   '';
 
-  xdg.configFile."quickshell/lockscreen/wallpaper.png".source =
+  xdg.configFile."quickshell/wallpaper.png".source =
     ../../Wallpapers/a6116535-4a72-453e-83c9-ea97b8597d8c.png;
 
-  xdg.configFile."quickshell/lockscreen/pam/password.conf".text = ''
+  xdg.configFile."quickshell/pam/password.conf".text = ''
     auth required pam_unix.so
   '';
 
-  xdg.configFile."quickshell/lockscreen/LockContext.qml".text = ''
+  xdg.configFile."quickshell/LockContext.qml".text = ''
     import QtQuick
     import Quickshell
     import Quickshell.Services.Pam
@@ -987,6 +1001,7 @@ in
                 } else {
                     root.currentText = "";
                     root.showFailure = true;
+                    root.failed();
                 }
                 root.unlockInProgress = false;
             }
@@ -994,7 +1009,7 @@ in
     }
   '';
 
-  xdg.configFile."quickshell/lockscreen/LockSurface.qml".text = ''
+  xdg.configFile."quickshell/LockSurface.qml".text = ''
     import QtQuick
     import QtQuick.Layouts
     import QtQuick.Controls
@@ -1008,7 +1023,7 @@ in
         Image {
             anchors.fill: parent
             source: "wallpaper.png"
-            fillMode: Image.PreserveAspectFit 
+            fillMode: Image.PreserveAspectFit
         }
 
         ColumnLayout {
@@ -1119,30 +1134,6 @@ in
                 font.pixelSize: 14
                 font.family: "JetBrainsMono Nerd Font"
                 Layout.alignment: Qt.AlignHCenter
-            }
-        }
-    }
-  '';
-
-  xdg.configFile."quickshell/lockscreen/shell.qml".text = ''
-    import Quickshell
-    import Quickshell.Wayland
-    ShellRoot {
-        LockContext {
-            id: lockContext
-            onUnlocked: {
-                lock.locked = false;
-                Qt.quit();
-            }
-        }
-        WlSessionLock {
-            id: lock
-            locked: true
-            WlSessionLockSurface {
-                LockSurface {
-                    anchors.fill: parent
-                    context: lockContext
-                }
             }
         }
     }
