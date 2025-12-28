@@ -131,7 +131,7 @@ in {
       bind=SUPER,t,spawn,ghostty
       bind=SUPER,a,spawn,fuzzel
       bind=SUPER,n,spawn,dunst-fuzzel
-      bind=SUPER,b,spawn,qutebrowser
+      bind=SUPER,b,spawn,helium
       bind=SUPER,e,spawn,thunar
       bind=SUPER,x,spawn_shell,qs ipc call powerMenu toggle
       bind=SUPER,p,spawn,screenshot

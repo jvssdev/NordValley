@@ -2,8 +2,7 @@
   pkgs,
   userName,
   ...
-}:
-{
+}: {
   virtualisation = {
     docker = {
       enable = true;
@@ -23,7 +22,10 @@
       };
     };
     spiceUSBRedirection.enable = true;
-    waydroid.enable = true;
+    waydroid = {
+      enable = true;
+      package = pkgs.waydroid-nftables;
+    };
   };
 
   systemd.services.libvirt-guests.enable = false;
