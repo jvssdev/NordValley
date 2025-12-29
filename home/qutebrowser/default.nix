@@ -10,6 +10,12 @@ in {
 
     extraConfig = ''
       config.set('colors.webpage.darkmode.enabled', False, 'file://*')
+      c.tabs.padding = {
+        'bottom': 5,
+        'left': 9,
+        'right': 9,
+        'top': 5
+      }
     '';
     settings = {
       colors.webpage.darkmode = {
@@ -18,7 +24,10 @@ in {
         policy.images = "never";
       };
       auto_save.session = true;
-      scrolling.smooth = true;
+      scrolling = {
+        smooth = true;
+        bar = "never";
+      };
       editor.command = [
         "ghostty"
         "-e"
@@ -28,10 +37,22 @@ in {
       zoom.default = 75;
       tabs = {
         indicator.width = 0;
+        show = "multiple";
         title.format = "{audio}{index}:{current_title}";
+        width = "7%";
+      };
+
+      input = {
+        insert_mode = {
+          auto_enter = true;
+          auto_leave = true;
+          auto_load = false;
+          leave_on_load = true;
+        };
       };
       content = {
         autoplay = false;
+        geolocation = "ask";
         javascript.clipboard = "access-paste";
         blocking = {
           enabled = true;
@@ -335,10 +356,10 @@ in {
         name = "startpage.css.js";
         text = builtins.readFile ./greasemonkey/startpage.css.js;
       })
-      # (pkgs.writeTextFile {
-      #   name = "youtube_sponsorblock.js";
-      #   text = builtins.readFile ./greasemonkey/youtube_sponsorblock.js;
-      # })
+      (pkgs.writeTextFile {
+        name = "youtube_sponsorblock.js";
+        text = builtins.readFile ./greasemonkey/youtube_sponsorblock.js;
+      })
       # (pkgs.fetchurl {
       #   url = "https://raw.githubusercontent.com/pixeltris/TwitchAdSolutions/master/vaft/vaft-ublock-origin.js";
       #   sha256 = "sha256-YwkfRh+PEwcjkQGCMk17uAPSzMkdOFCmkGA/OxyiMl0=";
