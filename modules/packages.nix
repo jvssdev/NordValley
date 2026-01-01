@@ -5,7 +5,7 @@
 }: let
   inherit
     (specialArgs)
-    helium-browser
+    # helium-browser
     quickshell
     ;
 in
@@ -69,6 +69,7 @@ in
       # rclone-ui
 
       # GUI applications
+      brave
       keepassxc
       anydesk
       # llama-cpp
@@ -101,7 +102,7 @@ in
       dunst
       pavucontrol
 
-      helium-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+      # helium-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
       quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
   in

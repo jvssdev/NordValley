@@ -4,8 +4,7 @@
   userName,
   fullName,
   ...
-}:
-{
+}: {
   environment.variables = {
     EDITOR = "nvim";
     XCURSOR_THEME = "Bibata-Modern-Ice";
@@ -181,7 +180,7 @@
   services = {
     dbus = {
       enable = true;
-      packages = [ pkgs.dconf ];
+      packages = [pkgs.dconf];
     };
     libinput.enable = true;
     upower.enable = true;

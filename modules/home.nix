@@ -31,6 +31,7 @@ in {
   imports =
     [
       ./programs.nix
+      ../modules/brave/state.nix
       ../home/dunst/default.nix
       ../home/dunst-fuzzel
       ../home/fuzzel-clipboard
@@ -86,16 +87,16 @@ in {
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
-      "x-scheme-handler/http" = ["org.qutebrowser.qutebrowser.desktop"];
-      "x-scheme-handler/https" = ["org.qutebrowser.qutebrowser.desktop"];
-      "x-scheme-handler/chrome" = ["org.qutebrowser.qutebrowser.desktop"];
-      "text/html" = ["org.qutebrowser.qutebrowser.desktop"];
-      "application/x-extension-htm" = ["org.qutebrowser.qutebrowser.desktop"];
-      "application/x-extension-html" = ["org.qutebrowser.qutebrowser.desktop"];
-      "application/x-extension-shtml" = ["org.qutebrowser.qutebrowser.desktop"];
-      "application/xhtml+xml" = ["org.qutebrowser.qutebrowser.desktop"];
-      "application/x-extension-xhtml" = ["org.qutebrowser.qutebrowser.desktop"];
-      "application/x-extension-xht" = ["org.qutebrowser.qutebrowser.desktop"];
+      "x-scheme-handler/http" = ["brave-browser.desktop"];
+      "x-scheme-handler/https" = ["brave-browser.desktop"];
+      "x-scheme-handler/chrome" = ["brave-browser.desktop"];
+      "text/html" = ["brave-browser.desktop"];
+      "application/x-extension-htm" = ["brave-browser.desktop"];
+      "application/x-extension-html" = ["brave-browser.desktop"];
+      "application/x-extension-shtml" = ["brave-browser.desktop"];
+      "application/xhtml+xml" = ["brave-browser.desktop"];
+      "application/x-extension-xhtml" = ["brave-browser.desktop"];
+      "application/x-extension-xht" = ["brave-browser.desktop"];
       "inode/directory" = ["thunar.desktop"];
       "image/png" = ["imv.desktop"];
       "image/jpeg" = ["imv.desktop"];
@@ -110,16 +111,16 @@ in {
       "text/txt" = ["nvim.desktop"];
     };
     associations.added = {
-      "x-scheme-handler/http" = ["org.qutebrowser.qutebrowser.desktop"];
-      "x-scheme-handler/https" = ["org.qutebrowser.qutebrowser.desktop"];
-      "x-scheme-handler/chrome" = ["org.qutebrowser.qutebrowser.desktop"];
-      "text/html" = ["org.qutebrowser.qutebrowser.desktop"];
-      "application/x-extension-htm" = ["org.qutebrowser.qutebrowser.desktop"];
-      "application/x-extension-html" = ["org.qutebrowser.qutebrowser.desktop"];
-      "application/x-extension-shtml" = ["org.qutebrowser.qutebrowser.desktop"];
-      "application/xhtml+xml" = ["org.qutebrowser.qutebrowser.desktop"];
-      "application/x-extension-xhtml" = ["org.qutebrowser.qutebrowser.desktop"];
-      "application/x-extension-xht" = ["org.qutebrowser.qutebrowser.desktop"];
+      "x-scheme-handler/http" = ["brave-browser.desktop"];
+      "x-scheme-handler/https" = ["brave-browser.desktop"];
+      "x-scheme-handler/chrome" = ["brave-browser.desktop"];
+      "text/html" = ["brave-browser.desktop"];
+      "application/x-extension-htm" = ["brave-browser.desktop"];
+      "application/x-extension-html" = ["brave-browser.desktop"];
+      "application/x-extension-shtml" = ["brave-browser.desktop"];
+      "application/xhtml+xml" = ["brave-browser.desktop"];
+      "application/x-extension-xhtml" = ["brave-browser.desktop"];
+      "application/x-extension-xht" = ["brave-browser.desktop"];
       "inode/directory" = ["thunar.desktop"];
       "image/png" = ["imv.desktop"];
       "image/jpeg" = ["imv.desktop"];

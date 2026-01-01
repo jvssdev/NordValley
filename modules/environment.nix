@@ -7,8 +7,8 @@
 
   environment.sessionVariables = {
     TERMINAL = "ghostty";
-    BROWSER = "qutebrowser";
-    DEFAULT_BROWSER = "qutebrowser";
+    BROWSER = "browser";
+    DEFAULT_BROWSER = "browser";
 
     XDG_SCREENSHOTS_DIR = "$HOME/Pictures/Screenshots";
     XDG_SESSION_TYPE = "wayland";

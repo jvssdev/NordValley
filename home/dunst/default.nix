@@ -52,7 +52,7 @@ in {
         sticky_history = true;
         history_length = 100;
 
-        browser = "qutebrowser";
+        browser = "brave";
 
         always_run_script = true;
 
