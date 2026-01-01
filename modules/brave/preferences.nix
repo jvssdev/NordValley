@@ -1,12 +1,5 @@
-{
-  pkgs,
-  nix-colors,
-  ...
-}: let
-  palette = nix-colors.colorSchemes.nord.palette;
-  vimiumc = "hfjbmagddngcpeloejdejnfgbamkjaeg";
-in {
-  preferencesFile = pkgs.writeText "initial_preferences" (builtins.toJSON {
+{...}: {
+  initialPreferences = {
     brave.de_amp.enabled = true;
     brave.debounce.enabled = true;
     brave.reduce_language = true;
@@ -44,80 +37,5 @@ in {
       vertical_tabs_on_right = false;
     };
     extensions.theme.system_theme = 1;
-    extensions.commands."linux:Alt+Shift+A" = {
-      command_name = "addSite";
-      extension = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
-      global = false;
-    };
-    extensions.settings."${vimiumc}" = {
-      keyMappings = ''        #!no-check
-        map t Vomnibar.activateTabs
-        map L nextTab
-        map H previousTab
-        unmap J
-        unmap K'';
-      notifyUpdate = false;
-      searchUrl = "https://www.google.com/search?q=$s Google";
-      smoothScroll = true;
-      scrollStepSize = 60;
-      linkHintCharacters = "sadfjklewcmpgh";
-      filterLinkHints = false;
-      hideHud = false;
-      grabBackFocus = false;
-      userDefinedLinkHintCss = ''        div > .vimiumHintMarker {
-          background: #${palette.base0A};
-          border: 1px solid #${palette.base0A};
-        }
-
-        div > .vimiumHintMarker span {
-          color: #${palette.base00};
-          font-weight: bold;
-          font-size: 12px;
-          text-shadow: none !important;
-        }
-
-        #vomnibar,
-        #vomnibar input,
-        #vomnibar #vomnibar-search-area,
-        #vomnibar ul,
-        #vomnibar li {
-          color: #${palette.base05} !important;
-          background-color: #${palette.base00} !important;
-          border: 0px !important;
-        }
-
-        #vomnibar {
-          padding: 1px !important;
-        }
-
-        #vomnibar #vomnibar-search-area {
-          padding: 5px !important;
-          border-bottom: 2px solid #${palette.base05} !important;
-        }
-
-        #vomnibar li.selected {
-          background-color: #${palette.base01} !important;
-        }
-
-        #vomnibar li em,
-        #vomnibar li .title,
-        #vomnibar li .relevancy {
-          color: #${palette.base05} !important;
-        }
-
-        #vomnibar li .source,
-        #vomnibar li em .match {
-          color: #${palette.base03} !important;
-        }
-
-        #vomnibar li .match,
-        #vomnibar li .title .match {
-          color: #${palette.base07} !important;
-        }
-
-        #vomnibar li .url {
-          color: #${palette.base0D} !important;
-        }'';
-    };
-  });
+  };
 }
