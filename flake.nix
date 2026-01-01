@@ -57,10 +57,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    ghostty = {
-      url = "github:ghostty-org/ghostty";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
+    # ghostty = {
+    #   url = "github:ghostty-org/ghostty";
+    #   inputs.nixpkgs.follows = "nixpkgs-unstable";
+    # };
   };
 
   outputs = inputs @ {
@@ -71,7 +71,7 @@
     nixpkgs-unstable,
     nix-colors,
     niri-flake,
-    ghostty,
+    # ghostty,
     ...
   }: let
     userInfo = {
@@ -153,7 +153,7 @@
                     mango
                     niri-flake
                     nvf
-                    ghostty
+                    # ghostty
                     ;
                   inherit (userInfo) userName userEmail fullName;
                   inherit (defaults) homeDir;
@@ -227,7 +227,7 @@
           # helium-browser = inputs.helium-browser;
           nix-colors = inputs.nix-colors;
           nvf = inputs.nvf;
-          ghostty = inputs.ghostty;
+          # ghostty = inputs.ghostty;
           isRiver = true;
           isMango = false;
           isNiri = false;

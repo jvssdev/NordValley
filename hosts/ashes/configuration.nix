@@ -177,6 +177,7 @@
     };
   };
   environment.systemPackages = with pkgs; [
+    ghostty
     dconf
     glib
     qt6.qtwayland
