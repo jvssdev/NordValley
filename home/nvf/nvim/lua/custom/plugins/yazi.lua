@@ -1,49 +1,52 @@
----@type LazySpec
 return {
   'mikavilpas/yazi.nvim',
-  version = '*', -- use the latest stable version
+  version = '*',
   event = 'VeryLazy',
   dependencies = {
     { 'nvim-lua/plenary.nvim', lazy = true },
   },
   keys = {
-    -- 👇 in this section, choose your own keymappings!
     {
       '<leader>e',
       mode = { 'n', 'v' },
-      '<cmd>Yazi<cr>',
-      desc = 'Open yazi at the current file',
-    },
-    -- {
-    --   -- Open in the current working directory
-    --   "<leader>e",
-    --   "<cmd>Yazi cwd<cr>",
-    --   desc = "Open the file manager in nvim's working directory",
-    -- },
-    -- {
-    --   "<c-up>",
-    --   "<cmd>Yazi toggle<cr>",
-    --   desc = "Resume the last yazi session",
-    -- },
-  },
-  ---@type YaziConfig | {}
+      function()
+        local tmp_file = '/tmp/yazi-path-' .. vim.fn.getpid()
 
+        vim.fn.system('rm -f ' .. tmp_file)
+
+        local current_file = vim.fn.expand '%:p'
+        if current_file == '' then
+          current_file = vim.fn.getcwd()
+        end
+
+        vim.cmd 'silent! write'
+
+        local cmd = string.format('ghostty --title=yazi-picker -e sh -c "yazi \'%s\' --chooser-file=%s"', current_file, tmp_file)
+
+        vim.fn.jobstart(cmd, {
+          on_exit = function()
+            vim.schedule(function()
+              if vim.fn.filereadable(tmp_file) == 1 then
+                local chosen_file = vim.fn.readfile(tmp_file)[1]
+                if chosen_file and chosen_file ~= '' then
+                  vim.cmd('edit ' .. vim.fn.fnameescape(chosen_file))
+                end
+              end
+              vim.fn.system('rm -f ' .. tmp_file)
+            end)
+          end,
+        })
+      end,
+      desc = 'Open yazi in external terminal',
+    },
+  },
   opts = {
-    -- if you want to open yazi instead of netrw, see below for more info
     open_for_directories = false,
     keymaps = {
       show_help = '<f1>',
     },
-    -- the zindex of the yazi floating window. Can be used to make the yazi
-    -- window fullscreen. See `:h nvim_open_win()` for more information.
-    floating_window_scaling_factor = 1,
-    yazi_floating_window_zindex = 200,
   },
-  -- 👇 if you use `open_for_directories=true`, this is recommended
   init = function()
-    -- mark netrw as loaded so it's not loaded at all.
-    --
-    -- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
     vim.g.loaded_netrwPlugin = 1
   end,
 }

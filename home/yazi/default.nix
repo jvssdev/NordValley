@@ -29,7 +29,19 @@
     settings = {
       mgr = {
         show_hidden = true;
+        ratio = [
+          1
+          3
+          4
+        ];
       };
+      preview = {
+        max_width = 1920;
+        max_height = 1080;
+        image_filter = "lanczos3";
+        image_quality = 90;
+      };
+
       opener = {
         play = [
           {

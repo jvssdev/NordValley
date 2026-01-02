@@ -214,6 +214,9 @@ in {
       windowrule=unfocused_opacity:0.75,focused_opacity:0.75,appid:Thunar,isfloating:1
       windowrule=unfocused_opacity:0.75,focused_opacity:0.75,appid:ghostty
       windowrule=unfocused_opacity:0.75,focused_opacity:0.75,appid:fuzzel
+
+
+      windowrule=width:1600,height:1000,isfloating:1,title:yazi-picker
     '';
   };
   systemd.user.targets.mango-session = {
