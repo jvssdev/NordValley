@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}:
-{
+{pkgs, ...}: {
   programs.yazi = {
     package = pkgs.yazi;
     enable = true;
@@ -34,12 +29,7 @@
     settings = {
       mgr = {
         show_hidden = true;
-        ratio = [
-          1
-          3
-          4
-        ];
-      }; 
+      };
       opener = {
         play = [
           {
@@ -63,8 +53,8 @@
           }
         ];
         edit = [
-          { 
-            run = "nvim \"$@\"";
+          {
+            run = "$EDITOR \"$@\"";
             block = true;
             for = "unix";
           }
