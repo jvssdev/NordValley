@@ -1,8 +1,9 @@
-{nix-colors, ...}: let
-  palette = nix-colors.colorSchemes.nord.palette;
-in {
+# {nix-colors, ...}: let
+#   palette = nix-colors.colorSchemes.nord.palette;
+# in
+{
   programs.chromium.extraOpts = {
-    BrowserThemeColor = "#${palette.base01}";
+    # BrowserThemeColor = "#${palette.base01}";
     DefaultClipboardSetting = 2;
     DefaultGeolocationSetting = 2;
     DefaultInsecureContentSetting = 2;

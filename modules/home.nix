@@ -31,7 +31,6 @@ in {
   imports =
     [
       ./programs.nix
-      ../modules/brave/state.nix
       ../home/dunst/default.nix
       ../home/dunst-fuzzel
       ../home/fuzzel-clipboard
