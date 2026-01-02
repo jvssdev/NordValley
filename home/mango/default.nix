@@ -69,7 +69,7 @@ in {
       cursor_hide_timeout=5000
       trackpad_natural_scrolling=0
       animation_duration_move=500
-      animation_duration_open=400
+      animation_duration_open=350
       animation_duration_tag=0
       animation_duration_close=550
       animation_duration_focus=400
@@ -215,8 +215,7 @@ in {
       windowrule=unfocused_opacity:0.75,focused_opacity:0.75,appid:ghostty
       windowrule=unfocused_opacity:0.75,focused_opacity:0.75,appid:fuzzel
 
-
-      windowrule=width:1600,height:1000,isfloating:1,title:yazi-picker
+      windowrule=width:1900,height:1600,isnamedscratchpad:1,title:yazi-picker
     '';
   };
   systemd.user.targets.mango-session = {
