@@ -8,7 +8,7 @@
         name = "valley";
         palette = {
           base00 = "000000";
-          base01 = "151621";
+          base01 = "172554";
           base02 = "445576"; #
           base03 = "385285"; #
           base04 = "60759D"; #
@@ -18,11 +18,11 @@
           base08 = "E65757"; #
           base09 = "F6C177";
           base0A = "FFCD3C"; #
-          base0B = "597BC0"; #
+          base0B = "0EA2AB"; ##
           base0C = "8196C2"; #
-          base0D = "617CB3"; #
+          base0D = "597BC0"; ##
           base0E = "F6C177";
-          base0F = "6282C6";
+          base0F = "6282C6"; ##
         };
       };
     };
@@ -34,7 +34,7 @@
       name = "valley";
       palette = {
         base00 = "000000";
-        base01 = "151621";
+        base01 = "172554";
         base02 = "445576"; #
         base03 = "385285"; #
         base04 = "60759D"; #
@@ -44,11 +44,11 @@
         base08 = "E65757"; #
         base09 = "F6C177";
         base0A = "FFCD3C"; #
-        base0B = "597BC0"; #
+        base0B = "0EA2AB"; ##
         base0C = "8196C2"; #
-        base0D = "617CB3"; #
+        base0D = "597BC0"; ##
         base0E = "F6C177";
-        base0F = "6282C6";
+        base0F = "6282C6"; ##
       };
     };
   };

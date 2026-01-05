@@ -19,7 +19,7 @@ in {
       palette = [
         "0=#${palette.base00}"
         "1=#${palette.base08}"
-        "2=#${palette.base0B}"
+        "2=#${palette.base0D}"
         "3=#${palette.base0A}"
         "4=#${palette.base0D}"
         "5=#${palette.base0E}"

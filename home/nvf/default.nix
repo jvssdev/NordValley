@@ -113,12 +113,12 @@ in {
 
             local reverie_theme = {
               normal = {
-                a = { bg = "#${palette.base0B}", fg = "#${palette.base00}", gui = "bold" },
+                a = { bg = "#${palette.base0D}", fg = "#${palette.base00}", gui = "bold" },
                 b = { bg = "#${palette.base02}", fg = "#${palette.base05}" },
                 c = { bg = "#${palette.base01}", fg = "#${palette.base04}" }
               },
               insert = {
-                a = { bg = "#${palette.base0D}", fg = "#${palette.base00}", gui = "bold" },
+                a = { bg = "#${palette.base0B}", fg = "#${palette.base00}", gui = "bold" },
                 b = { bg = "#${palette.base02}", fg = "#${palette.base05}" },
                 c = { bg = "#${palette.base01}", fg = "#${palette.base04}" }
               },
