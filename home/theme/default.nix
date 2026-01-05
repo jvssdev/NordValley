@@ -65,13 +65,8 @@
   qt = {
     enable = true;
 
-    platformTheme = {
-      name = "kde";
-    };
-
-    style = {
-      name = "kvantum";
-    };
+    platformTheme.name = "qtct";
+    style.name = "kvantum";
   };
 
   xdg.configFile = {
