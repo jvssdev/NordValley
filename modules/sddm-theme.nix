@@ -1,19 +1,18 @@
 {
   pkgs,
   silentSDDM,
-  nix-colors,
+  config,
   ...
-}:
-let
-  colors = nix-colors.colorSchemes.nord.palette;
+}: let
+  colors = config.theme.colorScheme.palette;
   wallpaper = ../Wallpapers/nord_valley.png;
 
-  background-derivation = pkgs.runCommand "bg.jpg" { } ''
+  background-derivation = pkgs.runCommand "bg.jpg" {} ''
     cp ${wallpaper} $out
   '';
 
   silentTheme = silentSDDM.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
-    extraBackgrounds = [ background-derivation ];
+    extraBackgrounds = [background-derivation];
     theme-overrides = {
       "General" = {
         enable-animations = true;
@@ -168,9 +167,7 @@ let
       };
     };
   };
-in
-{
-
+in {
   environment.systemPackages = with pkgs; [
     silentTheme
     silentTheme.test

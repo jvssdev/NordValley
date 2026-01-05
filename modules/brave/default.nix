@@ -1,9 +1,5 @@
-{
-  pkgs,
-  nix-colors,
-  ...
-}: let
-  preferences = import ./preferences.nix {inherit nix-colors;};
+{pkgs, ...}: let
+  preferences = import ./preferences.nix;
 in {
   environment.systemPackages = [
     pkgs.brave

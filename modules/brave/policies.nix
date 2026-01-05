@@ -1,6 +1,3 @@
-# {nix-colors, ...}: let
-#   palette = nix-colors.colorSchemes.nord.palette;
-# in
 {
   programs.chromium.extraOpts = {
     # BrowserThemeColor = "#${palette.base01}";

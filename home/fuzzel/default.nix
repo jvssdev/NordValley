@@ -1,15 +1,17 @@
-{ config, lib, ... }:
-let
-  c = config.colorScheme.palette;
-in
 {
+  config,
+  lib,
+  ...
+}: let
+  c = config.colorScheme.palette;
+in {
   programs = {
     fuzzel = {
       enable = true;
       settings = {
         main = {
           font = lib.mkForce "JetBrainsMono Nerd Font:size=14";
-          icon-theme = "Nordzy";
+          icon-theme = "Colloid-Dark";
           dpi-aware = "no";
           lines = 15;
           width = 40;

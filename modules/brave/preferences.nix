@@ -1,4 +1,4 @@
-{...}: {
+{
   initialPreferences = {
     brave.de_amp.enabled = true;
     brave.debounce.enabled = true;

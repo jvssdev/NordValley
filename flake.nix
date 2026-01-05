@@ -10,13 +10,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-colors.url = "github:misterio77/nix-colors";
-
-    # helix = {
-    #   url = "github:helix-editor/helix/master";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-
     nvf = {
       url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -26,11 +19,6 @@
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # helium-browser = {
-    #   url = "github:ominit/helium-browser-flake";
-    #   inputs.nixpkgs.follows = "nixpkgs-unstable";
-    # };
 
     nur = {
       url = "github:nix-community/NUR";
@@ -56,11 +44,6 @@
       url = "github:uiriansan/SilentSDDM";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # ghostty = {
-    #   url = "github:ghostty-org/ghostty";
-    #   inputs.nixpkgs.follows = "nixpkgs-unstable";
-    # };
   };
 
   outputs = inputs @ {
@@ -69,9 +52,7 @@
     nur,
     mango,
     nixpkgs-unstable,
-    nix-colors,
     niri-flake,
-    # ghostty,
     ...
   }: let
     userInfo = {
@@ -108,6 +89,7 @@
       }
       ./hosts/ashes/configuration.nix
       ./hosts/ashes/hardware-configuration.nix
+      ./modules/theme.nix
       ./modules/path.nix
       ./modules/services.nix
       ./modules/elevated-packages.nix
@@ -126,7 +108,6 @@
           // userInfo
           // {
             homeDir = defaults.homeDir;
-            inherit nix-colors;
             silentSDDM = inputs.silentSDDM;
             inherit isRiver isMango isNiri;
           };
@@ -145,15 +126,11 @@
                 extraSpecialArgs = {
                   inherit
                     (inputs)
-                    # helix
                     zen-browser
-                    # helium-browser
                     quickshell
-                    nix-colors
                     mango
                     niri-flake
                     nvf
-                    # ghostty
                     ;
                   inherit (userInfo) userName userEmail fullName;
                   inherit (defaults) homeDir;
@@ -161,8 +138,8 @@
                 };
                 sharedModules =
                   [
+                    ./home/theme/module.nix
                     inputs.zen-browser.homeModules.default
-                    nix-colors.homeManagerModules.default
                     inputs.nvf.homeManagerModules.default
                   ]
                   ++ extraSharedModules;
@@ -221,13 +198,9 @@
       extraSpecialArgs =
         {
           homeDir = defaults.homeDir;
-          # helix = inputs.helix;
           quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;
-          # helium-browser = inputs.helium-browser;
-          nix-colors = inputs.nix-colors;
           nvf = inputs.nvf;
-          # ghostty = inputs.ghostty;
           isRiver = true;
           isMango = false;
           isNiri = false;
@@ -236,7 +209,6 @@
 
       modules = [
         ./modules/home.nix
-        nix-colors.homeManagerModules.default
       ];
     };
   };

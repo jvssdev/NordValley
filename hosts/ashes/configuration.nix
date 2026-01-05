@@ -186,8 +186,8 @@
     libsForQt5.qt5.qtwayland
     libsForQt5.qt5.qtgraphicaleffects
     libsForQt5.qt5.qtquickcontrols2
-    nordic
-    nordzy-icon-theme
+    colloid-gtk-theme
+    colloid-icon-theme
     bibata-cursors
   ];
   services = {

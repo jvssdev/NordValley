@@ -1,39 +1,10 @@
 {
   pkgs,
-  # specialArgs,
   lib,
+  osConfig,
   ...
-}:
-# let
-# nix-colors = specialArgs.nix-colors;
-# in
-{
-  # colorScheme = nix-colors.colorSchemes.grayscale-dark;
-
-  colorScheme = {
-    slug = "valley";
-    name = "valley";
-    palette = {
-      base00 = "#000000";
-      base01 = "#151621";
-      base02 = "#142E39";
-      base03 = "#5B6D74";
-      base04 = "#8C999E";
-      base05 = "#D1D6D8";
-      base06 = "#D1D6D8";
-      base07 = "#524F67";
-      base08 = "#CAC4D4";
-      base09 = "#F6C177";
-      base0A = "#EBBCBA";
-      # base0B = "#31748F";
-      base0B = "275D72";
-      base0C = "#9CCFD8";
-      base0D = "#81A1C1";
-      base0E = "#F6C177";
-      base0F = "#4D6174";
-    };
-  };
-
+}: {
+  colorScheme = osConfig.theme.colorScheme;
   home.pointerCursor = {
     package = pkgs.bibata-cursors;
     name = "Bibata-Modern-Ice";
@@ -49,21 +20,31 @@
     nerd-fonts.hack
     nerd-fonts.meslo-lg
     montserrat
-    nordic
-    nordzy-icon-theme
+    # nordic
+    # nordzy-icon-theme
+    colloid-gtk-theme
+    colloid-icon-theme
   ];
 
   gtk = {
     enable = true;
 
     theme = {
-      name = "Nordic-darker";
-      package = pkgs.nordic;
+      package = pkgs.colloid-gtk-theme.override {
+        colorVariants = ["dark"];
+        themeVariants = ["default"];
+        sizeVariants = ["compact"];
+        tweaks = [
+          "rimless"
+          "black"
+        ];
+      };
+      name = "Colloid-Dark-Compact";
     };
 
     iconTheme = {
-      name = "Nordzy-dark";
-      package = pkgs.nordzy-icon-theme;
+      name = "Colloid-Dark";
+      package = pkgs.colloid-icon-theme;
     };
 
     cursorTheme = {
@@ -76,8 +57,8 @@
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
-      icon-theme = "Nordzy-dark";
-      gtk-theme = "Nordic-darker";
+      icon-theme = "Colloid-Dark";
+      gtk-theme = "Colloid-Dark-Compact";
     };
   };
 
@@ -97,7 +78,7 @@
     kvantum = {
       target = "Kvantum/kvantum.kvconfig";
       text = lib.generators.toINI {} {
-        General.theme = "Nordic-darker";
+        General.theme = "Colloid-Dark-Compact";
       };
     };
 
@@ -105,7 +86,7 @@
       target = "qt5ct/qt5ct.conf";
       text = lib.generators.toINI {} {
         Appearance = {
-          icon_theme = "Nordzy-dark";
+          icon_theme = "Colloid-Dark-Compact";
         };
       };
     };
@@ -114,7 +95,7 @@
       target = "qt6ct/qt6ct.conf";
       text = lib.generators.toINI {} {
         Appearance = {
-          icon_theme = "Nordzy-dark";
+          icon_theme = "Colloid-Dark-Compact";
         };
       };
     };
