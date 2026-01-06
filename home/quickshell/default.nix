@@ -165,7 +165,7 @@ in {
                                     Text {
                                         text: modelData.text
                                         font.pixelSize: theme.fontPixelSize
-                                        color: "#${p.base05}"
+                                        color: "#${p.base03}"
                                         Layout.alignment: Qt.AlignHCenter
                                     }
                                 }
@@ -282,7 +282,7 @@ in {
                         Rectangle {
                             anchors.fill: parent
                             anchors.margins: 2
-                            color: model.isUrgent ? "#${p.base0C}" : (model.isActive ? "#${p.base0C}" : (model.isOccupied ? "#${p.base02}" : "transparent"))
+                            color: model.isUrgent ? "#${p.base0F}" : (model.isActive ? "#${p.base0F}" : (model.isOccupied ? "#${p.base02}" : "transparent"))
                             radius: theme.radius
                             Text {
                                 text: model.tagId
