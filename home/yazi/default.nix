@@ -17,106 +17,15 @@ in {
     enableZshIntegration = true;
 
     theme = {
-      input = {
-        border = {fg = "#${colors.base09}";};
-        title = {};
-        value = {};
-        selected = {reversed = true;};
+      mgr = {
+        size = {fg = "#${colors.base03}";};
       };
 
-      select = {
-        border = {fg = "#${colors.base09}";};
-        active = {fg = "#${colors.base0F}";};
-        inactive = {};
-      };
-
-      tasks = {
-        border = {fg = "#${colors.base09}";};
-        hovered = {underline = true;};
-        title = {};
-      };
-
-      which = {
-        mask = {bg = "#${colors.base00}";};
-        cand = {fg = "#${colors.base09}";};
-        rest = {fg = "#${colors.base09}";};
-        desc = {fg = "#${colors.base0F}";};
-        separator = "  ";
-        separator_style = {fg = "#${colors.base09}";};
-      };
-
-      help = {
-        on = {fg = "#${colors.base0F}";};
-        exec = {fg = "#${colors.base09}";};
-        desc = {fg = "#${colors.base05}";};
-        hovered = {
-          bg = "#${colors.base09}";
-          bold = true;
-        };
-        footer = {
-          fg = "#${colors.base00}";
-          bg = "#${colors.base09}";
-        };
-      };
-      tabs = {
-        sep_inner = {
-          open = "";
-          close = "";
-        };
-        sep_outer = {
-          open = "";
-          close = "";
-        };
-      };
       status = {
-        overall = {fg = "#${colors.base01}";};
-        sep_left = {
-          open = "";
-          close = "";
-        };
-        sep_right = {
-          open = "";
-          close = "";
-        };
-        separator_style = {
-          fg = "#${colors.base03}";
-          bg = "#${colors.base03}";
-        };
-
-        mode_normal = {
-          fg = "#${colors.base00}";
-          bg = "#${colors.base09}";
-          bold = true;
-        };
-
-        mode_select = {
-          fg = "#${colors.base00}";
-          bg = "#${colors.base0B}";
-          bold = true;
-        };
-
-        mode_unset = {
-          fg = "#${colors.base00}";
-          bg = "#${colors.base09}";
-          bold = true;
-        };
-
-        progress_label = {bold = true;};
         progress_normal = {
-          fg = "#${colors.base09}";
-          bg = "#${colors.base00}";
+          fg = "#${colors.base03}";
+          bg = "#${colors.base07}";
         };
-
-        progress_error = {
-          fg = "red";
-          bg = "#${colors.base00}";
-        };
-
-        permissions_t = {fg = "#${colors.base09}";};
-        permissions_r = {fg = "#${colors.base0A}";};
-        permissions_w = {fg = "#${colors.base08}";};
-        permissions_x = {fg = "#${colors.base0B}";};
-        permissions_s = {fg = "#${colors.base03}";};
       };
     };
 
@@ -125,7 +34,7 @@ in {
         full-border
         toggle-pane
         yatline
-        starship
+        yatline-githead
         smart-enter
         jump-to-char
         chmod
@@ -138,21 +47,74 @@ in {
         diff
         mime-ext
         ;
-
       yamb = yamb-yazi;
     };
 
     initLua = ''
       require("full-border"):setup {
-      	type = ui.Border.ROUNDED,
+        type = ui.Border.ROUNDED,
       }
 
       require("git"):setup()
 
-      require("starship"):setup({
-        hide_flags = false,
-        flags_after_prompt = true,
-        config_file = "~/.config/starship.toml",
+      require("yatline-githead"):setup()
+
+      require("yatline"):setup({
+        show_background = true,
+        display_header_line = true,
+
+        section_separator = { open = "", close = "" },
+        part_separator = { open = "", close = "" },
+        inverse_separator = { open = "", close = "" },
+
+        style_a = {
+          fg = "#${colors.base01}",
+          bg_mode = {
+            normal = "#${colors.base0D}",
+            select = "#${colors.base0B}",
+            un_set = "#${colors.base0D}",
+          }
+        },
+
+        style_b = {
+          bg = "#${colors.base07}",
+          fg = "#${colors.base03}",
+        },
+
+        style_c = {
+          bg = "#${colors.base01}",
+          fg = "#${colors.base05}",
+        },
+
+        permissions_t_fg = "#${colors.base01}",
+        permissions_r_fg = "#${colors.base01}",
+        permissions_w_fg = "#${colors.base01}",
+        permissions_x_fg = "#${colors.base01}",
+        permissions_s_fg = "#${colors.base01}",
+
+        status_line = {
+          left = {
+            section_a = {
+              { type = "string", custom = false, name = "tab_mode" },
+            },
+            section_b = {
+              { type = "coloreds", custom = false, name = "permissions" },
+            },
+            section_c = {
+              { type = "coloreds", custom = false, name = "githead" },
+            }
+          },
+          right = {
+            section_a = {
+              { type = "string", custom = false, name = "cursor_percentage" },
+              { type = "string", custom = false, name = "cursor_position" },
+            },
+            section_b = {
+              { type = "string", custom = false, name = "hovered_size" },
+            },
+            section_c = {}
+          }
+        }
       })
     '';
 
@@ -161,13 +123,10 @@ in {
         show_hidden = true;
         show_symlink = true;
         sort_dir_first = true;
-        linemode = "size"; # or size, permissions, owner, mtime
-        ratio = [
-          1
-          3
-          4
-        ];
+        linemode = "size";
+        ratio = [1 3 4];
       };
+
       preview = {
         max_width = 1920;
         max_height = 1080;
@@ -205,6 +164,7 @@ in {
           }
         ];
       };
+
       open = {
         rules = [
           {
