@@ -67,6 +67,38 @@ in {
         part_separator = { open = "", close = "" },
         inverse_separator = { open = "", close = "" },
 
+
+        header_line = {
+                        left = {
+                                section_a = {
+                                        {type = "line", custom = false, name = "tabs", params = {"left"}},
+                                },
+                                section_b = {
+                                },
+                                section_c = {
+                                }
+                        },
+                        right = {
+                                section_a = {
+                                        {type = "string", custom = false, name = "date", params = {"%A, %d %B %Y"}},
+                                },
+                                section_b = {
+                                        {type = "string", custom = false, name = "date", params = {"%X"}},
+                                },
+                                section_c = {
+                                }
+                        }
+                },
+
+        style_a = {
+          fg = "#${colors.base01}",
+          bg_mode = {
+            normal = "#${colors.base0D}",
+            select = "#${colors.base0B}",
+            un_set = "#${colors.base0D}",
+          }
+        },
+
         style_a = {
           fg = "#${colors.base01}",
           bg_mode = {
