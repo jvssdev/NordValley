@@ -152,13 +152,13 @@
         margin-top = 1;
         format = "dd/MM/yyyy";
         locale = "pt_BR";
-        color = "#${colors.base0F}";
+        color = "#${colors.base0D}";
         font-size = 32;
       };
       "LockScreen.Message" = {
         text = "Press any key";
         font-size = 32;
-        color = "#${colors.base0F}";
+        color = "#${colors.base0D}";
         icon-size = 44;
         paint-icon = true;
       };

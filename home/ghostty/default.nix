@@ -19,20 +19,20 @@ in {
       palette = [
         "0=#${palette.base00}"
         "1=#${palette.base08}"
-        "2=#${palette.base0D}"
+        "2=#${palette.base0B}"
         "3=#${palette.base0A}"
         "4=#${palette.base0D}"
         "5=#${palette.base0E}"
         "6=#${palette.base0C}"
         "7=#${palette.base05}"
-        "8=#${palette.base03}"
+        "8=#${palette.base04}"
         "9=#${palette.base08}"
         "10=#${palette.base0B}"
         "11=#${palette.base0A}"
         "12=#${palette.base0D}"
         "13=#${palette.base0E}"
         "14=#${palette.base0C}"
-        "15=#${palette.base07}"
+        "15=#${palette.base06}"
       ];
       window-decoration = false;
       cursor-style = "bar";

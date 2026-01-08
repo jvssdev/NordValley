@@ -559,7 +559,7 @@ in {
             readonly property string green: "#${p.base0B}"
             readonly property string yellow: "#${p.base0A}"
             readonly property string blue: "#${p.base0D}"
-            readonly property string darkBlue: "#${p.base0F}"
+            readonly property string darkBlue: "#${p.base0D}"
             readonly property string magenta: "#${p.base0E}"
             readonly property string cyan: "#${p.base0C}"
             readonly property string orange: "#${p.base09}"
