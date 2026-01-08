@@ -16,7 +16,7 @@
           base06 = "D1D6D8";
           base07 = "8BA3D3"; #
           base08 = "E65757"; #
-          base09 = "F6C177";
+          base09 = "FAB387";
           base0A = "FFCD3C"; #
           base0B = "0EA2AB"; ##
           base0C = "8196C2"; #

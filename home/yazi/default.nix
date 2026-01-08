@@ -57,8 +57,6 @@ in {
 
       require("git"):setup()
 
-      require("yatline-githead"):setup()
-
       require("yatline"):setup({
         show_background = true,
         display_header_line = true,
@@ -67,35 +65,24 @@ in {
         part_separator = { open = "", close = "" },
         inverse_separator = { open = "", close = "" },
 
-
         header_line = {
-                        left = {
-                                section_a = {
-                                        {type = "line", custom = false, name = "tabs", params = {"left"}},
-                                },
-                                section_b = {
-                                },
-                                section_c = {
-                                }
-                        },
-                        right = {
-                                section_a = {
-                                        {type = "string", custom = false, name = "date", params = {"%A, %d %B %Y"}},
-                                },
-                                section_b = {
-                                        {type = "string", custom = false, name = "date", params = {"%X"}},
-                                },
-                                section_c = {
-                                }
-                        }
-                },
-
-        style_a = {
-          fg = "#${colors.base01}",
-          bg_mode = {
-            normal = "#${colors.base0D}",
-            select = "#${colors.base0B}",
-            un_set = "#${colors.base0D}",
+          left = {
+            section_a = {
+              { type = "string", custom = false, name = "hovered_path" },
+            },
+            section_b = {
+              { type = "coloreds", custom = false, name = "githead" },
+            },
+            section_c = {},
+          },
+          right = {
+            section_a = {
+              { type = "string", custom = false, name = "date", params = { "%A, %d %B %Y" } },
+            },
+            section_b = {
+              { type = "string", custom = false, name = "date", params = { "%X" } },
+            },
+            section_c = {}
           }
         },
 
@@ -132,9 +119,7 @@ in {
             section_b = {
               { type = "coloreds", custom = false, name = "permissions" },
             },
-            section_c = {
-              { type = "coloreds", custom = false, name = "githead" },
-            }
+            section_c = {}
           },
           right = {
             section_a = {
@@ -147,6 +132,38 @@ in {
             section_c = {}
           }
         }
+      })
+
+      require("yatline-githead"):setup({
+        show_branch = true,
+        branch_prefix = "",
+        branch_symbol = "",
+        branch_borders = "",
+        commit_symbol = " ",
+        show_behind_ahead = true,
+        behind_symbol = "⇣",
+        ahead_symbol = "⇡",
+        show_stashes = true,
+        stashes_symbol = "✘",
+        show_state = true,
+        show_state_prefix = true,
+        state_symbol = "󱅉",
+        show_staged = true,
+        staged_symbol = "+",
+        show_unstaged = true,
+        unstaged_symbol = "!",
+        show_untracked = true,
+        untracked_symbol = "?",
+        prefix_color = "#${colors.base03}",
+        branch_color = "#${colors.base03}",
+        commit_color = "#${colors.base0E}",
+        stashes_color = "#${colors.base0B}",
+        state_color = "#${colors.base07}",
+        staged_color = "#${colors.base0B}",
+        unstaged_color = "#${colors.base0A}",
+        untracked_color = "#${colors.base09}",
+        ahead_color = "#${colors.base0B}",
+        behind_color = "#${colors.base0A}",
       })
     '';
 
