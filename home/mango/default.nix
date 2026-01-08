@@ -51,11 +51,11 @@ in {
       xkb_rules_layout=br
       cursor_size=24
       cursor_theme=Bibata-Modern-Ice
-      gappih=2
-      gappiv=2
-      gappoh=2
-      gappov=2
-      borderpx=2
+      gappih=5
+      gappiv=5
+      gappoh=5
+      gappov=5
+      borderpx=0
       border_radius=10
       no_border_when_single=0
       rootcolor=${hexToMango palette.base00}
@@ -66,6 +66,7 @@ in {
       repeat_delay=300
       warpcursor=1
       new_is_master=0
+      smartgaps=0
       cursor_hide_timeout=5000
       trackpad_natural_scrolling=0
       animation_duration_move=500
@@ -73,7 +74,7 @@ in {
       animation_duration_tag=0
       animation_duration_close=550
       animation_duration_focus=400
-      animation_curve_open=0.46,1.0,0.29,1.1
+      animation_curve_open=0.22,1.0,0.36,1
       animation_curve_move=0.46,1.0,0.29,1
       animation_curve_tag=0.65,0,0.35,1
       animation_curve_close=0.08,0.92,0,1
@@ -102,9 +103,9 @@ in {
       blur_params_contrast = 0.9
       blur_params_saturation = 1.5
       shadows=1
-      layer_shadows = 1
+      layer_shadows = 0
       shadow_only_floating=1
-      shadows_size=12
+      shadows_size=10
       shadows_blur=15
       shadows_position_x = 0
       shadows_position_y = 0
