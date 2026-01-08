@@ -282,7 +282,7 @@ in {
                         Rectangle {
                             anchors.fill: parent
                             anchors.margins: 2
-                            color: model.isUrgent ? "#${p.base0F}" : (model.isActive ? "#${p.base0F}" : (model.isOccupied ? "#${p.base02}" : "transparent"))
+                            color: model.isUrgent ? "#${p.base0D}" : (model.isActive ? "#${p.base0D}" : (model.isOccupied ? "#${p.base02}" : "transparent"))
                             radius: theme.radius
                             Text {
                                 text: model.tagId

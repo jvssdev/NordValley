@@ -123,7 +123,7 @@ in {
                 c = { bg = "#${palette.base01}", fg = "#${palette.base04}" }
               },
               visual = {
-                a = { bg = "#${palette.base0A}", fg = "#${palette.base00}", gui = "bold" },
+                a = { bg = "#${palette.base06}", fg = "#${palette.base00}", gui = "bold" },
                 b = { bg = "#${palette.base02}", fg = "#${palette.base05}" },
                 c = { bg = "#${palette.base01}", fg = "#${palette.base04}" }
               },
@@ -207,7 +207,7 @@ in {
             vim.g.terminal_color_0 = colors.base00
             vim.g.terminal_color_1 = colors.base08
             vim.g.terminal_color_2 = colors.base0B
-            vim.g.terminal_color_3 = colors.base0A
+            vim.g.terminal_color_3 = colors.base06
             vim.g.terminal_color_4 = colors.base0D
             vim.g.terminal_color_5 = colors.base0E
             vim.g.terminal_color_6 = colors.base0C
@@ -215,7 +215,7 @@ in {
             vim.g.terminal_color_8 = colors.base04
             vim.g.terminal_color_9 = colors.base08
             vim.g.terminal_color_10 = colors.base0B
-            vim.g.terminal_color_11 = colors.base0A
+            vim.g.terminal_color_11 = colors.base06
             vim.g.terminal_color_12 = colors.base0D
             vim.g.terminal_color_13 = colors.base0E
             vim.g.terminal_color_14 = colors.base0C
@@ -246,7 +246,7 @@ in {
             set_hl("Visual", { bg = colors.base02 })
             set_hl("VisualNOS", { fg = colors.base08 })
             set_hl("WarningMsg", { fg = colors.base08 })
-            set_hl("WildMenu", { fg = colors.base08, bg = colors.base0A })
+            set_hl("WildMenu", { fg = colors.base08, bg = colors.base06 })
             set_hl("Title", { fg = colors.base0D })
             set_hl("Conceal", { fg = colors.base0D, bg = colors.base00 })
             set_hl("Cursor", { fg = colors.base00, bg = colors.base05 })
@@ -279,7 +279,7 @@ in {
             set_hl("Identifier", { fg = colors.base08 })
             set_hl("Include", { fg = colors.base0D })
             set_hl("Keyword", { fg = colors.base0E })
-            set_hl("Label", { fg = colors.base0A })
+            set_hl("Label", { fg = colors.base04 })
             set_hl("Number", { fg = colors.base09 })
             set_hl("Operator", { fg = colors.base0E })
             set_hl("PreProc", { fg = colors.base0A })

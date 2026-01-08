@@ -92,7 +92,7 @@ in {
       zoom_end_ratio=0.7
       fadein_begin_opacity=0.5
       fadeout_begin_opacity=0.8
-      blur=0
+      blur=1
       blur_layer=1
       blur_optimized=1
       blur_params_num_passes = 2
@@ -210,10 +210,10 @@ in {
       windowrule=appid:pavucontrol,isfloating:1
       windowrule=appid:blueman-manager,isfloating:1
       windowrule=appid:nm-connection-editor,isfloating:1
-      windowrule=unfocused_opacity:0.75,focused_opacity:0.75,appid:thunar,isfloating:1
-      windowrule=unfocused_opacity:0.75,focused_opacity:0.75,appid:Thunar,isfloating:1
-      windowrule=unfocused_opacity:0.75,focused_opacity:0.75,appid:ghostty
-      windowrule=unfocused_opacity:0.75,focused_opacity:0.75,appid:fuzzel
+      windowrule=appid:thunar,isfloating:1
+      windowrule=appid:Thunar,isfloating:1
+      windowrule=appid:ghostty
+      windowrule=appid:fuzzel
 
       windowrule=width:1900,height:1600,isnamedscratchpad:1,title:yazi-picker
     '';

@@ -4,51 +4,50 @@
       type = lib.types.attrs;
       description = "Color scheme for the system";
       default = {
-        slug = "valley";
-        name = "valley";
+        slug = "yorumi-oled";
+        name = "Yorumi OLED";
         palette = {
           base00 = "000000";
-          base01 = "172554";
-          base02 = "445576"; #
-          base03 = "385285"; #
-          base04 = "60759D"; #
-          base05 = "787C99"; #
-          base06 = "D1D6D8";
-          base07 = "8BA3D3"; #
-          base08 = "E65757"; #
-          base09 = "FAB387";
-          base0A = "FFCD3C"; #
-          base0B = "0EA2AB"; ##
-          base0C = "8196C2"; #
-          base0D = "597BC0"; ##
-          base0E = "F6C177";
-          base0F = "6282C6"; ##
+          base01 = "060914";
+          base02 = "0C0F1A";
+          base03 = "1D202B";
+          base04 = "656771";
+          base05 = "A7A9B5";
+          base06 = "BDBFCB";
+          base07 = "C6DFEC";
+          base08 = "C65E53";
+          base09 = "C97E4F";
+          base0A = "E1C084";
+          base0B = "0EA2AB";
+          base0C = "67BBB9";
+          base0D = "597BC0";
+          base0E = "8666B2";
+          base0F = "BB5D7D";
         };
       };
     };
   };
-
   config = {
     theme.colorScheme = {
-      slug = "valley";
-      name = "valley";
+      slug = "yorumi-oled";
+      name = "Yorumi OLED";
       palette = {
         base00 = "000000";
-        base01 = "172554";
-        base02 = "445576"; #
-        base03 = "385285"; #
-        base04 = "60759D"; #
-        base05 = "787C99"; #
-        base06 = "D1D6D8";
-        base07 = "8BA3D3"; #
-        base08 = "E65757"; #
-        base09 = "F6C177";
-        base0A = "FFCD3C"; #
-        base0B = "0EA2AB"; ##
-        base0C = "8196C2"; #
-        base0D = "597BC0"; ##
-        base0E = "F6C177";
-        base0F = "6282C6"; ##
+        base01 = "060914";
+        base02 = "0C0F1A";
+        base03 = "1D202B";
+        base04 = "656771";
+        base05 = "A7A9B5";
+        base06 = "BDBFCB";
+        base07 = "C6DFEC";
+        base08 = "C65E53";
+        base09 = "C97E4F";
+        base0A = "E1C084";
+        base0B = "0EA2AB";
+        base0C = "67BBB9";
+        base0D = "597BC0";
+        base0E = "8666B2";
+        base0F = "BB5D7D";
       };
     };
   };
