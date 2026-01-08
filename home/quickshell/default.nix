@@ -165,7 +165,7 @@ in {
                                     Text {
                                         text: modelData.text
                                         font.pixelSize: theme.fontPixelSize
-                                        color: "#${p.base03}"
+                                        color: "#${p.base07}"
                                         Layout.alignment: Qt.AlignHCenter
                                     }
                                 }
