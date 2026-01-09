@@ -23,8 +23,8 @@ in {
 
       status = {
         progress_normal = {
-          fg = "#${colors.base03}";
-          bg = "#${colors.base07}";
+          fg = "#${colors.base04}";
+          bg = "#${colors.base03}";
         };
       };
     };
@@ -96,8 +96,8 @@ in {
         },
 
         style_b = {
-          bg = "#${colors.base07}",
-          fg = "#${colors.base03}",
+          bg = "#${colors.base03}",
+          fg = "#${colors.base04}",
         },
 
         style_c = {
@@ -105,11 +105,11 @@ in {
           fg = "#${colors.base05}",
         },
 
-        permissions_t_fg = "#${colors.base01}",
-        permissions_r_fg = "#${colors.base01}",
-        permissions_w_fg = "#${colors.base01}",
-        permissions_x_fg = "#${colors.base01}",
-        permissions_s_fg = "#${colors.base01}",
+        permissions_t_fg = "#${colors.base04}",
+        permissions_r_fg = "#${colors.base04}",
+        permissions_w_fg = "#${colors.base04}",
+        permissions_x_fg = "#${colors.base04}",
+        permissions_s_fg = "#${colors.base04}",
 
         status_line = {
           left = {
@@ -154,8 +154,8 @@ in {
         unstaged_symbol = "!",
         show_untracked = true,
         untracked_symbol = "?",
-        prefix_color = "#${colors.base03}",
-        branch_color = "#${colors.base03}",
+        prefix_color = "#${colors.base04}",
+        branch_color = "#${colors.base04}",
         commit_color = "#${colors.base0E}",
         stashes_color = "#${colors.base0B}",
         state_color = "#${colors.base07}",

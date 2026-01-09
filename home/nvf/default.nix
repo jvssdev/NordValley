@@ -110,65 +110,81 @@ in {
         luaConfigRC = {
           lualineTheme = ''
             vim.opt.laststatus = 3
-
-            local reverie_theme = {
+            local colors = {
+              base00 = "#${palette.base00}",
+              base01 = "#${palette.base01}",
+              base02 = "#${palette.base02}",
+              base03 = "#${palette.base03}",
+              base04 = "#${palette.base04}",
+              base05 = "#${palette.base05}",
+              base06 = "#${palette.base06}",
+              base07 = "#${palette.base07}",
+              base08 = "#${palette.base08}",
+              base09 = "#${palette.base09}",
+              base0A = "#${palette.base0A}",
+              base0B = "#${palette.base0B}",
+              base0C = "#${palette.base0C}",
+              base0D = "#${palette.base0D}",
+              base0E = "#${palette.base0E}",
+              base0F = "#${palette.base0F}",
+            }
+            local tsuki_theme = {
               normal = {
-                a = { bg = "#${palette.base0D}", fg = "#${palette.base00}", gui = "bold" },
-                b = { bg = "#${palette.base02}", fg = "#${palette.base05}" },
-                c = { bg = "#${palette.base01}", fg = "#${palette.base04}" }
+                a = { bg = colors.base0D, fg = colors.base00, gui = "bold" },
+                b = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+                c = { bg = colors.base01, fg = colors.base04 },
+                y = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+                z = { bg = colors.base0D, fg = colors.base00, gui = "bold" }
               },
               insert = {
-                a = { bg = "#${palette.base0B}", fg = "#${palette.base00}", gui = "bold" },
-                b = { bg = "#${palette.base02}", fg = "#${palette.base05}" },
-                c = { bg = "#${palette.base01}", fg = "#${palette.base04}" }
+                a = { bg = colors.base0B, fg = colors.base00, gui = "bold" },
+                b = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+                c = { bg = colors.base01, fg = colors.base04 },
+                y = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+                z = { bg = colors.base0B, fg = colors.base00, gui = "bold" }
               },
               visual = {
-                a = { bg = "#${palette.base06}", fg = "#${palette.base00}", gui = "bold" },
-                b = { bg = "#${palette.base02}", fg = "#${palette.base05}" },
-                c = { bg = "#${palette.base01}", fg = "#${palette.base04}" }
+                a = { bg = colors.base0E, fg = colors.base00, gui = "bold" },
+                b = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+                c = { bg = colors.base01, fg = colors.base04 },
+                y = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+                z = { bg = colors.base0E, fg = colors.base00, gui = "bold" }
               },
               replace = {
-                a = { bg = "#${palette.base08}", fg = "#${palette.base00}", gui = "bold" },
-                b = { bg = "#${palette.base02}", fg = "#${palette.base05}" },
-                c = { bg = "#${palette.base01}", fg = "#${palette.base04}" }
+                a = { bg = colors.base08, fg = colors.base00, gui = "bold" },
+                b = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+                c = { bg = colors.base01, fg = colors.base04 },
+                y = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+                z = { bg = colors.base08, fg = colors.base00, gui = "bold" }
               },
               command = {
-                a = { bg = "#${palette.base0C}", fg = "#${palette.base00}", gui = "bold" },
-                b = { bg = "#${palette.base02}", fg = "#${palette.base05}" },
-                c = { bg = "#${palette.base01}", fg = "#${palette.base04}" }
+                a = { bg = colors.base0C, fg = colors.base00, gui = "bold" },
+                b = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+                c = { bg = colors.base01, fg = colors.base04 },
+                y = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+                z = { bg = colors.base0C, fg = colors.base00, gui = "bold" }
               },
               inactive = {
-                a = { bg = "#${palette.base01}", fg = "#${palette.base04}" },
-                b = { bg = "#${palette.base01}", fg = "#${palette.base03}" },
-                c = { bg = "#${palette.base01}", fg = "#${palette.base03}" }
+                a = { bg = colors.base01, fg = colors.base04 },
+                b = { bg = colors.base01, fg = colors.base03 },
+                c = { bg = colors.base01, fg = colors.base03 }
               }
             }
-
             require('lualine').setup({
               options = {
-                theme = reverie_theme,
+                theme = tsuki_theme,
                 icons_enabled = true,
-                component_separators = { left = '', right = ''},
-                section_separators = { left = '', right = ''},
+                component_separators = { left = '', right = '' },
+                section_separators = { left = '', right = '' },
               },
               sections = {
                 lualine_a = { 'mode' },
-                lualine_b = { 'branch', 'diff', 'diagnostics' },
-                lualine_c = { 'filetype', 'filename' },
-                lualine_x = { 'encoding', 'fileformat' },
+                lualine_b = { 'branch' },
+                lualine_c = { 'diff', 'diagnostics' },
+                lualine_x = { 'encoding', 'filetype' },
                 lualine_y = { 'progress' },
                 lualine_z = { 'location' },
               },
-              inactive_sections = {
-                lualine_a = {},
-                lualine_b = {},
-                lualine_c = { 'filename' },
-                lualine_x = { 'location' },
-                lualine_y = {},
-                lualine_z = {},
-              },
-              tabline = {},
-              extensions = {},
             })
           '';
           theme = ''
@@ -191,19 +207,14 @@ in {
               base0F = "#${palette.base0F}",
               base11 = "#${palette.base0A}",
             }
-
             vim.cmd("highlight clear")
-
             if vim.fn.exists("syntax_on") then
               vim.cmd("syntax reset")
             end
-
-            vim.g.colors_name = "reverie"
-
+            vim.g.colors_name = "tsuki"
             local function set_hl(group, opts)
               vim.api.nvim_set_hl(0, group, opts)
             end
-
             vim.g.terminal_color_0 = colors.base00
             vim.g.terminal_color_1 = colors.base08
             vim.g.terminal_color_2 = colors.base0B
@@ -220,7 +231,6 @@ in {
             vim.g.terminal_color_13 = colors.base0E
             vim.g.terminal_color_14 = colors.base0C
             vim.g.terminal_color_15 = colors.base07
-
             set_hl("Normal", { fg = colors.base05, bg = colors.base00 })
             set_hl("Bold", { bold = true })
             set_hl("Debug", { fg = colors.base08 })
@@ -243,7 +253,7 @@ in {
             set_hl("SpecialKey", { fg = colors.base03 })
             set_hl("TooLong", { fg = colors.base08 })
             set_hl("Underlined", { fg = colors.base08 })
-            set_hl("Visual", { bg = colors.base02 })
+            set_hl("Visual", { bg = colors.base04 })
             set_hl("VisualNOS", { fg = colors.base08 })
             set_hl("WarningMsg", { fg = colors.base08 })
             set_hl("WildMenu", { fg = colors.base08, bg = colors.base06 })
@@ -266,7 +276,6 @@ in {
             set_hl("TabLine", { fg = colors.base03, bg = colors.base01 })
             set_hl("TabLineFill", { fg = colors.base03, bg = colors.base01 })
             set_hl("TabLineSel", { fg = colors.base0B, bg = colors.base01 })
-
             set_hl("Boolean", { fg = colors.base09 })
             set_hl("Character", { fg = colors.base08 })
             set_hl("Comment", { fg = colors.base04 })
@@ -303,27 +312,20 @@ in {
             set_hl("@function.builtin", { fg = colors.base0D })
             set_hl("@method", { fg = colors.base0D })
             set_hl("@method.call", { fg = colors.base0D })
-
             set_hl("WinSeparator", { fg = colors.base03 })
-
             set_hl("NormalFloat", { fg = colors.base05, bg = colors.base00 })
             set_hl("FloatBorder", { fg = colors.base03, bg = colors.base00 })
-
             set_hl("Pmenu", { fg = colors.base05, bg = colors.base00 })
             set_hl("PmenuSel", { fg = colors.base06, bg = colors.base01 })
             set_hl("PmenuSbar", { bg = colors.base00 })
             set_hl("PmenuThumb", { bg = colors.base01 })
-
             set_hl("TelescopeBorder", { fg = colors.base03 })
-
             set_hl("BlinkCmpMenuBorder", { fg = colors.base03, bg = colors.base00 })
-
             set_hl("DiagnosticFloat", { link = "NormalFloat" })
             set_hl("DiagnosticFloatingWarn", { fg = colors.base09, bg = colors.base01 })
             set_hl("DiagnosticFloatingError", { fg = colors.base08, bg = colors.base01 })
             set_hl("DiagnosticFloatingInfo", { fg = colors.base0D, bg = colors.base01 })
             set_hl("DiagnosticFloatingHint", { fg = colors.base0C, bg = colors.base01 })
-
             set_hl("NvimTreeFolderIcon", { fg = colors.base0E })
             set_hl("NvimTreeFolderName", { fg = colors.base05 })
             set_hl("NvimTreeNormal", { fg = colors.base06 })

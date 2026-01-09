@@ -4,8 +4,8 @@
       type = lib.types.attrs;
       description = "Color scheme for the system";
       default = {
-        slug = "yorumi-oled";
-        name = "Yorumi OLED";
+        slug = "tsuki";
+        name = "Tsuki";
         palette = {
           base00 = "000000";
           base01 = "060914";
@@ -29,8 +29,8 @@
   };
   config = {
     theme.colorScheme = {
-      slug = "yorumi-oled";
-      name = "Yorumi OLED";
+      slug = "tsuki";
+      name = "Tsuki";
       palette = {
         base00 = "000000";
         base01 = "060914";
