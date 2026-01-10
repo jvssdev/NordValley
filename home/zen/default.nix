@@ -29,6 +29,39 @@ in {
         "devtools.debugger.remote-enabled" = true;
         "devtools.chrome.enabled" = true;
         "browser.display.os-zoom-behavior" = 0;
+        "zen.welcome-screen.seen" = true;
+        "zen.theme.gradient.show-custom-colors" = true;
+        "zen.view.compact.hide-toolbar" = true;
+        "zen.view.compact.enable-at-startup" = true;
+      };
+      containersForce = true;
+
+      containers = {
+        Personal = {
+          color = "blue";
+          icon = "fingerprint";
+          id = 0;
+        };
+        Uni = {
+          color = "turquoise";
+          icon = "briefcase";
+          id = 1;
+        };
+      };
+      spacesForce = true;
+
+      spaces.Personal = {
+        id = "47e66c69-815b-40cb-8b41-be4fcf7a2c59";
+        container = 0;
+        name = "Personal";
+        position = 0;
+      };
+
+      spaces.Uni = {
+        id = "f700d4a8-e760-4aa5-9ada-ddc57a73454b";
+        container = 1;
+        name = "Uni";
+        position = 1;
       };
       search = {
         force = true;
@@ -50,7 +83,7 @@ in {
           keepassxc-browser
           sponsorblock
           betterttv
-          vimium-c
+          vimium
         ];
 
         settings = {
@@ -237,10 +270,36 @@ in {
               "moz-extension-scheme"
             ];
           };
+          # TODO: Implement https://github.com/philc/vimium/issues/4600 Upstream
 
-          "vimium-c@gdh1995.cn".settings = {
-            keyMappings = "#!no-check\nunmap x\nmap t Vomnibar.activateTabs";
-          };
+          # "{d7742d87-e61d-4b78-b8a1-b469842139fa}" = {
+          #   installation_mode = "force_installed";
+          #   settings = {
+          #     userDefinedLinkHintCss = ''
+          #       div > .vimiumHintMarker {
+          #         background: -webkit-gradient(linear, left top, left bottom,
+          #           color-stop(0%,#FFF785), color-stop(100%,#FFC542));
+          #         border: 1px solid #E3BE23;
+          #       }
+          #
+          #       div > .vimiumHintMarker span {
+          #         color: black;
+          #         font-weight: bold;
+          #         font-size: 12px;
+          #       }
+          #
+          #       div > .vimiumHintMarker > .matchingCharacter {
+          #       }
+          #     '';
+          #
+          #     normalModeKeyStateMapping = {
+          #       j = {
+          #         command = "scrollDown";
+          #         options = {};
+          #       };
+          #     };
+          #   };
+          # };
         };
       };
       userChrome = ''
@@ -269,6 +328,44 @@ in {
         Locked = true;
         Cryptomining = true;
         Fingerprinting = true;
+        EmailTracking = true;
+        Category = "strict";
+      };
+      HttpsOnlyMode = "force_enabled";
+      SearchEngines.Default = "DuckDuckGo";
+      Preferences = {
+        "browser.toolbars.bookmarks.visibility" = {
+          Value = "never";
+          Status = "default";
+        };
+        "browser.tabs.unloadOnLowMemory" = {
+          Value = true;
+          Status = "default";
+        };
+        "browser.ctrlTab.sortByRecentlyUsed" = {
+          Value = true;
+          Status = "default";
+        };
+        "browser.tabs.warnOnClose" = {
+          Value = false;
+          Status = "default";
+        };
+        "browser.low_commit_space_threshold_percent" = {
+          value = 100;
+          status = "default";
+        };
+        "breakpad.reportURL" = {
+          value = "";
+          status = "default";
+        };
+        "browser.tabs.crashReporting.sendReport" = {
+          value = false;
+          status = "default";
+        };
+        "browser.crashReports.unsubmittedCheck.autoSubmit2" = {
+          value = false;
+          status = "default";
+        };
       };
     };
   };
