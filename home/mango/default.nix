@@ -132,7 +132,7 @@ in {
       bind=SUPER,t,spawn,ghostty
       bind=SUPER,a,spawn,fuzzel
       bind=SUPER,n,spawn,dunst-fuzzel
-      bind=SUPER,b,spawn,brave
+      bind=SUPER,b,spawn,zen-beta
       bind=SUPER,e,spawn,thunar
       bind=SUPER,x,spawn_shell,qs ipc call powerMenu toggle
       bind=SUPER,p,spawn,screenshot

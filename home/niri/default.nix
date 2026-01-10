@@ -105,7 +105,7 @@ in {
     binds = {
       "Mod+A".action.spawn = "fuzzel";
       "Mod+T".action.spawn = "ghostty";
-      "Mod+B".action.spawn = "brave";
+      "Mod+B".action.spawn = "zen-beta";
       "Mod+X".action.spawn = [
         "qs"
         "ipc"

@@ -33,6 +33,8 @@ in {
         "zen.theme.gradient.show-custom-colors" = true;
         "zen.view.compact.hide-toolbar" = true;
         "zen.view.compact.enable-at-startup" = true;
+        "zen.tabs.vertical.right-side" = true;
+        "zen.view.use-single-toolbar" = false;
       };
       containersForce = true;
 
