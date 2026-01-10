@@ -7,6 +7,11 @@
 in {
   programs.zen-browser = {
     enable = true;
+
+    languagePacks = [
+      "en-US"
+      "pt-BR"
+    ];
     profiles.default = {
       id = 0;
       name = "default";
@@ -22,9 +27,9 @@ in {
         "cookiebanners.service.mode.privateBrowsing" = 2;
         "cookiebanners.service.mode" = 2;
         "cookiebanners.ui.desktop.enabled" = 2;
-        "distribution.searchplugins.defaultLocale" = "en-GB";
+        "distribution.searchplugins.defaultLocale" = "en-US";
         "extensions.autoDisableScopes" = 0;
-        "general.useragent.locale" = "en-GB";
+        "general.useragent.locale" = "en-US";
         "media.videocontrols.picture-in-picture.enable-when-switching-tabs.enabled" = false;
         "devtools.debugger.remote-enabled" = true;
         "devtools.chrome.enabled" = true;
@@ -35,7 +40,9 @@ in {
         "zen.view.compact.enable-at-startup" = true;
         "zen.tabs.vertical.right-side" = true;
         "zen.view.use-single-toolbar" = false;
+        "zen.workspaces.continue-where-left-off" = true;
       };
+
       containersForce = true;
 
       containers = {
@@ -68,6 +75,7 @@ in {
       search = {
         force = true;
         default = "ddg";
+        privateDefault = "ddg";
         engines = {
           "ddg" = {
             urls = [{template = "https://duckduckgo.com/?q={searchTerms}&ia=web";}];
