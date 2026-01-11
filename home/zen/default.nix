@@ -312,12 +312,275 @@ in {
           # };
         };
       };
+
       userChrome = ''
-        :root:not([inDOMFullscreen="true"]):not([chromehidden~="location"]):not([chromehidden~="toolbar"]) {
-          & #tabbrowser-tabbox #tabbrowser-tabpanels .browserSidebarContainer {
-            & browser[transparent="true"] {
-              background: none !important;
+        :root {
+          --zen-colors-primary: #${palette.base02} !important;
+          --zen-primary-color: #${palette.base0D} !important;
+          --zen-colors-secondary: #${palette.base02} !important;
+          --zen-colors-tertiary: #${palette.base01} !important;
+          --zen-colors-border: #${palette.base0D} !important;
+          --toolbarbutton-icon-fill: #${palette.base0D} !important;
+          --lwt-text-color: #${palette.base05} !important;
+          --toolbar-field-color: #${palette.base05} !important;
+          --tab-selected-textcolor: #${palette.base05} !important;
+          --toolbar-field-focus-color: #${palette.base05} !important;
+          --toolbar-color: #${palette.base05} !important;
+          --newtab-text-primary-color: #${palette.base05} !important;
+          --arrowpanel-color: #${palette.base05} !important;
+          --arrowpanel-background: #${palette.base00} !important;
+          --sidebar-text-color: #${palette.base05} !important;
+          --lwt-sidebar-text-color: #${palette.base05} !important;
+          --lwt-sidebar-background-color: #${palette.base00} !important;
+          --toolbar-bgcolor: #${palette.base02} !important;
+          --newtab-background-color: #${palette.base00} !important;
+          --zen-themed-toolbar-bg: #${palette.base00} !important;
+          --zen-main-browser-background: #${palette.base00} !important;
+          --toolbox-bgcolor-inactive: #${palette.base01} !important;
+        }
+
+        #permissions-granted-icon {
+          color: #${palette.base05} !important;
+        }
+
+        .sidebar-placesTree {
+          background-color: #${palette.base00} !important;
+        }
+
+        #zen-workspaces-button {
+          background-color: #${palette.base00} !important;
+        }
+
+        #TabsToolbar {
+          background-color: #${palette.base00} !important;
+        }
+
+        .urlbar-background {
+          background-color: #${palette.base02} !important;
+        }
+
+        .content-shortcuts {
+          background-color: #${palette.base00} !important;
+          border-color: #${palette.base0D} !important;
+        }
+
+        .urlbarView-url {
+          color: #${palette.base0D} !important;
+        }
+
+        #urlbar-input::selection {
+          background-color: #${palette.base0D} !important;
+          color: #${palette.base00} !important;
+        }
+
+        #zenEditBookmarkPanelFaviconContainer {
+          background: #${palette.base00} !important;
+        }
+
+        #zen-media-controls-toolbar {
+          & #zen-media-progress-bar {
+            &::-moz-range-track {
+              background: #${palette.base02} !important;
             }
+          }
+        }
+
+        toolbar .toolbarbutton-1 {
+          &:not([disabled]) {
+            &:is([open], [checked])
+              > :is(
+                .toolbarbutton-icon,
+                .toolbarbutton-text,
+                .toolbarbutton-badge-stack
+              ) {
+              fill: #${palette.base00};
+            }
+          }
+        }
+
+        .identity-color-blue {
+          --identity-tab-color: #${palette.base0D} !important;
+          --identity-icon-color: #${palette.base0D} !important;
+        }
+
+        .identity-color-turquoise {
+          --identity-tab-color: #${palette.base0C} !important;
+          --identity-icon-color: #${palette.base0C} !important;
+        }
+
+        .identity-color-green {
+          --identity-tab-color: #${palette.base0B} !important;
+          --identity-icon-color: #${palette.base0B} !important;
+        }
+
+        .identity-color-yellow {
+          --identity-tab-color: #${palette.base0A} !important;
+          --identity-icon-color: #${palette.base0A} !important;
+        }
+
+        .identity-color-orange {
+          --identity-tab-color: #${palette.base09} !important;
+          --identity-icon-color: #${palette.base09} !important;
+        }
+
+        .identity-color-red {
+          --identity-tab-color: #${palette.base08} !important;
+          --identity-icon-color: #${palette.base08} !important;
+        }
+
+        .identity-color-pink {
+          --identity-tab-color: #${palette.base0E} !important;
+          --identity-icon-color: #${palette.base0E} !important;
+        }
+
+        .identity-color-purple {
+          --identity-tab-color: #${palette.base0F} !important;
+          --identity-icon-color: #${palette.base0F} !important;
+        }
+
+        hbox#titlebar {
+          background-color: #${palette.base00} !important;
+        }
+
+        #zen-appcontent-navbar-container {
+          background-color: #${palette.base00} !important;
+        }
+
+        #contentAreaContextMenu menu,
+        menuitem,
+        menupopup {
+          color: #${palette.base05} !important;
+        }
+      '';
+
+      userContent = ''
+        @-moz-document url-prefix("about:") {
+          :root {
+            --in-content-page-color: #${palette.base05} !important;
+            --color-accent-primary: #${palette.base0D} !important;
+            --color-accent-primary-hover: #${palette.base0D} !important;
+            --color-accent-primary-active: #${palette.base0D} !important;
+            background-color: #${palette.base00} !important;
+            --in-content-page-background: #${palette.base00} !important;
+          }
+        }
+
+        @-moz-document url("about:newtab"), url("about:home") {
+          :root {
+            --newtab-background-color: #${palette.base00} !important;
+            --newtab-background-color-secondary: #${palette.base02} !important;
+            --newtab-element-hover-color: #${palette.base02} !important;
+            --newtab-text-primary-color: #${palette.base05} !important;
+            --newtab-wordmark-color: #${palette.base05} !important;
+            --newtab-primary-action-background: #${palette.base0D} !important;
+          }
+
+          .icon {
+            color: #${palette.base0D} !important;
+          }
+
+          .card-outer:is(:hover, :focus, .active):not(.placeholder) .card-title {
+            color: #${palette.base0D} !important;
+          }
+
+          .top-site-outer .search-topsite {
+            background-color: #${palette.base0D} !important;
+          }
+
+          .compact-cards .card-outer .card-context .card-context-icon.icon-download {
+            fill: #${palette.base0B} !important;
+          }
+        }
+
+        @-moz-document url-prefix("about:preferences") {
+          :root {
+            --zen-colors-tertiary: #${palette.base01} !important;
+            --in-content-text-color: #${palette.base05} !important;
+            --link-color: #${palette.base0D} !important;
+            --link-color-hover: #${palette.base0D} !important;
+            --zen-colors-primary: #${palette.base02} !important;
+            --in-content-box-background: #${palette.base02} !important;
+            --zen-primary-color: #${palette.base0D} !important;
+          }
+
+          groupbox, moz-card {
+            background: #${palette.base00} !important;
+          }
+
+          button,
+          groupbox menulist {
+            background: #${palette.base02} !important;
+            color: #${palette.base05} !important;
+          }
+
+          .main-content {
+            background-color: #${palette.base00} !important;
+          }
+
+          .identity-color-blue {
+            --identity-tab-color: #${palette.base0D} !important;
+            --identity-icon-color: #${palette.base0D} !important;
+          }
+
+          .identity-color-turquoise {
+            --identity-tab-color: #${palette.base0C} !important;
+            --identity-icon-color: #${palette.base0C} !important;
+          }
+
+          .identity-color-green {
+            --identity-tab-color: #${palette.base0B} !important;
+            --identity-icon-color: #${palette.base0B} !important;
+          }
+
+          .identity-color-yellow {
+            --identity-tab-color: #${palette.base0A} !important;
+            --identity-icon-color: #${palette.base0A} !important;
+          }
+
+          .identity-color-orange {
+            --identity-tab-color: #${palette.base09} !important;
+            --identity-icon-color: #${palette.base09} !important;
+          }
+
+          .identity-color-red {
+            --identity-tab-color: #${palette.base08} !important;
+            --identity-icon-color: #${palette.base08} !important;
+          }
+
+          .identity-color-pink {
+            --identity-tab-color: #${palette.base0E} !important;
+            --identity-icon-color: #${palette.base0E} !important;
+          }
+
+          .identity-color-purple {
+            --identity-tab-color: #${palette.base0F} !important;
+            --identity-icon-color: #${palette.base0F} !important;
+          }
+        }
+
+        @-moz-document url-prefix("about:addons") {
+          :root {
+            --zen-dark-color-mix-base: #${palette.base01} !important;
+            --background-color-box: #${palette.base00} !important;
+          }
+        }
+
+        @-moz-document url-prefix("about:protections") {
+          :root {
+            --zen-primary-color: #${palette.base00} !important;
+            --social-color: #${palette.base0E} !important;
+            --coockie-color: #${palette.base0D} !important;
+            --fingerprinter-color: #${palette.base0A} !important;
+            --cryptominer-color: #${palette.base0F} !important;
+            --tracker-color: #${palette.base0B} !important;
+            --in-content-primary-button-background-hover: #${palette.base03} !important;
+            --in-content-primary-button-text-color-hover: #${palette.base05} !important;
+            --in-content-primary-button-background: #${palette.base03} !important;
+            --in-content-primary-button-text-color: #${palette.base05} !important;
+          }
+
+          .card {
+            background-color: #${palette.base02} !important;
           }
         }
       '';

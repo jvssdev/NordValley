@@ -20,8 +20,6 @@
     nerd-fonts.hack
     nerd-fonts.meslo-lg
     montserrat
-    # nordic
-    # nordzy-icon-theme
     colloid-gtk-theme
     colloid-icon-theme
   ];

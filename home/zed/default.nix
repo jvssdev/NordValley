@@ -7,7 +7,6 @@ in {
     extensions = [
       "biome"
       "nix"
-      "nord"
       "symbols"
     ];
     userKeymaps = [
