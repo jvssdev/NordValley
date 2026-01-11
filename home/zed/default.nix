@@ -6,8 +6,8 @@
       "biome"
       "nix"
       "nord"
+      "symbols"
     ];
-
     userKeymaps = [
       # {
       #    "context": "Editor && vim_mode == insert && !menu",
@@ -67,6 +67,14 @@
         light = "Nord Dark";
         dark = "Nord Dark";
       };
+      icon_theme = "Symbols Icon Theme";
+      diagnostics.inline.enabled = true;
+
+      vim = {
+        toggle_relative_line_numbers = true;
+        use_system_clipboard = "always";
+      };
+
       cursor_blink = false;
       autosave = "on_focus_change";
       use_autoclose = true;
@@ -75,9 +83,43 @@
         language_server.name = "biome";
       };
       features = {
-        copilot = false;
+        edit_prediction_provider = "none";
       };
-
+      terminal = {
+        alternate_scroll = "off";
+        blinking = "terminal_controlled";
+        copy_on_select = false;
+        dock = "bottom";
+        default_width = 640;
+        default_height = 320;
+        detect_venv = {
+          on = {
+            directories = [
+              ".env"
+              "env"
+              ".venv"
+              "venv"
+            ];
+            activate_script = "default";
+          };
+        };
+        env = {
+          TERM = "ghostty";
+        };
+        line_height = "comfortable";
+        button = true;
+        shell = {
+          program = "zsh";
+        };
+        toolbar = {
+          breadcrumbs = false;
+          title = true;
+        };
+        working_directory = "current_project_directory";
+        scrollbar = {
+          show = null;
+        };
+      };
       hide_mouse = "on_typing_and_movement";
       code_actions_on_format = {
         "source.fixAll.biome" = true;
@@ -91,8 +133,8 @@
       buffer_line_height = "comfortable";
       current_line_highlight = "all";
       selection_highlight = true;
-      buffer_font_family = "JetBrains Mono Nerd Font";
-      ui_font_family = "JetBrains Mono Nerd Font";
+      buffer_font_family = "JetBrainsMono Nerd Font";
+      ui_font_family = "JetBrainsMono Nerd Font";
       ui_font_size = 15;
       ui_font_weight = 400;
       telemetry = {
