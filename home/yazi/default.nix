@@ -3,14 +3,9 @@
   config,
   ...
 }: let
-  yamb-yazi = pkgs.fetchFromGitHub {
-    owner = "h-hg";
-    repo = "yamb.yazi";
-    rev = "22af0033be18eead7b04c2768767d38ccfbaa05b";
-    hash = "sha256-NMxZ8/7HQgs+BsZeH4nEglWsRH2ibAzq7hRSyrtFDTA=";
-  };
   colors = config.colorScheme.palette;
 in {
+  home.packages = with pkgs; [trash-cli];
   programs.yazi = {
     package = pkgs.yazi;
     enable = true;
@@ -32,29 +27,18 @@ in {
     plugins = with pkgs.yaziPlugins; {
       inherit
         full-border
-        toggle-pane
         yatline
         yatline-githead
-        smart-enter
-        jump-to-char
         chmod
-        smart-paste
-        smart-filter
         git
-        lazygit
-        rich-preview
-        ouch
-        diff
-        mime-ext
+        restore
         ;
-      yamb = yamb-yazi;
     };
 
     initLua = ''
       require("full-border"):setup {
         type = ui.Border.ROUNDED,
       }
-
       require("git"):setup()
 
       require("yatline"):setup({
@@ -166,7 +150,24 @@ in {
         behind_color = "#${colors.base0A}",
       })
     '';
-
+    keymap = {
+      mgr.prepend_keymap = [
+        {
+          on = ["g" "s"];
+          run = "plugin git";
+          desc = "Show git status";
+        }
+        {
+          on = ["c" "m"];
+          run = "plugin chmod";
+        }
+        {
+          run = "plugin restore";
+          on = "u";
+          desc = "Restore last deleted files/folders";
+        }
+      ];
+    };
     settings = {
       mgr = {
         show_hidden = true;
@@ -183,6 +184,18 @@ in {
         image_quality = 90;
       };
 
+      plugin.prepend_fetchers = [
+        {
+          id = "git";
+          name = "*";
+          run = "git";
+        }
+        {
+          id = "git";
+          name = "*/";
+          run = "git";
+        }
+      ];
       opener = {
         play = [
           {
