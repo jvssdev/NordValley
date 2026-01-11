@@ -55,9 +55,9 @@ in {
       gappiv=5
       gappoh=5
       gappov=5
-      borderpx=0
+      borderpx=2
       border_radius=10
-      no_border_when_single=0
+      no_border_when_single=1
       rootcolor=${hexToMango palette.base00}
       bordercolor=${hexToMango palette.base03}
       focuscolor=${hexToMango palette.base0D}
@@ -66,7 +66,7 @@ in {
       repeat_delay=300
       warpcursor=1
       new_is_master=0
-      smartgaps=0
+      smartgaps=1
       cursor_hide_timeout=5000
       trackpad_natural_scrolling=0
       animation_duration_move=500
