@@ -4,7 +4,7 @@
 
     settings = {
       # Theme settings
-      color_theme = "nord";
+      color_theme = "TTY";
       theme_background = true;
       truecolor = true;
       force_tty = false;

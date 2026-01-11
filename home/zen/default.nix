@@ -41,6 +41,10 @@ in {
         "zen.tabs.vertical.right-side" = true;
         "zen.view.use-single-toolbar" = false;
         "zen.workspaces.continue-where-left-off" = true;
+        "zen.view.window.scheme" = 0;
+        "devtools.theme" = "dark";
+        "layout.css.prefers-color-scheme.content-override" = 0;
+        "zen.theme.accent-color" = "#${palette.base0D}";
       };
 
       containersForce = true;
@@ -315,11 +319,11 @@ in {
 
       userChrome = ''
         :root {
-          --zen-colors-primary: #${palette.base02} !important;
+          --zen-colors-primary: #${palette.base01} !important;
           --zen-primary-color: #${palette.base0D} !important;
           --zen-colors-secondary: #${palette.base02} !important;
-          --zen-colors-tertiary: #${palette.base01} !important;
-          --zen-colors-border: #${palette.base0D} !important;
+          --zen-colors-tertiary: #${palette.base03} !important;
+          --zen-colors-border: #${palette.base03} !important;
           --toolbarbutton-icon-fill: #${palette.base0D} !important;
           --lwt-text-color: #${palette.base05} !important;
           --toolbar-field-color: #${palette.base05} !important;
@@ -332,11 +336,11 @@ in {
           --sidebar-text-color: #${palette.base05} !important;
           --lwt-sidebar-text-color: #${palette.base05} !important;
           --lwt-sidebar-background-color: #${palette.base00} !important;
-          --toolbar-bgcolor: #${palette.base02} !important;
+          --toolbar-bgcolor: #${palette.base00} !important;
           --newtab-background-color: #${palette.base00} !important;
           --zen-themed-toolbar-bg: #${palette.base00} !important;
           --zen-main-browser-background: #${palette.base00} !important;
-          --toolbox-bgcolor-inactive: #${palette.base01} !important;
+          --toolbox-bgcolor-inactive: #${palette.base00} !important;
         }
 
         #permissions-granted-icon {
@@ -356,12 +360,13 @@ in {
         }
 
         .urlbar-background {
-          background-color: #${palette.base02} !important;
+          background-color: #${palette.base01} !important;
+          border: 1px solid #${palette.base03} !important;
         }
 
         .content-shortcuts {
-          background-color: #${palette.base00} !important;
-          border-color: #${palette.base0D} !important;
+          background-color: #${palette.base01} !important;
+          border-color: #${palette.base03} !important;
         }
 
         .urlbarView-url {
@@ -393,7 +398,8 @@ in {
                 .toolbarbutton-text,
                 .toolbarbutton-badge-stack
               ) {
-              fill: #${palette.base00};
+              fill: #${palette.base0D};
+              background-color: #${palette.base01} !important;
             }
           }
         }
@@ -450,6 +456,19 @@ in {
         menuitem,
         menupopup {
           color: #${palette.base05} !important;
+          background-color: #${palette.base01} !important;
+        }
+
+        menuseparator {
+          border-color: #${palette.base03} !important;
+        }
+
+        .tabbrowser-tab[selected] {
+          background-color: #${palette.base01} !important;
+        }
+
+        .tabbrowser-tab:not([selected]):hover {
+          background-color: #${palette.base02} !important;
         }
       '';
 
@@ -458,21 +477,27 @@ in {
           :root {
             --in-content-page-color: #${palette.base05} !important;
             --color-accent-primary: #${palette.base0D} !important;
-            --color-accent-primary-hover: #${palette.base0D} !important;
-            --color-accent-primary-active: #${palette.base0D} !important;
+            --color-accent-primary-hover: #${palette.base0C} !important;
+            --color-accent-primary-active: #${palette.base0B} !important;
             background-color: #${palette.base00} !important;
             --in-content-page-background: #${palette.base00} !important;
+            --in-content-box-background: #${palette.base01} !important;
+            --in-content-box-border-color: #${palette.base03} !important;
           }
         }
 
         @-moz-document url("about:newtab"), url("about:home") {
           :root {
             --newtab-background-color: #${palette.base00} !important;
-            --newtab-background-color-secondary: #${palette.base02} !important;
+            --newtab-background-color-secondary: #${palette.base01} !important;
             --newtab-element-hover-color: #${palette.base02} !important;
             --newtab-text-primary-color: #${palette.base05} !important;
             --newtab-wordmark-color: #${palette.base05} !important;
             --newtab-primary-action-background: #${palette.base0D} !important;
+          }
+
+          body {
+            background-color: #${palette.base00} !important;
           }
 
           .icon {
@@ -490,27 +515,37 @@ in {
           .compact-cards .card-outer .card-context .card-context-icon.icon-download {
             fill: #${palette.base0B} !important;
           }
+
+          .top-sites-list .top-site-outer .tile {
+            background-color: #${palette.base01} !important;
+          }
         }
 
         @-moz-document url-prefix("about:preferences") {
           :root {
-            --zen-colors-tertiary: #${palette.base01} !important;
+            --zen-colors-tertiary: #${palette.base03} !important;
             --in-content-text-color: #${palette.base05} !important;
             --link-color: #${palette.base0D} !important;
-            --link-color-hover: #${palette.base0D} !important;
-            --zen-colors-primary: #${palette.base02} !important;
-            --in-content-box-background: #${palette.base02} !important;
+            --link-color-hover: #${palette.base0C} !important;
+            --zen-colors-primary: #${palette.base01} !important;
+            --in-content-box-background: #${palette.base01} !important;
             --zen-primary-color: #${palette.base0D} !important;
           }
 
           groupbox, moz-card {
-            background: #${palette.base00} !important;
+            background: #${palette.base01} !important;
+            border: 1px solid #${palette.base03} !important;
           }
 
           button,
           groupbox menulist {
             background: #${palette.base02} !important;
             color: #${palette.base05} !important;
+            border: 1px solid #${palette.base03} !important;
+          }
+
+          button:hover {
+            background: #${palette.base03} !important;
           }
 
           .main-content {
@@ -562,12 +597,18 @@ in {
           :root {
             --zen-dark-color-mix-base: #${palette.base01} !important;
             --background-color-box: #${palette.base00} !important;
+            --in-content-box-background: #${palette.base01} !important;
+          }
+
+          .addon-card {
+            background-color: #${palette.base01} !important;
+            border: 1px solid #${palette.base03} !important;
           }
         }
 
         @-moz-document url-prefix("about:protections") {
           :root {
-            --zen-primary-color: #${palette.base00} !important;
+            --zen-primary-color: #${palette.base0D} !important;
             --social-color: #${palette.base0E} !important;
             --coockie-color: #${palette.base0D} !important;
             --fingerprinter-color: #${palette.base0A} !important;
@@ -575,12 +616,17 @@ in {
             --tracker-color: #${palette.base0B} !important;
             --in-content-primary-button-background-hover: #${palette.base03} !important;
             --in-content-primary-button-text-color-hover: #${palette.base05} !important;
-            --in-content-primary-button-background: #${palette.base03} !important;
+            --in-content-primary-button-background: #${palette.base02} !important;
             --in-content-primary-button-text-color: #${palette.base05} !important;
           }
 
           .card {
-            background-color: #${palette.base02} !important;
+            background-color: #${palette.base01} !important;
+            border: 1px solid #${palette.base03} !important;
+          }
+
+          body {
+            background-color: #${palette.base00} !important;
           }
         }
       '';
