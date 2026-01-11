@@ -39,7 +39,6 @@ in {
       ../home/fastfetch/default.nix
       ../home/fuzzel/default.nix
       ../home/ghostty/default.nix
-      # ../home/helix/default.nix
       ../home/mpd/default.nix
       ../home/mpv/default.nix
       ../home/quickshell/default.nix
@@ -48,13 +47,12 @@ in {
       ../home/wpaperd/default.nix
       ../home/yazi/default.nix
       ../home/zathura/default.nix
-      ../home/zed/default.nix
       ../home/zen/default.nix
       ../home/shell/default.nix
       ../home/jujutsu/default.nix
       ../home/services/default.nix
-      ../home/nvf/default.nix
       ../home/qutebrowser/default.nix
+      ../home/editors/default.nix
     ]
     ++ lib.optionals isRiver [
       ../home/river
