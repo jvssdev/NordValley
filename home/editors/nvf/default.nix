@@ -1,11 +1,20 @@
 {
   pkgs,
   config,
+  lib,
   ...
 }: let
   nvimConfigDir = "${config.home.homeDirectory}/.config/nvf-custom";
   palette = config.colorScheme.palette;
 in {
+  imports = [
+    ./snacks-nvim.nix
+    ./yazi-nvim.nix
+    ./tabline.nix
+    ./conform.nix
+    ./flash.nix
+  ];
+
   home.file."${nvimConfigDir}".source = ./nvim;
   programs.nvf = {
     enable = true;
@@ -50,6 +59,75 @@ in {
             p.yaml
           ]))
         ];
+        treesitter = {
+          enable = true;
+          autotagHtml = true;
+          context.enable = true;
+          highlight.enable = true;
+          grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
+            typescript # in language settings only tsx gets enabled, not typescript
+          ];
+        };
+        languages = {
+          enableDAP = true;
+          enableExtraDiagnostics = true;
+          enableFormat = true;
+          go.enable = true;
+          bash = {
+            enable = true;
+          };
+          ts = {
+            enable = true;
+            extensions.ts-error-translator.enable = true;
+          };
+          markdown = {
+            enable = true;
+            extensions = {
+              markview-nvim = {
+                enable = true;
+              };
+            };
+          };
+          nix = {
+            enable = true;
+            format.type = ["nixfmt"];
+            lsp.server = ["nil"];
+          };
+        };
+        formatter = {
+          conform-nvim = {
+            enable = true;
+          };
+        };
+        diagnostics = {
+          enable = true;
+          config = {
+            signs = {
+              text = {
+                "vim.diagnostic.severity.Error" = " ";
+                "vim.diagnostic.severity.Warn" = " ";
+                "vim.diagnostic.severity.Hint" = " ";
+                "vim.diagnostic.severity.Info" = " ";
+              };
+            };
+            underline = true;
+            update_in_insert = true;
+            virtual_text = {
+              format =
+                lib.generators.mkLuaInline
+                /*
+                lua
+                */
+                ''
+                  function(diagnostic)
+                    return string.format("%s", diagnostic.message)
+                    --return string.format("%s (%s)", diagnostic.message, diagnostic.source)
+                  end
+                '';
+            };
+          };
+        };
+        syntaxHighlighting = true;
         optPlugins = [];
         extraPlugins = {};
         pluginOverrides = {};
@@ -61,13 +139,102 @@ in {
           icons.enable = true;
           globalStatus = true;
         };
+        ui = {
+          noice = {
+            enable = true;
+            setupOpts = {
+              lsp.progress.enabled = false;
+              notify.enabled = false;
+            };
+          };
+        };
+
+        notes.todo-comments = {
+          enable = true;
+          mappings.telescope = "<leader>fd";
+          setupOpts.signs = false;
+        };
         globals = {
           netrw_dirhistmax = 0;
         };
         options = {
-          number = false;
-          relativenumber = false;
+          number = true;
+          relativenumber = true;
+          swapfile = false;
+          wrap = false;
+          scrolloff = 10;
+          updatetime = 50;
         };
+        lsp = {
+          enable = true;
+          formatOnSave = true;
+          trouble.enable = true;
+        };
+        autocomplete.blink-cmp = {
+          enable = true;
+
+          friendly-snippets.enable = true;
+
+          setupOpts = {
+            keymap.preset = "default";
+            signature.enabled = true;
+          };
+        };
+        git.gitsigns.enable = true;
+        telescope = {
+          enable = true;
+          extensions = [
+            {
+              name = "fzf";
+              packages = [pkgs.vimPlugins.telescope-fzf-native-nvim];
+              setup = {
+                fzf = {
+                  fuzzy = true;
+                  override_generic_sorter = true;
+                  override_file_sorter = true;
+                  case_mode = "smart_case";
+                };
+              };
+            }
+          ];
+
+          mappings = {
+            buffers = "<leader>.";
+            diagnostics = "<leader>sd";
+            findFiles = "<leader>sf";
+            # findProjects = "<leader>sp";
+            #gitBranches = "<leader>svb";
+            # gitBufferCommits = "<leader>fc";
+            #gitCommits = "<leader>svcw";
+            #gitStash = "<leader>svx";
+            #gitStatus = "<leader>svs";
+            #helpTags = "<leader>ht";
+            liveGrep = "<leader>sg";
+            lspDefinitions = "grd";
+            lspDocumentSymbols = "gO";
+            lspImplementations = "gri";
+            lspReferences = "grr";
+            lspTypeDefinitions = "grt";
+            lspWorkspaceSymbols = "gW";
+            #open = "<leader>so";
+            resume = "<leader>sr";
+            treesitter = "<leader>ss";
+          };
+        };
+        visuals = {
+          indent-blankline = {
+            enable = true;
+            setupOpts.scope.show_exact_scope = true;
+          };
+          # fidget-nvim = {
+          #   enable = true;
+          #   setupOpts.notification.window.winblend = 0;
+          # };
+          highlight-undo.enable = true;
+          nvim-cursorline.enable = true;
+          nvim-web-devicons.enable = true;
+        };
+        binds.whichKey.enable = true;
         keymaps = [];
         pluginRC = {};
         luaConfigPre = "";
@@ -294,16 +461,16 @@ in {
             set_hl("NvimTreeFolderName", { fg = colors.base05 })
             set_hl("NvimTreeNormal", { fg = colors.base06 })
           '';
-          userInit = ''
-            local custom_config = "${nvimConfigDir}/init.lua"
-            if vim.fn.filereadable(custom_config) == 1 then
-              dofile(custom_config)
-            end
-          '';
+          # userInit = ''
+          #   local custom_config = "${nvimConfigDir}/init.lua"
+          #   if vim.fn.filereadable(custom_config) == 1 then
+          #     dofile(custom_config)
+          #   end
+          # '';
         };
         luaConfigPost = "";
         additionalRuntimePaths = [
-          nvimConfigDir
+          # nvimConfigDir
         ];
         extraLuaFiles = [];
         withRuby = false;

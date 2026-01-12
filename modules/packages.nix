@@ -20,7 +20,7 @@ in
       unzip
       tree-sitter
       nodejs_22
-
+      tree
       neovim-unwrapped
 
       bibata-cursors

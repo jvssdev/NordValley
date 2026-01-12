@@ -9,8 +9,10 @@
     ripgrep
     fd
     tree-sitter
+    imagemagick
     bash-language-server
     nil
+    nixfmt-rfc-style
     pylyzer
     pyright
     ruff
