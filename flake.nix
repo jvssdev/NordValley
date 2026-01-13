@@ -46,157 +46,158 @@
     };
   };
 
-  outputs = inputs @ {
-    nixpkgs,
-    home-manager,
-    nur,
-    mango,
-    nixpkgs-unstable,
-    niri-flake,
-    ...
-  }: let
-    userInfo = {
-      userName = "joaov";
-      fullName = "João Víctor Santos Silva";
-      userEmail = "joao.victor.ss.dev@gmail.com";
-    };
+  outputs =
+    inputs@{
+      nixpkgs,
+      home-manager,
+      nur,
+      mango,
+      nixpkgs-unstable,
+      niri-flake,
+      ...
+    }:
+    let
+      userInfo = {
+        userName = "joaov";
+        fullName = "João Víctor Santos Silva";
+        userEmail = "joao.victor.ss.dev@gmail.com";
+      };
 
-    system = "x86_64-linux";
+      system = "x86_64-linux";
 
-    pkgs = import nixpkgs {
-      inherit system;
-      config.allowUnfree = true;
-      overlays = [
-        nur.overlays.default
-        inputs.niri-flake.overlays.niri
-        (final: prev: {
-          quickshell = inputs.quickshell.packages.${system}.default;
-          mango = inputs.mango.packages.${system}.default;
-        })
-      ];
-    };
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = [
+          nur.overlays.default
+          inputs.niri-flake.overlays.niri
+          (final: prev: {
+            quickshell = inputs.quickshell.packages.${system}.default;
+            mango = inputs.mango.packages.${system}.default;
+          })
+        ];
+      };
 
-    defaults = {
-      homeDir = "/home/${userInfo.userName}";
-    };
+      defaults = {
+        homeDir = "/home/${userInfo.userName}";
+      };
 
-    commonModules = [
-      {
-        nixpkgs = {
-          hostPlatform = system;
-          inherit pkgs;
-        };
-      }
-      ./hosts/ashes/configuration.nix
-      ./hosts/ashes/hardware-configuration.nix
-      ./modules/theme.nix
-      ./modules/path.nix
-      ./modules/services.nix
-      ./modules/elevated-packages.nix
-      ./modules/intel-drivers.nix
-      ./modules/power-management.nix
-      ./modules/thunar.nix
-      ./modules/sddm-theme.nix
-      ./modules/environment.nix
-      ./modules/brave/default.nix
-    ];
-
-    mkSystem = isRiver: isMango: isNiri: extraModules: extraSharedModules:
-      nixpkgs.lib.nixosSystem {
-        specialArgs =
-          inputs
-          // userInfo
-          // {
-            homeDir = defaults.homeDir;
-            silentSDDM = inputs.silentSDDM;
-            inherit isRiver isMango isNiri;
+      commonModules = [
+        {
+          nixpkgs = {
+            hostPlatform = system;
+            inherit pkgs;
           };
+        }
+        ./hosts/ashes/configuration.nix
+        ./hosts/ashes/hardware-configuration.nix
+        ./modules/theme.nix
+        ./modules/path.nix
+        ./modules/services.nix
+        ./modules/elevated-packages.nix
+        ./modules/intel-drivers.nix
+        ./modules/power-management.nix
+        ./modules/thunar.nix
+        ./modules/sddm-theme.nix
+        ./modules/environment.nix
+        ./modules/brave/default.nix
+      ];
 
-        modules =
-          commonModules
-          ++ extraModules
-          ++ [
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                backupFileExtension = "hm-backup";
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                users.${userInfo.userName} = import ./modules/home.nix;
-                extraSpecialArgs = {
-                  inherit
-                    (inputs)
-                    zen-browser
-                    quickshell
-                    mango
-                    niri-flake
-                    nvf
-                    ;
-                  inherit (userInfo) userName userEmail fullName;
-                  inherit (defaults) homeDir;
-                  inherit isRiver isMango isNiri;
-                };
-                sharedModules =
-                  [
+      mkSystem =
+        isRiver: isMango: isNiri: extraModules: extraSharedModules:
+        nixpkgs.lib.nixosSystem {
+          specialArgs =
+            inputs
+            // userInfo
+            // {
+              homeDir = defaults.homeDir;
+              silentSDDM = inputs.silentSDDM;
+              inherit isRiver isMango isNiri;
+            };
+
+          modules =
+            commonModules
+            ++ extraModules
+            ++ [
+              home-manager.nixosModules.home-manager
+              {
+                home-manager = {
+                  backupFileExtension = "hm-backup";
+                  useGlobalPkgs = true;
+                  useUserPackages = true;
+                  users.${userInfo.userName} = import ./modules/home.nix;
+                  extraSpecialArgs = {
+                    inherit (inputs)
+                      zen-browser
+                      quickshell
+                      mango
+                      niri-flake
+                      nvf
+                      ;
+                    inherit (userInfo) userName userEmail fullName;
+                    inherit (defaults) homeDir;
+                    inherit isRiver isMango isNiri;
+                  };
+                  sharedModules = [
                     ./home/theme/module.nix
                     inputs.zen-browser.homeModules.default
                     inputs.nvf.homeManagerModules.default
                   ]
                   ++ extraSharedModules;
-              };
+                };
+              }
+            ];
+        };
+    in
+    {
+      nixosConfigurations.river =
+        mkSystem true false false
+          [
+            {
+              services.displayManager.sessionPackages = [
+                (pkgs.writeTextFile rec {
+                  name = "river-session";
+                  destination = "/share/wayland-sessions/river.desktop";
+                  text = ''
+                    [Desktop Entry]
+                    Name=River
+                    Comment=A dynamic tiling Wayland compositor
+                    Exec=river
+                    Type=Application
+                  '';
+                  passthru.providedSessions = [ "river" ];
+                })
+              ];
             }
+          ]
+          [ ];
+
+      nixosConfigurations.mangowc =
+        mkSystem false true false
+          [
+            mango.nixosModules.mango
+            {
+              programs.mango.enable = true;
+            }
+          ]
+          [
+            mango.hmModules.mango
           ];
-      };
-  in {
-    nixosConfigurations.river =
-      mkSystem true false false
-      [
-        {
-          services.displayManager.sessionPackages = [
-            (pkgs.writeTextFile rec {
-              name = "river-session";
-              destination = "/share/wayland-sessions/river.desktop";
-              text = ''
-                [Desktop Entry]
-                Name=River
-                Comment=A dynamic tiling Wayland compositor
-                Exec=river
-                Type=Application
-              '';
-              passthru.providedSessions = ["river"];
-            })
-          ];
-        }
-      ]
-      [];
 
-    nixosConfigurations.mangowc =
-      mkSystem false true false
-      [
-        mango.nixosModules.mango
-        {
-          programs.mango.enable = true;
-        }
-      ]
-      [
-        mango.hmModules.mango
-      ];
+      nixosConfigurations.niri =
+        mkSystem false false true
+          [
+            niri-flake.nixosModules.niri
+            {
+              programs.niri.enable = true;
+              programs.niri.package = pkgs.niri-unstable;
+            }
+          ]
+          [ ];
 
-    nixosConfigurations.niri =
-      mkSystem false false true
-      [
-        niri-flake.nixosModules.niri
-        {
-          programs.niri.enable = true;
-          programs.niri.package = pkgs.niri-unstable;
-        }
-      ]
-      [];
-
-    homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
-      inherit pkgs;
-      extraSpecialArgs =
-        {
+      homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        extraSpecialArgs = {
           homeDir = defaults.homeDir;
           quickshell = inputs.quickshell;
           zen-browser = inputs.zen-browser;
@@ -207,9 +208,9 @@
         }
         // userInfo;
 
-      modules = [
-        ./modules/home.nix
-      ];
+        modules = [
+          ./modules/home.nix
+        ];
+      };
     };
-  };
 }

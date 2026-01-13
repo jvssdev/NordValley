@@ -111,13 +111,11 @@ in {
             underline = true;
             update_in_insert = true;
             virtual_text = {
-              format =
-                lib.generators.mkLuaInline
-                ''
-                  function(diagnostic)
-                    return string.format("%s", diagnostic.message)
-                  end
-                '';
+              format = lib.generators.mkLuaInline ''
+                function(diagnostic)
+                  return string.format("%s", diagnostic.message)
+                end
+              '';
             };
           };
         };
@@ -354,7 +352,45 @@ in {
             enable = true;
             navbuddy.enable = true;
           };
-          nvim-ufo.enable = true;
+          # folding
+          nvim-ufo = {
+            enable = true;
+            setupOpts = {
+              # Use LSP, then Treesitter, then indent
+              provider_selector =
+                lib.generators.mkLuaInline
+                #lua
+                ''
+                  function(_, filetype, buftype)
+                    local function handleFallbackException(bufnr, err, providerName)
+                      if type(err) == "string" and err:match "UfoFallbackException" then
+                        return require("ufo").getFolds(bufnr, providerName)
+                      else
+                        return require("promise").reject(err)
+                      end
+                    end
+
+                    return (filetype == "" or buftype == "nofile") and "indent"
+                        or function(bufnr)
+                          return require("ufo")
+                              .getFolds(bufnr, "lsp")
+                              :catch(
+                                function(err)
+                                  return handleFallbackException(bufnr, err, "treesitter")
+                                end
+                              )
+                              :catch(
+                                function(err)
+                                  return handleFallbackException(bufnr, err, "indent")
+                                end
+                              )
+                        end
+                  end,
+                '';
+            };
+          };
+          colorizer.enable = true;
+          # smartcolumn.enable = true;
         };
 
         notify.nvim-notify = {
@@ -371,6 +407,10 @@ in {
           setupOpts.signs = false;
         };
 
+        mini = {
+          comment.enable = true;
+          # move.enable = true;
+        };
         globals = {
           netrw_dirhistmax = 0;
           have_nerd_font = true;
@@ -385,6 +425,17 @@ in {
           wrap = false;
           scrolloff = 10;
           updatetime = 50;
+          foldcolumn = "1";
+          foldlevel = 99;
+          foldlevelstart = 99;
+          foldenable = true;
+          fillchars = "eob:‿,fold: ,foldopen:,foldsep:⸽,foldclose:";
+          smartindent = true;
+          breakindent = true;
+          tabstop = 4;
+          shiftwidth = 2;
+          softtabstop = 4;
+          expandtab = true;
         };
 
         lsp = {
@@ -406,11 +457,21 @@ in {
           enable = true;
           setupOpts = {
             signs = {
-              add = {text = "+";};
-              change = {text = "~";};
-              delete = {text = "_";};
-              topdelete = {text = "‾";};
-              changedelete = {text = "~";};
+              add = {
+                text = "+";
+              };
+              change = {
+                text = "~";
+              };
+              delete = {
+                text = "_";
+              };
+              topdelete = {
+                text = "‾";
+              };
+              changedelete = {
+                text = "~";
+              };
             };
           };
         };
@@ -421,6 +482,32 @@ in {
             action = "<cmd>lua require('telescope.builtin').keymaps()<CR>";
             desc = "[S]earch [K]eymaps";
           }
+          {
+            key = "zR";
+            mode = "n";
+            silent = true;
+            action = "<cmd>lua require('ufo').openAllFolds()<CR>";
+            desc = "Open all folds";
+          }
+          {
+            key = "zM";
+            mode = "n";
+            silent = true;
+            action = "<cmd>lua require('ufo').closeAllFolds()<CR>";
+            desc = "Close all folds";
+          }
+          {
+            key = "<C-c>";
+            action = "<Cmd>lua require('mini.comment').toggle_lines(vim.fn.line('.'), vim.fn.line('.'))<CR>";
+            mode = "n";
+            desc = "Toggle comment line";
+          }
+          # {
+          #   key = "<C-l>";
+          #   action = "<Cmd>lua MiniMove.move_line('right')<CR>";
+          #   mode = "n";
+          #   desc = "Move line right";
+          # }
         ];
         telescope = {
           enable = true;
