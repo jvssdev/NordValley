@@ -10,10 +10,25 @@
           float = true;
         };
       };
+      picker = {
+        enabled = false;
+      };
+      scratch = {
+        enabled = true;
+      };
+      notifier = {
+        enabled = true;
+      };
       dashboard = {
         enabled = true;
       };
-      picker = {
+      gh = {
+        enabled = false;
+      };
+      gitbrowse = {
+        enabled = false;
+      };
+      toggle = {
         enabled = false;
       };
     };

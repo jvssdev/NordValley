@@ -19,6 +19,7 @@ in {
   programs.nvf = {
     enable = true;
     defaultEditor = true;
+
     settings = {
       vim = {
         package = pkgs.neovim-unwrapped;
@@ -59,15 +60,16 @@ in {
             p.yaml
           ]))
         ];
+
         treesitter = {
           enable = true;
           autotagHtml = true;
-          context.enable = true;
           highlight.enable = true;
           grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
-            typescript # in language settings only tsx gets enabled, not typescript
+            typescript
           ];
         };
+
         languages = {
           enableDAP = true;
           enableExtraDiagnostics = true;
@@ -91,14 +93,10 @@ in {
           nix = {
             enable = true;
             format.type = ["nixfmt"];
-            lsp.server = ["nil"];
+            lsp.servers = ["nil"];
           };
         };
-        formatter = {
-          conform-nvim = {
-            enable = true;
-          };
-        };
+
         diagnostics = {
           enable = true;
           config = {
@@ -115,37 +113,255 @@ in {
             virtual_text = {
               format =
                 lib.generators.mkLuaInline
-                /*
-                lua
-                */
                 ''
                   function(diagnostic)
                     return string.format("%s", diagnostic.message)
-                    --return string.format("%s (%s)", diagnostic.message, diagnostic.source)
                   end
                 '';
             };
           };
         };
+
         syntaxHighlighting = true;
-        optPlugins = [];
-        extraPlugins = {};
-        pluginOverrides = {};
-        theme = {
-          enable = false;
-        };
+
+        luaConfigPost = ''
+          local colors = {
+            base00 = "#${palette.base00}",
+            base01 = "#${palette.base01}",
+            base02 = "#${palette.base02}",
+            base03 = "#${palette.base03}",
+            base04 = "#${palette.base04}",
+            base05 = "#${palette.base05}",
+            base06 = "#${palette.base06}",
+            base07 = "#${palette.base07}",
+            base08 = "#${palette.base08}",
+            base09 = "#${palette.base09}",
+            base0A = "#${palette.base0A}",
+            base0B = "#${palette.base0B}",
+            base0C = "#${palette.base0C}",
+            base0D = "#${palette.base0D}",
+            base0E = "#${palette.base0E}",
+            base0F = "#${palette.base0F}",
+            base11 = "#${palette.base0D}",
+          }
+
+          vim.cmd("highlight clear")
+          if vim.fn.exists("syntax_on") then
+            vim.cmd("syntax reset")
+          end
+          vim.g.colors_name = "tsuki"
+
+          local function set_hl(group, opts)
+            vim.api.nvim_set_hl(0, group, opts)
+          end
+
+          vim.g.terminal_color_0 = colors.base00
+          vim.g.terminal_color_1 = colors.base08
+          vim.g.terminal_color_2 = colors.base0B
+          vim.g.terminal_color_3 = colors.base06
+          vim.g.terminal_color_4 = colors.base0D
+          vim.g.terminal_color_5 = colors.base0E
+          vim.g.terminal_color_6 = colors.base0C
+          vim.g.terminal_color_7 = colors.base05
+          vim.g.terminal_color_8 = colors.base04
+          vim.g.terminal_color_9 = colors.base08
+          vim.g.terminal_color_10 = colors.base0B
+          vim.g.terminal_color_11 = colors.base06
+          vim.g.terminal_color_12 = colors.base0D
+          vim.g.terminal_color_13 = colors.base0E
+          vim.g.terminal_color_14 = colors.base0C
+          vim.g.terminal_color_15 = colors.base07
+
+          set_hl("Normal", { fg = colors.base05, bg = colors.base00 })
+          set_hl("Bold", { bold = true })
+          set_hl("Debug", { fg = colors.base08 })
+          set_hl("Directory", { fg = colors.base0D })
+          set_hl("Error", { fg = colors.base00, bg = colors.base08 })
+          set_hl("ErrorMsg", { fg = colors.base08, bg = colors.base00 })
+          set_hl("Exception", { fg = colors.base08 })
+          set_hl("FoldColumn", { fg = colors.base0C, bg = colors.base01 })
+          set_hl("Folded", { fg = colors.base04, bg = colors.base01 })
+          set_hl("Search", { fg = colors.base01, bg = colors.base05 })
+          set_hl("IncSearch", { fg = colors.base01, bg = colors.base06 })
+          set_hl("CurSearch", { fg = colors.base01, bg = colors.base11 })
+          set_hl("Italic", { italic = true })
+          set_hl("Macro", { fg = colors.base08 })
+          set_hl("MatchParen", { bg = colors.base03 })
+          set_hl("ModeMsg", { fg = colors.base0B })
+          set_hl("MoreMsg", { fg = colors.base0B })
+          set_hl("Question", { fg = colors.base0D })
+          set_hl("Substitute", { fg = colors.base01, bg = colors.base0A })
+          set_hl("SpecialKey", { fg = colors.base03 })
+          set_hl("TooLong", { fg = colors.base08 })
+          set_hl("Underlined", { fg = colors.base08 })
+          set_hl("Visual", { bg = colors.base04 })
+          set_hl("VisualNOS", { fg = colors.base08 })
+          set_hl("WarningMsg", { fg = colors.base08 })
+          set_hl("WildMenu", { fg = colors.base08, bg = colors.base06 })
+          set_hl("Title", { fg = colors.base0D })
+          set_hl("Conceal", { fg = colors.base0D, bg = colors.base00 })
+          set_hl("Cursor", { fg = colors.base00, bg = colors.base05 })
+          set_hl("NonText", { fg = colors.base03 })
+          set_hl("LineNr", { fg = colors.base04, bg = colors.base00 })
+          set_hl("SignColumn", { fg = colors.base04, bg = colors.base00 })
+          set_hl("StatusLine", { fg = colors.base04, bg = colors.base02 })
+          set_hl("StatusLineNC", { fg = colors.base03, bg = colors.base01 })
+          set_hl("VertSplit", { fg = colors.base02, bg = colors.base02 })
+          set_hl("ColorColumn", { bg = colors.base01 })
+          set_hl("CursorColumn", { bg = colors.base01 })
+          set_hl("CursorLine", { bg = colors.base01 })
+          set_hl("CursorLineNr", { fg = colors.base04, bg = colors.base01 })
+          set_hl("QuickFixLine", { bg = colors.base01 })
+          set_hl("PMenu", { fg = colors.base05, bg = colors.base01 })
+          set_hl("PMenuSel", { fg = colors.base01, bg = colors.base05 })
+          set_hl("TabLine", { fg = colors.base03, bg = colors.base01 })
+          set_hl("TabLineFill", { fg = colors.base03, bg = colors.base01 })
+          set_hl("TabLineSel", { fg = colors.base0B, bg = colors.base01 })
+          set_hl("Boolean", { fg = colors.base09 })
+          set_hl("Character", { fg = colors.base08 })
+          set_hl("Comment", { fg = colors.base04 })
+          set_hl("Conditional", { fg = colors.base0E })
+          set_hl("Constant", { fg = colors.base09 })
+          set_hl("Delimiter", { fg = colors.base0E })
+          set_hl("Define", { fg = colors.base0E })
+          set_hl("Float", { fg = colors.base09 })
+          set_hl("Function", { fg = colors.base0E })
+          set_hl("Identifier", { fg = colors.base08 })
+          set_hl("Include", { fg = colors.base0D })
+          set_hl("Keyword", { fg = colors.base0E })
+          set_hl("Label", { fg = colors.base04 })
+          set_hl("Number", { fg = colors.base09 })
+          set_hl("Operator", { fg = colors.base0E })
+          set_hl("PreProc", { fg = colors.base0A })
+          set_hl("Repeat", { fg = colors.base0A })
+          set_hl("Special", { fg = colors.base0E })
+          set_hl("SpecialChar", { fg = colors.base11 })
+          set_hl("Statement", { fg = colors.base0E })
+          set_hl("StorageClass", { fg = colors.base0A })
+          set_hl("String", { fg = colors.base0B })
+          set_hl("Structure", { fg = colors.base0E })
+          set_hl("Tag", { fg = colors.base08 })
+          set_hl("Todo", { fg = colors.base0A, bg = colors.base01 })
+          set_hl("Type", { fg = colors.base0A })
+          set_hl("Typedef", { fg = colors.base0A })
+          set_hl("@keyword", { fg = colors.base0E })
+          set_hl("@keyword.function", { fg = colors.base0E })
+          set_hl("@keyword.operator", { fg = colors.base0E })
+          set_hl("@keyword.return", { fg = colors.base0E })
+          set_hl("@function", { fg = colors.base0D })
+          set_hl("@function.call", { fg = colors.base0D })
+          set_hl("@function.builtin", { fg = colors.base0D })
+          set_hl("@method", { fg = colors.base0D })
+          set_hl("@method.call", { fg = colors.base0D })
+          set_hl("WinSeparator", { fg = colors.base03 })
+          set_hl("NormalFloat", { fg = colors.base05, bg = colors.base00 })
+          set_hl("FloatBorder", { fg = colors.base03, bg = colors.base00 })
+          set_hl("Pmenu", { fg = colors.base05, bg = colors.base00 })
+          set_hl("PmenuSel", { fg = colors.base06, bg = colors.base01 })
+          set_hl("PmenuSbar", { bg = colors.base00 })
+          set_hl("PmenuThumb", { bg = colors.base01 })
+          set_hl("TelescopeBorder", { fg = colors.base03 })
+          set_hl("BlinkCmpMenuBorder", { fg = colors.base03, bg = colors.base00 })
+          set_hl("DiagnosticFloat", { link = "NormalFloat" })
+          set_hl("DiagnosticFloatingWarn", { fg = colors.base09, bg = colors.base01 })
+          set_hl("DiagnosticFloatingError", { fg = colors.base08, bg = colors.base01 })
+          set_hl("DiagnosticFloatingInfo", { fg = colors.base0D, bg = colors.base01 })
+          set_hl("DiagnosticFloatingHint", { fg = colors.base0C, bg = colors.base01 })
+          set_hl("NvimTreeFolderIcon", { fg = colors.base0E })
+          set_hl("NvimTreeFolderName", { fg = colors.base05 })
+          set_hl("NvimTreeNormal", { fg = colors.base06 })
+
+          -- Lualine configuration (using the same colors table)
+          vim.opt.laststatus = 3
+
+          local tsuki_theme = {
+            normal = {
+              a = { bg = colors.base0D, fg = colors.base00, gui = "bold" },
+              b = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+              c = { bg = colors.base01, fg = colors.base04 },
+              y = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+              z = { bg = colors.base0D, fg = colors.base00, gui = "bold" }
+            },
+            insert = {
+              a = { bg = colors.base0B, fg = colors.base00, gui = "bold" },
+              b = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+              c = { bg = colors.base01, fg = colors.base04 },
+              y = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+              z = { bg = colors.base0B, fg = colors.base00, gui = "bold" }
+            },
+            visual = {
+              a = { bg = colors.base0E, fg = colors.base00, gui = "bold" },
+              b = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+              c = { bg = colors.base01, fg = colors.base04 },
+              y = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+              z = { bg = colors.base0E, fg = colors.base00, gui = "bold" }
+            },
+            replace = {
+              a = { bg = colors.base08, fg = colors.base00, gui = "bold" },
+              b = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+              c = { bg = colors.base01, fg = colors.base04 },
+              y = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+              z = { bg = colors.base08, fg = colors.base00, gui = "bold" }
+            },
+            command = {
+              a = { bg = colors.base0C, fg = colors.base00, gui = "bold" },
+              b = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+              c = { bg = colors.base01, fg = colors.base04 },
+              y = { bg = colors.base03, fg = colors.base04, gui = "bold" },
+              z = { bg = colors.base0C, fg = colors.base00, gui = "bold" }
+            },
+            inactive = {
+              a = { bg = colors.base01, fg = colors.base04 },
+              b = { bg = colors.base01, fg = colors.base03 },
+              c = { bg = colors.base01, fg = colors.base03 }
+            }
+          }
+
+          require('lualine').setup({
+            options = {
+              theme = tsuki_theme,
+              icons_enabled = true,
+              component_separators = { left = '', right = '' },
+              section_separators = { left = '', right = '' },
+            },
+            sections = {
+              lualine_a = { 'mode' },
+              lualine_b = { 'branch' },
+              lualine_c = { 'diff', 'diagnostics' },
+              lualine_x = { 'encoding', 'filetype' },
+              lualine_y = { 'progress' },
+              lualine_z = { 'location' },
+            },
+          })
+        '';
+
         statusline.lualine = {
           enable = true;
           icons.enable = true;
           globalStatus = true;
         };
+
         ui = {
           noice = {
             enable = true;
             setupOpts = {
               lsp.progress.enabled = false;
-              notify.enabled = false;
+              notify.enabled = true;
             };
+          };
+          illuminate.enable = true;
+          breadcrumbs = {
+            enable = true;
+            navbuddy.enable = true;
+          };
+          nvim-ufo.enable = true;
+        };
+
+        notify.nvim-notify = {
+          enable = true;
+          setupOpts = {
+            stages = "fade";
+            timeout = 3000;
           };
         };
 
@@ -154,9 +370,14 @@ in {
           mappings.telescope = "<leader>fd";
           setupOpts.signs = false;
         };
+
         globals = {
           netrw_dirhistmax = 0;
+          have_nerd_font = true;
+          mapleader = " ";
+          maplocalleader = " ";
         };
+
         options = {
           number = true;
           relativenumber = true;
@@ -165,22 +386,42 @@ in {
           scrolloff = 10;
           updatetime = 50;
         };
+
         lsp = {
           enable = true;
           formatOnSave = true;
           trouble.enable = true;
         };
+
         autocomplete.blink-cmp = {
           enable = true;
-
           friendly-snippets.enable = true;
-
           setupOpts = {
             keymap.preset = "default";
             signature.enabled = true;
           };
         };
-        git.gitsigns.enable = true;
+
+        git.gitsigns = {
+          enable = true;
+          setupOpts = {
+            signs = {
+              add = {text = "+";};
+              change = {text = "~";};
+              delete = {text = "_";};
+              topdelete = {text = "‾";};
+              changedelete = {text = "~";};
+            };
+          };
+        };
+        keymaps = [
+          {
+            key = "<leader>sk";
+            mode = "n";
+            action = "<cmd>lua require('telescope.builtin').keymaps()<CR>";
+            desc = "[S]earch [K]eymaps";
+          }
+        ];
         telescope = {
           enable = true;
           extensions = [
@@ -197,18 +438,10 @@ in {
               };
             }
           ];
-
           mappings = {
             buffers = "<leader>.";
             diagnostics = "<leader>sd";
             findFiles = "<leader>sf";
-            # findProjects = "<leader>sp";
-            #gitBranches = "<leader>svb";
-            # gitBufferCommits = "<leader>fc";
-            #gitCommits = "<leader>svcw";
-            #gitStash = "<leader>svx";
-            #gitStatus = "<leader>svs";
-            #helpTags = "<leader>ht";
             liveGrep = "<leader>sg";
             lspDefinitions = "grd";
             lspDocumentSymbols = "gO";
@@ -216,7 +449,6 @@ in {
             lspReferences = "grr";
             lspTypeDefinitions = "grt";
             lspWorkspaceSymbols = "gW";
-            #open = "<leader>so";
             resume = "<leader>sr";
             treesitter = "<leader>ss";
           };
@@ -226,258 +458,14 @@ in {
             enable = true;
             setupOpts.scope.show_exact_scope = true;
           };
-          # fidget-nvim = {
-          #   enable = true;
-          #   setupOpts.notification.window.winblend = 0;
-          # };
-          highlight-undo.enable = true;
+          highlight-undo.enable = false;
           nvim-cursorline.enable = true;
           nvim-web-devicons.enable = true;
         };
+
         binds.whichKey.enable = true;
-        keymaps = [];
-        pluginRC = {};
-        luaConfigPre = "";
-        luaConfigRC = {
-          lualineTheme = ''
-            vim.opt.laststatus = 3
-            local colors = {
-              base00 = "#${palette.base00}",
-              base01 = "#${palette.base01}",
-              base02 = "#${palette.base02}",
-              base03 = "#${palette.base03}",
-              base04 = "#${palette.base04}",
-              base05 = "#${palette.base05}",
-              base06 = "#${palette.base06}",
-              base07 = "#${palette.base07}",
-              base08 = "#${palette.base08}",
-              base09 = "#${palette.base09}",
-              base0A = "#${palette.base0A}",
-              base0B = "#${palette.base0B}",
-              base0C = "#${palette.base0C}",
-              base0D = "#${palette.base0D}",
-              base0E = "#${palette.base0E}",
-              base0F = "#${palette.base0F}",
-            }
-            local tsuki_theme = {
-              normal = {
-                a = { bg = colors.base0D, fg = colors.base00, gui = "bold" },
-                b = { bg = colors.base03, fg = colors.base04, gui = "bold" },
-                c = { bg = colors.base01, fg = colors.base04 },
-                y = { bg = colors.base03, fg = colors.base04, gui = "bold" },
-                z = { bg = colors.base0D, fg = colors.base00, gui = "bold" }
-              },
-              insert = {
-                a = { bg = colors.base0B, fg = colors.base00, gui = "bold" },
-                b = { bg = colors.base03, fg = colors.base04, gui = "bold" },
-                c = { bg = colors.base01, fg = colors.base04 },
-                y = { bg = colors.base03, fg = colors.base04, gui = "bold" },
-                z = { bg = colors.base0B, fg = colors.base00, gui = "bold" }
-              },
-              visual = {
-                a = { bg = colors.base0E, fg = colors.base00, gui = "bold" },
-                b = { bg = colors.base03, fg = colors.base04, gui = "bold" },
-                c = { bg = colors.base01, fg = colors.base04 },
-                y = { bg = colors.base03, fg = colors.base04, gui = "bold" },
-                z = { bg = colors.base0E, fg = colors.base00, gui = "bold" }
-              },
-              replace = {
-                a = { bg = colors.base08, fg = colors.base00, gui = "bold" },
-                b = { bg = colors.base03, fg = colors.base04, gui = "bold" },
-                c = { bg = colors.base01, fg = colors.base04 },
-                y = { bg = colors.base03, fg = colors.base04, gui = "bold" },
-                z = { bg = colors.base08, fg = colors.base00, gui = "bold" }
-              },
-              command = {
-                a = { bg = colors.base0C, fg = colors.base00, gui = "bold" },
-                b = { bg = colors.base03, fg = colors.base04, gui = "bold" },
-                c = { bg = colors.base01, fg = colors.base04 },
-                y = { bg = colors.base03, fg = colors.base04, gui = "bold" },
-                z = { bg = colors.base0C, fg = colors.base00, gui = "bold" }
-              },
-              inactive = {
-                a = { bg = colors.base01, fg = colors.base04 },
-                b = { bg = colors.base01, fg = colors.base03 },
-                c = { bg = colors.base01, fg = colors.base03 }
-              }
-            }
-            require('lualine').setup({
-              options = {
-                theme = tsuki_theme,
-                icons_enabled = true,
-                component_separators = { left = '', right = '' },
-                section_separators = { left = '', right = '' },
-              },
-              sections = {
-                lualine_a = { 'mode' },
-                lualine_b = { 'branch' },
-                lualine_c = { 'diff', 'diagnostics' },
-                lualine_x = { 'encoding', 'filetype' },
-                lualine_y = { 'progress' },
-                lualine_z = { 'location' },
-              },
-            })
-          '';
-          theme = ''
-            local colors = {
-              base00 = "#${palette.base00}",
-              base01 = "#${palette.base01}",
-              base02 = "#${palette.base02}",
-              base03 = "#${palette.base03}",
-              base04 = "#${palette.base04}",
-              base05 = "#${palette.base05}",
-              base06 = "#${palette.base06}",
-              base07 = "#${palette.base07}",
-              base08 = "#${palette.base08}",
-              base09 = "#${palette.base09}",
-              base0A = "#${palette.base0A}",
-              base0B = "#${palette.base0B}",
-              base0C = "#${palette.base0C}",
-              base0D = "#${palette.base0D}",
-              base0E = "#${palette.base0E}",
-              base0F = "#${palette.base0F}",
-              base11 = "#${palette.base0A}",
-            }
-            vim.cmd("highlight clear")
-            if vim.fn.exists("syntax_on") then
-              vim.cmd("syntax reset")
-            end
-            vim.g.colors_name = "tsuki"
-            local function set_hl(group, opts)
-              vim.api.nvim_set_hl(0, group, opts)
-            end
-            vim.g.terminal_color_0 = colors.base00
-            vim.g.terminal_color_1 = colors.base08
-            vim.g.terminal_color_2 = colors.base0B
-            vim.g.terminal_color_3 = colors.base06
-            vim.g.terminal_color_4 = colors.base0D
-            vim.g.terminal_color_5 = colors.base0E
-            vim.g.terminal_color_6 = colors.base0C
-            vim.g.terminal_color_7 = colors.base05
-            vim.g.terminal_color_8 = colors.base04
-            vim.g.terminal_color_9 = colors.base08
-            vim.g.terminal_color_10 = colors.base0B
-            vim.g.terminal_color_11 = colors.base06
-            vim.g.terminal_color_12 = colors.base0D
-            vim.g.terminal_color_13 = colors.base0E
-            vim.g.terminal_color_14 = colors.base0C
-            vim.g.terminal_color_15 = colors.base07
-            set_hl("Normal", { fg = colors.base05, bg = colors.base00 })
-            set_hl("Bold", { bold = true })
-            set_hl("Debug", { fg = colors.base08 })
-            set_hl("Directory", { fg = colors.base0D })
-            set_hl("Error", { fg = colors.base00, bg = colors.base08 })
-            set_hl("ErrorMsg", { fg = colors.base08, bg = colors.base00 })
-            set_hl("Exception", { fg = colors.base08 })
-            set_hl("FoldColumn", { fg = colors.base0C, bg = colors.base01 })
-            set_hl("Folded", { fg = colors.base04, bg = colors.base01 })
-            set_hl("Search", { fg = colors.base01, bg = colors.base05 })
-            set_hl("IncSearch", { fg = colors.base01, bg = colors.base06 })
-            set_hl("CurSearch", { fg = colors.base01, bg = colors.base11 })
-            set_hl("Italic", { italic = true })
-            set_hl("Macro", { fg = colors.base08 })
-            set_hl("MatchParen", { bg = colors.base03 })
-            set_hl("ModeMsg", { fg = colors.base0B })
-            set_hl("MoreMsg", { fg = colors.base0B })
-            set_hl("Question", { fg = colors.base0D })
-            set_hl("Substitute", { fg = colors.base01, bg = colors.base0A })
-            set_hl("SpecialKey", { fg = colors.base03 })
-            set_hl("TooLong", { fg = colors.base08 })
-            set_hl("Underlined", { fg = colors.base08 })
-            set_hl("Visual", { bg = colors.base04 })
-            set_hl("VisualNOS", { fg = colors.base08 })
-            set_hl("WarningMsg", { fg = colors.base08 })
-            set_hl("WildMenu", { fg = colors.base08, bg = colors.base06 })
-            set_hl("Title", { fg = colors.base0D })
-            set_hl("Conceal", { fg = colors.base0D, bg = colors.base00 })
-            set_hl("Cursor", { fg = colors.base00, bg = colors.base05 })
-            set_hl("NonText", { fg = colors.base03 })
-            set_hl("LineNr", { fg = colors.base04, bg = colors.base00 })
-            set_hl("SignColumn", { fg = colors.base04, bg = colors.base00 })
-            set_hl("StatusLine", { fg = colors.base04, bg = colors.base02 })
-            set_hl("StatusLineNC", { fg = colors.base03, bg = colors.base01 })
-            set_hl("VertSplit", { fg = colors.base02, bg = colors.base02 })
-            set_hl("ColorColumn", { bg = colors.base01 })
-            set_hl("CursorColumn", { bg = colors.base01 })
-            set_hl("CursorLine", { bg = colors.base01 })
-            set_hl("CursorLineNr", { fg = colors.base04, bg = colors.base01 })
-            set_hl("QuickFixLine", { bg = colors.base01 })
-            set_hl("PMenu", { fg = colors.base05, bg = colors.base01 })
-            set_hl("PMenuSel", { fg = colors.base01, bg = colors.base05 })
-            set_hl("TabLine", { fg = colors.base03, bg = colors.base01 })
-            set_hl("TabLineFill", { fg = colors.base03, bg = colors.base01 })
-            set_hl("TabLineSel", { fg = colors.base0B, bg = colors.base01 })
-            set_hl("Boolean", { fg = colors.base09 })
-            set_hl("Character", { fg = colors.base08 })
-            set_hl("Comment", { fg = colors.base04 })
-            set_hl("Conditional", { fg = colors.base0E })
-            set_hl("Constant", { fg = colors.base09 })
-            set_hl("Delimiter", { fg = colors.base0E })
-            set_hl("Define", { fg = colors.base0E })
-            set_hl("Float", { fg = colors.base09 })
-            set_hl("Function", { fg = colors.base0E })
-            set_hl("Identifier", { fg = colors.base08 })
-            set_hl("Include", { fg = colors.base0D })
-            set_hl("Keyword", { fg = colors.base0E })
-            set_hl("Label", { fg = colors.base04 })
-            set_hl("Number", { fg = colors.base09 })
-            set_hl("Operator", { fg = colors.base0E })
-            set_hl("PreProc", { fg = colors.base0A })
-            set_hl("Repeat", { fg = colors.base0A })
-            set_hl("Special", { fg = colors.base0E })
-            set_hl("SpecialChar", { fg = colors.base11 })
-            set_hl("Statement", { fg = colors.base0E })
-            set_hl("StorageClass", { fg = colors.base0A })
-            set_hl("String", { fg = colors.base0B })
-            set_hl("Structure", { fg = colors.base0E })
-            set_hl("Tag", { fg = colors.base08 })
-            set_hl("Todo", { fg = colors.base0A, bg = colors.base01 })
-            set_hl("Type", { fg = colors.base0A })
-            set_hl("Typedef", { fg = colors.base0A })
-            set_hl("@keyword", { fg = colors.base0E })
-            set_hl("@keyword.function", { fg = colors.base0E })
-            set_hl("@keyword.operator", { fg = colors.base0E })
-            set_hl("@keyword.return", { fg = colors.base0E })
-            set_hl("@function", { fg = colors.base0D })
-            set_hl("@function.call", { fg = colors.base0D })
-            set_hl("@function.builtin", { fg = colors.base0D })
-            set_hl("@method", { fg = colors.base0D })
-            set_hl("@method.call", { fg = colors.base0D })
-            set_hl("WinSeparator", { fg = colors.base03 })
-            set_hl("NormalFloat", { fg = colors.base05, bg = colors.base00 })
-            set_hl("FloatBorder", { fg = colors.base03, bg = colors.base00 })
-            set_hl("Pmenu", { fg = colors.base05, bg = colors.base00 })
-            set_hl("PmenuSel", { fg = colors.base06, bg = colors.base01 })
-            set_hl("PmenuSbar", { bg = colors.base00 })
-            set_hl("PmenuThumb", { bg = colors.base01 })
-            set_hl("TelescopeBorder", { fg = colors.base03 })
-            set_hl("BlinkCmpMenuBorder", { fg = colors.base03, bg = colors.base00 })
-            set_hl("DiagnosticFloat", { link = "NormalFloat" })
-            set_hl("DiagnosticFloatingWarn", { fg = colors.base09, bg = colors.base01 })
-            set_hl("DiagnosticFloatingError", { fg = colors.base08, bg = colors.base01 })
-            set_hl("DiagnosticFloatingInfo", { fg = colors.base0D, bg = colors.base01 })
-            set_hl("DiagnosticFloatingHint", { fg = colors.base0C, bg = colors.base01 })
-            set_hl("NvimTreeFolderIcon", { fg = colors.base0E })
-            set_hl("NvimTreeFolderName", { fg = colors.base05 })
-            set_hl("NvimTreeNormal", { fg = colors.base06 })
-          '';
-          # userInit = ''
-          #   local custom_config = "${nvimConfigDir}/init.lua"
-          #   if vim.fn.filereadable(custom_config) == 1 then
-          #     dofile(custom_config)
-          #   end
-          # '';
-        };
-        luaConfigPost = "";
-        additionalRuntimePaths = [
-          # nvimConfigDir
-        ];
-        extraLuaFiles = [];
-        withRuby = false;
-        withNodeJs = false;
-        luaPackages = [];
+
         withPython3 = true;
-        python3Packages = [];
       };
     };
   };
