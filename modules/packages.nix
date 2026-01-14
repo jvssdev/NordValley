@@ -2,108 +2,109 @@
   pkgs,
   specialArgs,
   ...
-}: let
-  inherit
-    (specialArgs)
+}:
+let
+  inherit (specialArgs)
     # helium-browser
     quickshell
     ;
 in
-  with pkgs; let
-    basePackages = [
-      # Build essentials
-      gcc
-      gnumake
-      cargo
-      rustc
-      wget
-      unzip
-      tree-sitter
-      nodejs_22
-      tree
-      neovim-unwrapped
+with pkgs;
+let
+  basePackages = [
+    # Build essentials
+    gcc
+    gnumake
+    cargo
+    rustc
+    wget
+    unzip
+    tree-sitter
+    nodejs_22
+    tree
+    neovim-unwrapped
 
-      bibata-cursors
+    bibata-cursors
 
-      zig
-      go
+    zig
+    go
 
-      # CLI tools
-      lazygit
-      fzf
-      fd
-      ncdu
-      ripgrep
-      nixos-shell
-      nix-your-shell
-      atuin
+    # CLI tools
+    lazygit
+    fzf
+    fd
+    ncdu
+    ripgrep
+    nixos-shell
+    nix-your-shell
+    atuin
 
-      bat
-      starship
-      lsd
-      ffmpeg
+    bat
+    starship
+    lsd
+    ffmpeg
 
-      # Media
-      mpc
-      playerctl
-      pamixer
+    # Media
+    mpc
+    playerctl
+    pamixer
 
-      # Wayland tools
-      wlopm
-      wpaperd
-      gammastep
+    # Wayland tools
+    wlopm
+    wpaperd
+    gammastep
 
-      # System utilities
-      p7zip
-      brightnessctl
-      appimage-run
-      nh
-      grim
-      slurp
-      wl-clipboard
-      cliphist
-      wlopm
+    # System utilities
+    p7zip
+    brightnessctl
+    appimage-run
+    nh
+    grim
+    slurp
+    wl-clipboard
+    cliphist
+    wlopm
 
-      # Cloud/Sync tools
-      # rclone
-      # rclone-ui
+    # Cloud/Sync tools
+    # rclone
+    # rclone-ui
 
-      # GUI applications
-      brave
-      keepassxc
-      anydesk
-      # llama-cpp
-      # (llama-cpp.override { vulkanSupport = true; })
-      qbittorrent
-      mpv
-      imv
+    # GUI applications
+    brave
+    keepassxc
+    anydesk
+    # llama-cpp
+    # (llama-cpp.override { vulkanSupport = true; })
+    qbittorrent
+    mpv
+    imv
 
-      # Libraries
-      libgcc
-      lxqt.lxqt-policykit
-      libnotify
+    # Libraries
+    libgcc
+    lxqt.lxqt-policykit
+    libnotify
 
-      gvfs
+    gvfs
 
-      # Polkit
-      polkit
-      mate.mate-polkit
+    # Polkit
+    polkit
+    mate.mate-polkit
 
-      # Network
-      networkmanagerapplet
+    # Network
+    networkmanagerapplet
 
-      # Qt
-      libsForQt5.qt5.qtgraphicaleffects
-      kdePackages.qt6ct
-      qt6.qtwayland
-      kdePackages.qtwayland
+    # Qt
+    libsForQt5.qt5.qtgraphicaleffects
+    kdePackages.qt6ct
+    qt6.qtwayland
+    kdePackages.qtwayland
 
-      # Wayland bar/menu
-      dunst
-      pavucontrol
+    # Wayland bar/menu
+    dunst
+    pavucontrol
 
-      # helium-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
-      quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default
-    ];
-  in
-    basePackages
+    # helium-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+    quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default
+  ];
+in
+basePackages

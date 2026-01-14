@@ -52,7 +52,7 @@
       home-manager,
       nur,
       mango,
-      nixpkgs-unstable,
+      # nixpkgs-unstable,
       niri-flake,
       ...
     }:
@@ -110,8 +110,8 @@
             inputs
             // userInfo
             // {
-              homeDir = defaults.homeDir;
-              silentSDDM = inputs.silentSDDM;
+              inherit (defaults) homeDir;
+              inherit (inputs) silentSDDM;
               inherit isRiver isMango isNiri;
             };
 
@@ -150,58 +150,60 @@
         };
     in
     {
-      nixosConfigurations.river =
-        mkSystem true false false
-          [
-            {
-              services.displayManager.sessionPackages = [
-                (pkgs.writeTextFile rec {
-                  name = "river-session";
-                  destination = "/share/wayland-sessions/river.desktop";
-                  text = ''
-                    [Desktop Entry]
-                    Name=River
-                    Comment=A dynamic tiling Wayland compositor
-                    Exec=river
-                    Type=Application
-                  '';
-                  passthru.providedSessions = [ "river" ];
-                })
-              ];
-            }
-          ]
-          [ ];
+      nixosConfigurations = {
+        river =
+          mkSystem true false false
+            [
+              {
+                services.displayManager.sessionPackages = [
+                  (pkgs.writeTextFile {
+                    name = "river-session";
+                    destination = "/share/wayland-sessions/river.desktop";
+                    text = ''
+                      [Desktop Entry]
+                      Name=River
+                      Comment=A dynamic tiling Wayland compositor
+                      Exec=river
+                      Type=Application
+                    '';
+                    passthru.providedSessions = [ "river" ];
+                  })
+                ];
+              }
+            ]
+            [ ];
 
-      nixosConfigurations.mangowc =
-        mkSystem false true false
-          [
-            mango.nixosModules.mango
-            {
-              programs.mango.enable = true;
-            }
-          ]
-          [
-            mango.hmModules.mango
-          ];
+        mangowc =
+          mkSystem false true false
+            [
+              mango.nixosModules.mango
+              {
+                programs.mango.enable = true;
+              }
+            ]
+            [
+              mango.hmModules.mango
+            ];
 
-      nixosConfigurations.niri =
-        mkSystem false false true
-          [
-            niri-flake.nixosModules.niri
-            {
-              programs.niri.enable = true;
-              programs.niri.package = pkgs.niri-unstable;
-            }
-          ]
-          [ ];
+        niri =
+          mkSystem false false true
+            [
+              niri-flake.nixosModules.niri
+              {
+                programs.niri.enable = true;
+                programs.niri.package = pkgs.niri-unstable;
+              }
+            ]
+            [ ];
+      };
 
       homeConfigurations.universal = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = {
-          homeDir = defaults.homeDir;
-          quickshell = inputs.quickshell;
-          zen-browser = inputs.zen-browser;
-          nvf = inputs.nvf;
+          inherit (defaults) homeDir;
+          inherit (inputs) quickshell;
+          inherit (inputs) zen-browser;
+          inherit (inputs) nvf;
           isRiver = true;
           isMango = false;
           isNiri = false;

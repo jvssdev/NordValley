@@ -2,10 +2,12 @@
   pkgs,
   config,
   ...
-}: let
-  colors = config.colorScheme.palette;
-in {
-  home.packages = with pkgs; [trash-cli];
+}:
+let
+  inherit (config.colorScheme) palette;
+in
+{
+  home.packages = with pkgs; [ trash-cli ];
   programs.yazi = {
     package = pkgs.yazi;
     enable = true;
@@ -13,13 +15,15 @@ in {
 
     theme = {
       mgr = {
-        size = {fg = "#${colors.base03}";};
+        size = {
+          fg = "#${palette.base03}";
+        };
       };
 
       status = {
         progress_normal = {
-          fg = "#${colors.base04}";
-          bg = "#${colors.base03}";
+          fg = "#${palette.base04}";
+          bg = "#${palette.base03}";
         };
       };
     };
@@ -71,29 +75,29 @@ in {
         },
 
         style_a = {
-          fg = "#${colors.base01}",
+          fg = "#${palette.base01}",
           bg_mode = {
-            normal = "#${colors.base0D}",
-            select = "#${colors.base0B}",
-            un_set = "#${colors.base0D}",
+            normal = "#${palette.base0D}",
+            select = "#${palette.base0B}",
+            un_set = "#${palette.base0D}",
           }
         },
 
         style_b = {
-          bg = "#${colors.base03}",
-          fg = "#${colors.base04}",
+          bg = "#${palette.base03}",
+          fg = "#${palette.base04}",
         },
 
         style_c = {
-          bg = "#${colors.base01}",
-          fg = "#${colors.base05}",
+          bg = "#${palette.base01}",
+          fg = "#${palette.base05}",
         },
 
-        permissions_t_fg = "#${colors.base04}",
-        permissions_r_fg = "#${colors.base04}",
-        permissions_w_fg = "#${colors.base04}",
-        permissions_x_fg = "#${colors.base04}",
-        permissions_s_fg = "#${colors.base04}",
+        permissions_t_fg = "#${palette.base04}",
+        permissions_r_fg = "#${palette.base04}",
+        permissions_w_fg = "#${palette.base04}",
+        permissions_x_fg = "#${palette.base04}",
+        permissions_s_fg = "#${palette.base04}",
 
         status_line = {
           left = {
@@ -138,27 +142,33 @@ in {
         unstaged_symbol = "!",
         show_untracked = true,
         untracked_symbol = "?",
-        prefix_color = "#${colors.base04}",
-        branch_color = "#${colors.base04}",
-        commit_color = "#${colors.base0E}",
-        stashes_color = "#${colors.base0B}",
-        state_color = "#${colors.base07}",
-        staged_color = "#${colors.base0B}",
-        unstaged_color = "#${colors.base0A}",
-        untracked_color = "#${colors.base09}",
-        ahead_color = "#${colors.base0B}",
-        behind_color = "#${colors.base0A}",
+        prefix_color = "#${palette.base04}",
+        branch_color = "#${palette.base04}",
+        commit_color = "#${palette.base0E}",
+        stashes_color = "#${palette.base0B}",
+        state_color = "#${palette.base07}",
+        staged_color = "#${palette.base0B}",
+        unstaged_color = "#${palette.base0A}",
+        untracked_color = "#${palette.base09}",
+        ahead_color = "#${palette.base0B}",
+        behind_color = "#${palette.base0A}",
       })
     '';
     keymap = {
       mgr.prepend_keymap = [
         {
-          on = ["g" "s"];
+          on = [
+            "g"
+            "s"
+          ];
           run = "plugin git";
           desc = "Show git status";
         }
         {
-          on = ["c" "m"];
+          on = [
+            "c"
+            "m"
+          ];
           run = "plugin chmod";
         }
         {
@@ -174,7 +184,11 @@ in {
         show_symlink = true;
         sort_dir_first = true;
         linemode = "size";
-        ratio = [1 3 4];
+        ratio = [
+          1
+          3
+          4
+        ];
       };
 
       preview = {

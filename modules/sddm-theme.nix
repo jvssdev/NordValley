@@ -3,16 +3,17 @@
   silentSDDM,
   config,
   ...
-}: let
-  colors = config.theme.colorScheme.palette;
+}:
+let
+  inherit (config.theme.colorScheme) palette;
   wallpaper = ../Wallpapers/nord_valley.png;
 
-  background-derivation = pkgs.runCommand "bg.jpg" {} ''
+  background-derivation = pkgs.runCommand "bg.jpg" { } ''
     cp ${wallpaper} $out
   '';
 
   silentTheme = silentSDDM.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
-    extraBackgrounds = [background-derivation];
+    extraBackgrounds = [ background-derivation ];
     theme-overrides = {
       "General" = {
         enable-animations = true;
@@ -30,19 +31,19 @@
         active-size = 140;
         border-radius = 1;
         active-border-size = 2;
-        active-border-color = "#${colors.base0D}";
+        active-border-color = "#${palette.base0D}";
       };
       "LoginScreen.LoginArea.LoginButton" = {
         font-size = 22;
         icon-size = 30;
-        content-color = "#${colors.base05}";
-        active-content-color = "#${colors.base06}";
-        background-color = "#${colors.base00}";
+        content-color = "#${palette.base05}";
+        active-content-color = "#${palette.base06}";
+        background-color = "#${palette.base00}";
         background-opacity = 0.7;
-        active-background-color = "#${colors.base0D}";
+        active-background-color = "#${palette.base0D}";
         active-background-opacity = 0.7;
         border-size = 2;
-        border-color = "#${colors.base0D}";
+        border-color = "#${palette.base0D}";
       };
       "LoginScreen.LoginArea.PasswordInput" = {
         width = 460;
@@ -50,30 +51,30 @@
         font-size = 22;
         display-icon = true;
         icon-size = 30;
-        content-color = "#${colors.base05}";
-        background-color = "#${colors.base00}";
+        content-color = "#${palette.base05}";
+        background-color = "#${palette.base00}";
         background-opacity = 0.7;
         border-size = 2;
-        border-color = "#${colors.base0D}";
+        border-color = "#${palette.base0D}";
         margin-top = 20;
       };
       "LoginScreen.LoginArea.Spinner" = {
         text = "Logging in";
         font-size = 36;
         icon-size = 72;
-        color = "#${colors.base06}";
+        color = "#${palette.base06}";
         spacing = 1;
       };
       "LoginScreen.LoginArea.Username" = {
         font-size = 40;
-        color = "#${colors.base00}";
+        color = "#${palette.base00}";
         margin = 5;
       };
       "LoginScreen.LoginArea.WarningMessage" = {
         font-size = 22;
-        normal-color = "#${colors.base06}";
-        warning-color = "#${colors.base0A}";
-        error-color = "#${colors.base08}";
+        normal-color = "#${palette.base06}";
+        warning-color = "#${palette.base0A}";
+        error-color = "#${palette.base08}";
       };
       "LoginScreen.MenuArea.Buttons" = {
         size = 60;
@@ -86,12 +87,12 @@
         position = "bottom-center";
         font-size = 20;
         icon-size = 32;
-        content-color = "#${colors.base05}";
-        active-content-color = "#${colors.base06}";
-        background-color = "#${colors.base00}";
+        content-color = "#${palette.base05}";
+        active-content-color = "#${palette.base06}";
+        background-color = "#${palette.base00}";
         background-opacity = 0.7;
         border-size = 2;
-        border-color = "#${colors.base0D}";
+        border-color = "#${palette.base0D}";
       };
       "LoginScreen.MenuArea.Popups" = {
         max-height = 600;
@@ -100,14 +101,14 @@
         padding = 2;
         font-size = 22;
         icon-size = 24;
-        content-color = "#${colors.base05}";
-        active-content-color = "#${colors.base06}";
-        background-color = "#${colors.base00}";
+        content-color = "#${palette.base05}";
+        active-content-color = "#${palette.base06}";
+        background-color = "#${palette.base00}";
         background-opacity = 0.7;
-        active-option-background-color = "#${colors.base02}";
+        active-option-background-color = "#${palette.base02}";
         active-option-background-opacity = 0.7;
         border-size = 2;
-        border-color = "#${colors.base0D}";
+        border-color = "#${palette.base0D}";
         display-scrollbar = true;
       };
       "LoginScreen.MenuArea.Power" = {
@@ -115,12 +116,12 @@
         popup-width = 200;
         position = "bottom-center";
         icon-size = 32;
-        content-color = "#${colors.base05}";
-        active-content-color = "#${colors.base06}";
-        background-color = "#${colors.base00}";
+        content-color = "#${palette.base05}";
+        active-content-color = "#${palette.base06}";
+        background-color = "#${palette.base00}";
         background-opacity = 0.7;
         border-size = 2;
-        border-color = "#${colors.base0D}";
+        border-color = "#${palette.base0D}";
       };
       "LoginScreen.MenuArea.Session" = {
         index = 1;
@@ -129,13 +130,13 @@
         popup-width = 300;
         font-size = 25;
         icon-size = 32;
-        content-color = "#${colors.base05}";
-        active-content-color = "#${colors.base06}";
-        background-color = "#${colors.base00}";
+        content-color = "#${palette.base05}";
+        active-content-color = "#${palette.base06}";
+        background-color = "#${palette.base00}";
         background-opacity = 0.7;
         active-background-opacity = 0.7;
         border-size = 2;
-        border-color = "#${colors.base0D}";
+        border-color = "#${palette.base0D}";
       };
       "LockScreen" = {
         background = "${background-derivation.name}";
@@ -145,20 +146,20 @@
         position = "center";
         align = "center";
         format = "hh:mm:ss";
-        color = "#${colors.base01}";
+        color = "#${palette.base01}";
         font-size = 92;
       };
       "LockScreen.Date" = {
         margin-top = 1;
         format = "dd/MM/yyyy";
         locale = "pt_BR";
-        color = "#${colors.base0D}";
+        color = "#${palette.base0D}";
         font-size = 32;
       };
       "LockScreen.Message" = {
         text = "Press any key";
         font-size = 32;
-        color = "#${colors.base0D}";
+        color = "#${palette.base0D}";
         icon-size = 44;
         paint-icon = true;
       };
@@ -167,17 +168,32 @@
       };
     };
   };
-in {
-  environment.systemPackages = with pkgs; [
-    silentTheme
-    silentTheme.test
-    bibata-cursors
-    kdePackages.qt6ct
-    libsForQt5.qtstyleplugin-kvantum
-    kdePackages.qtstyleplugin-kvantum
-    kdePackages.qtwayland
-    qt6.qtwayland
-  ];
+in
+{
+  environment = {
+    systemPackages = with pkgs; [
+      silentTheme
+      silentTheme.test
+      bibata-cursors
+      kdePackages.qt6ct
+      libsForQt5.qtstyleplugin-kvantum
+      kdePackages.qtstyleplugin-kvantum
+      kdePackages.qtwayland
+      qt6.qtwayland
+    ];
+
+    etc."sddm.conf.d/cursor.conf".text = ''
+      [Theme]
+      CursorTheme=Bibata-Modern-Ice
+      CursorSize=24
+    '';
+
+    sessionVariables = {
+      XCURSOR_THEME = "Bibata-Modern-Ice";
+      XCURSOR_SIZE = "24";
+      QT_QPA_PLATFORMTHEME = "qt6ct";
+    };
+  };
 
   qt.enable = true;
 
@@ -185,12 +201,6 @@ in {
     "L+ /var/lib/sddm/.icons/default - - - - ${pkgs.bibata-cursors}/share/icons/Bibata-Modern-Ice"
     "d /var/lib/sddm/.icons 0755 sddm sddm"
   ];
-
-  environment.etc."sddm.conf.d/cursor.conf".text = ''
-    [Theme]
-    CursorTheme=Bibata-Modern-Ice
-    CursorSize=24
-  '';
 
   services.displayManager.sddm = {
     enable = true;
@@ -211,11 +221,5 @@ in {
         CursorSize = 24;
       };
     };
-  };
-
-  environment.sessionVariables = {
-    XCURSOR_THEME = "Bibata-Modern-Ice";
-    XCURSOR_SIZE = "24";
-    QT_QPA_PLATFORMTHEME = "qt6ct";
   };
 }

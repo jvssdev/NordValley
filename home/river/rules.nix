@@ -1,4 +1,3 @@
-{ lib, ... }:
 {
   wayland.windowManager.river.settings.rule-add = {
     "ssd" = [ ];

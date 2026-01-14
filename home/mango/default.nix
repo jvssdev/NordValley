@@ -3,10 +3,12 @@
   pkgs,
   lib,
   ...
-}: let
-  palette = config.colorScheme.palette;
+}:
+let
+  inherit (config.colorScheme) palette;
   hexToMango = hex: "0x${hex}ff";
-in {
+in
+{
   wayland.windowManager.mango = {
     enable = true;
     systemd.enable = false;
@@ -222,12 +224,12 @@ in {
   systemd.user.targets.mango-session = {
     Unit = {
       Description = "mango compositor session";
-      Documentation = ["man:systemd.special(7)"];
-      BindsTo = ["graphical-session.target"];
+      Documentation = [ "man:systemd.special(7)" ];
+      BindsTo = [ "graphical-session.target" ];
       Wants = [
         "graphical-session-pre.target"
       ];
-      After = ["graphical-session-pre.target"];
+      After = [ "graphical-session-pre.target" ];
     };
   };
   xdg.portal = {
@@ -237,14 +239,14 @@ in {
       xdg-desktop-portal-gtk
       xdg-desktop-portal
     ];
-    config.common.default = ["gtk"];
+    config.common.default = [ "gtk" ];
     config = {
       mango = {
-        default = ["gtk"];
-        "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
-        "org.freedesktop.impl.portal.ScreenCast" = ["wlr"];
-        "org.freedesktop.impl.portal.Screenshot" = ["wlr"];
-        "org.freedesktop.impl.portal.Inhibit" = [];
+        default = [ "gtk" ];
+        "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
+        "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
+        "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
+        "org.freedesktop.impl.portal.Inhibit" = [ ];
       };
     };
   };

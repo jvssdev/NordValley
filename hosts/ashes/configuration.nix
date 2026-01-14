@@ -1,16 +1,51 @@
 {
   pkgs,
-  lib,
   userName,
   fullName,
   ...
-}: {
-  environment.variables = {
-    EDITOR = "nvim";
-    XCURSOR_THEME = "Bibata-Modern-Ice";
-    XCURSOR_SIZE = "24";
+}:
+{
+  environment = {
+    variables = {
+      EDITOR = "nvim";
+      XCURSOR_THEME = "Bibata-Modern-Ice";
+      XCURSOR_SIZE = "24";
+    };
+    etc."direnv/direnv.toml".text = ''
+      [global]
+      hide_env_diff = true
+      warn_timeout = 0
+      log_filter="^$"
+    '';
+    systemPackages = with pkgs; [
+      ghostty
+      dconf
+      glib
+      qt6.qtwayland
+      kdePackages.qtwayland
+      kdePackages.qt6ct
+      libsForQt5.qt5.qtwayland
+      libsForQt5.qt5.qtgraphicaleffects
+      libsForQt5.qt5.qtquickcontrols2
+      colloid-gtk-theme
+      colloid-icon-theme
+      bibata-cursors
+    ];
+    sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+      MOZ_ENABLE_WAYLAND = "1";
+      QT_QPA_PLATFORM = "wayland";
+      QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+      SDL_VIDEODRIVER = "wayland";
+      _JAVA_AWT_WM_NONREPARENTING = "1";
+      XDG_SESSION_TYPE = "wayland";
+    };
   };
-  programs.dconf.enable = true;
+  programs = {
+    dconf.enable = true;
+    zsh.enable = true;
+    xwayland.enable = true;
+  };
   nix = {
     settings = {
       experimental-features = [
@@ -26,8 +61,6 @@
       options = "--delete-older-than 7d";
     };
   };
-  programs.zsh.enable = true;
-  programs.xwayland.enable = true;
   users.users.${userName} = {
     isNormalUser = true;
     description = fullName;
@@ -42,12 +75,6 @@
     ];
     shell = pkgs.zsh;
   };
-  environment.etc."direnv/direnv.toml".text = ''
-    [global]
-    hide_env_diff = true
-    warn_timeout = 0
-    log_filter="^$"
-  '';
   zramSwap = {
     enable = true;
     algorithm = "zstd";
@@ -169,31 +196,26 @@
 
     fontconfig = {
       defaultFonts = {
-        sansSerif = ["Roboto" "Noto Sans CJK JP"];
-        serif = ["Roboto" "Noto Serif CJK JP"];
-        monospace = ["JetBrainsMono Nerd Font" "Noto Sans Mono CJK JP"];
-        emoji = ["Noto Color Emoji"];
+        sansSerif = [
+          "Roboto"
+          "Noto Sans CJK JP"
+        ];
+        serif = [
+          "Roboto"
+          "Noto Serif CJK JP"
+        ];
+        monospace = [
+          "JetBrainsMono Nerd Font"
+          "Noto Sans Mono CJK JP"
+        ];
+        emoji = [ "Noto Color Emoji" ];
       };
     };
   };
-  environment.systemPackages = with pkgs; [
-    ghostty
-    dconf
-    glib
-    qt6.qtwayland
-    kdePackages.qtwayland
-    kdePackages.qt6ct
-    libsForQt5.qt5.qtwayland
-    libsForQt5.qt5.qtgraphicaleffects
-    libsForQt5.qt5.qtquickcontrols2
-    colloid-gtk-theme
-    colloid-icon-theme
-    bibata-cursors
-  ];
   services = {
     dbus = {
       enable = true;
-      packages = [pkgs.dconf];
+      packages = [ pkgs.dconf ];
     };
     libinput.enable = true;
     upower.enable = true;
@@ -237,15 +259,6 @@
     LC_PAPER = "pt_BR.UTF-8";
     LC_TELEPHONE = "pt_BR.UTF-8";
     LC_TIME = "pt_BR.UTF-8";
-  };
-  environment.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
-    MOZ_ENABLE_WAYLAND = "1";
-    QT_QPA_PLATFORM = "wayland";
-    QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-    SDL_VIDEODRIVER = "wayland";
-    _JAVA_AWT_WM_NONREPARENTING = "1";
-    XDG_SESSION_TYPE = "wayland";
   };
   system.stateVersion = "25.11";
 }

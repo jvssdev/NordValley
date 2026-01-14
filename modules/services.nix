@@ -2,7 +2,8 @@
   pkgs,
   userName,
   ...
-}: {
+}:
+{
   virtualisation = {
     docker = {
       enable = true;
@@ -44,23 +45,25 @@
     lxc
   ];
 
-  services.envfs.enable = true;
-
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    jack.enable = true;
-  };
-
   hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
+  services = {
 
-  services.syncthing = {
-    enable = true;
-    user = userName;
-    dataDir = "/home/${userName}";
-    configDir = "/home/${userName}/.config/syncthing";
+    envfs.enable = true;
+
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      jack.enable = true;
+    };
+    blueman.enable = true;
+
+    syncthing = {
+      enable = true;
+      user = userName;
+      dataDir = "/home/${userName}";
+      configDir = "/home/${userName}/.config/syncthing";
+    };
   };
 }

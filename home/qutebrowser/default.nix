@@ -2,9 +2,11 @@
   config,
   pkgs,
   ...
-}: let
-  p = config.colorScheme.palette;
-in {
+}:
+let
+  inherit (config.colorScheme) palette;
+in
+{
   programs.qutebrowser = {
     enable = true;
 
@@ -89,193 +91,195 @@ in {
         };
       };
       colors = {
-        webpage = {preferred_color_scheme = "dark";};
+        webpage = {
+          preferred_color_scheme = "dark";
+        };
 
         completion = {
-          fg = "#${p.base05}";
-          odd.bg = "#${p.base01}";
-          even.bg = "#${p.base00}";
+          fg = "#${palette.base05}";
+          odd.bg = "#${palette.base01}";
+          even.bg = "#${palette.base00}";
           category = {
-            fg = "#${p.base0A}";
-            bg = "#${p.base00}";
+            fg = "#${palette.base0A}";
+            bg = "#${palette.base00}";
             border = {
-              top = "#${p.base00}";
-              bottom = "#${p.base00}";
+              top = "#${palette.base00}";
+              bottom = "#${palette.base00}";
             };
           };
           item.selected = {
-            fg = "#${p.base05}";
-            bg = "#${p.base02}";
+            fg = "#${palette.base05}";
+            bg = "#${palette.base02}";
             border = {
-              top = "#${p.base02}";
-              bottom = "#${p.base02}";
+              top = "#${palette.base02}";
+              bottom = "#${palette.base02}";
             };
-            match.fg = "#${p.base0B}";
+            match.fg = "#${palette.base0B}";
           };
-          match.fg = "#${p.base0B}";
+          match.fg = "#${palette.base0B}";
           scrollbar = {
-            fg = "#${p.base05}";
-            bg = "#${p.base00}";
+            fg = "#${palette.base05}";
+            bg = "#${palette.base00}";
           };
         };
 
         contextmenu = {
           disabled = {
-            bg = "#${p.base01}";
-            fg = "#${p.base04}";
+            bg = "#${palette.base01}";
+            fg = "#${palette.base04}";
           };
           menu = {
-            bg = "#${p.base00}";
-            fg = "#${p.base05}";
+            bg = "#${palette.base00}";
+            fg = "#${palette.base05}";
           };
           selected = {
-            bg = "#${p.base02}";
-            fg = "#${p.base05}";
+            bg = "#${palette.base02}";
+            fg = "#${palette.base05}";
           };
         };
 
         downloads = {
-          bar.bg = "#${p.base00}";
+          bar.bg = "#${palette.base00}";
           start = {
-            fg = "#${p.base00}";
-            bg = "#${p.base0D}";
+            fg = "#${palette.base00}";
+            bg = "#${palette.base0D}";
           };
           stop = {
-            fg = "#${p.base00}";
-            bg = "#${p.base0C}";
+            fg = "#${palette.base00}";
+            bg = "#${palette.base0C}";
           };
-          error.fg = "#${p.base08}";
+          error.fg = "#${palette.base08}";
         };
 
         hints = {
-          fg = "#${p.base00}";
-          bg = "#${p.base0C}";
-          match.fg = "#${p.base05}";
+          fg = "#${palette.base00}";
+          bg = "#${palette.base0C}";
+          match.fg = "#${palette.base05}";
         };
 
         keyhint = {
-          fg = "#${p.base05}";
-          suffix.fg = "#${p.base05}";
-          bg = "#${p.base00}";
+          fg = "#${palette.base05}";
+          suffix.fg = "#${palette.base05}";
+          bg = "#${palette.base00}";
         };
 
         messages = {
           error = {
-            fg = "#${p.base00}";
-            bg = "#${p.base08}";
-            border = "#${p.base08}";
+            fg = "#${palette.base00}";
+            bg = "#${palette.base08}";
+            border = "#${palette.base08}";
           };
           warning = {
-            fg = "#${p.base00}";
-            bg = "#${p.base0E}";
-            border = "#${p.base0E}";
+            fg = "#${palette.base00}";
+            bg = "#${palette.base0E}";
+            border = "#${palette.base0E}";
           };
           info = {
-            fg = "#${p.base05}";
-            bg = "#${p.base00}";
-            border = "#${p.base00}";
+            fg = "#${palette.base05}";
+            bg = "#${palette.base00}";
+            border = "#${palette.base00}";
           };
         };
 
         prompts = {
-          fg = "#${p.base05}";
-          border = "#${p.base00}";
-          bg = "#${p.base00}";
+          fg = "#${palette.base05}";
+          border = "#${palette.base00}";
+          bg = "#${palette.base00}";
           selected = {
-            bg = "#${p.base02}";
-            fg = "#${p.base0C}";
+            bg = "#${palette.base02}";
+            fg = "#${palette.base0C}";
           };
         };
 
         statusbar = {
           normal = {
-            fg = "#${p.base0B}";
-            bg = "#${p.base00}";
+            fg = "#${palette.base0B}";
+            bg = "#${palette.base00}";
           };
           insert = {
-            fg = "#${p.base00}";
-            bg = "#${p.base0D}";
+            fg = "#${palette.base00}";
+            bg = "#${palette.base0D}";
           };
           passthrough = {
-            fg = "#${p.base00}";
-            bg = "#${p.base0C}";
+            fg = "#${palette.base00}";
+            bg = "#${palette.base0C}";
           };
           private = {
-            fg = "#${p.base00}";
-            bg = "#${p.base01}";
+            fg = "#${palette.base00}";
+            bg = "#${palette.base01}";
           };
           command = {
-            fg = "#${p.base05}";
-            bg = "#${p.base00}";
+            fg = "#${palette.base05}";
+            bg = "#${palette.base00}";
             private = {
-              fg = "#${p.base05}";
-              bg = "#${p.base00}";
+              fg = "#${palette.base05}";
+              bg = "#${palette.base00}";
             };
           };
           caret = {
-            fg = "#${p.base00}";
-            bg = "#${p.base0E}";
+            fg = "#${palette.base00}";
+            bg = "#${palette.base0E}";
             selection = {
-              fg = "#${p.base00}";
-              bg = "#${p.base0D}";
+              fg = "#${palette.base00}";
+              bg = "#${palette.base0D}";
             };
           };
-          progress.bg = "#${p.base0D}";
+          progress.bg = "#${palette.base0D}";
           url = {
-            fg = "#${p.base05}";
-            error.fg = "#${p.base08}";
-            hover.fg = "#${p.base05}";
+            fg = "#${palette.base05}";
+            error.fg = "#${palette.base08}";
+            hover.fg = "#${palette.base05}";
             success = {
-              http.fg = "#${p.base0C}";
-              https.fg = "#${p.base0B}";
+              http.fg = "#${palette.base0C}";
+              https.fg = "#${palette.base0B}";
             };
-            warn.fg = "#${p.base0E}";
+            warn.fg = "#${palette.base0E}";
           };
         };
 
         tabs = {
-          bar.bg = "#${p.base00}";
+          bar.bg = "#${palette.base00}";
           indicator = {
-            start = "#${p.base0D}";
-            stop = "#${p.base0C}";
-            error = "#${p.base08}";
+            start = "#${palette.base0D}";
+            stop = "#${palette.base0C}";
+            error = "#${palette.base08}";
           };
           odd = {
-            fg = "#${p.base05}";
-            bg = "#${p.base01}";
+            fg = "#${palette.base05}";
+            bg = "#${palette.base01}";
           };
           even = {
-            fg = "#${p.base05}";
-            bg = "#${p.base00}";
+            fg = "#${palette.base05}";
+            bg = "#${palette.base00}";
           };
           pinned = {
             even = {
-              bg = "#${p.base0C}";
-              fg = "#${p.base07}";
+              bg = "#${palette.base0C}";
+              fg = "#${palette.base07}";
             };
             odd = {
-              bg = "#${p.base0B}";
-              fg = "#${p.base07}";
+              bg = "#${palette.base0B}";
+              fg = "#${palette.base07}";
             };
             selected = {
               even = {
-                bg = "#${p.base02}";
-                fg = "#${p.base05}";
+                bg = "#${palette.base02}";
+                fg = "#${palette.base05}";
               };
               odd = {
-                bg = "#${p.base02}";
-                fg = "#${p.base05}";
+                bg = "#${palette.base02}";
+                fg = "#${palette.base05}";
               };
             };
           };
           selected = {
             odd = {
-              fg = "#${p.base05}";
-              bg = "#${p.base02}";
+              fg = "#${palette.base05}";
+              bg = "#${palette.base02}";
             };
             even = {
-              fg = "#${p.base05}";
-              bg = "#${p.base02}";
+              fg = "#${palette.base05}";
+              bg = "#${palette.base02}";
             };
           };
         };
@@ -310,8 +314,7 @@ in {
     };
 
     greasemonkey = [
-      (
-        pkgs.writeText "theme.css.js"
+      (pkgs.writeText "theme.css.js"
         # css
         ''
           // ==UserScript==
@@ -320,34 +323,34 @@ in {
           // ==/UserScript==
           GM_addStyle(`
           :root {
-            --system-theme-fg: ${p.base04};
-            --system-theme-primary: ${p.base08};
-            --system-theme-secondary: ${p.base09};
-            --system-theme-red: ${p.base0B};
-            --system-theme-orange: ${p.base0F};
-            --system-theme-yellow: ${p.base0A};
-            --system-theme-green: ${p.base0B};
-            --system-theme-aqua: ${p.base0C};
-            --system-theme-blue: ${p.base0D};
-            --system-theme-purple: ${p.base0E};
-            --system-theme-grey0: ${p.base03};
-            --system-theme-grey1: ${p.base04};
-            --system-theme-grey2: ${p.base05};
-            --system-theme-statusline1: ${p.base02};
-            --system-theme-statusline2: ${p.base03};
-            --system-theme-statusline3: ${p.base04};
-            --system-theme-bg_dim: ${p.base00};
-            --system-theme-bg0: ${p.base00};
-            --system-theme-bg1: ${p.base01};
-            --system-theme-bg2: ${p.base02};
-            --system-theme-bg3: ${p.base03};
-            --system-theme-bg4: ${p.base04};
-            --system-theme-bg5: ${p.base05};
-            --system-theme-bg_visual: ${p.base02};
-            --system-theme-bg_red: ${p.base08};
-            --system-theme-bg_green: ${p.base0B};
-            --system-theme-bg_blue: ${p.base0D};
-            --system-theme-bg_yellow: ${p.base0A};
+            --system-theme-fg: ${palette.base04};
+            --system-theme-primary: ${palette.base08};
+            --system-theme-secondary: ${palette.base09};
+            --system-theme-red: ${palette.base0B};
+            --system-theme-orange: ${palette.base0F};
+            --system-theme-yellow: ${palette.base0A};
+            --system-theme-green: ${palette.base0B};
+            --system-theme-aqua: ${palette.base0C};
+            --system-theme-blue: ${palette.base0D};
+            --system-theme-purple: ${palette.base0E};
+            --system-theme-grey0: ${palette.base03};
+            --system-theme-grey1: ${palette.base04};
+            --system-theme-grey2: ${palette.base05};
+            --system-theme-statusline1: ${palette.base02};
+            --system-theme-statusline2: ${palette.base03};
+            --system-theme-statusline3: ${palette.base04};
+            --system-theme-bg_dim: ${palette.base00};
+            --system-theme-bg0: ${palette.base00};
+            --system-theme-bg1: ${palette.base01};
+            --system-theme-bg2: ${palette.base02};
+            --system-theme-bg3: ${palette.base03};
+            --system-theme-bg4: ${palette.base04};
+            --system-theme-bg5: ${palette.base05};
+            --system-theme-bg_visual: ${palette.base02};
+            --system-theme-bg_red: ${palette.base08};
+            --system-theme-bg_green: ${palette.base0B};
+            --system-theme-bg_blue: ${palette.base0D};
+            --system-theme-bg_yellow: ${palette.base0A};
           }
           `)
         ''

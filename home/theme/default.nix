@@ -3,8 +3,9 @@
   lib,
   osConfig,
   ...
-}: {
-  colorScheme = osConfig.theme.colorScheme;
+}:
+{
+  inherit (osConfig.theme) colorScheme;
   home.pointerCursor = {
     package = pkgs.bibata-cursors;
     name = "Bibata-Modern-Ice";
@@ -29,9 +30,9 @@
 
     theme = {
       package = pkgs.colloid-gtk-theme.override {
-        colorVariants = ["dark"];
-        themeVariants = ["default"];
-        sizeVariants = ["compact"];
+        colorVariants = [ "dark" ];
+        themeVariants = [ "default" ];
+        sizeVariants = [ "compact" ];
         tweaks = [
           "rimless"
           "black"
@@ -70,14 +71,14 @@
   xdg.configFile = {
     kvantum = {
       target = "Kvantum/kvantum.kvconfig";
-      text = lib.generators.toINI {} {
+      text = lib.generators.toINI { } {
         General.theme = "Colloid-Dark-Compact";
       };
     };
 
     qt5ct = {
       target = "qt5ct/qt5ct.conf";
-      text = lib.generators.toINI {} {
+      text = lib.generators.toINI { } {
         Appearance = {
           icon_theme = "Colloid-Dark-Compact";
         };
@@ -86,7 +87,7 @@
 
     qt6ct = {
       target = "qt6ct/qt6ct.conf";
-      text = lib.generators.toINI {} {
+      text = lib.generators.toINI { } {
         Appearance = {
           icon_theme = "Colloid-Dark-Compact";
         };

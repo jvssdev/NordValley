@@ -1,12 +1,17 @@
 { pkgs, config, ... }:
 let
-  c = config.colorScheme.palette;
+  inherit (config.colorScheme) palette;
 in
 {
-  home.packages = with pkgs; [
-    rmpc
-    mpc
-  ];
+  home = {
+    packages = with pkgs; [
+      rmpc
+      mpc
+    ];
+
+    file."Music/.keep".text = "";
+    file."Music/Playlists/.keep".text = "";
+  };
 
   services = {
     mpd = {
@@ -35,9 +40,6 @@ in
     };
   };
 
-  home.file."Music/.keep".text = "";
-  home.file."Music/Playlists/.keep".text = "";
-
   xdg.configFile."rmpc/config.ron".text = ''
     #![enable(implicit_some)]
     #![enable(unwrap_newtypes)]
@@ -50,63 +52,63 @@ in
       draw_borders: true,
       browser_column_widths: [20, 38, 42],
 
-      background_color: "${c.base00}",
+      background_color: "${palette.base00}",
       modal_backdrop: true,
-      text_color: "${c.base04}",
-      header_background_color: "${c.base00}",
-      modal_background_color: "${c.base00}",
+      text_color: "${palette.base04}",
+      header_background_color: "${palette.base00}",
+      modal_background_color: "${palette.base00}",
 
-      preview_label_style: (fg: "${c.base0E}"),
-      preview_metadata_group_style: (fg: "${c.base08}"),
+      preview_label_style: (fg: "${palette.base0E}"),
+      preview_metadata_group_style: (fg: "${palette.base08}"),
 
       tab_bar: (
-        active_style: (fg: "${c.base00}", bg: "${c.base09}", modifiers: "Bold"),
-        inactive_style: (fg: "${c.base04}", bg: "${c.base00}", modifiers: ""),
+        active_style: (fg: "${palette.base00}", bg: "${palette.base09}", modifiers: "Bold"),
+        inactive_style: (fg: "${palette.base04}", bg: "${palette.base00}", modifiers: ""),
       ),
 
-      highlighted_item_style: (fg: "${c.base0B}", modifiers: "Bold"),
-      current_item_style: (fg: "${c.base00}", bg: "${c.base09}", modifiers: "Bold"),
-      borders_style: (fg: "${c.base09}", modifiers: "Bold"),
-      highlight_border_style: (fg: "${c.base09}"),
+      highlighted_item_style: (fg: "${palette.base0B}", modifiers: "Bold"),
+      current_item_style: (fg: "${palette.base00}", bg: "${palette.base09}", modifiers: "Bold"),
+      borders_style: (fg: "${palette.base09}", modifiers: "Bold"),
+      highlight_border_style: (fg: "${palette.base09}"),
 
       symbols: (song: "󰝚 ", dir: " ", playlist: "󰲸 ", marker: "* ", ellipsis: "..."),
 
       progress_bar: (
         symbols: ["█", "█", "█", "█", "█"],
-        track_style: (fg: "${c.base01}"),
-        elapsed_style: (fg: "${c.base09}"),
-        thumb_style: (fg: "${c.base09}"),
+        track_style: (fg: "${palette.base01}"),
+        elapsed_style: (fg: "${palette.base09}"),
+        thumb_style: (fg: "${palette.base09}"),
       ),
 
       scrollbar: (
         symbols: ["│", "█", "▲", "▼"],
-        track_style: (fg: "${c.base09}"),
-        ends_style: (fg: "${c.base09}"),
-        thumb_style: (fg: "${c.base09}"),
+        track_style: (fg: "${palette.base09}"),
+        ends_style: (fg: "${palette.base09}"),
+        thumb_style: (fg: "${palette.base09}"),
       ),
 
       song_table_format: [
         (
-          prop: (kind: Property(Artist), style: (fg: "${c.base09}"),
-            default: (kind: Text("Unknown"), style: (fg: "${c.base0E}"))
+          prop: (kind: Property(Artist), style: (fg: "${palette.base09}"),
+            default: (kind: Text("Unknown"), style: (fg: "${palette.base0E}"))
           ),
           width: "20%",
         ),
         (
-          prop: (kind: Property(Title), style: (fg: "${c.base08}"),
-            highlighted_item_style: (fg: "${c.base04}", modifiers: "Bold"),
-            default: (kind: Property(Filename), style: (fg: "${c.base04}"))
+          prop: (kind: Property(Title), style: (fg: "${palette.base08}"),
+            highlighted_item_style: (fg: "${palette.base04}", modifiers: "Bold"),
+            default: (kind: Property(Filename), style: (fg: "${palette.base04}"))
           ),
           width: "35%",
         ),
         (
-          prop: (kind: Property(Album), style: (fg: "${c.base09}"),
-            default: (kind: Text("Unknown Album"), style: (fg: "${c.base0E}"))
+          prop: (kind: Property(Album), style: (fg: "${palette.base09}"),
+            default: (kind: Text("Unknown Album"), style: (fg: "${palette.base0E}"))
           ),
           width: "30%",
         ),
         (
-          prop: (kind: Property(Duration), style: (fg: "${c.base08}"),
+          prop: (kind: Property(Duration), style: (fg: "${palette.base08}"),
             default: (kind: Text("-"))
           ),
           width: "15%",
@@ -152,64 +154,64 @@ in
         rows: [
           (
             left: [
-              (kind: Text(""), style: (fg: "${c.base09}", modifiers: "Bold")),
+              (kind: Text(""), style: (fg: "${palette.base09}", modifiers: "Bold")),
               (kind: Property(Status(StateV2(playing_label: " ", paused_label: " ", stopped_label: " ")))),
-              (kind: Text(" "), style: (fg: "${c.base09}", modifiers: "Bold")),
+              (kind: Text(" "), style: (fg: "${palette.base09}", modifiers: "Bold")),
               (kind: Property(Widget(ScanStatus)))
             ],
             center: [
-              (kind: Property(Song(Title)), style: (fg: "${c.base04}", modifiers: "Bold"),
-                default: (kind: Property(Song(Filename)), style: (fg: "${c.base04}", modifiers: "Bold"))
+              (kind: Property(Song(Title)), style: (fg: "${palette.base04}", modifiers: "Bold"),
+                default: (kind: Property(Song(Filename)), style: (fg: "${palette.base04}", modifiers: "Bold"))
               )
             ],
             right: [
-              (kind: Text("󱡬"), style: (fg: "${c.base09}", modifiers: "Bold")),
-              (kind: Property(Status(Volume)), style: (fg: "${c.base04}", modifiers: "Bold")),
-              (kind: Text("%"), style: (fg: "${c.base09}", modifiers: "Bold"))
+              (kind: Text("󱡬"), style: (fg: "${palette.base09}", modifiers: "Bold")),
+              (kind: Property(Status(Volume)), style: (fg: "${palette.base04}", modifiers: "Bold")),
+              (kind: Text("%"), style: (fg: "${palette.base09}", modifiers: "Bold"))
             ]
           ),
           (
             left: [
-              (kind: Text("[ "), style: (fg: "${c.base09}", modifiers: "Bold")),
-              (kind: Property(Status(Elapsed)), style: (fg: "${c.base04}")),
-              (kind: Text(" / "), style: (fg: "${c.base09}", modifiers: "Bold")),
-              (kind: Property(Status(Duration)), style: (fg: "${c.base04}")),
-              (kind: Text(" | "), style: (fg: "${c.base09}")),
-              (kind: Property(Status(Bitrate)), style: (fg: "${c.base04}")),
-              (kind: Text(" kbps"), style: (fg: "${c.base09}")),
-              (kind: Text("]"), style: (fg: "${c.base09}", modifiers: "Bold"))
+              (kind: Text("[ "), style: (fg: "${palette.base09}", modifiers: "Bold")),
+              (kind: Property(Status(Elapsed)), style: (fg: "${palette.base04}")),
+              (kind: Text(" / "), style: (fg: "${palette.base09}", modifiers: "Bold")),
+              (kind: Property(Status(Duration)), style: (fg: "${palette.base04}")),
+              (kind: Text(" | "), style: (fg: "${palette.base09}")),
+              (kind: Property(Status(Bitrate)), style: (fg: "${palette.base04}")),
+              (kind: Text(" kbps"), style: (fg: "${palette.base09}")),
+              (kind: Text("]"), style: (fg: "${palette.base09}", modifiers: "Bold"))
             ],
             center: [
-              (kind: Property(Song(Artist)), style: (fg: "${c.base08}", modifiers: "Bold"),
-                default: (kind: Text("Unknown Artist"), style: (fg: "${c.base08}", modifiers: "Bold"))
+              (kind: Property(Song(Artist)), style: (fg: "${palette.base08}", modifiers: "Bold"),
+                default: (kind: Text("Unknown Artist"), style: (fg: "${palette.base08}", modifiers: "Bold"))
               ),
               (kind: Text(" - ")),
-              (kind: Property(Song(Album)), style: (fg: "${c.base09}"),
-                default: (kind: Text("Unknown Album"), style: (fg: "${c.base09}", modifiers: "Bold"))
+              (kind: Property(Song(Album)), style: (fg: "${palette.base09}"),
+                default: (kind: Text("Unknown Album"), style: (fg: "${palette.base09}", modifiers: "Bold"))
               )
             ],
             right: [
-              (kind: Text("[ "), style: (fg: "${c.base09}")),
+              (kind: Text("[ "), style: (fg: "${palette.base09}")),
               (kind: Property(Status(RepeatV2(
                 on_label: "", off_label: "",
-                on_style: (fg: "${c.base04}", modifiers: "Bold"), off_style: (fg: "${c.base03}", modifiers: "Bold")
+                on_style: (fg: "${palette.base04}", modifiers: "Bold"), off_style: (fg: "${palette.base03}", modifiers: "Bold")
               )))),
-              (kind: Text(" | "), style: (fg: "${c.base09}")),
+              (kind: Text(" | "), style: (fg: "${palette.base09}")),
               (kind: Property(Status(RandomV2(
                 on_label: "", off_label: "",
-                on_style: (fg: "${c.base04}", modifiers: "Bold"), off_style: (fg: "${c.base03}", modifiers: "Bold")
+                on_style: (fg: "${palette.base04}", modifiers: "Bold"), off_style: (fg: "${palette.base03}", modifiers: "Bold")
               )))),
-              (kind: Text(" | "), style: (fg: "${c.base09}")),
+              (kind: Text(" | "), style: (fg: "${palette.base09}")),
               (kind: Property(Status(ConsumeV2(
                 on_label: "󰮯", off_label: "󰮯", oneshot_label: "󰮯󰇊",
-                on_style: (fg: "${c.base04}", modifiers: "Bold"), off_style: (fg: "${c.base03}", modifiers: "Bold")
+                on_style: (fg: "${palette.base04}", modifiers: "Bold"), off_style: (fg: "${palette.base03}", modifiers: "Bold")
               )))),
-              (kind: Text(" | "), style: (fg: "${c.base09}")),
+              (kind: Text(" | "), style: (fg: "${palette.base09}")),
               (kind: Property(Status(SingleV2(
                 on_label: "󰎤", off_label: "󰎦", oneshot_label: "󰇊", off_oneshot_label: "󱅊",
-                on_style: (fg: "${c.base04}", modifiers: "Bold"), off_style: (fg: "${c.base03}", modifiers: "Bold")
+                on_style: (fg: "${palette.base04}", modifiers: "Bold"), off_style: (fg: "${palette.base03}", modifiers: "Bold")
               )))),
-              (kind: Text(" ]"), style: (fg: "${c.base09}")),
+              (kind: Text(" ]"), style: (fg: "${palette.base09}")),
             ]
           ),
         ],

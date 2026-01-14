@@ -1,6 +1,8 @@
-{config, ...}: let
-  palette = config.colorScheme.palette;
-in {
+{ config, ... }:
+let
+  inherit (config.colorScheme) palette;
+in
+{
   services.dunst = {
     enable = true;
 

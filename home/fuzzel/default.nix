@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
-  c = config.colorScheme.palette;
-in {
+}:
+let
+  inherit (config.colorScheme) palette;
+in
+{
   programs = {
     fuzzel = {
       enable = true;
@@ -22,11 +24,11 @@ in {
           width = 70;
         };
         colors = {
-          background = "${c.base00}f0";
-          text = "${c.base05}ff";
-          selection = "${c.base0D}ff";
-          selection-text = "${c.base00}ff";
-          border = "${c.base0D}ff";
+          background = "${palette.base00}f0";
+          text = "${palette.base05}ff";
+          selection = "${palette.base0D}ff";
+          selection-text = "${palette.base00}ff";
+          border = "${palette.base0D}ff";
         };
         border = {
           width = 2;

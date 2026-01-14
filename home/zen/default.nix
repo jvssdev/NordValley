@@ -2,9 +2,11 @@
   pkgs,
   config,
   ...
-}: let
-  palette = config.colorScheme.palette;
-in {
+}:
+let
+  inherit (config.colorScheme) palette;
+in
+{
   programs.zen-browser = {
     enable = true;
 
@@ -82,9 +84,9 @@ in {
         privateDefault = "ddg";
         engines = {
           "ddg" = {
-            urls = [{template = "https://duckduckgo.com/?q={searchTerms}&ia=web";}];
+            urls = [ { template = "https://duckduckgo.com/?q={searchTerms}&ia=web"; } ];
             icon = "https://duckduckgo.com/favicon.ico";
-            definedAliases = ["@ddg"];
+            definedAliases = [ "@ddg" ];
           };
         };
       };

@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs.helix = {
     enable = false;
     settings = {
@@ -17,7 +18,7 @@
         true-color = true;
         undercurl = true;
         soft-wrap.enable = true;
-        rulers = [120];
+        rulers = [ 120 ];
         clipboard-provider = "wayland";
         end-of-line-diagnostics = "hint";
         file-picker.hidden = false;
@@ -41,9 +42,11 @@
         inline-diagnostics.cursor-line = "hint";
 
         statusline = {
-          mode.normal = "NORMAL";
-          mode.insert = "INSERT";
-          mode.select = "SELECT";
+          mode = {
+            normal = "NORMAL";
+            insert = "INSERT";
+            select = "SELECT";
+          };
           left = [
             "mode"
             "file-name"
@@ -150,7 +153,7 @@
               "javascript"
             ];
           };
-          language-servers = ["typescript-language-server"];
+          language-servers = [ "typescript-language-server" ];
           auto-format = true;
         }
         {
@@ -166,7 +169,7 @@
               "typescript"
             ];
           };
-          language-servers = ["typescript-language-server"];
+          language-servers = [ "typescript-language-server" ];
           auto-format = true;
         }
         {
@@ -182,18 +185,18 @@
               "typescript"
             ];
           };
-          language-servers = ["typescript-language-server"];
+          language-servers = [ "typescript-language-server" ];
           auto-format = true;
         }
         {
           name = "go";
-          language-servers = ["gopls"];
+          language-servers = [ "gopls" ];
           formatter.command = "gofmt";
           auto-format = true;
         }
         {
           name = "zig";
-          language-servers = ["zls"];
+          language-servers = [ "zls" ];
           formatter.command = "";
           auto-format = true;
         }
@@ -249,17 +252,17 @@
         {
           name = "nix";
           formatter.command = "nixfmt";
-          language-servers = ["nixd"];
+          language-servers = [ "nixd" ];
           auto-format = true;
         }
         {
           name = "python";
-          language-servers = ["basedpyright"];
+          language-servers = [ "basedpyright" ];
           auto-format = true;
         }
         {
           name = "qml";
-          language-servers = ["qmlls"];
+          language-servers = [ "qmlls" ];
           auto-format = true;
         }
       ];

@@ -1,6 +1,8 @@
-{config, ...}: let
-  c = config.colorScheme.palette;
-in {
+{ config, ... }:
+let
+  inherit (config.colorScheme) palette;
+in
+{
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
@@ -9,12 +11,12 @@ in {
       add_newline = true;
 
       format = ''
-        [░▒▓](#${c.base03})[ ](bg:#${c.base03} fg:#${c.base06})[](bg:#${c.base0D} fg:#${c.base03})$directory[](fg:#${c.base0D} bg:#${c.base01})$git_branch$git_status[](fg:#${c.base01} bg:#${c.base02})$nodejs$rust$golang$php[](fg:#${c.base02} bg:#${c.base03})$time[](fg:#${c.base03})
+        [░▒▓](#${palette.base03})[ ](bg:#${palette.base03} fg:#${palette.base06})[](bg:#${palette.base0D} fg:#${palette.base03})$directory[](fg:#${palette.base0D} bg:#${palette.base01})$git_branch$git_status[](fg:#${palette.base01} bg:#${palette.base02})$nodejs$rust$golang$php[](fg:#${palette.base02} bg:#${palette.base03})$time[](fg:#${palette.base03})
         $character
       '';
 
       directory = {
-        style = "fg:#${c.base03} bg:#${c.base0D}";
+        style = "fg:#${palette.base03} bg:#${palette.base0D}";
         format = "[ $path ]($style)";
         truncation_length = 3;
         truncation_symbol = "…/";
@@ -28,44 +30,44 @@ in {
 
       git_branch = {
         symbol = "";
-        style = "bg:#${c.base01}";
-        format = "[[ $symbol $branch ](fg:#${c.base04} bg:#${c.base01})]($style)";
+        style = "bg:#${palette.base01}";
+        format = "[[ $symbol $branch ](fg:#${palette.base04} bg:#${palette.base01})]($style)";
       };
 
       git_status = {
-        style = "bg:#${c.base01}";
-        format = "[[($all_status$ahead_behind )](fg:#${c.base04} bg:#${c.base01})]($style)";
+        style = "bg:#${palette.base01}";
+        format = "[[($all_status$ahead_behind )](fg:#${palette.base04} bg:#${palette.base01})]($style)";
       };
 
       nodejs = {
         symbol = "";
-        style = "bg:#${c.base02}";
-        format = "[[ $symbol ($version) ](fg:#${c.base0B} bg:#${c.base02})]($style)";
+        style = "bg:#${palette.base02}";
+        format = "[[ $symbol ($version) ](fg:#${palette.base0B} bg:#${palette.base02})]($style)";
       };
 
       rust = {
         symbol = "";
-        style = "bg:#${c.base02}";
-        format = "[[ $symbol ($version) ](fg:#${c.base09} bg:#${c.base02})]($style)";
+        style = "bg:#${palette.base02}";
+        format = "[[ $symbol ($version) ](fg:#${palette.base09} bg:#${palette.base02})]($style)";
       };
 
       golang = {
         symbol = "";
-        style = "bg:#${c.base02}";
-        format = "[[ $symbol ($version) ](fg:#${c.base0C} bg:#${c.base02})]($style)";
+        style = "bg:#${palette.base02}";
+        format = "[[ $symbol ($version) ](fg:#${palette.base0C} bg:#${palette.base02})]($style)";
       };
 
       php = {
         symbol = "";
-        style = "bg:#${c.base02}";
-        format = "[[ $symbol ($version) ](fg:#${c.base0E} bg:#${c.base02})]($style)";
+        style = "bg:#${palette.base02}";
+        format = "[[ $symbol ($version) ](fg:#${palette.base0E} bg:#${palette.base02})]($style)";
       };
 
       time = {
         disabled = false;
         time_format = "%R";
-        style = "bg:#${c.base03}";
-        format = "[[  $time ](fg:#${c.base04} bg:#${c.base03})]($style)";
+        style = "bg:#${palette.base03}";
+        format = "[[  $time ](fg:#${palette.base04} bg:#${palette.base03})]($style)";
       };
     };
   };

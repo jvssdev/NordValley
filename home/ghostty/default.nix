@@ -3,9 +3,11 @@
   config,
   # ghostty,
   ...
-}: let
-  palette = config.colorScheme.palette;
-in {
+}:
+let
+  inherit (config.colorScheme) palette;
+in
+{
   programs.ghostty = {
     enable = true;
     package = pkgs.ghostty;
