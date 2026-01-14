@@ -39,8 +39,6 @@
 
       ELECTRON_OZONE_PLATFORM_HINT = "auto";
 
-      WLR_NO_HARDWARE_CURSORS = "1";
-
       XCURSOR_THEME = "Bibata-Modern-Ice";
       XCURSOR_SIZE = "24";
     };

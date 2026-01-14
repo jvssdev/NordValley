@@ -65,10 +65,6 @@ in
 
     window-rules = [
       {
-        matches = [ { app-id = "com.mitchellh.ghostty"; } ];
-        opacity = 0.9;
-      }
-      {
         matches = [
           { app-id = "(?i)pavucontrol"; }
           { app-id = "(?i)org\\.pulseaudio\\.pavucontrol"; }
@@ -116,7 +112,7 @@ in
         "toggle"
       ];
       "Mod+E".action.spawn = "thunar";
-      "Mod+P".action.spawn = "screenshot";
+      "Mod+P".action.screenshot = [ ];
       "Mod+V".action.spawn = "fuzzel-clipboard";
       "Mod+Shift+V".action.spawn = "fuzzel-clipboard-clear";
       "Mod+N".action.spawn = "dunst-fuzzel";

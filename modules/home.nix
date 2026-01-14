@@ -35,7 +35,6 @@ in
     ../home/dunst/default.nix
     ../home/dunst-fuzzel
     ../home/fuzzel-clipboard
-    ../home/screenshot
     ../home/btop/default.nix
     ../home/fastfetch/default.nix
     ../home/fuzzel/default.nix
@@ -55,9 +54,11 @@ in
   ]
   ++ lib.optionals isRiver [
     ../home/river
+    ../home/screenshot
   ]
   ++ lib.optionals isMango [
     ../home/mango/default.nix
+    ../home/screenshot
   ]
   ++ lib.optionals isNiri [
     ../home/niri/default.nix

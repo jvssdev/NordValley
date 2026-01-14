@@ -2,6 +2,9 @@
   pkgs,
   silentSDDM,
   config,
+  isRiver ? false,
+  isMango ? false,
+  isNiri ? false,
   ...
 }:
 let
@@ -213,7 +216,14 @@ in
 
     settings = {
       General = {
-        GreeterEnvironment = "QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard,XCURSOR_THEME=Bibata-Modern-Ice,XCURSOR_SIZE=24,XCURSOR_PATH=/usr/share/icons:${pkgs.bibata-cursors}/share/icons,WLR_NO_HARDWARE_CURSORS=1";
+        GreeterEnvironment =
+          if isMango || isRiver then
+            "QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard,XCURSOR_THEME=Bibata-Modern-Ice,XCURSOR_SIZE=24,XCURSOR_PATH=/usr/share/icons:${pkgs.bibata-cursors}/share/icons,WLR_NO_HARDWARE_CURSORS=1"
+          else if isNiri then
+            "QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard,XCURSOR_THEME=Bibata-Modern-Ice,XCURSOR_SIZE=24,XCURSOR_PATH=/usr/share/icons:${pkgs.bibata-cursors}/share/icons"
+          else
+            "QML2_IMPORT_PATH=${silentTheme}/share/sddm/themes/${silentTheme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard,XCURSOR_THEME=Bibata-Modern-Ice,XCURSOR_SIZE=24,XCURSOR_PATH=/usr/share/icons:${pkgs.bibata-cursors}/share/icons";
+
         InputMethod = "qtvirtualkeyboard";
       };
       Theme = {

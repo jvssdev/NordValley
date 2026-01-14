@@ -49,7 +49,7 @@ in
       env=QT_WAYLAND_FORCE_DPI,140
       env=GDK_DPI_SCALE,1.45
 
-      monitorrule=eDP-1,0.55,1,tile,0,1,0,0,1920,1080,60
+      monitorrule=eDP-1,0.60,1,tile,0,1,0,0,1920,1080,60
       xkb_rules_layout=br
       cursor_size=24
       cursor_theme=Bibata-Modern-Ice
