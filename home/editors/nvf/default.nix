@@ -10,7 +10,6 @@
     ./telescope.nix
     ./snacks-nvim.nix
     ./yazi-nvim.nix
-    ./tabline.nix
     ./conform.nix
     ./flash.nix
     ./ui.nix
@@ -117,6 +116,22 @@
 
         mini = {
           comment.enable = true;
+          tabline = {
+            enable = true;
+            setupOpts = {
+              show_icons = true;
+              tabpage_section = "left";
+              format = lib.generators.mkLuaInline ''
+                function(buf_id, label)
+                  local default_label = MiniTabline.default_format(buf_id, label)
+
+                  local modification = vim.bo[buf_id].modified and " ●" or ""
+
+                  return default_label .. modification
+                end
+              '';
+            };
+          };
           # move.enable = true;
         };
 
@@ -139,12 +154,18 @@
             mode = "n";
             desc = "Toggle comment line";
           }
-          # {
-          #   key = "<C-l>";
-          #   action = "<Cmd>lua MiniMove.move_line('right')<CR>";
-          #   mode = "n";
-          #   desc = "Move line right";
-          # }
+          {
+            key = "L";
+            action = "<Cmd>bnext<CR>";
+            mode = "n";
+            desc = "Go to next buffer";
+          }
+          {
+            key = "H";
+            action = "<Cmd>bprev<CR>";
+            mode = "n";
+            desc = "Go to previous buffer";
+          }
         ];
       };
     };
