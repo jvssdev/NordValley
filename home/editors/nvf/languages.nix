@@ -21,8 +21,8 @@
     };
     nix = {
       enable = true;
-      format.type = ["nixfmt"];
-      lsp.servers = ["nil"];
+      format.type = [ "nixfmt" ];
+      lsp.servers = [ "nil" ];
     };
   };
 }

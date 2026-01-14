@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   programs = {
     git = {
@@ -10,6 +11,25 @@
     direnv = {
       enable = true;
       nix-direnv.enable = true;
+    };
+    mpv = {
+      enable = true;
+    };
+  };
+  systemd.user.services.playerctld = {
+    Unit = {
+      Description = "playerctl daemon";
+      After = [ "graphical-session.target" ];
+    };
+
+    Service = {
+      Type = "simple";
+      ExecStart = "${pkgs.playerctl}/bin/playerctld daemon";
+      Restart = "on-failure";
+    };
+
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
     };
   };
 

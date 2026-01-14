@@ -1,12 +1,8 @@
 {
   pkgs,
-  config,
   lib,
   ...
 }:
-let
-  nvimConfigDir = "${config.home.homeDirectory}/.config/nvf-custom";
-in
 {
   imports = [
     ./treesitter.nix
@@ -20,7 +16,6 @@ in
     ./ui.nix
   ];
 
-  home.file."${nvimConfigDir}".source = ./nvim;
   programs.nvf = {
     enable = true;
     defaultEditor = true;

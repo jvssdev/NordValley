@@ -41,11 +41,9 @@ in
     ../home/fuzzel/default.nix
     ../home/ghostty/default.nix
     ../home/mpd/default.nix
-    ../home/mpv/default.nix
     ../home/quickshell/default.nix
     ../home/starship/default.nix
     ../home/theme/default.nix
-    ../home/wpaperd/default.nix
     ../home/yazi/default.nix
     ../home/zathura/default.nix
     ../home/zen/default.nix
@@ -112,22 +110,5 @@ in
       };
     };
     configFile."mimeapps.list".force = true;
-  };
-
-  systemd.user.services.playerctld = {
-    Unit = {
-      Description = "playerctl daemon";
-      After = [ "graphical-session.target" ];
-    };
-
-    Service = {
-      Type = "simple";
-      ExecStart = "${pkgs.playerctl}/bin/playerctld daemon";
-      Restart = "on-failure";
-    };
-
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
   };
 }
