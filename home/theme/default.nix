@@ -1,29 +1,37 @@
 {
-  pkgs,
   lib,
   osConfig,
+  pkgs,
   ...
 }:
 {
   inherit (osConfig.theme) colorScheme;
-  home.pointerCursor = {
-    package = pkgs.bibata-cursors;
-    name = "Bibata-Modern-Ice";
-    size = 24;
-    gtk.enable = true;
-    x11.enable = true;
+  home = {
+    packages = [
+      pkgs.bibata-cursors
+      pkgs.nerd-fonts.jetbrains-mono
+      pkgs.nerd-fonts.fira-code
+      pkgs.nerd-fonts.hack
+      pkgs.nerd-fonts.meslo-lg
+      pkgs.montserrat
+      pkgs.colloid-gtk-theme
+      pkgs.colloid-icon-theme
+    ];
+
+    pointerCursor = {
+      package = pkgs.bibata-cursors;
+      name = "Bibata-Modern-Ice";
+      size = 24;
+      gtk.enable = true;
+      x11.enable = true;
+    };
   };
 
-  fonts.fontconfig.enable = true;
-  home.packages = with pkgs; [
-    nerd-fonts.jetbrains-mono
-    nerd-fonts.fira-code
-    nerd-fonts.hack
-    nerd-fonts.meslo-lg
-    montserrat
-    colloid-gtk-theme
-    colloid-icon-theme
-  ];
+  fonts = {
+    fontconfig = {
+      enable = true;
+    };
+  };
 
   gtk = {
     enable = true;
@@ -63,7 +71,6 @@
 
   qt = {
     enable = true;
-
     platformTheme.name = "qtct";
     style.name = "kvantum";
   };

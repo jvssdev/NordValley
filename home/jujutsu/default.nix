@@ -1,8 +1,8 @@
 { pkgs, ... }:
 {
-  home.packages = with pkgs; [
-    jujutsu
-    jjui
+  home.packages = [
+    pkgs.jujutsu
+    pkgs.jjui
   ];
 
   programs.jujutsu = {

@@ -12,37 +12,7 @@ in
 with pkgs;
 let
   basePackages = [
-    # Build essentials
-    gcc
-    gnumake
-    cargo
-    rustc
-    wget
-    unzip
-    tree-sitter
-    nodejs_22
-    tree
     neovim-unwrapped
-
-    bibata-cursors
-
-    zig
-    go
-
-    # CLI tools
-    lazygit
-    fzf
-    fd
-    ncdu
-    ripgrep
-    nixos-shell
-    nix-your-shell
-    atuin
-
-    bat
-    starship
-    lsd
-    ffmpeg
 
     # Media
     mpc
@@ -83,7 +53,6 @@ let
     libgcc
     lxqt.lxqt-policykit
     libnotify
-
     gvfs
 
     # Polkit

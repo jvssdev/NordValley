@@ -8,6 +8,24 @@ let
   inherit (config.colorScheme) palette;
 in
 {
+  home.packages = [
+    pkgs.wget
+    pkgs.unzip
+    pkgs.tree
+    pkgs.lazygit
+    pkgs.fzf
+    pkgs.fd
+    pkgs.ncdu
+    pkgs.ripgrep
+    pkgs.nixos-shell
+    pkgs.nix-your-shell
+    pkgs.atuin
+    pkgs.bat
+    pkgs.starship
+    pkgs.lsd
+    pkgs.ffmpeg
+  ];
+
   programs = {
     zoxide = {
       enable = true;

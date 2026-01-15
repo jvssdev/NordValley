@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./nvf
     ./zed
@@ -37,11 +38,18 @@
     stylua
     shfmt
     prettierd
-    alejandra
     cmake-format
     gotools
     black
     rustfmt
     biome
+    gcc
+    gnumake
+    cargo
+    rustc
+    tree-sitter
+    nodejs_22
+    zig
+    go
   ];
 }

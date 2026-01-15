@@ -47,6 +47,7 @@
           mouse = "";
           ignorecase = true;
           copyindent = true;
+          preserveindent = true;
         };
 
         lsp = {
