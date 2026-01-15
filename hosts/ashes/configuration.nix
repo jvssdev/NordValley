@@ -111,6 +111,8 @@
       "sysrq_always_enabled=0"
       "rootflags=noatime"
       "lsm=landlock,lockdown,yama,integrity,apparmor,bpf,tomoyo,selinux"
+      "i915.enable_fbc=0"
+      "i915.disable_power_well=0"
     ];
 
     consoleLogLevel = 0;
