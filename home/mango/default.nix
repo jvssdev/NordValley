@@ -234,29 +234,28 @@ in
   };
   xdg.portal = {
     enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-wlr
-      xdg-desktop-portal-gtk
-      xdg-desktop-portal
+    xdgOpenUsePortal = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-wlr
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.gnome-keyring
     ];
     config.common.default = [ "gtk" ];
-    config = {
-      mango = {
-        default = [ "gtk" ];
-        "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
-        "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
-        "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
-        "org.freedesktop.impl.portal.Inhibit" = [ ];
-      };
+    config.mango = {
+      default = [ "gtk" ];
+      "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
+      "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
+      "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
+      "org.freedesktop.impl.portal.Inhibit" = [ ];
     };
   };
-  home.packages = with pkgs; [
-    gnome-keyring
-    glib
-    xdg-utils
-    wf-recorder
-    xwayland-satellite
-    fcitx5
-    xorg.xrdb
+  services.gnome-keyring.enable = true;
+  home.packages = [
+    pkgs.glib
+    pkgs.xdg-utils
+    pkgs.wf-recorder
+    pkgs.xwayland-satellite
+    pkgs.fcitx5
+    pkgs.xorg.xrdb
   ];
 }

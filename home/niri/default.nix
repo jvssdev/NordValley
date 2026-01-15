@@ -250,30 +250,29 @@ in
   xdg.portal = {
     enable = true;
     xdgOpenUsePortal = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-      xdg-desktop-portal-gnome
-      gnome-keyring
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-gnome
+      pkgs.gnome-keyring
     ];
     config.common.default = [ "gtk" ];
-    config = {
-      mango = {
-        default = [
-          "gtk"
-          "gnome"
-        ];
-        "org.freedesktop.impl.portal.Access" = [ "gtk" ];
-        "org.freedesktop.impl.portal.Notification" = [ "gtk" ];
-        "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
-        "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
-        "org.freedesktop.impl.portal.ScreenCast" = [ "xdg-desktop-portal-gnome" ];
-        "org.freedesktop.impl.portal.Screenshot" = [ "xdg-desktop-portal-gnome" ];
-      };
+    config.niri = {
+      default = [
+        "gtk"
+        "gnome"
+      ];
+      "org.freedesktop.impl.portal.Access" = [ "gtk" ];
+      "org.freedesktop.impl.portal.Notification" = [ "gtk" ];
+      "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
+      "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
+      "org.freedesktop.impl.portal.ScreenCast" = [ "xdg-desktop-portal-gnome" ];
+      "org.freedesktop.impl.portal.Screenshot" = [ "xdg-desktop-portal-gnome" ];
     };
   };
-  home.packages = with pkgs; [
-    xdg-utils
-    wf-recorder
-    fcitx5
+  services.gnome-keyring.enable = true;
+  home.packages = [
+    pkgs.xdg-utils
+    pkgs.wf-recorder
+    pkgs.fcitx5
   ];
 }
