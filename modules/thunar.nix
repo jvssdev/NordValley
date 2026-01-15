@@ -3,21 +3,23 @@
 {
   programs.thunar = {
     enable = true;
-    plugins = with pkgs.xfce; [
-      thunar-archive-plugin
-      thunar-media-tags-plugin
-      thunar-volman
+    plugins = [
+      pkgs.xfce.thunar-archive-plugin
+      pkgs.xfce.thunar-media-tags-plugin
+      pkgs.xfce.thunar-volman
     ];
   };
 
   programs.xfconf.enable = true;
-  services.gvfs.enable = true;
-  services.tumbler.enable = true;
+  services = {
+    gvfs.enable = true;
+    tumbler.enable = true;
+  };
 
-  environment.systemPackages = with pkgs; [
-    kdePackages.ark
-    ffmpegthumbnailer
-    libgsf
-    xfce.tumbler
+  environment.systemPackages = [
+    pkgs.kdePackages.ark
+    pkgs.ffmpegthumbnailer
+    pkgs.libgsf
+    pkgs.xfce.tumbler
   ];
 }

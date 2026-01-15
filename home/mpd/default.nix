@@ -4,9 +4,9 @@ let
 in
 {
   home = {
-    packages = with pkgs; [
-      rmpc
-      mpc
+    packages = [
+      pkgs.rmpc
+      pkgs.mpc
     ];
 
     file."Music/.keep".text = "";

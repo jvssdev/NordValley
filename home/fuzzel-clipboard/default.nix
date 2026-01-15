@@ -24,5 +24,6 @@ in
     fuzzel-clipboard-clear
     pkgs.wl-clip-persist
     pkgs.cliphist
+    pkgs.wl-clipboard
   ];
 }

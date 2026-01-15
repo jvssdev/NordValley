@@ -18,9 +18,26 @@
       log_filter="^$"
     '';
     systemPackages = with pkgs; [
+      mpc
+      playerctl
+      pamixer
+      pavucontrol
+      networkmanagerapplet
+      keepassxc
+      anydesk
       ghostty
       dconf
       glib
+      p7zip
+      appimage-run
+      nh
+      mpv
+      imv
+      qbittorrent
+      libgcc
+      lxqt.lxqt-policykit
+      libnotify
+      gvfs
       qt6.qtwayland
       kdePackages.qtwayland
       kdePackages.qt6ct

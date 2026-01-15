@@ -1,5 +1,10 @@
 { pkgs, ... }:
 {
+  home.packages = [
+    pkgs.gammastep
+    pkgs.wpaperd
+    pkgs.brightnessctl
+  ];
   services = {
     gammastep = {
       enable = true;

@@ -1,8 +1,10 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 let
   inherit (config.colorScheme) palette;
 in
 {
+
+  home.packages = [ pkgs.dunst ];
   services.dunst = {
     enable = true;
 

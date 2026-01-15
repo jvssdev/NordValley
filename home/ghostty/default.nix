@@ -1,7 +1,6 @@
 {
   pkgs,
   config,
-  # ghostty,
   ...
 }:
 let
@@ -11,7 +10,6 @@ in
   programs.ghostty = {
     enable = true;
     package = pkgs.ghostty;
-    # package = ghostty.packages.${pkgs.stdenv.hostPlatform.system}.default;
     settings = {
       font-size = 15;
       font-family = "JetBrainsMono Nerd Font";

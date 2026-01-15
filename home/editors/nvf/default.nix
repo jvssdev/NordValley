@@ -14,7 +14,9 @@
     ./flash.nix
     ./ui.nix
   ];
-
+  home.packages = [
+    pkgs.neovim-unwrapped
+  ];
   programs.nvf = {
     enable = true;
     defaultEditor = true;
@@ -46,6 +48,7 @@
           signcolumn = "yes";
           mouse = "";
           ignorecase = true;
+          smartcase = true;
           copyindent = true;
           preserveindent = true;
         };
@@ -166,6 +169,32 @@
             action = "<Cmd>bprev<CR>";
             mode = "n";
             desc = "Go to previous buffer";
+          }
+          {
+            key = "<leader>bd";
+            action = "<Cmd>bdelete<CR>";
+            mode = "n";
+            desc = "Delete buffer";
+          }
+          {
+            mode = "n";
+            key = "<Left>";
+            action = ":echo 'Use h to move!!'";
+          }
+          {
+            mode = "n";
+            key = "<Right>";
+            action = ":echo 'Use l to move!!'";
+          }
+          {
+            mode = "n";
+            key = "<Up>";
+            action = ":echo 'Use k to move!!'";
+          }
+          {
+            mode = "n";
+            key = "<Down>";
+            action = ":echo 'Use j to move!!'";
           }
         ];
       };

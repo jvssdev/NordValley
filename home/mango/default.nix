@@ -257,5 +257,7 @@ in
     pkgs.xwayland-satellite
     pkgs.fcitx5
     pkgs.xorg.xrdb
+    pkgs.polkit
+    pkgs.mate.mate-polkit
   ];
 }

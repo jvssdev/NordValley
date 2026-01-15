@@ -18,9 +18,6 @@ in
     username = userName;
     homeDirectory = homeDir;
     stateVersion = "25.11";
-    packages = import ./packages.nix {
-      inherit pkgs specialArgs;
-    };
     sessionPath = [
       "$HOME/.nix-profile/bin"
       "/nix/var/nix/profiles/default/bin"
@@ -45,12 +42,11 @@ in
     ../home/theme/default.nix
     ../home/yazi/default.nix
     ../home/zathura/default.nix
-    ../home/zen/default.nix
     ../home/shell/default.nix
     ../home/jujutsu/default.nix
     ../home/services/default.nix
-    ../home/qutebrowser/default.nix
     ../home/editors/default.nix
+    ../home/browsers/default.nix
   ]
   ++ lib.optionals isRiver [
     ../home/river

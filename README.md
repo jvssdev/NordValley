@@ -2,7 +2,27 @@
 
 # NordValley NixOS Installation Guide
 
-Complete guide for installing and configuring NixOS with River or MangoWC window managers.
+<!--toc:start-->
+
+- [NordValley NixOS Installation Guide](#nordvalley-nixos-installation-guide)
+  - [Prerequisites](#prerequisites)
+  - [Quick Installation](#quick-installation)
+    - [Option 1: Automatic Installation (Recommended)](#option-1-automatic-installation-recommended)
+  - [Post-installation](#post-installation)
+    - [1. Configure the system](#1-configure-the-system)
+    - [2. Verify everything is working](#2-verify-everything-is-working)
+  - [Directory Structure](#directory-structure)
+    - [Update the system](#update-the-system)
+  - [Main Keybindings](#main-keybindings)
+    - [River](#river)
+  - [Additional Resources](#additional-resources)
+  - [License](#license)
+    - [Cleanup storage](#cleanup-storage)
+
+<!--toc:end-->
+
+Complete guide for installing and configuring NixOS with River or MangoWC window
+managers.
 
 ## Prerequisites
 
@@ -21,7 +41,8 @@ Complete guide for installing and configuring NixOS with River or MangoWC window
 nix-shell -p git
 ```
 
-* **Configure network** (if needed):
+- **Configure network** (if needed):
+
 ```bash
 # For WiFi
 sudo systemctl start wpa_supplicant
@@ -31,6 +52,7 @@ wpa_cli
 ```
 
 2. **Clone the repository**:
+
 ```bash
 # Temporarily in live environment
 git clone https://github.com/jvssdev/NordValley.git
@@ -38,12 +60,14 @@ cd NordValley
 ```
 
 3. **Run the installer**:
+
 ```bash
 chmod +x install.sh
 ./install.sh
 ```
 
 The script will:
+
 - Request user information
 - Install the complete system
 - Configure everything automatically
@@ -73,7 +97,7 @@ sudo nixos-rebuild switch --flake .#mangowc
 
 ```bash
 # Test the editor
-hx
+nvim
 
 # Test the terminal
 ghostty
@@ -86,7 +110,7 @@ systemctl status
 
 After installation:
 
-```
+````
 ~/NordValley/               # Main configuration
   ├── home/            # Configuration files
   ├── hosts/               # Per-host configurations
@@ -100,7 +124,7 @@ After installation:
 ```bash
 # Rebuild with another WM
 sudo nixos-rebuild switch --flake ~/NordValley#mangowc
-```
+````
 
 ### Update the system
 
@@ -108,25 +132,6 @@ sudo nixos-rebuild switch --flake ~/NordValley#mangowc
 cd ~/NordValley
 nix flake update
 sudo nixos-rebuild switch --flake .#river
-```
-
-### Add packages
-
-Edit `~/NordValley/modules/packages.nix`:
-
-```nix
-basePackages = [
-  # Your packages here
-  neovim
-  git
-  # ...
-];
-```
-
-Then:
-
-```bash
-sudo nixos-rebuild switch --flake ~/NordValley#river
 ```
 
 ## Main Keybindings
@@ -137,12 +142,6 @@ sudo nixos-rebuild switch --flake ~/NordValley#river
 - `Super + A`: Launcher (Fuzzel)
 - `Super + Q`: Close window
 - `Super + X`: Power menu
-
-### Ghostty (Terminal)
-
-- `Ctrl + Shift + T`: New tab
-- `Ctrl + Shift + W`: Close tab
-- `Ctrl + Shift + C/V`: Copy/Paste
 
 ## Additional Resources
 
@@ -161,5 +160,5 @@ This project is under the MIT license.
 
 Delete stale paths: `nix-collect-garbage`
 
-Delete stale paths and generations older than x days: `nix-collect-garbage --delete-older-than 30d`
-
+Delete stale paths and generations older than x days:
+`nix-collect-garbage --delete-older-than 30d`

@@ -19,15 +19,17 @@
     XCURSOR_SIZE = "24";
     NIXOS_OZONE_WL = "1";
   };
-  home.packages = with pkgs; [
-    wideriver
-    xwayland
+  home.packages = [
+    pkgs.wideriver
+    pkgs.xwayland
+    pkgs.polkit
+    pkgs.mate.mate-polkit
   ];
   xdg.portal = {
     enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-wlr
-      xdg-desktop-portal-gtk
+    extraPortals = [
+      pkgs.xdg-desktop-portal-wlr
+      pkgs.xdg-desktop-portal-gtk
     ];
     config = {
       common = {
