@@ -1,19 +1,61 @@
+{ config, ... }:
+let
+  inherit (config.colorScheme) palette;
+in
 {
+  home.file.".config/btop/themes/tsuki.theme".text = ''
+    theme[main_bg]="#${palette.base00}"
+    theme[main_fg]="#${palette.base05}"
+    theme[title]="#${palette.base0D}"
+    theme[hi_fg]="#${palette.base0C}"
+    theme[selected_bg]="#${palette.base02}"
+    theme[selected_fg]="#${palette.base05}"
+    theme[inactive_fg]="#${palette.base03}"
+    theme[proc_misc]="#${palette.base0C}"
+    theme[cpu_box]="#${palette.base0D}"
+    theme[mem_box]="#${palette.base0E}"
+    theme[net_box]="#${palette.base0B}"
+    theme[proc_box]="#${palette.base0A}"
+    theme[div_line]="#${palette.base03}"
+    theme[temp_start]="#${palette.base0B}"
+    theme[temp_mid]="#${palette.base0A}"
+    theme[temp_end]="#${palette.base08}"
+    theme[cpu_start]="#${palette.base0D}"
+    theme[cpu_mid]="#${palette.base0C}"
+    theme[cpu_end]="#${palette.base0E}"
+    theme[free_start]="#${palette.base0B}"
+    theme[free_mid]="#${palette.base0C}"
+    theme[free_end]="#${palette.base0D}"
+    theme[cached_start]="#${palette.base0A}"
+    theme[cached_mid]="#${palette.base09}"
+    theme[cached_end]="#${palette.base08}"
+    theme[available_start]="#${palette.base0B}"
+    theme[available_mid]="#${palette.base0C}"
+    theme[available_end]="#${palette.base0D}"
+    theme[used_start]="#${palette.base08}"
+    theme[used_mid]="#${palette.base09}"
+    theme[used_end]="#${palette.base0A}"
+    theme[download_start]="#${palette.base0B}"
+    theme[download_mid]="#${palette.base0C}"
+    theme[download_end]="#${palette.base0D}"
+    theme[upload_start]="#${palette.base0E}"
+    theme[upload_mid]="#${palette.base0F}"
+    theme[upload_end]="#${palette.base08}"
+  '';
   programs.btop = {
     enable = true;
 
     settings = {
       # Theme settings
-      color_theme = "TTY";
+      color_theme = "tsuki";
       theme_background = true;
       truecolor = true;
-      force_tty = false;
 
       # Layout presets
       presets = "cpu:1:default,proc:0:default cpu:0:default,mem:0:default,net:0:default cpu:0:block,net:0:tty";
 
       # Interface settings
-      vim_keys = false;
+      vim_keys = true;
       rounded_corners = true;
 
       # Graph symbols

@@ -1,4 +1,5 @@
-{lib, ...}: {
+{ lib, ... }:
+{
   options = {
     theme.colorScheme = lib.mkOption {
       type = lib.types.attrs;
