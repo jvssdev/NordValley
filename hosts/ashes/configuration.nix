@@ -38,15 +38,6 @@
       lxqt.lxqt-policykit
       libnotify
       gvfs
-      qt6.qtwayland
-      kdePackages.qtwayland
-      kdePackages.qt6ct
-      libsForQt5.qt5.qtwayland
-      libsForQt5.qt5.qtgraphicaleffects
-      libsForQt5.qt5.qtquickcontrols2
-      colloid-gtk-theme
-      colloid-icon-theme
-      bibata-cursors
     ];
     sessionVariables = {
       NIXOS_OZONE_WL = "1";
@@ -200,36 +191,6 @@
 
   powerManagement = {
     powertop.enable = true;
-  };
-  fonts = {
-    enableDefaultPackages = true;
-    packages = with pkgs; [
-      nerd-fonts.jetbrains-mono
-      font-awesome
-      roboto
-      montserrat
-      noto-fonts-cjk-sans
-      noto-fonts-cjk-serif
-      noto-fonts-color-emoji
-    ];
-
-    fontconfig = {
-      defaultFonts = {
-        sansSerif = [
-          "Roboto"
-          "Noto Sans CJK JP"
-        ];
-        serif = [
-          "Roboto"
-          "Noto Serif CJK JP"
-        ];
-        monospace = [
-          "JetBrainsMono Nerd Font"
-          "Noto Sans Mono CJK JP"
-        ];
-        emoji = [ "Noto Color Emoji" ];
-      };
-    };
   };
 
   security.polkit.enable = true;

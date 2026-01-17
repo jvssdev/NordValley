@@ -139,7 +139,6 @@
                     inherit isRiver isMango isNiri;
                   };
                   sharedModules = [
-                    ./home/theme/module.nix
                     inputs.zen-browser.homeModules.default
                     inputs.nvf.homeManagerModules.default
                   ]

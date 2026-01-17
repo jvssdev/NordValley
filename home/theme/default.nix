@@ -1,103 +1,88 @@
 {
-  lib,
   osConfig,
   pkgs,
+  lib,
   ...
 }:
+let
+  inherit (osConfig.theme) colorScheme pointerCursor font;
+  inherit (font)
+    sansSerif
+    serif
+    monospace
+    emoji
+    ;
+  inherit (pointerCursor) name size;
+in
 {
-  inherit (osConfig.theme) colorScheme;
-  home = {
-    packages = [
-      pkgs.bibata-cursors
-      pkgs.nerd-fonts.jetbrains-mono
-      pkgs.nerd-fonts.fira-code
-      pkgs.nerd-fonts.hack
-      pkgs.nerd-fonts.meslo-lg
-      pkgs.montserrat
-      pkgs.colloid-gtk-theme
-      pkgs.colloid-icon-theme
-    ];
+  imports = [
+    ./qt.nix
+    ./gtk.nix
+  ];
 
-    pointerCursor = {
-      package = pkgs.bibata-cursors;
-      name = "Bibata-Modern-Ice";
-      size = 24;
-      gtk.enable = true;
-      x11.enable = true;
-    };
-  };
-
-  fonts = {
-    fontconfig = {
-      enable = true;
-    };
-  };
-
-  gtk = {
-    enable = true;
-
+  options = {
     theme = {
-      package = pkgs.colloid-gtk-theme.override {
-        colorVariants = [ "dark" ];
-        themeVariants = [ "default" ];
-        sizeVariants = [ "compact" ];
-        tweaks = [
-          "rimless"
-          "black"
-        ];
+      colorScheme = lib.mkOption {
+        type = lib.types.attrs;
+        description = "Color scheme for the system";
       };
-      name = "Colloid-Dark-Compact";
-    };
-
-    iconTheme = {
-      name = "Colloid-Dark";
-      package = pkgs.colloid-icon-theme;
-    };
-
-    cursorTheme = {
-      name = "Bibata-Modern-Ice";
-      package = pkgs.bibata-cursors;
-      size = 24;
-    };
-  };
-
-  dconf.settings = {
-    "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
-      icon-theme = "Colloid-Dark";
-      gtk-theme = "Colloid-Dark-Compact";
-    };
-  };
-
-  qt = {
-    enable = true;
-    platformTheme.name = "qtct";
-    style.name = "kvantum";
-  };
-
-  xdg.configFile = {
-    kvantum = {
-      target = "Kvantum/kvantum.kvconfig";
-      text = lib.generators.toINI { } {
-        General.theme = "Colloid-Dark-Compact";
+      font = lib.mkOption {
+        type = lib.types.attrs;
+        description = "Font configuration";
+      };
+      pointerCursor = lib.mkOption {
+        type = lib.types.attrs;
+        description = "Pointer cursor configuration";
       };
     };
 
-    qt5ct = {
-      target = "qt5ct/qt5ct.conf";
-      text = lib.generators.toINI { } {
-        Appearance = {
-          icon_theme = "Colloid-Dark-Compact";
-        };
+    colorScheme = lib.mkOption {
+      type = lib.types.attrs;
+      description = "Color scheme (legacy)";
+    };
+  };
+
+  config = {
+    theme = {
+      inherit colorScheme font pointerCursor;
+    };
+
+    inherit colorScheme;
+
+    home = {
+      packages = with pkgs; [
+        bibata-cursors
+        nerd-fonts.jetbrains-mono
+        nerd-fonts.fira-code
+        nerd-fonts.hack
+        nerd-fonts.meslo-lg
+        montserrat
+        colloid-gtk-theme
+        colloid-icon-theme
+        font-awesome
+        roboto
+        noto-fonts-cjk-sans
+        noto-fonts-cjk-serif
+        noto-fonts-color-emoji
+      ];
+
+      pointerCursor = {
+        package = pkgs.bibata-cursors;
+        inherit name size;
+        gtk.enable = true;
+        x11.enable = true;
       };
     };
 
-    qt6ct = {
-      target = "qt6ct/qt6ct.conf";
-      text = lib.generators.toINI { } {
-        Appearance = {
-          icon_theme = "Colloid-Dark-Compact";
-        };
+    fonts.fontconfig = {
+      enable = true;
+      defaultFonts = {
+        inherit
+          sansSerif
+          serif
+          monospace
+          emoji
+          ;
       };
     };
   };
