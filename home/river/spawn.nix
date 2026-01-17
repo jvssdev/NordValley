@@ -6,7 +6,7 @@ let
   spawns = [
     "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=river NIXOS_OZONE_WL"
     "${pkgs.systemd}/bin/systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-    "${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1 &"
+    "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent &"
     "${pkgs.wpaperd}/bin/wpaperd &"
     "${pkgs.quickshell}/bin/quickshell &"
     "${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &"

@@ -231,11 +231,14 @@
       };
     };
   };
+
+  security.polkit.enable = true;
   services = {
     dbus = {
       enable = true;
       packages = [ pkgs.dconf ];
     };
+
     libinput.enable = true;
     upower.enable = true;
     fstrim.enable = true;

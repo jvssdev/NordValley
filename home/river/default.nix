@@ -19,11 +19,11 @@
     XCURSOR_SIZE = "24";
     NIXOS_OZONE_WL = "1";
   };
+
   home.packages = [
     pkgs.wideriver
     pkgs.xwayland
-    pkgs.polkit
-    pkgs.mate.mate-polkit
+    pkgs.hyprpolkitagent
   ];
   xdg.portal = {
     enable = true;

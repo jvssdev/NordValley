@@ -16,7 +16,7 @@ in
       exec-once=${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots
       exec-once=systemctl --user reset-failed
       exec-once=systemctl --user start mango-session.target
-
+      exec-once=${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent
       exec-once=${lib.getExe pkgs.xwayland-satellite} :11
       exec-once=sh -c "sleep 1; echo 'Xft.dpi: 140' | ${pkgs.xorg.xrdb}/bin/xrdb -merge"
       exec-once=${pkgs.dunst}/bin/dunst
@@ -213,10 +213,12 @@ in
       windowrule=appid:pavucontrol,isfloating:1
       windowrule=appid:blueman-manager,isfloating:1
       windowrule=appid:nm-connection-editor,isfloating:1
-      windowrule=appid:thunar,isfloating:1
-      windowrule=appid:Thunar,isfloating:1
+      windowrule=appid:^[Tt]hunar$,isfloating:1
       windowrule=appid:ghostty
       windowrule=appid:fuzzel
+
+      # scratchpad
+      enable_hotarea = 0
 
       windowrule=width:1900,height:1600,isnamedscratchpad:1,title:yazi-picker
     '';
@@ -232,13 +234,13 @@ in
       After = [ "graphical-session-pre.target" ];
     };
   };
+
   xdg.portal = {
     enable = true;
     xdgOpenUsePortal = true;
     extraPortals = [
       pkgs.xdg-desktop-portal-wlr
       pkgs.xdg-desktop-portal-gtk
-      pkgs.gnome-keyring
     ];
     config.common.default = [ "gtk" ];
     config.mango = {
@@ -257,7 +259,6 @@ in
     pkgs.xwayland-satellite
     pkgs.fcitx5
     pkgs.xorg.xrdb
-    pkgs.polkit
-    pkgs.mate.mate-polkit
+    pkgs.hyprpolkitagent
   ];
 }
