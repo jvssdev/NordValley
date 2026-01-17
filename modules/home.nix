@@ -47,6 +47,7 @@ in
     ../home/services/default.nix
     ../home/editors/default.nix
     ../home/browsers/default.nix
+    ../home/keepassxc/default.nix
   ]
   ++ lib.optionals isRiver [
     ../home/river
