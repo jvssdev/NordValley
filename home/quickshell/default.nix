@@ -13,6 +13,7 @@ let
     quickshell
     ;
   inherit (config.colorScheme) palette;
+  inherit (config.theme.font) monospace;
 in
 {
   home.packages = [
@@ -244,7 +245,7 @@ in
                                   text: parent.parent.tagId
                                   color: parent.parent.isActive ? "#${palette.base00}" : "#${palette.base05}"
                                   font.pixelSize: 12
-                                  font.family: "JetBrainsMono Nerd Font"
+                                  font.family: "${builtins.head monospace}"
                                   font.bold: parent.parent.isActive
                                   anchors.centerIn: parent
                               }
@@ -295,7 +296,7 @@ in
                                           text: model.tagId
                                           color: (model.isActive || model.isUrgent) ? "#${palette.base00}" : "#${palette.base05}"
                                           font.pixelSize: 11
-                                          font.family: "JetBrainsMono Nerd Font"
+                                          font.family: "${builtins.head monospace}"
                                           font.bold: model.isActive
                                           anchors.centerIn: parent
                                       }
@@ -308,7 +309,7 @@ in
                           text: ""
                           color: "#${palette.base0C}"
                           font.pixelSize: 11
-                          font.family: "JetBrainsMono Nerd Font"
+                          font.family: "${builtins.head monospace}"
                           font.bold: true
                       }
                   }
@@ -384,7 +385,7 @@ in
                               text: modelData.name || (modelData.index + 1)
                               color: modelData.isActive ? "#${palette.base00}" : "#${palette.base05}"
                               font.pixelSize: 12
-                              font.family: "JetBrainsMono Nerd Font"
+                              font.family: "${builtins.head monospace}"
                               font.bold: modelData.isActive
                               anchors.centerIn: parent
                           }
@@ -437,7 +438,7 @@ in
                       text: "~"
                       color: "#${palette.base0E}"
                       font.pixelSize: 18
-                      font.family: "JetBrainsMono Nerd Font"
+                      font.family: "${builtins.head monospace}"
                       font.bold: true
                   }
                 ''
@@ -575,7 +576,7 @@ in
                 readonly property int borderWidth: 2
                 readonly property int padding: 14
                 readonly property int spacing: 10
-                readonly property string fontFamily: "JetBrainsMono Nerd Font"
+                readonly property string fontFamily: "${builtins.head monospace}"
                 readonly property int fontPixelSize: 12
             }
             QtObject {
@@ -1043,7 +1044,7 @@ in
                     text: Qt.formatTime(currentDate, "HH:mm")
                     color: "#${palette.base06}"
                     font.pixelSize: 72
-                    font.family: "JetBrainsMono Nerd Font"
+                    font.family: "${builtins.head monospace}"
                     font.bold: true
                     style: Text.Outline
                     styleColor: Qt.rgba(0, 0, 0, 0.8)
@@ -1063,7 +1064,7 @@ in
                     text: Qt.formatDate(currentDate, "dd/MM/yyyy")
                     color: "#${palette.base04}"
                     font.pixelSize: 24
-                    font.family: "JetBrainsMono Nerd Font"
+                    font.family: "${builtins.head monospace}"
                     Layout.alignment: Qt.AlignHCenter
 
                     Timer {
@@ -1078,7 +1079,7 @@ in
                     text: "Enter Password"
                     color: "#${palette.base05}"
                     font.pixelSize: 18
-                    font.family: "JetBrainsMono Nerd Font"
+                    font.family: "${builtins.head monospace}"
                     Layout.alignment: Qt.AlignHCenter
                 }
 
@@ -1125,7 +1126,7 @@ in
                             verticalAlignment: Text.AlignVCenter
                             font.pixelSize: 16
                             font.bold: true
-                            font.family: "JetBrainsMono Nerd Font"
+                            font.family: "${builtins.head monospace}"
                         }
                         background: Rectangle {
                             color: parent.down ? "#${palette.base0B}" : (parent.hovered ? "#${palette.base0C}" : "#${palette.base0D}")
@@ -1139,7 +1140,7 @@ in
                     text: "Incorrect password"
                     color: "#${palette.base08}"
                     font.pixelSize: 14
-                    font.family: "JetBrainsMono Nerd Font"
+                    font.family: "${builtins.head monospace}"
                     Layout.alignment: Qt.AlignHCenter
                 }
             }

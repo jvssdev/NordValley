@@ -1,6 +1,7 @@
 { config, pkgs, ... }:
 let
   inherit (config.colorScheme) palette;
+  inherit (config.theme.font) monospace;
 in
 {
 
@@ -36,7 +37,7 @@ in
         separator_color = "frame";
         sort = true;
 
-        font = "JetBrainsMono Nerd Font 12";
+        font = "${builtins.head monospace} 12";
         line_height = 0;
         markup = "full";
         format = "<b>%s</b>\\n%b";
