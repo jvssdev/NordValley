@@ -5,6 +5,7 @@
 }:
 let
   inherit (config.colorScheme) palette;
+  inherit (config.theme.font) monospace;
 in
 {
   programs.ghostty = {
@@ -12,7 +13,7 @@ in
     package = pkgs.ghostty;
     settings = {
       font-size = 15;
-      font-family = "JetBrainsMono Nerd Font";
+      font-family = "${builtins.head monospace}";
       background = palette.base00;
       foreground = palette.base05;
       cursor-color = palette.base05;
