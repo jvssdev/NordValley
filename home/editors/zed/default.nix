@@ -1,6 +1,7 @@
 { config, ... }:
 let
   inherit (config.colorScheme) palette;
+  inherit (config.theme.font) monospace;
 in
 {
   programs.zed-editor = {
@@ -127,8 +128,8 @@ in
       buffer_line_height = "comfortable";
       current_line_highlight = "all";
       selection_highlight = true;
-      buffer_font_family = "JetBrainsMono Nerd Font";
-      ui_font_family = "JetBrainsMono Nerd Font";
+      buffer_font_family = "${builtins.head monospace}";
+      ui_font_family = "${builtins.head monospace}";
       ui_font_size = 15;
       ui_font_weight = 400;
       telemetry = {
