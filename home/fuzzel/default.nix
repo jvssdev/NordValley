@@ -1,10 +1,11 @@
 {
   config,
-  lib,
+  pkgs,
   ...
 }:
 let
   inherit (config.colorScheme) palette;
+  inherit (config.theme.font) monospace;
 in
 {
   programs = {
@@ -12,12 +13,13 @@ in
       enable = true;
       settings = {
         main = {
-          font = lib.mkForce "JetBrainsMono Nerd Font:size=14";
+          font = "${builtins.head monospace}:size=13";
           icon-theme = "Colloid-Dark";
           dpi-aware = "no";
           lines = 15;
           width = 40;
           prompt = ''"󰍉  "'';
+          terminal = "${pkgs.ghostty}/bin/ghostty";
         };
         dmenu = {
           lines = 25;

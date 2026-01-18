@@ -1,6 +1,8 @@
-{pkgs, ...}: let
+{ pkgs, ... }:
+let
   preferences = import ./preferences.nix;
-in {
+in
+{
   environment.systemPackages = [
     pkgs.brave
   ];
@@ -19,14 +21,15 @@ in {
       "eimadpbcbfnmbkopoojfekhnkhdbieeh"
       "mnjggcdmjocbbbhaepdhchncahnbgone"
     ];
-    initialPrefs =
-      preferences.initialPreferences
-      // {
-        BrowserSignin = 0;
-        SyncDisabled = true;
-        PasswordManagerEnabled = false;
-        SpellcheckEnabled = true;
-        SpellcheckLanguage = ["en-US" "pt-BR"];
-      };
+    initialPrefs = preferences.initialPreferences // {
+      BrowserSignin = 0;
+      SyncDisabled = true;
+      PasswordManagerEnabled = false;
+      SpellcheckEnabled = true;
+      SpellcheckLanguage = [
+        "en-US"
+        "pt-BR"
+      ];
+    };
   };
 }
