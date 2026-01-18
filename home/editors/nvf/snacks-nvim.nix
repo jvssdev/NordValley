@@ -14,9 +14,6 @@
         picker = {
           enabled = false;
         };
-        scratch = {
-          enabled = true;
-        };
         notifier = {
           enabled = true;
         };
