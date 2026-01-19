@@ -6,6 +6,7 @@
 let
   inherit (config.colorScheme) palette;
   inherit (config.theme.font) monospace sansSerif;
+  inherit (config.gtk.iconTheme) name;
 in
 {
   qt = {
@@ -2480,7 +2481,7 @@ in
       [Appearance]
       custom_palette=true
       style=kvantum
-      icon_theme=Colloid-Dark
+      icon_theme=${name}
 
       [Fonts]
       fixed="${builtins.head monospace},11"
@@ -2491,7 +2492,7 @@ in
       [Appearance]
       custom_palette=true
       style=kvantum
-      icon_theme=Colloid-Dark
+      icon_theme=${name}
 
       [Fonts]
       fixed="${builtins.head monospace},11"

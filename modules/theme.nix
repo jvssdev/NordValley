@@ -64,6 +64,18 @@
         };
       };
 
+      gtkTheme = lib.mkOption {
+        type = lib.types.str;
+        description = "GTK theme name";
+        default = "Colloid-Dark-Compact";
+      };
+
+      iconTheme = lib.mkOption {
+        type = lib.types.str;
+        description = "Icons theme name";
+        default = "Colloid-Dark";
+      };
+
       pointerCursor = {
         name = lib.mkOption {
           type = lib.types.str;
@@ -120,6 +132,9 @@
         ];
         emoji = [ "Noto Color Emoji" ];
       };
+
+      gtkTheme = "Colloid-Dark-Compact";
+      iconTheme = "Colloid-Dark";
 
       pointerCursor = {
         name = "Bibata-Modern-Ice";

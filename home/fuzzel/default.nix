@@ -6,6 +6,7 @@
 let
   inherit (config.colorScheme) palette;
   inherit (config.theme.font) monospace;
+  inherit (config.gtk.iconTheme) name;
 in
 {
   programs = {
@@ -14,7 +15,7 @@ in
       settings = {
         main = {
           font = "${builtins.head monospace}:size=13";
-          icon-theme = "Colloid-Dark";
+          icon-theme = name;
           dpi-aware = "no";
           lines = 15;
           width = 40;
