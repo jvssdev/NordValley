@@ -73,7 +73,7 @@
       iconTheme = lib.mkOption {
         type = lib.types.str;
         description = "Icons theme name";
-        default = "Colloid-Dark";
+        default = "FairyWren_Dark";
       };
 
       pointerCursor = {
@@ -134,7 +134,7 @@
       };
 
       gtkTheme = "Colloid-Dark-Compact";
-      iconTheme = "Colloid-Dark";
+      iconTheme = "FairyWren_Dark";
 
       pointerCursor = {
         name = "Bibata-Modern-Ice";

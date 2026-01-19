@@ -25,7 +25,7 @@ in
     pkgs.libsForQt5.qt5.qtwayland
     pkgs.libsForQt5.qt5.qtgraphicaleffects
     pkgs.libsForQt5.qt5.qtquickcontrols2
-    pkgs.colloid-icon-theme
+    pkgs.fairywren
   ];
 
   xdg.configFile = {

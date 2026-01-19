@@ -58,7 +58,7 @@ in
         nerd-fonts.meslo-lg
         montserrat
         colloid-gtk-theme
-        colloid-icon-theme
+        fairywren
         font-awesome
         roboto
         noto-fonts-cjk-sans

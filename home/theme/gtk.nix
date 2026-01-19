@@ -26,7 +26,7 @@ in
 
     iconTheme = {
       name = iconTheme;
-      package = pkgs.colloid-icon-theme;
+      package = pkgs.fairywren;
     };
 
     cursorTheme = {
