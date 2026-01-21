@@ -119,6 +119,7 @@ in
       scroller_default_proportion_single=1.0
 
       default_mfact=0.5
+      default_nmaster=1;
 
       tagrule=id:1,layout_name:tile
       tagrule=id:2,layout_name:tile
