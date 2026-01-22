@@ -2,8 +2,8 @@
   programs.nvf.settings.vim = {
     luaConfigRC.yazi-custom = ''
       vim.g.loaded_netrwPlugin = 1
-
       local tmp_file = '/tmp/yazi-nvim-' .. vim.fn.getpid()
+      local wezterm_class = 'wezterm-yazi-nvim'
 
       local function open_yazi_external()
         local current_file = vim.fn.expand('%:p')
@@ -15,10 +15,11 @@
           vim.cmd('silent! write')
         end
         
-        vim.uv.spawn('ghostty', {
+        vim.uv.spawn('wezterm', {
           args = {
-            '--title=yazi-picker',
-            '-e', 'sh', '-c',
+            'start',
+            '--class', wezterm_class,
+            'sh', '-c',
             string.format("yazi '%s' --chooser-file='%s'", current_file, tmp_file)
           },
           detached = true,

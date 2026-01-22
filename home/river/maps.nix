@@ -1,6 +1,6 @@
 {
   wayland.windowManager.river.settings.map.normal = {
-    "Super T" = "spawn ghostty";
+    "Super T" = "spawn wezterm";
     "Super A" = "spawn fuzzel";
     "Super B" = "spawn zen-beta";
     "Super E" = "spawn thunar";

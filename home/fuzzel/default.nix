@@ -20,7 +20,7 @@ in
           lines = 15;
           width = 40;
           prompt = ''"󰍉  "'';
-          terminal = "${pkgs.ghostty}/bin/ghostty";
+          terminal = "${pkgs.wezterm}/bin/wezterm";
         };
         dmenu = {
           lines = 25;

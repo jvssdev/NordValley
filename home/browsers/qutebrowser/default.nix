@@ -31,7 +31,7 @@ in
         bar = "never";
       };
       editor.command = [
-        "ghostty"
+        "wezterm"
         "-e"
         "nvim"
         "{file}"

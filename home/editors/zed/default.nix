@@ -99,7 +99,7 @@ in
           };
         };
         env = {
-          TERM = "ghostty";
+          TERM = "wezterm";
         };
         line_height = "comfortable";
         button = true;

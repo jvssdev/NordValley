@@ -29,13 +29,14 @@ in
 
   imports = [
     ./programs.nix
+    ../home/wezterm/default.nix
     ../home/dunst/default.nix
     ../home/dunst-fuzzel
     ../home/fuzzel-clipboard
     ../home/btop/default.nix
     ../home/fastfetch/default.nix
     ../home/fuzzel/default.nix
-    ../home/ghostty/default.nix
+    # ../home/ghostty/default.nix
     ../home/mpd/default.nix
     ../home/quickshell/default.nix
     ../home/starship/default.nix

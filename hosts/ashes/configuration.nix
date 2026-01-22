@@ -18,6 +18,7 @@
       log_filter="^$"
     '';
     systemPackages = with pkgs; [
+      wezterm
       mpc
       playerctl
       pamixer
@@ -25,7 +26,7 @@
       networkmanagerapplet
       keepassxc
       anydesk
-      ghostty
+      # ghostty
       dconf
       glib
       p7zip

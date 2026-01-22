@@ -7,7 +7,7 @@
     };
 
     sessionVariables = {
-      TERMINAL = "ghostty";
+      TERMINAL = "wezterm";
       BROWSER = "brave";
       DEFAULT_BROWSER = "brave";
 

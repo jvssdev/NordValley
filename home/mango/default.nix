@@ -132,7 +132,7 @@ in
       tagrule=id:9,layout_name:tile
 
       bind=SUPER,r,reload_config
-      bind=SUPER,t,spawn,ghostty
+      bind=SUPER,t,spawn,wezterm
       bind=SUPER,a,spawn,fuzzel
       bind=SUPER,n,spawn,dunst-fuzzel
       bind=SUPER,b,spawn,zen-beta
@@ -215,13 +215,13 @@ in
       windowrule=appid:blueman-manager,isfloating:1
       windowrule=appid:nm-connection-editor,isfloating:1
       windowrule=appid:^[Tt]hunar$,isfloating:1
-      windowrule=appid:ghostty
+      windowrule=appid:wezterm
       windowrule=appid:fuzzel
 
       # scratchpad
       enable_hotarea = 0
 
-      windowrule=width:1900,height:1600,isnamedscratchpad:1,title:yazi-picker
+      windowrule=isnamedscratchpad:1,width:1900,height:1600,appid:wezterm-yazi-nvim
     '';
   };
   systemd.user.targets.mango-session = {
