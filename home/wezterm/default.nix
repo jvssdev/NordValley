@@ -9,25 +9,46 @@ in
     enableZshIntegration = true;
     extraConfig = ''
       local wezterm = require 'wezterm'
-
       local config = wezterm.config_builder()
-
       config.font = wezterm.font '${builtins.head monospace}'
       config.font_size = 15
       config.enable_wayland = true
       config.colors = {
-        foreground = '${palette.base05}',
-        background = '${palette.base00}',
-        cursor_border = '${palette.base05}',
-        cursor_bg = '${palette.base05}',
-        cursor_fg = '${palette.base00}',
+        foreground = '#${palette.base05}',
+        background = '#${palette.base00}',
+        cursor_border = '#${palette.base05}',
+        cursor_bg = '#${palette.base05}',
+        cursor_fg = '#${palette.base00}',
         ansi = {
-          '${palette.base00}', '${palette.base08}', '${palette.base0B}', '${palette.base0A}',
-          '${palette.base0D}', '${palette.base0E}', '${palette.base0C}', '${palette.base05}',
+          '#${palette.base00}', '#${palette.base08}', '#${palette.base0B}', '#${palette.base0A}',
+          '#${palette.base0D}', '#${palette.base0E}', '#${palette.base0C}', '#${palette.base05}',
         },
         brights = {
-          '${palette.base03}', '${palette.base09}', '${palette.base01}', '${palette.base02}',
-          '${palette.base04}', '${palette.base06}', '${palette.base0F}', '${palette.base07}',
+          '#${palette.base03}', '#${palette.base09}', '#${palette.base01}', '#${palette.base02}',
+          '#${palette.base04}', '#${palette.base06}', '#${palette.base0F}', '#${palette.base07}',
+        },
+        tab_bar = {
+          background = '#${palette.base00}',
+          active_tab = {
+            bg_color = '#${palette.base0D}',
+            fg_color = '#${palette.base00}',
+          },
+          inactive_tab = {
+            bg_color = '#${palette.base00}',
+            fg_color = '#${palette.base05}',
+          },
+          inactive_tab_hover = {
+            bg_color = '#${palette.base01}',
+            fg_color = '#${palette.base05}',
+          },
+          new_tab = {
+            bg_color = '#${palette.base00}',
+            fg_color = '#${palette.base0C}',
+          },
+          new_tab_hover = {
+            bg_color = '#${palette.base01}',
+            fg_color = '#${palette.base0C}',
+          },
         },
       }
       config.keys = {
@@ -54,7 +75,10 @@ in
          { key = "DownArrow", mods = "ALT", action = wezterm.action.ActivatePaneDirection("Down") },
        }
       config.hide_tab_bar_if_only_one_tab = true
-
+      config.window_frame = {
+        active_titlebar_bg = '#${palette.base00}',
+        inactive_titlebar_bg = '#${palette.base00}',
+      }
       return config
     '';
   };
