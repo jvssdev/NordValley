@@ -8,8 +8,8 @@
 
     sessionVariables = {
       TERMINAL = "ghostty";
-      BROWSER = "browser";
-      DEFAULT_BROWSER = "browser";
+      BROWSER = "brave";
+      DEFAULT_BROWSER = "brave";
 
       XDG_SCREENSHOTS_DIR = "$HOME/Pictures/Screenshots";
       XDG_SESSION_TYPE = "wayland";
