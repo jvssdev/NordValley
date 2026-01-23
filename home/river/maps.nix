@@ -2,7 +2,7 @@
   wayland.windowManager.river.settings.map.normal = {
     "Super T" = "spawn wezterm";
     "Super A" = "spawn fuzzel";
-    "Super B" = "spawn zen-beta";
+    "Super B" = "spawn brave";
     "Super E" = "spawn thunar";
     "Super X" = "spawn 'qs ipc call powerMenu toggle'";
     "Super P" = "spawn screenshot";

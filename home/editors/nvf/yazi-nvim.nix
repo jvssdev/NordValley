@@ -15,6 +15,8 @@
           vim.cmd('silent! write')
         end
         
+        os.remove(tmp_file)
+        
         vim.uv.spawn('wezterm', {
           args = {
             'start',
@@ -23,20 +25,23 @@
             string.format("yazi '%s' --chooser-file='%s'", current_file, tmp_file)
           },
           detached = true,
-        }, function()
-          vim.schedule(function()
-            local file = io.open(tmp_file, 'r')
-            if file then
-              local chosen_file = file:read('*l')
-              file:close()
-              os.remove(tmp_file)
-              
-              if chosen_file and chosen_file ~= "" and chosen_file ~= current_file then
-                vim.cmd('edit ' .. vim.fn.fnameescape(chosen_file))
-              end
+        })
+        
+        local timer = vim.uv.new_timer()
+        timer:start(100, 100, vim.schedule_wrap(function()
+          local file = io.open(tmp_file, 'r')
+          if file then
+            local chosen_file = file:read('*l')
+            file:close()
+            timer:stop()
+            timer:close()
+            os.remove(tmp_file)
+            
+            if chosen_file and chosen_file ~= "" and chosen_file ~= current_file then
+              vim.cmd('edit ' .. vim.fn.fnameescape(chosen_file))
             end
-          end)
-        end)
+          end
+        end))
       end
 
       vim.keymap.set({'n', 'v'}, '<leader>e', open_yazi_external, { desc = 'Open yazi in external terminal' })

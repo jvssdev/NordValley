@@ -11,6 +11,7 @@ in
       local wezterm = require 'wezterm'
       local config = wezterm.config_builder()
       config.font = wezterm.font '${builtins.head monospace}'
+      config.default_cursor_style = 'SteadyBar'
       config.font_size = 15
       config.enable_wayland = true
       config.colors = {
