@@ -23,6 +23,7 @@ in
       config.default_cursor_style = 'SteadyBar'
       config.font_size = 15
       config.enable_wayland = true
+      config.check_for_updates = false
       config.colors = {
         foreground = '#${palette.base05}',
         background = '#${palette.base00}',
@@ -30,12 +31,24 @@ in
         cursor_bg = '#${palette.base05}',
         cursor_fg = '#${palette.base00}',
         ansi = {
-          '#${palette.base00}', '#${palette.base08}', '#${palette.base0B}', '#${palette.base0A}',
-          '#${palette.base0D}', '#${palette.base0E}', '#${palette.base0C}', '#${palette.base05}',
+          '#${palette.base00}',
+          '#${palette.base08}',
+          '#${palette.base0B}',
+          '#${palette.base0A}',
+          '#${palette.base0D}',
+          '#${palette.base0E}',
+          '#${palette.base0C}',
+          '#${palette.base05}',
         },
         brights = {
-          '#${palette.base03}', '#${palette.base09}', '#${palette.base01}', '#${palette.base02}',
-          '#${palette.base04}', '#${palette.base06}', '#${palette.base0F}', '#${palette.base07}',
+          '#${palette.base03}',
+          '#${palette.base08}',
+          '#${palette.base0B}',
+          '#${palette.base0A}',
+          '#${palette.base0D}',
+          '#${palette.base0E}',
+          '#${palette.base0C}',
+          '#${palette.base07}',
         },
         tab_bar = {
           background = '#${palette.base00}',
