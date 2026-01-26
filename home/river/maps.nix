@@ -3,7 +3,6 @@
     "Super T" = "spawn wezterm";
     "Super A" = "spawn fuzzel";
     "Super B" = "spawn brave";
-    "Super E" = "spawn thunar";
     "Super X" = "spawn 'qs ipc call powerMenu toggle'";
     "Super P" = "spawn screenshot";
     "Super V" = "spawn fuzzel-clipboard";

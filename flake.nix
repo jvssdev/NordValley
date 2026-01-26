@@ -25,6 +25,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    wezterm = {
+      url = "github:wezterm/wezterm?dir=nix";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     mango = {
       url = "github:DreamMaoMao/mango";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -92,12 +97,13 @@
         ./hosts/ashes/configuration.nix
         ./hosts/ashes/hardware-configuration.nix
         ./modules/theme.nix
+        ./modules/cache.nix
         ./modules/path.nix
         ./modules/services.nix
         ./modules/elevated-packages.nix
         ./modules/intel-drivers.nix
         ./modules/power-management.nix
-        ./modules/thunar.nix
+        # ./modules/thunar.nix
         ./modules/sddm-theme.nix
         ./modules/environment.nix
         ./modules/brave/default.nix
@@ -133,6 +139,7 @@
                       mango
                       niri-flake
                       nvf
+                      wezterm
                       ;
                     inherit (userInfo) userName userEmail fullName;
                     inherit (defaults) homeDir;
@@ -203,6 +210,7 @@
           inherit (inputs) quickshell;
           inherit (inputs) zen-browser;
           inherit (inputs) nvf;
+          inherit (inputs) wezterm;
           isRiver = true;
           isMango = false;
           isNiri = false;

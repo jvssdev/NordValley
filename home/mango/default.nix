@@ -137,7 +137,6 @@ in
       bind=SUPER,a,spawn,fuzzel
       bind=SUPER,n,spawn,dunst-fuzzel
       bind=SUPER,b,spawn,brave
-      bind=SUPER,e,spawn,thunar
       bind=SUPER,x,spawn_shell,qs ipc call powerMenu toggle
       bind=SUPER,p,spawn,screenshot
       bind=SUPER,v,spawn,fuzzel-clipboard
@@ -273,6 +272,7 @@ in
   };
 
   services.gnome-keyring.enable = true;
+
   home = {
     sessionVariables = {
       GTK_USE_PORTAL = "1";
@@ -284,27 +284,15 @@ in
         #!${pkgs.bash}/bin/bash
         set -e
 
-        ${pkgs.coreutils}/bin/echo "Yazi wrapper called with args: $@" >> /tmp/yazi-wrapper.log
-
         multiple="$1"
         directory="$2"
         save="$3"
         path="$4"
         out="$5"
-        debug="''${6:-0}"
-
-        if [ "$debug" -ge 4 ]; then
-            set -x
-        fi
-
-        ${pkgs.coreutils}/bin/echo "multiple=$multiple directory=$directory save=$save path=$path out=$out" >> /tmp/yazi-wrapper.log
 
         ${pkgs.wezterm}/bin/wezterm start --always-new-process -- ${pkgs.yazi}/bin/yazi --chooser-file="$out" "$path"
-
-        ${pkgs.coreutils}/bin/echo "Command finished" >> /tmp/yazi-wrapper.log
       '';
     };
-
     packages = [
       pkgs.glib
       pkgs.xdg-utils

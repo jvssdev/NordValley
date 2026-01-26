@@ -3,8 +3,6 @@
     "ssd" = [ ];
     "-app-id" = {
       "'float*'" = [ "float" ];
-      "'thunar'" = [ "float" ];
-      "'Thunar'" = [ "float" ];
       "'org.gnome.FileRoller'" = [ "float" ];
       "'org.pulseaudio.pavucontrol'" = [ "float" ];
       "'blueman-manager'" = [ "float" ];

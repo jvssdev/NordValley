@@ -94,7 +94,6 @@ in
         {
           matches = [
             { app-id = "(?i)yazi-picker"; }
-            { app-id = "thunar"; }
           ];
           open-floating = true;
         }
@@ -121,7 +120,6 @@ in
           "powerMenu"
           "toggle"
         ];
-        "Mod+E".action.spawn = "thunar";
         "Mod+P".action.screenshot = [ ];
         "Mod+V".action.spawn = "fuzzel-clipboard";
         "Mod+Shift+V".action.spawn = "fuzzel-clipboard-clear";

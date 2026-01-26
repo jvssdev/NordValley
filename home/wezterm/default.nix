@@ -1,11 +1,20 @@
-{ config, ... }:
+{
+  config,
+  pkgs,
+  specialArgs,
+  ...
+}:
 let
+  inherit (specialArgs)
+    wezterm
+    ;
   inherit (config.colorScheme) palette;
   inherit (config.theme.font) monospace;
 in
 {
   programs.wezterm = {
     enable = true;
+    package = wezterm.packages.${pkgs.stdenv.hostPlatform.system}.default;
     enableZshIntegration = true;
     extraConfig = ''
       local wezterm = require 'wezterm'
