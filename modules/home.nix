@@ -78,7 +78,7 @@ in
         "application/xhtml+xml" = [ "brave-browser.desktop" ];
         "application/x-extension-xhtml" = [ "brave-browser.desktop" ];
         "application/x-extension-xht" = [ "brave-browser.desktop" ];
-        "inode/directory" = [ "thunar.desktop" ];
+        "inode/directory" = "yazi-open.desktop";
         "image/png" = [ "imv.desktop" ];
         "image/jpeg" = [ "imv.desktop" ];
         "image/gif" = [ "imv.desktop" ];
@@ -102,10 +102,19 @@ in
         "application/xhtml+xml" = [ "brave-browser.desktop" ];
         "application/x-extension-xhtml" = [ "brave-browser.desktop" ];
         "application/x-extension-xht" = [ "brave-browser.desktop" ];
-        "inode/directory" = [ "thunar.desktop" ];
+        "inode/directory" = "yazi-open.desktop";
         "image/png" = [ "imv.desktop" ];
         "image/jpeg" = [ "imv.desktop" ];
         "application/pdf" = [ "org.pwmt.zathura.desktop" ];
+      };
+    };
+    desktopEntries = {
+      yazi-open = {
+        name = "Open with Yazi";
+        exec = "wezterm yazi";
+        terminal = true;
+        mimeType = [ "inode/directory" ];
+        noDisplay = true;
       };
     };
     configFile."mimeapps.list".force = true;

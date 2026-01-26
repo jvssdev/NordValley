@@ -33,7 +33,7 @@
 
       NIXOS_OZONE_WL = "1";
       MOZ_ENABLE_WAYLAND = "1";
-
+      TERMCMD = "wezterm start --always-new-process";
       GDK_BACKEND = "wayland";
       CLUTTER_BACKEND = "wayland";
 

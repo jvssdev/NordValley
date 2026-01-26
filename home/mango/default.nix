@@ -48,6 +48,7 @@ in
       env=QT_QPA_PLATFORMTHEME,qt5ct
       env=QT_WAYLAND_FORCE_DPI,140
       env=GDK_DPI_SCALE,1.45
+      env=GTK_USE_PORTAL,1
 
       monitorrule=eDP-1,0.60,1,tile,0,1,0,0,1920,1080,60
       xkb_rules_layout=br
@@ -218,48 +219,100 @@ in
       windowrule=appid:wezterm
       windowrule=appid:fuzzel
 
-      # scratchpad
       enable_hotarea = 0
 
       windowrule=isnamedscratchpad:1,width:1900,height:1600,appid:wezterm-yazi-nvim
     '';
   };
+
   systemd.user.targets.mango-session = {
     Unit = {
       Description = "mango compositor session";
       Documentation = [ "man:systemd.special(7)" ];
       BindsTo = [ "graphical-session.target" ];
-      Wants = [
-        "graphical-session-pre.target"
-      ];
+      Wants = [ "graphical-session-pre.target" ];
       After = [ "graphical-session-pre.target" ];
     };
   };
 
-  xdg.portal = {
-    enable = true;
-    xdgOpenUsePortal = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-wlr
-      pkgs.xdg-desktop-portal-gtk
-    ];
-    config.common.default = [ "gtk" ];
-    config.mango = {
-      default = [ "gtk" ];
-      "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
-      "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
-      "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
-      "org.freedesktop.impl.portal.Inhibit" = [ ];
+  xdg = {
+    portal = {
+      enable = true;
+      xdgOpenUsePortal = true;
+      extraPortals = [
+        pkgs.xdg-desktop-portal-wlr
+        pkgs.xdg-desktop-portal-gtk
+        pkgs.xdg-desktop-portal-termfilechooser
+      ];
+      config = {
+        common = {
+          default = [ "gtk" ];
+          "org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" ];
+        };
+        mango = {
+          default = [ "gtk" ];
+          "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
+          "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
+          "org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" ];
+          "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
+          "org.freedesktop.impl.portal.Inhibit" = [ ];
+        };
+      };
+    };
+    configFile = {
+      "xdg-desktop-portal-termfilechooser/config" = {
+        text = ''
+          [filechooser]
+          cmd = $HOME/.config/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
+          default_dir = $HOME
+          open_mode = suggested
+          save_mode = last
+        '';
+      };
     };
   };
+
   services.gnome-keyring.enable = true;
-  home.packages = [
-    pkgs.glib
-    pkgs.xdg-utils
-    pkgs.wf-recorder
-    pkgs.xwayland-satellite
-    pkgs.fcitx5
-    pkgs.xorg.xrdb
-    pkgs.hyprpolkitagent
-  ];
+  home = {
+    sessionVariables = {
+      GTK_USE_PORTAL = "1";
+    };
+
+    file.".config/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh" = {
+      executable = true;
+      text = ''
+        #!${pkgs.bash}/bin/bash
+        set -e
+
+        ${pkgs.coreutils}/bin/echo "Yazi wrapper called with args: $@" >> /tmp/yazi-wrapper.log
+
+        multiple="$1"
+        directory="$2"
+        save="$3"
+        path="$4"
+        out="$5"
+        debug="''${6:-0}"
+
+        if [ "$debug" -ge 4 ]; then
+            set -x
+        fi
+
+        ${pkgs.coreutils}/bin/echo "multiple=$multiple directory=$directory save=$save path=$path out=$out" >> /tmp/yazi-wrapper.log
+
+        ${pkgs.wezterm}/bin/wezterm start --always-new-process -- ${pkgs.yazi}/bin/yazi --chooser-file="$out" "$path"
+
+        ${pkgs.coreutils}/bin/echo "Command finished" >> /tmp/yazi-wrapper.log
+      '';
+    };
+
+    packages = [
+      pkgs.glib
+      pkgs.xdg-utils
+      pkgs.wf-recorder
+      pkgs.xwayland-satellite
+      pkgs.fcitx5
+      pkgs.xorg.xrdb
+      pkgs.hyprpolkitagent
+    ];
+  };
 }
