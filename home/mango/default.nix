@@ -217,6 +217,7 @@ in
       windowrule=appid:^[Tt]hunar$,isfloating:1
       windowrule=appid:wezterm
       windowrule=appid:fuzzel
+      layerrule=noblur:1,layer_name:selection
 
       enable_hotarea = 0
 
@@ -239,68 +240,70 @@ in
       enable = true;
       xdgOpenUsePortal = true;
       extraPortals = [
-        pkgs.xdg-desktop-portal-wlr
         pkgs.xdg-desktop-portal-gtk
         pkgs.xdg-desktop-portal-termfilechooser
       ];
       config = {
-        common = {
-          default = [ "gtk" ];
-          "org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" ];
-        };
-        mango = {
-          default = [ "gtk" ];
-          "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
-          "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
-          "org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" ];
-          "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
-          "org.freedesktop.impl.portal.Inhibit" = [ ];
-        };
+        common.default = [ "gtk" ];
+        mango.default = [ "gtk" ];
+        mango."org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" ];
       };
     };
-    configFile = {
-      "xdg-desktop-portal-termfilechooser/config" = {
-        text = ''
-          [filechooser]
-          cmd = $HOME/.config/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
-          default_dir = $HOME
-          open_mode = suggested
-          save_mode = last
-        '';
-      };
-    };
-  };
 
-  services.gnome-keyring.enable = true;
+    configFile."xdg-desktop-portal-termfilechooser/config".text = ''
+      [filechooser]
+      cmd=${pkgs.bash}/bin/bash $HOME/.config/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
+      default_dir=$HOME
+    '';
 
-  home = {
-    sessionVariables = {
-      GTK_USE_PORTAL = "1";
-    };
-
-    file.".config/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh" = {
+    configFile."xdg-desktop-portal-termfilechooser/yazi-wrapper.sh" = {
       executable = true;
       text = ''
-        #!${pkgs.bash}/bin/bash
+        #!/usr/bin/env bash
         set -e
 
-        multiple="$1"
-        directory="$2"
-        save="$3"
-        path="$4"
         out="$5"
+        path="$4"
 
-        ${pkgs.wezterm}/bin/wezterm start --always-new-process -- ${pkgs.yazi}/bin/yazi --chooser-file="$out" "$path"
+        export PATH="${pkgs.wezterm}/bin:${pkgs.yazi}/bin:${pkgs.coreutils}/bin:$PATH"
+
+        USER_ID=$(${pkgs.coreutils}/bin/id -u)
+        export USER=$(${pkgs.coreutils}/bin/id -un)
+        export HOME="/home/$USER"
+        export XDG_RUNTIME_DIR="/run/user/$USER_ID"
+
+        export DISPLAY=":11"
+        unset WAYLAND_DISPLAY
+
+        export XMODIFIERS="@im=fcitx"
+        export GTK_IM_MODULE="fcitx"
+        export QT_IM_MODULE="fcitx"
+        export SDL_IM_MODULE="fcitx"
+        export GLFW_IM_MODULE="ibus"
+
+        export XKB_CONFIG_ROOT="${pkgs.xkeyboard_config}/share/X11/xkb"
+        export XKB_DEFAULT_LAYOUT="br"
+
+        if [ ! -d "$path" ]; then
+          path="$HOME"
+        fi
+
+        exec ${pkgs.wezterm}/bin/wezterm start \
+          --always-new-process \
+          --class filechooser \
+          -- ${pkgs.yazi}/bin/yazi \
+          --chooser-file="$out" \
+          "$path" >> /tmp/portal-debug.log 2>&1
       '';
     };
-    packages = [
-      pkgs.glib
-      pkgs.xdg-utils
-      pkgs.wf-recorder
-      pkgs.xwayland-satellite
-      pkgs.fcitx5
-      pkgs.xorg.xrdb
-      pkgs.hyprpolkitagent
-    ];
   };
+  home.packages = [
+    pkgs.glib
+    pkgs.xdg-utils
+    pkgs.wf-recorder
+    pkgs.xwayland-satellite
+    pkgs.fcitx5
+    pkgs.xorg.xrdb
+    pkgs.hyprpolkitagent
+  ];
 }
