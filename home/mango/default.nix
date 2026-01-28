@@ -41,14 +41,11 @@ in
       env=XCURSOR_THEME,Bibata-Modern-Ice
       env=XCURSOR_SIZE,24
       env=DISPLAY,:11
-      env=QT_IM_MODULE,fcitx
-      env=SDL_IM_MODULE,fcitx
       env=XMODIFIERS,@im=fcitx
       env=GLFW_IM_MODULE,ibus
       env=QT_QPA_PLATFORMTHEME,qt5ct
       env=QT_WAYLAND_FORCE_DPI,140
       env=GDK_DPI_SCALE,1.45
-      env=GTK_USE_PORTAL,1
 
       monitorrule=eDP-1,0.60,1,tile,0,1,0,0,1920,1080,60
       xkb_rules_layout=br
@@ -288,17 +285,13 @@ in
         export USER=$(${pkgs.coreutils}/bin/id -un) 
         export HOME="/home/$USER"
         export XDG_RUNTIME_DIR="/run/user/$USER_ID"
-
-        # Garantimos que ele use Wayland Nativo
         export WAYLAND_DISPLAY="wayland-0"
-        unset DISPLAY
 
-        export XMODIFIERS="@im=fcitx"
-        export GLFW_IM_MODULE="ibus"
         unset GTK_IM_MODULE
         unset QT_IM_MODULE
+        export XMODIFIERS="@im=fcitx"
+        export GLFW_IM_MODULE="ibus"
 
-        # Fix definitivo para o pânico de teclado (Keymap)
         export LD_LIBRARY_PATH="${lib.makeLibraryPath [ pkgs.libxkbcommon ]}:$LD_LIBRARY_PATH"
         export XKB_CONFIG_ROOT="${pkgs.xkeyboard_config}/share/X11/xkb"
         export XKB_DEFAULT_LAYOUT="br"
