@@ -235,18 +235,29 @@ in
     };
   };
 
+  services.gnome-keyring.enable = true;
   xdg = {
     portal = {
       enable = true;
       xdgOpenUsePortal = true;
       extraPortals = [
+        pkgs.xdg-desktop-portal-wlr
         pkgs.xdg-desktop-portal-gtk
         pkgs.xdg-desktop-portal-termfilechooser
       ];
       config = {
-        common.default = [ "gtk" ];
-        mango.default = [ "gtk" ];
-        mango."org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" ];
+        common = {
+          default = [ "gtk" ];
+          "org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" ];
+        };
+        mango = {
+          default = [ "gtk" ];
+          "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
+          "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
+          "org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" ];
+          "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
+          "org.freedesktop.impl.portal.Inhibit" = [ ];
+        };
       };
     };
 
@@ -265,22 +276,30 @@ in
         out="$5"
         path="$4"
 
-        export PATH="${pkgs.wezterm}/bin:${pkgs.yazi}/bin:${pkgs.coreutils}/bin:$PATH"
+        export PATH="${
+          lib.makeBinPath [
+            pkgs.wezterm
+            pkgs.yazi
+            pkgs.coreutils
+          ]
+        }:$PATH"
 
         USER_ID=$(${pkgs.coreutils}/bin/id -u)
-        export USER=$(${pkgs.coreutils}/bin/id -un)
+        export USER=$(${pkgs.coreutils}/bin/id -un) 
         export HOME="/home/$USER"
         export XDG_RUNTIME_DIR="/run/user/$USER_ID"
 
-        export DISPLAY=":11"
-        unset WAYLAND_DISPLAY
+        # Garantimos que ele use Wayland Nativo
+        export WAYLAND_DISPLAY="wayland-0"
+        unset DISPLAY
 
         export XMODIFIERS="@im=fcitx"
-        export GTK_IM_MODULE="fcitx"
-        export QT_IM_MODULE="fcitx"
-        export SDL_IM_MODULE="fcitx"
         export GLFW_IM_MODULE="ibus"
+        unset GTK_IM_MODULE
+        unset QT_IM_MODULE
 
+        # Fix definitivo para o pânico de teclado (Keymap)
+        export LD_LIBRARY_PATH="${lib.makeLibraryPath [ pkgs.libxkbcommon ]}:$LD_LIBRARY_PATH"
         export XKB_CONFIG_ROOT="${pkgs.xkeyboard_config}/share/X11/xkb"
         export XKB_DEFAULT_LAYOUT="br"
 
