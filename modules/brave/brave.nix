@@ -14,6 +14,19 @@ let
 
   prefsFile = jsonFormat.generate "brave-preferences.json" cfg.preferences;
 
+  forcedExtensions = map (id: "${id};https://clients2.google.com/service/update2/crx") cfg.extensions;
+
+  fullPolicies = cfg.policies // {
+    ExtensionInstallForcelist = forcedExtensions;
+  };
+
+  policiesJson = jsonFormat.generate "brave-policies.json" fullPolicies;
+
+  braveFixed = pkgs.brave.overrideAttrs (old: {
+    postFixup = (old.postFixup or "") + ''
+      rm -f $out/share/applications/com.brave.Browser.desktop
+    '';
+  });
 in
 {
   options.programs.brave = {
@@ -21,7 +34,7 @@ in
 
     package = mkOption {
       type = types.package;
-      default = pkgs.brave;
+      default = braveFixed;
       description = "Brave package to use";
     };
 
@@ -72,11 +85,7 @@ in
       '')
     ];
 
-    programs.chromium = {
-      enable = true;
-      inherit (cfg) extensions;
-      extraOpts = cfg.policies;
-    };
+    environment.etc."opt/chrome/policies/managed/brave-policies.json".source = policiesJson;
 
     system.activationScripts.brave-preferences = ''
       ${pkgs.writeShellScript "apply-brave-prefs" ''
