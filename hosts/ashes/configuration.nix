@@ -4,6 +4,7 @@
   fullName,
   ...
 }:
+
 {
   environment = {
     variables = {
@@ -17,28 +18,26 @@
       warn_timeout = 0
       log_filter="^$"
     '';
-    systemPackages = with pkgs; [
-      wezterm
-      mpc
-      playerctl
-      pamixer
-      pavucontrol
-      networkmanagerapplet
-      keepassxc
-      anydesk
-      # ghostty
-      dconf
-      glib
-      p7zip
-      appimage-run
-      nh
-      mpv
-      imv
-      qbittorrent
-      libgcc
-      lxqt.lxqt-policykit
-      libnotify
-      gvfs
+    systemPackages = [
+      pkgs.mpc
+      pkgs.playerctl
+      pkgs.pamixer
+      pkgs.pavucontrol
+      pkgs.networkmanagerapplet
+      pkgs.keepassxc
+      pkgs.anydesk
+      pkgs.dconf
+      pkgs.glib
+      pkgs.p7zip
+      pkgs.appimage-run
+      pkgs.nh
+      pkgs.mpv
+      pkgs.imv
+      pkgs.qbittorrent
+      pkgs.libgcc
+      pkgs.lxqt.lxqt-policykit
+      pkgs.libnotify
+      pkgs.gvfs
     ];
     sessionVariables = {
       NIXOS_OZONE_WL = "1";

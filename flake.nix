@@ -140,6 +140,7 @@
                       niri-flake
                       nvf
                       wezterm
+                      helium-browser
                       ;
                     inherit (userInfo) userName userEmail fullName;
                     inherit (defaults) homeDir;
