@@ -9,7 +9,6 @@ in
 {
   programs.zen-browser = {
     enable = true;
-
     languagePacks = [
       "en-US"
       "pt-BR"
@@ -95,11 +94,11 @@ in
         packages = with pkgs.nur.repos.rycee.firefox-addons; [
           ublock-origin
           darkreader
-          privacy-badger
           keepassxc-browser
           sponsorblock
           betterttv
           vimium
+          auto-tab-discard
         ];
 
         settings = {
@@ -107,7 +106,6 @@ in
             userSettings = rec {
               advancedUserEnabled = true;
               cloudStorageEnabled = false;
-              # collapseBlocked = false;
               uiAccentCustom = true;
               uiAccentCustom0 = "${palette.base0D}";
               externalLists = pkgs.lib.concatStringsSep "\n" importedLists;
@@ -125,7 +123,6 @@ in
                 "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/ultimate.txt"
               ];
               largeMediaSize = 250;
-              # popupPanelSections = 31;
               tooltipsDisabled = true;
             };
             dynamicFilteringString = ''
@@ -211,277 +208,103 @@ in
               github.com * 3p-script noop
               accounts.google.com * 3p-frame noop
               accounts.google.com * 3p-script noop
+              calendar.google.com * 3p-frame noop
+              calendar.google.com * 3p-script noop
               docs.google.com * 3p-frame noop
               docs.google.com * 3p-script noop
-              drive.google.com * 3p noop
               drive.google.com * 3p-frame noop
               drive.google.com * 3p-script noop
-              notebooklm.google.com * 3p noop
-              notebooklm.google.com * 3p-frame noop
-              notebooklm.google.com * 3p-script noop
-              huggingface.co * 3p-frame noop
-              huggingface.co * 3p-script noop
+              mail.google.com * 3p-frame noop
+              mail.google.com * 3p-script noop
+              meet.google.com * 3p-frame noop
+              meet.google.com * 3p-script noop
+              hangouts.google.com * 3p-script noop
+              hangouts.google.com * 3p-frame noop
+              sites.google.com * 3p-script noop
+              sites.google.com * 3p-frame noop
+              www.google.com * 3p-frame noop
+              www.google.com * 3p-script noop
               kadena.latticehq.com * 3p-frame noop
               kadena.latticehq.com * 3p-script noop
+              linkedin.com * 3p noop
+              linkedin.com * 3p-frame noop
+              linkedin.com * 3p-script noop
               www.linkedin.com * 3p noop
+              www.linkedin.com * 3p-frame noop
+              www.linkedin.com * 3p-script noop
+              login.live.com * 3p-frame noop
+              login.live.com * 3p-script noop
+              account.microsoft.com * 3p-frame noop
+              account.microsoft.com * 3p-script noop
+              login.microsoftonline.com * 3p-frame noop
+              login.microsoftonline.com * 3p-script noop
+              learn.microsoft.com * 3p-frame noop
+              learn.microsoft.com * 3p-script noop
               www.notion.com * 3p-frame noop
               www.notion.com * 3p-script noop
               www.notion.so * 3p-frame noop
               www.notion.so * 3p-script noop
-              old.reddit.com * 3p noop
-              old.reddit.com * 3p-frame noop
-              old.reddit.com * 3p-script noop
-              www.reddit.com * 3p noop
+              my.okta.com * 3p-frame noop
+              my.okta.com * 3p-script noop
+              usa.onlinesrp.org * 3p-frame noop
+              usa.onlinesrp.org * 3p-script noop
               www.reddit.com * 3p-frame noop
               www.reddit.com * 3p-script noop
-              respected-meat-54f.notion.site * 3p noop
-              myprofile.saccounty.gov * 3p-frame noop
-              myprofile.saccounty.gov * 3p-script noop
-              myutilities.saccounty.gov * 3p-frame noop
-              myutilities.saccounty.gov * 3p-script noop
+              old.reddit.com * 3p-frame noop
+              old.reddit.com * 3p-script noop
+              schwab.com * 3p noop
+              schwab.com * 3p-frame noop
+              schwab.com * 3p-script noop
+              client.schwab.com * 3p noop
               client.schwab.com * 3p-frame noop
               client.schwab.com * 3p-script noop
+              sws-gateway-nr.schwab.com * 3p noop
               sws-gateway-nr.schwab.com * 3p-frame noop
               sws-gateway-nr.schwab.com * 3p-script noop
               slack.com * 3p-frame noop
               slack.com * 3p-script noop
-              app.slack.com * 3p noop
               app.slack.com * 3p-frame noop
               app.slack.com * 3p-script noop
-
+              kadena-io.slack.com * 3p-frame noop
+              kadena-io.slack.com * 3p-script noop
+              open.spotify.com * 3p-frame noop
+              open.spotify.com * 3p-script noop
+              www.twitch.tv * 3p-frame noop
+              www.twitch.tv * 3p-script noop
+              twitter.com * 3p-frame noop
+              twitter.com * 3p-script noop
+              x.com * 3p-frame noop
+              x.com * 3p-script noop
+              console.upstash.com * 3p-frame noop
+              console.upstash.com * 3p-script noop
+              www.wikipedia.org * 3p-frame noop
+              www.wikipedia.org * 3p-script noop
               www.youtube.com * 3p-frame noop
               www.youtube.com * 3p-script noop
             '';
-            urlFilteringString = "";
-
-            userFilters = "";
-            selectedFilterLists = [
-              "user-filters"
-              "ublock-filters"
-              "ublock-badware"
-              "ublock-privacy"
-              "ublock-quick-fixes"
-              "ublock-unbreak"
-              "easylist"
-              "easyprivacy"
-              "adguard-spyware"
-              "adguard-spyware-url"
-              "urlhaus-1"
-              "plowe-0"
-              "fanboy-cookiemonster"
-              "ublock-cookies-easylist"
-              "fanboy-social"
-              "easylist-chat"
-              "easylist-newsletters"
-              "easylist-notifications"
-              "easylist-annoyances"
-              "ublock-annoyances"
-              "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/hoster.txt"
-              "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/fake.txt"
-              "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/pro.mini.txt"
-              "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/spam-tlds-ublock.txt"
-            ];
-            whitelist = [
-              "chrome-extension-scheme"
-              "moz-extension-scheme"
-            ];
+            adminSettings = {
+              userFilters = ''
+                ! 2024-11-12 https://www.reddit.com
+                www.reddit.com###left-sidebar-container
+                ||analytics.reddit.com^$all
+              '';
+            };
           };
-          # TODO: Implement https://github.com/philc/vimium/issues/4600 Upstream
-
-          # "{d7742d87-e61d-4b78-b8a1-b469842139fa}" = {
-          #   installation_mode = "force_installed";
-          #   settings = {
-          #     userDefinedLinkHintCss = ''
-          #       div > .vimiumHintMarker {
-          #         background: -webkit-gradient(linear, left top, left bottom,
-          #           color-stop(0%,#FFF785), color-stop(100%,#FFC542));
-          #         border: 1px solid #E3BE23;
-          #       }
-          #
-          #       div > .vimiumHintMarker span {
-          #         color: black;
-          #         font-weight: bold;
-          #         font-size: 12px;
-          #       }
-          #
-          #       div > .vimiumHintMarker > .matchingCharacter {
-          #       }
-          #     '';
-          #
-          #     normalModeKeyStateMapping = {
-          #       j = {
-          #         command = "scrollDown";
-          #         options = {};
-          #       };
-          #     };
-          #   };
-          # };
         };
       };
-
       userChrome = ''
-        :root {
-          --zen-colors-primary: #${palette.base01} !important;
-          --zen-primary-color: #${palette.base0D} !important;
-          --zen-colors-secondary: #${palette.base02} !important;
-          --zen-colors-tertiary: #${palette.base03} !important;
-          --zen-colors-border: #${palette.base03} !important;
-          --toolbarbutton-icon-fill: #${palette.base0D} !important;
-          --lwt-text-color: #${palette.base05} !important;
-          --toolbar-field-color: #${palette.base05} !important;
-          --tab-selected-textcolor: #${palette.base05} !important;
-          --toolbar-field-focus-color: #${palette.base05} !important;
-          --toolbar-color: #${palette.base05} !important;
-          --newtab-text-primary-color: #${palette.base05} !important;
-          --arrowpanel-color: #${palette.base05} !important;
-          --arrowpanel-background: #${palette.base00} !important;
-          --sidebar-text-color: #${palette.base05} !important;
-          --lwt-sidebar-text-color: #${palette.base05} !important;
-          --lwt-sidebar-background-color: #${palette.base00} !important;
-          --toolbar-bgcolor: #${palette.base00} !important;
-          --newtab-background-color: #${palette.base00} !important;
-          --zen-themed-toolbar-bg: #${palette.base00} !important;
-          --zen-main-browser-background: #${palette.base00} !important;
-          --toolbox-bgcolor-inactive: #${palette.base00} !important;
-        }
-
-        #permissions-granted-icon {
-          color: #${palette.base05} !important;
-        }
-
-        .sidebar-placesTree {
-          background-color: #${palette.base00} !important;
-        }
-
-        #zen-workspaces-button {
-          background-color: #${palette.base00} !important;
-        }
-
-        #TabsToolbar {
-          background-color: #${palette.base00} !important;
-        }
-
-        .urlbar-background {
-          background-color: #${palette.base01} !important;
-          border: 1px solid #${palette.base03} !important;
-        }
-
-        .content-shortcuts {
-          background-color: #${palette.base01} !important;
-          border-color: #${palette.base03} !important;
-        }
-
-        .urlbarView-url {
-          color: #${palette.base0D} !important;
-        }
-
-        #urlbar-input::selection {
-          background-color: #${palette.base0D} !important;
-          color: #${palette.base00} !important;
-        }
-
-        #zenEditBookmarkPanelFaviconContainer {
-          background: #${palette.base00} !important;
-        }
-
-        #zen-media-controls-toolbar {
-          & #zen-media-progress-bar {
-            &::-moz-range-track {
-              background: #${palette.base02} !important;
-            }
+        @-moz-document url("about:blank") {
+          :root {
+            background-color: #${palette.base00} !important;
           }
         }
 
-        toolbar .toolbarbutton-1 {
-          &:not([disabled]) {
-            &:is([open], [checked])
-              > :is(
-                .toolbarbutton-icon,
-                .toolbarbutton-text,
-                .toolbarbutton-badge-stack
-              ) {
-              fill: #${palette.base0D};
-              background-color: #${palette.base01} !important;
-            }
-          }
-        }
-
-        .identity-color-blue {
-          --identity-tab-color: #${palette.base0D} !important;
-          --identity-icon-color: #${palette.base0D} !important;
-        }
-
-        .identity-color-turquoise {
-          --identity-tab-color: #${palette.base0C} !important;
-          --identity-icon-color: #${palette.base0C} !important;
-        }
-
-        .identity-color-green {
-          --identity-tab-color: #${palette.base0B} !important;
-          --identity-icon-color: #${palette.base0B} !important;
-        }
-
-        .identity-color-yellow {
-          --identity-tab-color: #${palette.base0A} !important;
-          --identity-icon-color: #${palette.base0A} !important;
-        }
-
-        .identity-color-orange {
-          --identity-tab-color: #${palette.base09} !important;
-          --identity-icon-color: #${palette.base09} !important;
-        }
-
-        .identity-color-red {
-          --identity-tab-color: #${palette.base08} !important;
-          --identity-icon-color: #${palette.base08} !important;
-        }
-
-        .identity-color-pink {
-          --identity-tab-color: #${palette.base0E} !important;
-          --identity-icon-color: #${palette.base0E} !important;
-        }
-
-        .identity-color-purple {
-          --identity-tab-color: #${palette.base0F} !important;
-          --identity-icon-color: #${palette.base0F} !important;
-        }
-
-        hbox#titlebar {
-          background-color: #${palette.base00} !important;
-        }
-
-        #zen-appcontent-navbar-container {
-          background-color: #${palette.base00} !important;
-        }
-
-        #contentAreaContextMenu menu,
-        menuitem,
-        menupopup {
-          color: #${palette.base05} !important;
-          background-color: #${palette.base01} !important;
-        }
-
-        menuseparator {
-          border-color: #${palette.base03} !important;
-        }
-
-        .tabbrowser-tab[selected] {
-          background-color: #${palette.base01} !important;
-        }
-
-        .tabbrowser-tab:not([selected]):hover {
-          background-color: #${palette.base02} !important;
-        }
-      '';
-
-      userContent = ''
         @-moz-document url-prefix("about:") {
           :root {
-            --in-content-page-color: #${palette.base05} !important;
-            --color-accent-primary: #${palette.base0D} !important;
-            --color-accent-primary-hover: #${palette.base0C} !important;
-            --color-accent-primary-active: #${palette.base0B} !important;
-            background-color: #${palette.base00} !important;
+            --zen-colors-border: #${palette.base03} !important;
+            --zen-colors-secondary: #${palette.base02} !important;
+            --zen-colors-tertiary: #${palette.base03} !important;
+            --zen-primary-color: #${palette.base0D} !important;
             --in-content-page-background: #${palette.base00} !important;
             --in-content-box-background: #${palette.base01} !important;
             --in-content-box-border-color: #${palette.base03} !important;

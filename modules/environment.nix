@@ -8,8 +8,8 @@
 
     sessionVariables = {
       TERMINAL = "wezterm";
-      BROWSER = "brave";
-      DEFAULT_BROWSER = "brave";
+      BROWSER = "zen-beta";
+      DEFAULT_BROWSER = "zen-beta";
 
       XDG_SCREENSHOTS_DIR = "$HOME/Pictures/Screenshots";
       XDG_SESSION_TYPE = "wayland";

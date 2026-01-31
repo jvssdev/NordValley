@@ -106,7 +106,6 @@
         # ./modules/thunar.nix
         ./modules/sddm-theme.nix
         ./modules/environment.nix
-        ./modules/brave/default.nix
       ];
 
       mkSystem =

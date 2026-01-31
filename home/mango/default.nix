@@ -133,7 +133,7 @@ in
       bind=SUPER,t,spawn,wezterm
       bind=SUPER,a,spawn,fuzzel
       bind=SUPER,n,spawn,dunst-fuzzel
-      bind=SUPER,b,spawn,brave
+      bind=SUPER,b,spawn,zen-beta
       bind=SUPER,x,spawn_shell,qs ipc call powerMenu toggle
       bind=SUPER,p,spawn,screenshot
       bind=SUPER,v,spawn,fuzzel-clipboard
